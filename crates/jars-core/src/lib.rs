@@ -1,6 +1,6 @@
 use std::collections::{BTreeMap, BTreeSet, VecDeque};
 
-use noak::reader::Class;
+use noak::reader::{AttributeContent, Class};
 use nom::{
     IResult, Parser,
     bytes::{tag, take_until},
@@ -157,6 +157,10 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
             .iter()
             .map(|a| {
                 let a = a.unwrap();
+                let code = a.attributes().iter().find_map(|a|match a.ok()?.read_content(c.pool()).ok()?{
+                    AttributeContent::Code(c) => Some(c),
+                    _ => None,
+                });
                 let (_, (_, params, _, returns)) = (
                     tag("("),
                     many0(|a|parse_bare_type(a).map(|(c,b)|(c,(a,b)))),
@@ -197,33 +201,42 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                     quote! {ret_val}
                 };
                
-                    params.push(quote! {
-                        Return<#returns>
-                    });
-                    impl_params.push(quote! {
-                        Return<#returns>
-                    });
-                
+                params.push(quote! {
+                    Return<#returns>
+                });
+                impl_params.push(quote! {
+                    Return<#returns>
+                });
                 (
                     name_ident(c.pool().get(a.name()).unwrap().content.to_str().unwrap()),
                     params,
                     impl_params,
                     quote! {
                         enum TaskEntry<S: Spawner>{
-                            Continue(S::Task<TaskEntry<S>>),
+                            Continue(S::Task<Result<TaskEntry<S>,Error>>),
                             Break((#(#returns),))
                         }
+                        #(#pcs)*
                         let (#(#ids_and_rets),*) = a;
-                        let ret_val = match _entry(spawner.clone(), #(#ids),*).await{
-                            TaskEntry::Break(a) => a,
-                            TaskEntry::Continue(mut task) => loop{
-                                match task.await{
-                                    TaskEntry::Break(a) => break a,
-                                    TaskEntry::Continue(a) => task = a,
+                        let ret_val = try{
+                            match _pc0(spawner.clone(), #(#ids),*).await?{
+                                TaskEntry::Break(a) => a,
+                                TaskEntry::Continue(mut task) => loop{
+                                    match task.await?{
+                                        TaskEntry::Break(a) => break a,
+                                        TaskEntry::Continue(a) => task = a,
+                                    }
                                 }
                             }
                         }
-                        ret.send(#return_map).await
+                        match ret_val{
+                            Ok(ret_val) => {
+                                ret.send(Ok(#return_map)).await
+                            },
+                            Err(e) => {
+                                ret.send(Err(e)).await
+                            }
+                        }
                     },
                     ids_and_rets.clone(),
                     param_strs.iter().map(|a|a.ends_with(";")).chain([false]).zip(ids_and_rets).map(|(a,b)|if a{quote!{#b.spawn(spawner)}}else{quote! {#b}}).collect::<Vec<_>>()
