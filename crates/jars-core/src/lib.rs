@@ -192,7 +192,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                             .to_str()
                             .unwrap().ends_with(";"){
                     quote! {
-                        spawn_obj!(ret_val, spawner)
+                        ret_val.spawn(spawner)
                     }
                 }else{
                     quote! {ret_val}
@@ -225,7 +225,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                         #(ret.send(#return_maps).await)?
                     },
                     ids_and_rets.clone(),
-                    param_strs.iter().map(|a|a.ends_with(";")).chain([false]).zip(ids_and_rets).map(|(a,b)|if a{quote!{spawn_obj!(#b)}}else{quote! {#b}}).collect::<Vec<_>>()
+                    param_strs.iter().map(|a|a.ends_with(";")).chain([false]).zip(ids_and_rets).map(|(a,b)|if a{quote!{#b.spawn(spawner)}}else{quote! {#b}}).collect::<Vec<_>>()
                 )
             })
             .collect::<(Vec<_>, Vec<_>,Vec<_>, Vec<_>,Vec<_>,Vec<_>)>();
@@ -294,11 +294,6 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
         }
     });
     quote! {
-        macro_rules! spawn_obj{
-            ($a:expr, $spawner:expr) => {
-                $a.spawn($spawner)
-            }
-        }
         #(#bodies)*
     }
 }
