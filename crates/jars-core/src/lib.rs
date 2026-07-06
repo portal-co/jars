@@ -215,11 +215,13 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                             Break((#(#returns),))
                         }
                         let (#(#ids_and_rets),*) = a;
-                        let mut task = spawner.spawn(_entry(spawner.clone(), #(#ids),*));
-                        let (#(#return_values),) = loop{
-                            match task.await{
-                                TaskEntry::Break(a) => break a,
-                                TaskEntry::Continue(a) => task = a,
+                        let (#(#return_values),) = match _entry(spawner.clone(), #(#ids),*).await{
+                            TaskEntry::Break(a) => a,
+                            TaskEntry::Continue(mut task) => loop{
+                                match task.await{
+                                    TaskEntry::Break(a) => break a,
+                                    TaskEntry::Continue(a) => task = a,
+                                }
                             }
                         }
                         #(ret.send(#return_maps).await)?
