@@ -1,0 +1,9 @@
+{
+  "description": "Java to Rust",
+  "devDependencies": {
+    "zshy": "^0.7.0"
+  },
+  "name": "@portal-solutions/jars",
+  "type": "module",
+  "workspaces": []
+}
