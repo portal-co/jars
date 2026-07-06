@@ -1,0 +1,12 @@
+[package]
+name = "jars-core"
+edition = "2024"
+version.workspace = true
+description.workspace = true
+
+[dependencies]
+noak.workspace = true
+nom = "8.0.0"
+proc-macro2.workspace = true
+quote.workspace = true
+syn.workspace = true

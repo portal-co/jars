@@ -1,7 +1,15 @@
 [workspace]
-members = []
+members = ["crates/jars-core"]
 resolver = "3"
 
 [workspace.package]
 version = "0.1.0"
 description = "Java to Rust"
+
+[workspace.dependencies]
+noak = "0.6"
+
+syn = { version = "2.0", default-features = false }
+quote = { version = "1.0", default-features = false }
+proc-macro2 = { version = "1.0", default-features = false }
+prettyplease = "0.2.37"
