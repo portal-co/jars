@@ -265,10 +265,15 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
             impl<X: #bounds> #methods for #name<X>{
                 fn spawn(self, spawner: impl Spawner) -> Channel<#event>{
                     let chan = Channel::new();
-                    let rc = chan.clone();
+                    let mut rc = chan.clone();
                     let s = spawner.clone();
                     spawner.spawn(async move{
                         loop{
+                            let ac = Arc::from(rc);
+                            if ac.strong_count() == 1{
+                                break;
+                            }
+                            rc = ac.into();
                             let r = rc.recv().await;
                             s.spawn(self.handle(r,s.clone()).await);
                         }
