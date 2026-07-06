@@ -161,7 +161,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                     tag("("),
                     many0(|a|parse_bare_type(a).map(|(c,b)|(c,(a,b)))),
                     tag(")"),
-                    parse_bare_type.map(Some).or(tag("V").map(|_| None)),
+                    parse_bare_type.or(tag("V").map(|_| (quote!{()},quote!{()}))),
                 )
                     .parse(
                         c.pool()
@@ -174,7 +174,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                     .unwrap();
                 let (param_strs,params) = params.into_iter().collect::<(Vec<_>,Vec<_>)>();
                 let (mut params, mut impl_params) = params.into_iter().collect::<(Vec<_>,Vec<_>)>();
-                let returns = returns.map(|a|a.0);
+                let returns = returns.0;
                 let ids = params
                     .iter()
                     .enumerate()
@@ -183,9 +183,8 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                 let ids_and_rets = ids
                     .iter()
                     .cloned()
-                    .chain(returns.as_ref().map(|_| format_ident!("ret"))).collect::<Vec<_>>();
-                let return_values = returns.as_ref().map(|_| format_ident!("ret_val"));
-                let return_maps = return_values.as_ref().map(|_|if c.pool()
+                    .chain([format_ident!("ret")]).collect::<Vec<_>>();
+                let return_map = if c.pool()
                             .get(a.descriptor())
                             .unwrap()
                             .content
@@ -196,15 +195,15 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                     }
                 }else{
                     quote! {ret_val}
-                });
-                if let Some(ret) = returns.clone() {
+                };
+               
                     params.push(quote! {
-                        Return<#ret>
+                        Return<#returns>
                     });
                     impl_params.push(quote! {
-                        Return<#ret>
+                        Return<#returns>
                     });
-                }
+                
                 (
                     name_ident(c.pool().get(a.name()).unwrap().content.to_str().unwrap()),
                     params,
@@ -215,7 +214,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                             Break((#(#returns),))
                         }
                         let (#(#ids_and_rets),*) = a;
-                        let (#(#return_values),) = match _entry(spawner.clone(), #(#ids),*).await{
+                        let ret_val = match _entry(spawner.clone(), #(#ids),*).await{
                             TaskEntry::Break(a) => a,
                             TaskEntry::Continue(mut task) => loop{
                                 match task.await{
@@ -224,7 +223,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                                 }
                             }
                         }
-                        #(ret.send(#return_maps).await)?
+                        ret.send(#return_map).await
                     },
                     ids_and_rets.clone(),
                     param_strs.iter().map(|a|a.ends_with(";")).chain([false]).zip(ids_and_rets).map(|(a,b)|if a{quote!{#b.spawn(spawner)}}else{quote! {#b}}).collect::<Vec<_>>()
