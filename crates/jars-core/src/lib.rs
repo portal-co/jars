@@ -214,7 +214,7 @@ pub fn classes(classes: &[Class<'_>]) -> impl ToTokens {
                     quote! {
                         enum TaskEntry<S: Spawner>{
                             Continue(S::Task<Result<TaskEntry<S>,Error>>),
-                            Break((#(#returns),))
+                            Break(Result<(#(#returns),),Error>)
                         }
                         #(#pcs)*
                         let (#(#ids_and_rets),*) = a;
