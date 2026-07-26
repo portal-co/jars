@@ -569,6 +569,7 @@ enum BodyKind {
 
 struct Body<'a> {
     program: &'a Program,
+    known_classes: &'a [String],
     method: &'a Method,
     kind: BodyKind,
     stack: Vec<Value>,
@@ -579,7 +580,12 @@ struct Body<'a> {
 }
 
 impl<'a> Body<'a> {
-    fn new(program: &'a Program, method: &'a Method, kind: BodyKind) -> Self {
+    fn new(
+        program: &'a Program,
+        known_classes: &'a [String],
+        method: &'a Method,
+        kind: BodyKind,
+    ) -> Self {
         let mut locals = Vec::new();
         match kind {
             BodyKind::Static => {}
@@ -596,6 +602,7 @@ impl<'a> Body<'a> {
         }
         Self {
             program,
+            known_classes,
             method,
             kind,
             stack: Vec::new(),
@@ -603,6 +610,18 @@ impl<'a> Body<'a> {
             statements: Vec::new(),
             next_temp: 0,
             next_uninitialized: 0,
+        }
+    }
+
+    fn class_path(&self, class: &str) -> Result<String, CompileError> {
+        if class == self.program.name {
+            Ok(String::new())
+        } else if self.known_classes.iter().any(|known| known == class) {
+            Ok(format!("super::{}::", rust_ident(class)?))
+        } else {
+            Err(invalid(format!(
+                "class `{class}` is not in the compilation set"
+            )))
         }
     }
 
@@ -813,7 +832,9 @@ impl<'a> Body<'a> {
                     self.statements.push(format!("state.{field} = {value};"));
                 }
                 Op::New(class) => {
-                    if !matches!(self.kind, BodyKind::Static) || class != &self.program.name {
+                    if !matches!(self.kind, BodyKind::Static)
+                        || !self.known_classes.iter().any(|known| known == class)
+                    {
                         return Err(unsupported(self.program, self.method, instruction, "new"));
                     }
                     let id = self.next_uninitialized;
@@ -844,7 +865,12 @@ impl<'a> Body<'a> {
                                 "Object.<init>",
                             ));
                         }
-                    } else if reference.class == self.program.name && reference.name == "<init>" {
+                    } else if self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
+                        && reference.name == "<init>"
+                    {
                         let Value::Uninitialized(id) = receiver else {
                             return Err(stack_error(
                                 self.program,
@@ -854,7 +880,11 @@ impl<'a> Body<'a> {
                             ));
                         };
                         let variable = format!("object{id}");
-                        let class = rust_ident(&self.program.name)?;
+                        let class = format!(
+                            "{}{}",
+                            self.class_path(&reference.class)?,
+                            rust_ident(&reference.class)?
+                        );
                         let call_arguments = if args.is_empty() {
                             "spawner.clone()".to_owned()
                         } else {
@@ -879,7 +909,10 @@ impl<'a> Body<'a> {
                 }
                 Op::InvokeStatic(reference) => {
                     if !matches!(self.kind, BodyKind::Static)
-                        || reference.class != self.program.name
+                        || !self
+                            .known_classes
+                            .iter()
+                            .any(|known| known == &reference.class)
                     {
                         return Err(unsupported(
                             self.program,
@@ -890,7 +923,11 @@ impl<'a> Body<'a> {
                     }
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
-                    let method = rust_ident(&reference.name)?;
+                    let method = format!(
+                        "{}{}",
+                        self.class_path(&reference.class)?,
+                        rust_ident(&reference.name)?
+                    );
                     let expression =
                         format!("{method}(spawner.clone(), {}).await?", args.join(", "));
                     match signature.returns {
@@ -936,7 +973,10 @@ impl<'a> Body<'a> {
                         self.statements
                             .push(format!("jars_runtime::println({});", args[0]));
                     } else if matches!(self.kind, BodyKind::Static)
-                        && reference.class == self.program.name
+                        && self
+                            .known_classes
+                            .iter()
+                            .any(|known| known == &reference.class)
                     {
                         let object = match receiver {
                             Value::Object(value) => value,
@@ -1223,7 +1263,11 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
     ))
 }
 
-fn static_method(program: &Program, method: &Method) -> Result<String, CompileError> {
+fn static_method(
+    program: &Program,
+    known_classes: &[String],
+    method: &Method,
+) -> Result<String, CompileError> {
     if method
         .instructions
         .iter()
@@ -1233,7 +1277,7 @@ fn static_method(program: &Program, method: &Method) -> Result<String, CompileEr
     }
     let name = rust_ident(&method.name)?;
     let parameters = parameters(method);
-    let body = Body::new(program, method, BodyKind::Static).run()?;
+    let body = Body::new(program, known_classes, method, BodyKind::Static).run()?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
         "pub async fn {name}<S: jars_runtime::Spawner>(spawner: S, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
@@ -1243,11 +1287,12 @@ fn static_method(program: &Program, method: &Method) -> Result<String, CompileEr
 
 fn instance_method(
     program: &Program,
+    known_classes: &[String],
     method: &Method,
 ) -> Result<(String, String, String), CompileError> {
     let name = rust_ident(&method.name)?;
     let parameters = parameters(method);
-    let body = Body::new(program, method, BodyKind::Instance).run()?;
+    let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
         "fn {name}_impl(state: &mut {}State, {parameters}) -> {} {{\n{body}\n{fallback}\n}}",
@@ -1284,6 +1329,7 @@ fn instance_method(
 
 fn actor_code(
     program: &Program,
+    known_classes: &[String],
     constructor: &Method,
     methods: &[&Method],
 ) -> Result<String, CompileError> {
@@ -1305,7 +1351,8 @@ fn actor_code(
         &constructor_parameters,
         "reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>>",
     );
-    let constructor_body = Body::new(program, constructor, BodyKind::Instance).run()?;
+    let constructor_body =
+        Body::new(program, known_classes, constructor, BodyKind::Instance).run()?;
     let constructor_args = (0..constructor.signature.parameters.len())
         .map(|index| format!("arg{index}"))
         .collect::<Vec<_>>()
@@ -1326,7 +1373,7 @@ fn actor_code(
         "fn init_impl(state: &mut {class}State, {constructor_parameters}) {{\n{constructor_body}\n}}"
     ));
     for method in methods {
-        let (implementation, variant, proxy) = instance_method(program, method)?;
+        let (implementation, variant, proxy) = instance_method(program, known_classes, method)?;
         let name = rust_ident(&method.name)?;
         let args = (0..method.signature.parameters.len())
             .map(|index| format!("arg{index}"))
@@ -1356,25 +1403,13 @@ fn actor_code(
     ))
 }
 
-fn render(program: &Program) -> Result<String, CompileError> {
+fn render_module(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
     let class = rust_ident(&program.name)?;
-    let main = program.methods.iter().find(|method| {
-        method.is_public
-            && method.is_static
-            && method.name == "main"
-            && method.signature.parameters == [Type::StringArray]
-            && method.signature.returns == Type::Void
-    });
-    if main.is_none() {
-        return Err(CompileError::MissingEntryPoint {
-            class: program.name.clone(),
-        });
-    }
     let statics = program
         .methods
         .iter()
         .filter(|method| method.is_static && method.is_public)
-        .map(|method| static_method(program, method))
+        .map(|method| static_method(program, known_classes, method))
         .collect::<Result<Vec<_>, _>>()?;
     let constructors = program
         .methods
@@ -1394,13 +1429,57 @@ fn render(program: &Program) -> Result<String, CompileError> {
         let constructor = constructors
             .first()
             .ok_or_else(|| invalid("instance methods and fields require a constructor"))?;
-        actor_code(program, constructor, &instances)?
+        actor_code(program, known_classes, constructor, &instances)?
     } else {
         String::new()
     };
+    Ok(format!(
+        "pub mod {class} {{\n{actor}\n{}\n}}",
+        statics.join("\n")
+    ))
+}
+
+fn entry_point(programs: &[Program]) -> Result<&Program, CompileError> {
+    let entries = programs
+        .iter()
+        .filter(|program| {
+            program.methods.iter().any(|method| {
+                method.is_public
+                    && method.is_static
+                    && method.name == "main"
+                    && method.signature.parameters == [Type::StringArray]
+                    && method.signature.returns == Type::Void
+            })
+        })
+        .collect::<Vec<_>>();
+    match entries.as_slice() {
+        [entry] => Ok(*entry),
+        [] if programs.len() == 1 => Err(CompileError::MissingEntryPoint {
+            class: programs[0].name.clone(),
+        }),
+        [] => Err(invalid(
+            "the compilation set does not define public static main(String[])",
+        )),
+        _ => Err(invalid(
+            "the compilation set defines more than one public static main(String[])",
+        )),
+    }
+}
+
+fn render(programs: &[Program]) -> Result<String, CompileError> {
+    let entry = entry_point(programs)?;
+    let known_classes = programs
+        .iter()
+        .map(|program| program.name.clone())
+        .collect::<Vec<_>>();
+    let modules = programs
+        .iter()
+        .map(|program| render_module(program, &known_classes))
+        .collect::<Result<Vec<_>, _>>()?;
+    let class = rust_ident(&entry.name)?;
     let source = format!(
-        "pub mod {class} {{\n{actor}\n{}\n}}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet args = std::env::args().skip(1).collect();\nruntime.block_on({class}::main(runtime.clone(), args)).expect(\"Java actor call failed\");\n}}",
-        statics.join("\n"),
+        "{}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet args = std::env::args().skip(1).collect();\nruntime.block_on({class}::main(runtime.clone(), args)).expect(\"Java actor call failed\");\n}}",
+        modules.join("\n"),
     );
     let file = syn::parse_file(&source)
         .map_err(|error| invalid(format!("internal generated Rust was invalid: {error}")))?;
@@ -1409,7 +1488,33 @@ fn render(program: &Program) -> Result<String, CompileError> {
 
 /// Compiles one default-package Java class file into a complete Rust source file.
 pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
-    render(&parse_program(bytes)?)
+    render(&[parse_program(bytes)?])
+}
+
+/// Compiles a closed, default-package class set into one AOT Rust source file.
+///
+/// References to classes outside `classes` are rejected during code generation;
+/// the generated modules call each other directly and retain no class-file data.
+pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
+    if classes.is_empty() {
+        return Err(invalid("the compilation set is empty"));
+    }
+    let programs = classes
+        .iter()
+        .map(|bytes| parse_program(bytes))
+        .collect::<Result<Vec<_>, _>>()?;
+    for (index, program) in programs.iter().enumerate() {
+        if programs[..index]
+            .iter()
+            .any(|previous| previous.name == program.name)
+        {
+            return Err(invalid(format!(
+                "the compilation set contains duplicate class `{}`",
+                program.name
+            )));
+        }
+    }
+    render(&programs)
 }
 
 #[cfg(test)]
