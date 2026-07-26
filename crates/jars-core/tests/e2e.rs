@@ -163,6 +163,15 @@ fn closed_class_set_constructs_and_calls_a_cross_class_actor() {
 }
 
 #[test]
+fn concrete_object_parameters_returns_and_actor_fields_remain_typed() {
+    let (stdout, generated) = compile_set_and_run(&["ObjectReferencesMain", "Box", "Holder"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("Option<super::Box::Box>"));
+    assert!(generated.contains("box: Option<super::Box::Box>"));
+    assert!(generated.contains("pub async fn identity"));
+}
+
+#[test]
 fn unsupported_bytecode_has_a_source_location() {
     let temp = tempfile::tempdir().unwrap();
     let error = compile_class(&compile_java("Unsupported", &temp)).unwrap_err();

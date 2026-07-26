@@ -74,15 +74,24 @@ enum Type {
     Void,
     String,
     StringArray,
+    Class(String),
 }
 
 impl Type {
-    fn rust(&self) -> &'static str {
+    fn rust(&self, current_class: &str) -> Result<String, CompileError> {
         match self {
-            Self::Int => "i32",
-            Self::Void => "()",
-            Self::String => "&'static str",
-            Self::StringArray => "Vec<String>",
+            Self::Int => Ok("i32".to_owned()),
+            Self::Void => Ok("()".to_owned()),
+            Self::String => Ok("&'static str".to_owned()),
+            Self::StringArray => Ok("Vec<String>".to_owned()),
+            Self::Class(name) if name == current_class => {
+                Ok(format!("Option<{}>", rust_ident(name)?))
+            }
+            Self::Class(name) => Ok(format!(
+                "Option<super::{}::{}>",
+                rust_ident(name)?,
+                rust_ident(name)?
+            )),
         }
     }
 }
@@ -123,6 +132,7 @@ enum Op {
     Goto(i32),
     If(IfKind, i32),
     IReturn,
+    AReturn,
     Return,
     LdcString(String),
     GetStatic(MemberRef),
@@ -241,6 +251,20 @@ fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
     } else if remainder.starts_with("[Ljava/lang/String;") {
         *cursor += "[Ljava/lang/String;".len();
         Ok(Type::StringArray)
+    } else if remainder.starts_with('L') {
+        let end = remainder.find(';').ok_or_else(|| {
+            invalid(format!(
+                "unterminated reference descriptor fragment `{remainder}`"
+            ))
+        })?;
+        let name = &remainder[1..end];
+        if name.is_empty() || name.contains('/') {
+            return Err(invalid(format!(
+                "unsupported descriptor fragment `{remainder}`"
+            )));
+        }
+        *cursor += end + 1;
+        Ok(Type::Class(name.to_owned()))
     } else {
         Err(invalid(format!(
             "unsupported descriptor fragment `{remainder}`"
@@ -334,6 +358,7 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IfICmpGt { offset } => Op::If(IfKind::ICmpGt, offset.into()),
         IfICmpLe { offset } => Op::If(IfKind::ICmpLe, offset.into()),
         IReturn => Op::IReturn,
+        AReturn => Op::AReturn,
         Return => Op::Return,
         Dup => Op::Dup,
         New { index } => Op::New(class_name(pool, index)?),
@@ -430,8 +455,10 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
         )?;
         let mut cursor = 0;
         let ty = parse_type(&descriptor, &mut cursor)?;
-        if ty != Type::Int || cursor != descriptor.len() {
-            return Err(invalid("v1 instance fields must have type int"));
+        if !matches!(ty, Type::Int | Type::Class(_)) || cursor != descriptor.len() {
+            return Err(invalid(
+                "instance fields must have type int or a compiled class reference",
+            ));
         }
         fields.push(Field { name, ty });
     }
@@ -504,10 +531,10 @@ fn rust_ident(name: &str) -> Result<String, CompileError> {
         return Err(invalid(format!("unsupported Rust identifier `{name}`")));
     }
     let escaped = match name {
-        "as" | "async" | "await" | "break" | "const" | "continue" | "crate" | "dyn" | "else"
-        | "enum" | "extern" | "false" | "fn" | "for" | "if" | "impl" | "in" | "let" | "loop"
-        | "match" | "mod" | "move" | "mut" | "pub" | "ref" | "return" | "Self" | "self"
-        | "static" | "struct" | "super" | "trait" | "true" | "type" | "unsafe" | "use"
+        "as" | "async" | "await" | "box" | "break" | "const" | "continue" | "crate" | "dyn"
+        | "else" | "enum" | "extern" | "false" | "fn" | "for" | "if" | "impl" | "in" | "let"
+        | "loop" | "match" | "mod" | "move" | "mut" | "pub" | "ref" | "return" | "Self"
+        | "self" | "static" | "struct" | "super" | "trait" | "true" | "type" | "unsafe" | "use"
         | "where" | "while" => format!("r#{name}"),
         _ => name.to_owned(),
     };
@@ -548,14 +575,15 @@ enum Value {
     String(String),
     PrintStream,
     This,
-    Object(String),
+    Object { expression: String, class: String },
     Uninitialized(usize),
 }
 
 impl Value {
     fn expression(&self) -> Option<&str> {
         match self {
-            Self::Int(value) | Self::String(value) | Self::Object(value) => Some(value),
+            Self::Int(value) | Self::String(value) => Some(value),
+            Self::Object { expression, .. } => Some(expression),
             _ => None,
         }
     }
@@ -595,7 +623,14 @@ impl<'a> Body<'a> {
             let value = match ty {
                 Type::Int => Value::Int(format!("arg{index}")),
                 Type::String => Value::String(format!("arg{index}")),
-                Type::StringArray => Value::Object(format!("arg{index}")),
+                Type::StringArray => Value::Object {
+                    expression: format!("arg{index}"),
+                    class: "java/lang/String[]".to_owned(),
+                },
+                Type::Class(class) => Value::Object {
+                    expression: format!("arg{index}"),
+                    class: class.clone(),
+                },
                 Type::Void => unreachable!(),
             };
             locals.push(Some(value));
@@ -666,7 +701,10 @@ impl<'a> Body<'a> {
         self.locals[index] = Some(value);
     }
 
-    fn temp(&mut self, expression: String, value: fn(String) -> Value) -> Value {
+    fn temp<F>(&mut self, expression: String, value: F) -> Value
+    where
+        F: FnOnce(String) -> Value,
+    {
         let name = format!("value{}", self.next_temp);
         self.next_temp += 1;
         self.statements.push(format!("let {name} = {expression};"));
@@ -691,8 +729,16 @@ impl<'a> Body<'a> {
             match &instruction.op {
                 Op::IConst(value) => self.stack.push(Value::Int(value.to_string())),
                 Op::LdcString(value) => self.stack.push(Value::String(format!("{value:?}"))),
-                Op::ILoad(index) | Op::ALoad(index) => {
-                    self.stack.push(self.local(*index, instruction)?)
+                Op::ILoad(index) => self.stack.push(self.local(*index, instruction)?),
+                Op::ALoad(index) => {
+                    let value = self.local(*index, instruction)?;
+                    self.stack.push(match value {
+                        Value::Object { expression, class } => Value::Object {
+                            expression: format!("{expression}.clone()"),
+                            class,
+                        },
+                        other => other,
+                    });
                 }
                 Op::IStore(index) | Op::AStore(index) => {
                     let value = self.pop(instruction)?;
@@ -711,7 +757,10 @@ impl<'a> Body<'a> {
                         match value {
                             Value::Int(_) => Value::Int(local),
                             Value::String(_) => Value::String(local),
-                            Value::Object(_) => Value::Object(local),
+                            Value::Object { class, .. } => Value::Object {
+                                expression: local,
+                                class,
+                            },
                             _ => unreachable!(),
                         },
                     );
@@ -786,7 +835,6 @@ impl<'a> Body<'a> {
                 Op::GetField(reference) => {
                     if !matches!(self.kind, BodyKind::Instance)
                         || reference.class != self.program.name
-                        || reference.descriptor != "I"
                     {
                         return Err(unsupported(
                             self.program,
@@ -804,13 +852,40 @@ impl<'a> Body<'a> {
                         ));
                     }
                     let field = rust_ident(&reference.name)?;
-                    let value = self.temp(format!("state.{field}"), Value::Int);
+                    let mut cursor = 0;
+                    let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                    if cursor != reference.descriptor.len() {
+                        return Err(unsupported(
+                            self.program,
+                            self.method,
+                            instruction,
+                            "getfield descriptor",
+                        ));
+                    }
+                    let value = match ty {
+                        Type::Int => self.temp(format!("state.{field}"), Value::Int),
+                        Type::Class(class) => {
+                            self.temp(format!("state.{field}.clone()"), |expression| {
+                                Value::Object {
+                                    expression,
+                                    class: class.clone(),
+                                }
+                            })
+                        }
+                        _ => {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "getfield descriptor",
+                            ));
+                        }
+                    };
                     self.stack.push(value);
                 }
                 Op::PutField(reference) => {
                     if !matches!(self.kind, BodyKind::Instance)
                         || reference.class != self.program.name
-                        || reference.descriptor != "I"
                     {
                         return Err(unsupported(
                             self.program,
@@ -895,7 +970,10 @@ impl<'a> Body<'a> {
                         ));
                         for value in &mut self.stack {
                             if matches!(value, Value::Uninitialized(other) if *other == id) {
-                                *value = Value::Object(variable.clone());
+                                *value = Value::Object {
+                                    expression: format!("Some({variable})"),
+                                    class: reference.class.clone(),
+                                };
                             }
                         }
                     } else {
@@ -948,6 +1026,13 @@ impl<'a> Body<'a> {
                                 "array return",
                             ));
                         }
+                        Type::Class(class) => {
+                            let value = self.temp(expression, |expression| Value::Object {
+                                expression,
+                                class: class.clone(),
+                            });
+                            self.stack.push(value);
+                        }
                     }
                 }
                 Op::InvokeVirtual(reference) => {
@@ -978,8 +1063,8 @@ impl<'a> Body<'a> {
                             .iter()
                             .any(|known| known == &reference.class)
                     {
-                        let object = match receiver {
-                            Value::Object(value) => value,
+                        let (object, class) = match receiver {
+                            Value::Object { expression, class } => (expression, class),
                             _ => {
                                 return Err(stack_error(
                                     self.program,
@@ -989,8 +1074,19 @@ impl<'a> Body<'a> {
                                 ));
                             }
                         };
+                        if class != reference.class {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "virtual dispatch through a non-concrete reference",
+                            ));
+                        }
                         let method = rust_ident(&reference.name)?;
-                        let expression = format!("{object}.{method}({}).await?", args.join(", "));
+                        let expression = format!(
+                            "{object}.ok_or(jars_runtime::JavaError::NullPointer)?.{method}({}).await?",
+                            args.join(", ")
+                        );
                         match signature.returns {
                             Type::Int => {
                                 let value = self.temp(expression, Value::Int);
@@ -1009,6 +1105,13 @@ impl<'a> Body<'a> {
                                     "array return",
                                 ));
                             }
+                            Type::Class(class) => {
+                                let value = self.temp(expression, |expression| Value::Object {
+                                    expression,
+                                    class: class.clone(),
+                                });
+                                self.stack.push(value);
+                            }
                         }
                     } else {
                         return Err(unsupported(
@@ -1020,6 +1123,13 @@ impl<'a> Body<'a> {
                     }
                 }
                 Op::IReturn => {
+                    let value = self.pop_expression(instruction)?;
+                    match self.kind {
+                        BodyKind::Static => self.statements.push(format!("return Ok({value});")),
+                        BodyKind::Instance => self.statements.push(format!("return {value};")),
+                    }
+                }
+                Op::AReturn => {
                     let value = self.pop_expression(instruction)?;
                     match self.kind {
                         BodyKind::Static => self.statements.push(format!("return Ok({value});")),
@@ -1044,15 +1154,15 @@ impl<'a> Body<'a> {
     }
 }
 
-fn parameters(method: &Method) -> String {
+fn parameters(program: &Program, method: &Method) -> Result<String, CompileError> {
     method
         .signature
         .parameters
         .iter()
         .enumerate()
-        .map(|(index, ty)| format!("arg{index}: {}", ty.rust()))
-        .collect::<Vec<_>>()
-        .join(", ")
+        .map(|(index, ty)| Ok(format!("arg{index}: {}", ty.rust(&program.name)?)))
+        .collect::<Result<Vec<_>, CompileError>>()
+        .map(|parameters| parameters.join(", "))
 }
 
 fn reply_fields(parameters: &str, reply: &str) -> String {
@@ -1069,6 +1179,7 @@ fn default_return(ty: &Type) -> &'static str {
         Type::Void => "()",
         Type::String => "\"\"",
         Type::StringArray => "Vec::new()",
+        Type::Class(_) => "None",
     }
 }
 
@@ -1243,7 +1354,7 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
         };
         arms.push(format!("{} => {{ {arm} }}", instruction.offset));
     }
-    let parameters = parameters(method);
+    let parameters = parameters(program, method)?;
     let initial_locals = method
         .signature
         .parameters
@@ -1276,12 +1387,12 @@ fn static_method(
         return aot_int_static_method(program, method);
     }
     let name = rust_ident(&method.name)?;
-    let parameters = parameters(method);
+    let parameters = parameters(program, method)?;
     let body = Body::new(program, known_classes, method, BodyKind::Static).run()?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
         "pub async fn {name}<S: jars_runtime::Spawner>(spawner: S, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
-        method.signature.returns.rust(),
+        method.signature.returns.rust(&program.name)?,
     ))
 }
 
@@ -1291,13 +1402,13 @@ fn instance_method(
     method: &Method,
 ) -> Result<(String, String, String), CompileError> {
     let name = rust_ident(&method.name)?;
-    let parameters = parameters(method);
+    let parameters = parameters(program, method)?;
     let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
         "fn {name}_impl(state: &mut {}State, {parameters}) -> {} {{\n{body}\n{fallback}\n}}",
         rust_ident(&program.name)?,
-        method.signature.returns.rust(),
+        method.signature.returns.rust(&program.name)?,
     );
     let variant = format!(
         "{name} {{ {} }}",
@@ -1305,7 +1416,7 @@ fn instance_method(
             &parameters,
             &format!(
                 "reply: jars_runtime::Reply<Result<{}, jars_runtime::JavaError>>",
-                method.signature.returns.rust(),
+                method.signature.returns.rust(&program.name)?,
             ),
         ),
     );
@@ -1320,7 +1431,7 @@ fn instance_method(
         } else {
             format!(", {parameters}")
         },
-        method.signature.returns.rust(),
+        method.signature.returns.rust(&program.name)?,
         rust_ident(&program.name)?,
         reply_fields(&arguments, "reply"),
     );
@@ -1337,16 +1448,28 @@ fn actor_code(
     let field_declarations = program
         .fields
         .iter()
-        .map(|field| Ok(format!("{}: {}", rust_ident(&field.name)?, field.ty.rust())))
+        .map(|field| {
+            Ok(format!(
+                "{}: {}",
+                rust_ident(&field.name)?,
+                field.ty.rust(&program.name)?
+            ))
+        })
         .collect::<Result<Vec<_>, CompileError>>()
         .map(|fields| fields.join(", "))?;
     let field_initializers = program
         .fields
         .iter()
-        .map(|field| Ok(format!("{}: 0", rust_ident(&field.name)?)))
+        .map(|field| {
+            Ok(format!(
+                "{}: {}",
+                rust_ident(&field.name)?,
+                default_return(&field.ty)
+            ))
+        })
         .collect::<Result<Vec<_>, CompileError>>()
         .map(|fields| fields.join(", "))?;
-    let constructor_parameters = parameters(constructor);
+    let constructor_parameters = parameters(program, constructor)?;
     let constructor_message_fields = reply_fields(
         &constructor_parameters,
         "reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>>",
@@ -1486,9 +1609,39 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
     Ok(prettyplease::unparse(&file))
 }
 
+fn validate_reference_type(ty: &Type, known_classes: &[String]) -> Result<(), CompileError> {
+    if let Type::Class(class) = ty {
+        if !known_classes.iter().any(|known| known == class) {
+            return Err(invalid(format!(
+                "reference type `{class}` is not in the compilation set"
+            )));
+        }
+    }
+    Ok(())
+}
+
+fn validate_reference_types(programs: &[Program]) -> Result<(), CompileError> {
+    let known_classes = programs
+        .iter()
+        .map(|program| program.name.clone())
+        .collect::<Vec<_>>();
+    for program in programs {
+        for field in &program.fields {
+            validate_reference_type(&field.ty, &known_classes)?;
+        }
+        for method in &program.methods {
+            for parameter in &method.signature.parameters {
+                validate_reference_type(parameter, &known_classes)?;
+            }
+            validate_reference_type(&method.signature.returns, &known_classes)?;
+        }
+    }
+    Ok(())
+}
+
 /// Compiles one default-package Java class file into a complete Rust source file.
 pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
-    render(&[parse_program(bytes)?])
+    compile_classes(&[bytes])
 }
 
 /// Compiles a closed, default-package class set into one AOT Rust source file.
@@ -1514,6 +1667,7 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
             )));
         }
     }
+    validate_reference_types(&programs)?;
     render(&programs)
 }
 
