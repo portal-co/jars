@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/jars-core"]
+members = ["crates/jars-core", "crates/jars-runtime"]
 resolver = "3"
 
 [workspace.package]
@@ -9,7 +9,10 @@ description = "Java to Rust"
 [workspace.dependencies]
 noak = "0.6"
 
-syn = { version = "2.0", default-features = false }
+syn = { version = "2.0", default-features = false, features = ["full", "parsing"] }
 quote = { version = "1.0", default-features = false }
 proc-macro2 = { version = "1.0", default-features = false }
 prettyplease = "0.2.37"
+async-channel = "2.5"
+futures = "0.3"
+tempfile = "3.20"

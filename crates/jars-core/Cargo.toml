@@ -6,7 +6,10 @@ description.workspace = true
 
 [dependencies]
 noak.workspace = true
-nom = "8.0.0"
 proc-macro2.workspace = true
 quote.workspace = true
 syn.workspace = true
+prettyplease.workspace = true
+
+[dev-dependencies]
+tempfile.workspace = true

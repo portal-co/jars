@@ -1,0 +1,9 @@
+[package]
+name = "jars-runtime"
+edition = "2024"
+version.workspace = true
+description.workspace = true
+
+[dependencies]
+async-channel.workspace = true
+futures.workspace = true
