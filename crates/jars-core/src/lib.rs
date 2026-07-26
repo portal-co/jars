@@ -74,6 +74,9 @@ impl std::error::Error for CompileError {}
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Type {
     Int,
+    Long,
+    Float,
+    Double,
     Void,
     String,
     StringArray,
@@ -84,6 +87,9 @@ impl Type {
     fn rust(&self, current_class: &str) -> Result<String, CompileError> {
         match self {
             Self::Int => Ok("i32".to_owned()),
+            Self::Long => Ok("i64".to_owned()),
+            Self::Float => Ok("f32".to_owned()),
+            Self::Double => Ok("f64".to_owned()),
             Self::Void => Ok("()".to_owned()),
             Self::String => Ok("&'static str".to_owned()),
             Self::StringArray => Ok("Vec<String>".to_owned()),
@@ -115,10 +121,19 @@ struct MemberRef {
 #[derive(Clone, Debug)]
 enum Op {
     IConst(i32),
+    LConst(i64),
+    FConst(f32),
+    DConst(f64),
     ILoad(usize),
     IStore(usize),
     ALoad(usize),
     AStore(usize),
+    LLoad(usize),
+    LStore(usize),
+    FLoad(usize),
+    FStore(usize),
+    DLoad(usize),
+    DStore(usize),
     IAdd,
     ISub,
     IMul,
@@ -131,10 +146,31 @@ enum Op {
     IShl,
     IShr,
     IUshr,
+    LAdd,
+    LSub,
+    LMul,
+    LDiv,
+    LRem,
+    LNeg,
+    FAdd,
+    FSub,
+    FMul,
+    FDiv,
+    FRem,
+    FNeg,
+    DAdd,
+    DSub,
+    DMul,
+    DDiv,
+    DRem,
+    DNeg,
     IInc(usize, i32),
     Goto(i32),
     If(IfKind, i32),
     IReturn,
+    LReturn,
+    FReturn,
+    DReturn,
     AReturn,
     Return,
     LdcString(String),
@@ -248,6 +284,15 @@ fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
     if remainder.starts_with('I') {
         *cursor += 1;
         Ok(Type::Int)
+    } else if remainder.starts_with('J') {
+        *cursor += 1;
+        Ok(Type::Long)
+    } else if remainder.starts_with('F') {
+        *cursor += 1;
+        Ok(Type::Float)
+    } else if remainder.starts_with('D') {
+        *cursor += 1;
+        Ok(Type::Double)
     } else if remainder.starts_with('V') {
         *cursor += 1;
         Ok(Type::Void)
@@ -311,6 +356,13 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IConst5 => Op::IConst(5),
         BIPush { value } => Op::IConst(value.into()),
         SIPush { value } => Op::IConst(value.into()),
+        LConst0 => Op::LConst(0),
+        LConst1 => Op::LConst(1),
+        FConst0 => Op::FConst(0.0),
+        FConst1 => Op::FConst(1.0),
+        FConst2 => Op::FConst(2.0),
+        DConst0 => Op::DConst(0.0),
+        DConst1 => Op::DConst(1.0),
         ILoad { index } => Op::ILoad(index.into()),
         ILoadW { index } => Op::ILoad(index.into()),
         ILoad0 => Op::ILoad(0),
@@ -329,12 +381,48 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         ALoad1 => Op::ALoad(1),
         ALoad2 => Op::ALoad(2),
         ALoad3 => Op::ALoad(3),
+        LLoad { index } => Op::LLoad(index.into()),
+        LLoadW { index } => Op::LLoad(index.into()),
+        LLoad0 => Op::LLoad(0),
+        LLoad1 => Op::LLoad(1),
+        LLoad2 => Op::LLoad(2),
+        LLoad3 => Op::LLoad(3),
+        FLoad { index } => Op::FLoad(index.into()),
+        FLoadW { index } => Op::FLoad(index.into()),
+        FLoad0 => Op::FLoad(0),
+        FLoad1 => Op::FLoad(1),
+        FLoad2 => Op::FLoad(2),
+        FLoad3 => Op::FLoad(3),
+        DLoad { index } => Op::DLoad(index.into()),
+        DLoadW { index } => Op::DLoad(index.into()),
+        DLoad0 => Op::DLoad(0),
+        DLoad1 => Op::DLoad(1),
+        DLoad2 => Op::DLoad(2),
+        DLoad3 => Op::DLoad(3),
         AStore { index } => Op::AStore(index.into()),
         AStoreW { index } => Op::AStore(index.into()),
         AStore0 => Op::AStore(0),
         AStore1 => Op::AStore(1),
         AStore2 => Op::AStore(2),
         AStore3 => Op::AStore(3),
+        LStore { index } => Op::LStore(index.into()),
+        LStoreW { index } => Op::LStore(index.into()),
+        LStore0 => Op::LStore(0),
+        LStore1 => Op::LStore(1),
+        LStore2 => Op::LStore(2),
+        LStore3 => Op::LStore(3),
+        FStore { index } => Op::FStore(index.into()),
+        FStoreW { index } => Op::FStore(index.into()),
+        FStore0 => Op::FStore(0),
+        FStore1 => Op::FStore(1),
+        FStore2 => Op::FStore(2),
+        FStore3 => Op::FStore(3),
+        DStore { index } => Op::DStore(index.into()),
+        DStoreW { index } => Op::DStore(index.into()),
+        DStore0 => Op::DStore(0),
+        DStore1 => Op::DStore(1),
+        DStore2 => Op::DStore(2),
+        DStore3 => Op::DStore(3),
         IAdd => Op::IAdd,
         ISub => Op::ISub,
         IMul => Op::IMul,
@@ -347,6 +435,24 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IShL => Op::IShl,
         IShR => Op::IShr,
         IUShR => Op::IUshr,
+        LAdd => Op::LAdd,
+        LSub => Op::LSub,
+        LMul => Op::LMul,
+        LDiv => Op::LDiv,
+        LRem => Op::LRem,
+        LNeg => Op::LNeg,
+        FAdd => Op::FAdd,
+        FSub => Op::FSub,
+        FMul => Op::FMul,
+        FDiv => Op::FDiv,
+        FRem => Op::FRem,
+        FNeg => Op::FNeg,
+        DAdd => Op::DAdd,
+        DSub => Op::DSub,
+        DMul => Op::DMul,
+        DDiv => Op::DDiv,
+        DRem => Op::DRem,
+        DNeg => Op::DNeg,
         IInc { index, value } => Op::IInc(index.into(), value.into()),
         IIncW { index, value } => Op::IInc(index.into(), value.into()),
         Goto { offset } => Op::Goto(offset.into()),
@@ -364,6 +470,9 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IfICmpGt { offset } => Op::If(IfKind::ICmpGt, offset.into()),
         IfICmpLe { offset } => Op::If(IfKind::ICmpLe, offset.into()),
         IReturn => Op::IReturn,
+        LReturn => Op::LReturn,
+        FReturn => Op::FReturn,
+        DReturn => Op::DReturn,
         AReturn => Op::AReturn,
         Return => Op::Return,
         Dup => Op::Dup,
@@ -428,7 +537,16 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
                     .content,
             )?),
             Item::Integer(value) => Op::IConst(value.value),
+            Item::Float(value) => Op::FConst(value.value),
             other => return Err(invalid(format!("unsupported ldc constant {other:?}"))),
+        },
+        LdC2W { index } => match pool
+            .get(index)
+            .map_err(|error| CompileError::Parse(error.to_string()))?
+        {
+            Item::Long(value) => Op::LConst(value.value),
+            Item::Double(value) => Op::DConst(value.value),
+            other => return Err(invalid(format!("unsupported ldc2 constant {other:?}"))),
         },
         other => return Err(invalid(format!("unsupported bytecode {other:?}"))),
     };
@@ -597,6 +715,9 @@ fn stack_error(
 #[derive(Clone)]
 enum Value {
     Int(String),
+    Long(String),
+    Float(String),
+    Double(String),
     String(String),
     PrintStream,
     This,
@@ -607,7 +728,11 @@ enum Value {
 impl Value {
     fn expression(&self) -> Option<&str> {
         match self {
-            Self::Int(value) | Self::String(value) => Some(value),
+            Self::Int(value)
+            | Self::Long(value)
+            | Self::Float(value)
+            | Self::Double(value)
+            | Self::String(value) => Some(value),
             Self::Object { expression, .. } => Some(expression),
             _ => None,
         }
@@ -644,9 +769,13 @@ impl<'a> Body<'a> {
             BodyKind::Static => {}
             BodyKind::Instance => locals.push(Some(Value::This)),
         }
+        let mut slot = locals.len();
         for (index, ty) in method.signature.parameters.iter().enumerate() {
             let value = match ty {
                 Type::Int => Value::Int(format!("arg{index}")),
+                Type::Long => Value::Long(format!("arg{index}")),
+                Type::Float => Value::Float(format!("arg{index}")),
+                Type::Double => Value::Double(format!("arg{index}")),
                 Type::String => Value::String(format!("arg{index}")),
                 Type::StringArray => Value::Object {
                     expression: format!("arg{index}"),
@@ -658,7 +787,11 @@ impl<'a> Body<'a> {
                 },
                 Type::Void => unreachable!(),
             };
-            locals.push(Some(value));
+            if locals.len() <= slot {
+                locals.resize(slot + 1, None);
+            }
+            locals[slot] = Some(value);
+            slot += matches!(ty, Type::Long | Type::Double) as usize + 1;
         }
         Self {
             program,
@@ -753,8 +886,14 @@ impl<'a> Body<'a> {
         for instruction in &self.method.instructions {
             match &instruction.op {
                 Op::IConst(value) => self.stack.push(Value::Int(value.to_string())),
+                Op::LConst(value) => self.stack.push(Value::Long(format!("{value}_i64"))),
+                Op::FConst(value) => self.stack.push(Value::Float(format!("{value:?}_f32"))),
+                Op::DConst(value) => self.stack.push(Value::Double(format!("{value:?}_f64"))),
                 Op::LdcString(value) => self.stack.push(Value::String(format!("{value:?}"))),
                 Op::ILoad(index) => self.stack.push(self.local(*index, instruction)?),
+                Op::LLoad(index) | Op::FLoad(index) | Op::DLoad(index) => {
+                    self.stack.push(self.local(*index, instruction)?)
+                }
                 Op::ALoad(index) => {
                     let value = self.local(*index, instruction)?;
                     self.stack.push(match value {
@@ -765,7 +904,11 @@ impl<'a> Body<'a> {
                         other => other,
                     });
                 }
-                Op::IStore(index) | Op::AStore(index) => {
+                Op::IStore(index)
+                | Op::AStore(index)
+                | Op::LStore(index)
+                | Op::FStore(index)
+                | Op::DStore(index) => {
                     let value = self.pop(instruction)?;
                     let expression = value.expression().ok_or_else(|| {
                         stack_error(
@@ -781,6 +924,9 @@ impl<'a> Body<'a> {
                         *index,
                         match value {
                             Value::Int(_) => Value::Int(local),
+                            Value::Long(_) => Value::Long(local),
+                            Value::Float(_) => Value::Float(local),
+                            Value::Double(_) => Value::Double(local),
                             Value::String(_) => Value::String(local),
                             Value::Object { class, .. } => Value::Object {
                                 expression: local,
@@ -820,6 +966,63 @@ impl<'a> Body<'a> {
                     let left = self.pop_expression(instruction)?;
                     let value =
                         self.temp(format!("jars_runtime::irem({left}, {right})?"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::LAdd | Op::LSub | Op::LMul | Op::LDiv | Op::LRem => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let expression = match &instruction.op {
+                        Op::LAdd => format!("{left}.wrapping_add({right})"),
+                        Op::LSub => format!("{left}.wrapping_sub({right})"),
+                        Op::LMul => format!("{left}.wrapping_mul({right})"),
+                        Op::LDiv => format!("jars_runtime::ldiv({left}, {right})?"),
+                        Op::LRem => format!("jars_runtime::lrem({left}, {right})?"),
+                        _ => unreachable!(),
+                    };
+                    let value = self.temp(expression, Value::Long);
+                    self.stack.push(value);
+                }
+                Op::LNeg => {
+                    let value = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("{value}.wrapping_neg()"), Value::Long);
+                    self.stack.push(value);
+                }
+                Op::FAdd | Op::FSub | Op::FMul | Op::FDiv | Op::FRem => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let operation = match &instruction.op {
+                        Op::FAdd => "+",
+                        Op::FSub => "-",
+                        Op::FMul => "*",
+                        Op::FDiv => "/",
+                        Op::FRem => "%",
+                        _ => unreachable!(),
+                    };
+                    let value = self.temp(format!("{left} {operation} {right}"), Value::Float);
+                    self.stack.push(value);
+                }
+                Op::FNeg => {
+                    let value = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("-{value}"), Value::Float);
+                    self.stack.push(value);
+                }
+                Op::DAdd | Op::DSub | Op::DMul | Op::DDiv | Op::DRem => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let operation = match &instruction.op {
+                        Op::DAdd => "+",
+                        Op::DSub => "-",
+                        Op::DMul => "*",
+                        Op::DDiv => "/",
+                        Op::DRem => "%",
+                        _ => unreachable!(),
+                    };
+                    let value = self.temp(format!("{left} {operation} {right}"), Value::Double);
+                    self.stack.push(value);
+                }
+                Op::DNeg => {
+                    let value = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("-{value}"), Value::Double);
                     self.stack.push(value);
                 }
                 Op::INeg => {
@@ -1038,6 +1241,18 @@ impl<'a> Body<'a> {
                             let value = self.temp(expression, Value::Int);
                             self.stack.push(value);
                         }
+                        Type::Long => {
+                            let value = self.temp(expression, Value::Long);
+                            self.stack.push(value);
+                        }
+                        Type::Float => {
+                            let value = self.temp(expression, Value::Float);
+                            self.stack.push(value);
+                        }
+                        Type::Double => {
+                            let value = self.temp(expression, Value::Double);
+                            self.stack.push(value);
+                        }
                         Type::String => {
                             let value = self.temp(expression, Value::String);
                             self.stack.push(value);
@@ -1070,7 +1285,11 @@ impl<'a> Body<'a> {
                             || !matches!(signature.returns, Type::Void)
                             || !matches!(
                                 signature.parameters.as_slice(),
-                                [Type::Int] | [Type::String]
+                                [Type::Int]
+                                    | [Type::Long]
+                                    | [Type::Float]
+                                    | [Type::Double]
+                                    | [Type::String]
                             )
                         {
                             return Err(unsupported(
@@ -1117,6 +1336,18 @@ impl<'a> Body<'a> {
                                 let value = self.temp(expression, Value::Int);
                                 self.stack.push(value);
                             }
+                            Type::Long => {
+                                let value = self.temp(expression, Value::Long);
+                                self.stack.push(value);
+                            }
+                            Type::Float => {
+                                let value = self.temp(expression, Value::Float);
+                                self.stack.push(value);
+                            }
+                            Type::Double => {
+                                let value = self.temp(expression, Value::Double);
+                                self.stack.push(value);
+                            }
                             Type::String => {
                                 let value = self.temp(expression, Value::String);
                                 self.stack.push(value);
@@ -1148,6 +1379,13 @@ impl<'a> Body<'a> {
                     }
                 }
                 Op::IReturn => {
+                    let value = self.pop_expression(instruction)?;
+                    match self.kind {
+                        BodyKind::Static => self.statements.push(format!("return Ok({value});")),
+                        BodyKind::Instance => self.statements.push(format!("return {value};")),
+                    }
+                }
+                Op::LReturn | Op::FReturn | Op::DReturn => {
                     let value = self.pop_expression(instruction)?;
                     match self.kind {
                         BodyKind::Static => self.statements.push(format!("return Ok({value});")),
@@ -1201,6 +1439,9 @@ fn reply_fields(parameters: &str, reply: &str) -> String {
 fn default_return(ty: &Type) -> &'static str {
     match ty {
         Type::Int => "0",
+        Type::Long => "0",
+        Type::Float => "0.0",
+        Type::Double => "0.0",
         Type::Void => "()",
         Type::String => "\"\"",
         Type::StringArray => "Vec::new()",
@@ -1787,8 +2028,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn descriptors_reject_unimplemented_types() {
-        assert!(parse_signature("(J)V").is_err());
+    fn descriptors_accept_wide_numeric_types_and_reject_unimplemented_ones() {
+        assert!(parse_signature("(JFD)V").is_ok());
+        assert!(parse_signature("(Z)V").is_err());
         assert!(parse_signature("(I").is_err());
     }
 

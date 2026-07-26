@@ -180,6 +180,15 @@ fn closed_world_linker_accepts_interface_implementation_metadata() {
 }
 
 #[test]
+fn long_float_and_double_methods_are_emitted_aot() {
+    let (stdout, generated) = compile_and_run("Numeric");
+    assert_eq!(stdout, "38\n2.5\n42\n");
+    assert!(generated.contains("i64"));
+    assert!(generated.contains("f32"));
+    assert!(generated.contains("f64"));
+}
+
+#[test]
 fn unsupported_bytecode_has_a_source_location() {
     let temp = tempfile::tempdir().unwrap();
     let error = compile_class(&compile_java("Unsupported", &temp)).unwrap_err();
