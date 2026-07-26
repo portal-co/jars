@@ -92,13 +92,22 @@ fn accumulator_serializes_private_state_through_its_actor() {
 }
 
 #[test]
+fn arithmetic_branches_and_back_edges_are_emitted_as_aot_state_machines() {
+    let (stdout, generated) = compile_and_run("Arithmetic");
+    assert_eq!(stdout, "63\n");
+    assert!(generated.contains("loop {"));
+    assert!(generated.contains("match pc"));
+    assert!(!generated.contains("RawInstruction"));
+}
+
+#[test]
 fn unsupported_bytecode_has_a_source_location() {
     let temp = tempfile::tempdir().unwrap();
     let error = compile_class(&compile_java("Unsupported", &temp)).unwrap_err();
     assert!(matches!(
         error,
         jars_core::CompileError::Unsupported { class, method, .. }
-            if class == "Unsupported" && method == "subtract"
+            if class == "Unsupported" && method == "main"
     ));
 }
 

@@ -108,6 +108,20 @@ enum Op {
     ALoad(usize),
     AStore(usize),
     IAdd,
+    ISub,
+    IMul,
+    IDiv,
+    IRem,
+    INeg,
+    IAnd,
+    IOr,
+    IXor,
+    IShl,
+    IShr,
+    IUshr,
+    IInc(usize, i32),
+    Goto(i32),
+    If(IfKind, i32),
     IReturn,
     Return,
     LdcString(String),
@@ -119,6 +133,22 @@ enum Op {
     InvokeSpecial(MemberRef),
     InvokeStatic(MemberRef),
     InvokeVirtual(MemberRef),
+}
+
+#[derive(Clone, Copy, Debug)]
+enum IfKind {
+    Eq,
+    Ne,
+    Lt,
+    Ge,
+    Gt,
+    Le,
+    ICmpEq,
+    ICmpNe,
+    ICmpLt,
+    ICmpGe,
+    ICmpGt,
+    ICmpLe,
 }
 
 #[derive(Clone, Debug)]
@@ -276,6 +306,33 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         AStore2 => Op::AStore(2),
         AStore3 => Op::AStore(3),
         IAdd => Op::IAdd,
+        ISub => Op::ISub,
+        IMul => Op::IMul,
+        IDiv => Op::IDiv,
+        IRem => Op::IRem,
+        INeg => Op::INeg,
+        IAnd => Op::IAnd,
+        IOr => Op::IOr,
+        IXor => Op::IXor,
+        IShL => Op::IShl,
+        IShR => Op::IShr,
+        IUShR => Op::IUshr,
+        IInc { index, value } => Op::IInc(index.into(), value.into()),
+        IIncW { index, value } => Op::IInc(index.into(), value.into()),
+        Goto { offset } => Op::Goto(offset.into()),
+        GotoW { offset } => Op::Goto(offset),
+        IfEq { offset } => Op::If(IfKind::Eq, offset.into()),
+        IfNe { offset } => Op::If(IfKind::Ne, offset.into()),
+        IfLt { offset } => Op::If(IfKind::Lt, offset.into()),
+        IfGe { offset } => Op::If(IfKind::Ge, offset.into()),
+        IfGt { offset } => Op::If(IfKind::Gt, offset.into()),
+        IfLe { offset } => Op::If(IfKind::Le, offset.into()),
+        IfICmpEq { offset } => Op::If(IfKind::ICmpEq, offset.into()),
+        IfICmpNe { offset } => Op::If(IfKind::ICmpNe, offset.into()),
+        IfICmpLt { offset } => Op::If(IfKind::ICmpLt, offset.into()),
+        IfICmpGe { offset } => Op::If(IfKind::ICmpGe, offset.into()),
+        IfICmpGt { offset } => Op::If(IfKind::ICmpGt, offset.into()),
+        IfICmpLe { offset } => Op::If(IfKind::ICmpLe, offset.into()),
         IReturn => Op::IReturn,
         Return => Op::Return,
         Dup => Op::Dup,
@@ -643,7 +700,53 @@ impl<'a> Body<'a> {
                 Op::IAdd => {
                     let right = self.pop_expression(instruction)?;
                     let left = self.pop_expression(instruction)?;
-                    let value = self.temp(format!("{left} + {right}"), Value::Int);
+                    let value = self.temp(format!("{left}.wrapping_add({right})"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::ISub => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("{left}.wrapping_sub({right})"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::IMul => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("{left}.wrapping_mul({right})"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::IDiv => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let value =
+                        self.temp(format!("jars_runtime::idiv({left}, {right})?"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::IRem => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let value =
+                        self.temp(format!("jars_runtime::irem({left}, {right})?"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::INeg => {
+                    let value = self.pop_expression(instruction)?;
+                    let value = self.temp(format!("{value}.wrapping_neg()"), Value::Int);
+                    self.stack.push(value);
+                }
+                Op::IAnd | Op::IOr | Op::IXor | Op::IShl | Op::IShr | Op::IUshr => {
+                    let right = self.pop_expression(instruction)?;
+                    let left = self.pop_expression(instruction)?;
+                    let expression = match &instruction.op {
+                        Op::IAnd => format!("{left} & {right}"),
+                        Op::IOr => format!("{left} | {right}"),
+                        Op::IXor => format!("{left} ^ {right}"),
+                        Op::IShl => format!("{left}.wrapping_shl(({right} as u32) & 31)"),
+                        Op::IShr => format!("{left}.wrapping_shr(({right} as u32) & 31)"),
+                        Op::IUshr => format!("jars_runtime::iushr({left}, {right})"),
+                        _ => unreachable!(),
+                    };
+                    let value = self.temp(expression, Value::Int);
                     self.stack.push(value);
                 }
                 Op::GetStatic(reference) => {
@@ -887,6 +990,14 @@ impl<'a> Body<'a> {
                     BodyKind::Static => self.statements.push("return Ok(());".to_owned()),
                     BodyKind::Instance => self.statements.push("return ();".to_owned()),
                 },
+                Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) => {
+                    return Err(unsupported(
+                        self.program,
+                        self.method,
+                        instruction,
+                        "control flow requires AOT state-machine lowering",
+                    ));
+                }
             }
         }
         Ok(self.statements.join("\n"))
@@ -921,13 +1032,211 @@ fn default_return(ty: &Type) -> &'static str {
     }
 }
 
+fn next_offset(method: &Method, index: usize) -> Option<u32> {
+    method.instructions.get(index + 1).map(|next| next.offset)
+}
+
+fn branch_target(
+    program: &Program,
+    method: &Method,
+    instruction: &Instruction,
+    delta: i32,
+) -> Result<u32, CompileError> {
+    let target = instruction.offset as i64 + i64::from(delta);
+    if target < 0
+        || !method
+            .instructions
+            .iter()
+            .any(|candidate| candidate.offset == target as u32)
+    {
+        return Err(stack_error(
+            program,
+            method,
+            instruction,
+            format!("branch target {target} is not an instruction boundary"),
+        ));
+    }
+    Ok(target as u32)
+}
+
+/// Emits an AOT state machine for integer-only static methods with branches.
+///
+/// There is no bytecode representation at run time: every bytecode instruction
+/// becomes one Rust `match` arm.  `pc`, locals and the operand stack are merely
+/// the activation record required to preserve JVM ordering across back-edges.
+fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, CompileError> {
+    if method.signature.returns != Type::Int
+        || method
+            .signature
+            .parameters
+            .iter()
+            .any(|parameter| *parameter != Type::Int)
+    {
+        return Err(invalid(format!(
+            "AOT control-flow method {}.{} must use only int parameters and an int return",
+            program.name, method.name
+        )));
+    }
+    let max_local = method
+        .instructions
+        .iter()
+        .filter_map(|instruction| match &instruction.op {
+            Op::ILoad(index) | Op::IStore(index) | Op::IInc(index, _) => Some(*index),
+            _ => None,
+        })
+        .chain(std::iter::once(
+            method.signature.parameters.len().saturating_sub(1),
+        ))
+        .max()
+        .unwrap_or(0)
+        + 1;
+    let mut arms = Vec::new();
+    for (index, instruction) in method.instructions.iter().enumerate() {
+        let next = next_offset(method, index);
+        let continue_at = |next: Option<u32>| -> Result<String, CompileError> {
+            next.map(|offset| format!("pc = {offset}; continue;"))
+                .ok_or_else(|| {
+                    stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "instruction falls off the end of a method",
+                    )
+                })
+        };
+        let arm = match &instruction.op {
+            Op::IConst(value) => format!("stack.push({value}); {}", continue_at(next)?),
+            Op::ILoad(local) => format!("stack.push(locals[{local}]); {}", continue_at(next)?),
+            Op::IStore(local) => format!(
+                "locals[{local}] = stack.pop().expect(\"verified JVM stack\"); {}",
+                continue_at(next)?
+            ),
+            Op::IInc(local, value) => format!(
+                "locals[{local}] = locals[{local}].wrapping_add({value}); {}",
+                continue_at(next)?
+            ),
+            Op::IAdd
+            | Op::ISub
+            | Op::IMul
+            | Op::IAnd
+            | Op::IOr
+            | Op::IXor
+            | Op::IShl
+            | Op::IShr
+            | Op::IUshr => {
+                let expression = match &instruction.op {
+                    Op::IAdd => "left.wrapping_add(right)",
+                    Op::ISub => "left.wrapping_sub(right)",
+                    Op::IMul => "left.wrapping_mul(right)",
+                    Op::IAnd => "left & right",
+                    Op::IOr => "left | right",
+                    Op::IXor => "left ^ right",
+                    Op::IShl => "left.wrapping_shl((right as u32) & 31)",
+                    Op::IShr => "left.wrapping_shr((right as u32) & 31)",
+                    Op::IUshr => "jars_runtime::iushr(left, right)",
+                    _ => unreachable!(),
+                };
+                format!(
+                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); stack.push({expression}); {}",
+                    continue_at(next)?
+                )
+            }
+            Op::IDiv | Op::IRem => {
+                let operation = if matches!(&instruction.op, Op::IDiv) {
+                    "idiv"
+                } else {
+                    "irem"
+                };
+                format!(
+                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); stack.push(jars_runtime::{operation}(left, right)?); {}",
+                    continue_at(next)?
+                )
+            }
+            Op::INeg => format!(
+                "let value = stack.pop().expect(\"verified JVM stack\"); stack.push(value.wrapping_neg()); {}",
+                continue_at(next)?
+            ),
+            Op::Goto(delta) => format!(
+                "pc = {}; continue;",
+                branch_target(program, method, instruction, *delta)?
+            ),
+            Op::If(kind, delta) => {
+                let (condition, pops) = match kind {
+                    IfKind::Eq => ("value == 0", 1),
+                    IfKind::Ne => ("value != 0", 1),
+                    IfKind::Lt => ("value < 0", 1),
+                    IfKind::Ge => ("value >= 0", 1),
+                    IfKind::Gt => ("value > 0", 1),
+                    IfKind::Le => ("value <= 0", 1),
+                    IfKind::ICmpEq => ("left == right", 2),
+                    IfKind::ICmpNe => ("left != right", 2),
+                    IfKind::ICmpLt => ("left < right", 2),
+                    IfKind::ICmpGe => ("left >= right", 2),
+                    IfKind::ICmpGt => ("left > right", 2),
+                    IfKind::ICmpLe => ("left <= right", 2),
+                };
+                let values = if pops == 1 {
+                    "let value = stack.pop().expect(\"verified JVM stack\");"
+                } else {
+                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\");"
+                };
+                format!(
+                    "{values} if {condition} {{ pc = {}; }} else {{ pc = {}; }} continue;",
+                    branch_target(program, method, instruction, *delta)?,
+                    next.ok_or_else(|| stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "conditional falls off method"
+                    ))?,
+                )
+            }
+            Op::IReturn => "return Ok(stack.pop().expect(\"verified JVM stack\"));".to_owned(),
+            _ => {
+                return Err(unsupported(
+                    program,
+                    method,
+                    instruction,
+                    "AOT integer state-machine instruction",
+                ));
+            }
+        };
+        arms.push(format!("{} => {{ {arm} }}", instruction.offset));
+    }
+    let parameters = parameters(method);
+    let initial_locals = method
+        .signature
+        .parameters
+        .iter()
+        .enumerate()
+        .map(|(index, _)| format!("locals[{index}] = arg{index};"))
+        .collect::<String>();
+    let name = rust_ident(&method.name)?;
+    let entry = method
+        .instructions
+        .first()
+        .ok_or_else(|| invalid("methods must contain at least one instruction"))?
+        .offset;
+    Ok(format!(
+        "pub async fn {name}<S: jars_runtime::Spawner>(_spawner: S, {parameters}) -> Result<i32, jars_runtime::JavaError> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
+        arms.join(",\n"),
+    ))
+}
+
 fn static_method(program: &Program, method: &Method) -> Result<String, CompileError> {
+    if method
+        .instructions
+        .iter()
+        .any(|instruction| matches!(&instruction.op, Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _)))
+    {
+        return aot_int_static_method(program, method);
+    }
     let name = rust_ident(&method.name)?;
     let parameters = parameters(method);
     let body = Body::new(program, method, BodyKind::Static).run()?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(spawner: S, {parameters}) -> Result<{}, jars_runtime::CallError> {{\n{body}\nOk({fallback})\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(spawner: S, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
         method.signature.returns.rust(),
     ))
 }
@@ -950,8 +1259,8 @@ fn instance_method(
         reply_fields(
             &parameters,
             &format!(
-                "reply: jars_runtime::Reply<{}>",
-                method.signature.returns.rust()
+                "reply: jars_runtime::Reply<Result<{}, jars_runtime::JavaError>>",
+                method.signature.returns.rust(),
             ),
         ),
     );
@@ -960,7 +1269,7 @@ fn instance_method(
         .collect::<Vec<_>>()
         .join(", ");
     let proxy = format!(
-        "pub async fn {name}(&self{}) -> Result<{}, jars_runtime::CallError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({}Message::{name} {{ {} }}).await?;\nresponse.recv().await\n}}",
+        "pub async fn {name}(&self{}) -> Result<{}, jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({}Message::{name} {{ {} }}).await?;\nresponse.recv().await?\n}}",
         if parameters.is_empty() {
             String::new()
         } else {
@@ -992,8 +1301,10 @@ fn actor_code(
         .collect::<Result<Vec<_>, CompileError>>()
         .map(|fields| fields.join(", "))?;
     let constructor_parameters = parameters(constructor);
-    let constructor_message_fields =
-        reply_fields(&constructor_parameters, "reply: jars_runtime::Reply<()>");
+    let constructor_message_fields = reply_fields(
+        &constructor_parameters,
+        "reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>>",
+    );
     let constructor_body = Body::new(program, constructor, BodyKind::Instance).run()?;
     let constructor_args = (0..constructor.signature.parameters.len())
         .map(|index| format!("arg{index}"))
@@ -1003,7 +1314,7 @@ fn actor_code(
     let mut variants = vec![format!("Init {{ {constructor_message_fields} }}")];
     let mut proxies = Vec::new();
     let mut dispatch = vec![format!(
-        "{class}Message::Init {{ {} }} => {{ {class}::init_impl(&mut state{}); let _ = reply.send(()); }}",
+        "{class}Message::Init {{ {} }} => {{ {class}::init_impl(&mut state{}); let _ = reply.send(Ok(())); }}",
         reply_fields(&constructor_args, "reply"),
         if constructor_args.is_empty() {
             String::new()
@@ -1025,13 +1336,13 @@ fn actor_code(
         variants.push(variant);
         proxies.push(proxy);
         dispatch.push(format!(
-            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(&mut state{}); let _ = reply.send(value); }}",
+            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(&mut state{}); let _ = reply.send(Ok(value)); }}",
             reply_fields(&args, "reply"),
             if args.is_empty() { String::new() } else { format!(", {args}") },
         ));
     }
     Ok(format!(
-        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(spawner: S{}) -> Result<Self, jars_runtime::CallError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nspawner.spawn(async move {{\nlet mut state = {class}State {{ {field_initializers} }};\nwhile let Ok(message) = mailbox.recv().await {{ match message {{ {} }} }}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await?;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
+        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(spawner: S{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nspawner.spawn(async move {{\nlet mut state = {class}State {{ {field_initializers} }};\nwhile let Ok(message) = mailbox.recv().await {{ match message {{ {} }} }}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
         variants.join(", "),
         if constructor_parameters.is_empty() {
             String::new()

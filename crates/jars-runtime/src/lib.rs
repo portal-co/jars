@@ -81,6 +81,96 @@ impl std::fmt::Display for CallError {
 
 impl std::error::Error for CallError {}
 
+/// Java execution failures that can cross an actor or static-method boundary.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum JavaError {
+    Actor(CallError),
+    Arithmetic(ArithmeticError),
+    NullPointer,
+    ClassCast,
+}
+
+impl From<CallError> for JavaError {
+    fn from(error: CallError) -> Self {
+        Self::Actor(error)
+    }
+}
+
+impl Display for JavaError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::Actor(error) => error.fmt(f),
+            Self::Arithmetic(error) => error.fmt(f),
+            Self::NullPointer => f.write_str("null Java reference"),
+            Self::ClassCast => f.write_str("invalid Java reference cast"),
+        }
+    }
+}
+
+impl std::error::Error for JavaError {}
+
+/// Arithmetic failures that Java programs expose before throwable support exists.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum ArithmeticError {
+    DivisionByZero,
+}
+
+impl Display for ArithmeticError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            Self::DivisionByZero => f.write_str("integer division by zero"),
+        }
+    }
+}
+
+impl std::error::Error for ArithmeticError {}
+
+/// Java `int` division, including the specified wrapping `MIN / -1` case.
+pub fn idiv(left: i32, right: i32) -> Result<i32, JavaError> {
+    if right == 0 {
+        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+    } else {
+        Ok(left.wrapping_div(right))
+    }
+}
+
+/// Java `int` remainder, including the specified wrapping `MIN % -1` case.
+pub fn irem(left: i32, right: i32) -> Result<i32, JavaError> {
+    if right == 0 {
+        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+    } else {
+        Ok(left.wrapping_rem(right))
+    }
+}
+
+/// Java `long` division, including the specified wrapping `MIN / -1` case.
+pub fn ldiv(left: i64, right: i64) -> Result<i64, JavaError> {
+    if right == 0 {
+        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+    } else {
+        Ok(left.wrapping_div(right))
+    }
+}
+
+/// Java `long` remainder, including the specified wrapping `MIN % -1` case.
+pub fn lrem(left: i64, right: i64) -> Result<i64, JavaError> {
+    if right == 0 {
+        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+    } else {
+        Ok(left.wrapping_rem(right))
+    }
+}
+
+#[must_use]
+pub fn iushr(value: i32, shift: i32) -> i32 {
+    ((value as u32) >> ((shift as u32) & 31)) as i32
+}
+
+#[must_use]
+pub fn lushr(value: i64, shift: i32) -> i64 {
+    ((value as u64) >> ((shift as u32) & 63)) as i64
+}
+
 /// A cloneable address for a single serialized actor.
 pub struct ActorRef<M> {
     sender: async_channel::Sender<M>,
@@ -216,5 +306,19 @@ mod tests {
         schedule(Delegating(runtime.clone()), seen.clone());
         runtime.pool.borrow_mut().run_until_stalled();
         assert!(*seen.borrow());
+    }
+
+    #[test]
+    fn java_integer_helpers_match_wrapping_and_zero_division_rules() {
+        assert_eq!(idiv(i32::MIN, -1), Ok(i32::MIN));
+        assert_eq!(irem(i32::MIN, -1), Ok(0));
+        assert_eq!(ldiv(i64::MIN, -1), Ok(i64::MIN));
+        assert_eq!(lrem(i64::MIN, -1), Ok(0));
+        assert_eq!(iushr(-1, 1), i32::MAX);
+        assert_eq!(lushr(-1, 1), i64::MAX);
+        assert_eq!(
+            idiv(1, 0),
+            Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+        );
     }
 }
