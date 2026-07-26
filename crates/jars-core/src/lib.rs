@@ -4,7 +4,10 @@
 //! default-package class and emits a complete Rust binary which depends on
 //! `jars-runtime`.
 
-use std::fmt;
+use std::{
+    collections::{HashMap, HashSet},
+    fmt,
+};
 
 use noak::{
     AccessFlags,
@@ -185,6 +188,9 @@ struct Field {
 #[derive(Clone, Debug)]
 struct Program {
     name: String,
+    superclass: Option<String>,
+    interfaces: Vec<String>,
+    is_interface: bool,
     fields: Vec<Field>,
     methods: Vec<Method>,
 }
@@ -436,6 +442,19 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
     if program_name.contains('/') {
         return Err(invalid("packages are not supported in v1"));
     }
+    let superclass = class
+        .super_class()
+        .map(|index| class_name(pool, index))
+        .transpose()?;
+    let interfaces = class
+        .interfaces()
+        .into_iter()
+        .map(|interface| {
+            interface
+                .map_err(|error| CompileError::Parse(error.to_string()))
+                .and_then(|index| class_name(pool, index))
+        })
+        .collect::<Result<Vec<_>, _>>()?;
 
     let mut fields = Vec::new();
     for field in class.fields() {
@@ -510,13 +529,19 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
                 signature,
                 is_static: method.access_flags().contains(AccessFlags::STATIC),
                 is_public: method.access_flags().contains(AccessFlags::PUBLIC),
-                instructions: instructions
-                    .ok_or_else(|| invalid("methods must have Code attributes"))?,
+                instructions: match instructions {
+                    Some(instructions) => instructions,
+                    None if method.access_flags().contains(AccessFlags::ABSTRACT) => Vec::new(),
+                    None => return Err(invalid("methods must have Code attributes")),
+                },
             });
         }
     }
     Ok(Program {
         name: program_name,
+        superclass,
+        interfaces,
+        is_interface: class.access_flags().contains(AccessFlags::INTERFACE),
         fields,
         methods,
     })
@@ -1528,6 +1553,12 @@ fn actor_code(
 
 fn render_module(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
     let class = rust_ident(&program.name)?;
+    if program.is_interface {
+        if program.methods.iter().any(|method| method.is_static) {
+            return Err(invalid("interface static methods are not supported"));
+        }
+        return Ok(format!("pub mod {class} {{}}"));
+    }
     let statics = program
         .methods
         .iter()
@@ -1639,6 +1670,85 @@ fn validate_reference_types(programs: &[Program]) -> Result<(), CompileError> {
     Ok(())
 }
 
+fn validate_hierarchy(programs: &[Program]) -> Result<(), CompileError> {
+    let by_name = programs
+        .iter()
+        .map(|program| (program.name.as_str(), program))
+        .collect::<HashMap<_, _>>();
+    for program in programs {
+        if let Some(parent) = &program.superclass {
+            if parent != "java/lang/Object" {
+                let parent_program = by_name.get(parent.as_str()).ok_or_else(|| {
+                    invalid(format!(
+                        "superclass `{parent}` of `{}` is not in the compilation set",
+                        program.name
+                    ))
+                })?;
+                if parent_program.is_interface {
+                    return Err(invalid(format!(
+                        "superclass `{parent}` of `{}` is an interface",
+                        program.name
+                    )));
+                }
+            }
+        }
+        for interface in &program.interfaces {
+            let interface_program = by_name.get(interface.as_str()).ok_or_else(|| {
+                invalid(format!(
+                    "interface `{interface}` of `{}` is not in the compilation set",
+                    program.name
+                ))
+            })?;
+            if !interface_program.is_interface {
+                return Err(invalid(format!(
+                    "interface `{interface}` of `{}` is not an interface",
+                    program.name
+                )));
+            }
+        }
+    }
+
+    fn visit<'a>(
+        program: &'a Program,
+        by_name: &HashMap<&'a str, &'a Program>,
+        visiting: &mut HashSet<&'a str>,
+        complete: &mut HashSet<&'a str>,
+    ) -> Result<(), CompileError> {
+        if complete.contains(program.name.as_str()) {
+            return Ok(());
+        }
+        if !visiting.insert(program.name.as_str()) {
+            return Err(invalid(format!(
+                "cyclic class/interface hierarchy involving `{}`",
+                program.name
+            )));
+        }
+        let mut parents = program
+            .interfaces
+            .iter()
+            .map(String::as_str)
+            .collect::<Vec<_>>();
+        if let Some(parent) = &program.superclass {
+            if parent != "java/lang/Object" {
+                parents.push(parent);
+            }
+        }
+        for parent in parents {
+            visit(by_name[parent], by_name, visiting, complete)?;
+        }
+        visiting.remove(program.name.as_str());
+        complete.insert(program.name.as_str());
+        Ok(())
+    }
+
+    let mut visiting = HashSet::new();
+    let mut complete = HashSet::new();
+    for program in programs {
+        visit(program, &by_name, &mut visiting, &mut complete)?;
+    }
+    Ok(())
+}
+
 /// Compiles one default-package Java class file into a complete Rust source file.
 pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
     compile_classes(&[bytes])
@@ -1667,6 +1777,7 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
             )));
         }
     }
+    validate_hierarchy(&programs)?;
     validate_reference_types(&programs)?;
     render(&programs)
 }

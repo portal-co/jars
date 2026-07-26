@@ -172,6 +172,14 @@ fn concrete_object_parameters_returns_and_actor_fields_remain_typed() {
 }
 
 #[test]
+fn closed_world_linker_accepts_interface_implementation_metadata() {
+    let (stdout, generated) = compile_set_and_run(&["Marker", "MarkerMain"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("pub mod Marker"));
+    assert!(generated.contains("pub mod MarkerMain"));
+}
+
+#[test]
 fn unsupported_bytecode_has_a_source_location() {
     let temp = tempfile::tempdir().unwrap();
     let error = compile_class(&compile_java("Unsupported", &temp)).unwrap_err();
