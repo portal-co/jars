@@ -8,6 +8,10 @@ use futures::{
     task::LocalSpawnExt,
 };
 
+/// Async scheduling pieces used by generated actor implementations. Re-exporting
+/// these keeps generated programs dependent only on `jars-runtime`.
+pub use futures::{FutureExt, StreamExt, select_biased, stream::FuturesUnordered};
+
 /// An executor capable of running the background tasks for generated actors.
 ///
 /// Generated Java code is generic over this trait, so consumers may provide an

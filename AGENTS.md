@@ -10,6 +10,10 @@
   explicit and deterministic, including supported `<clinit>` behavior and
   cached initialization failure.
 - When an actor operation needs another actor, lower it as async message work.
-  Do not introduce shared mutable object state or thread-local Java globals.
+  Generated actor loops use `FuturesUnordered` to retain multiple in-flight
+  handlers. Their `State` is an internal `Rc<Mutex<_>>`, shared only among that
+  actor's handlers; acquire a guard only for an individual state access and
+  never hold it across an `await`. Do not introduce shared mutable object state
+  outside the actor or thread-local Java globals.
 - Extend the supported bytecode subset by emitting more Rust, never by adding
   a runtime bytecode interpreter.

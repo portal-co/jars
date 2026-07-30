@@ -1200,9 +1200,11 @@ impl<'a> Body<'a> {
                     let expression = match receiver {
                         Value::This if reference.class == self.program.name => match ty {
                             Type::Int | Type::Long | Type::Float | Type::Double => {
-                                format!("state.{field}")
+                                format!("state.lock().expect(\"actor state mutex\").{field}")
                             }
-                            _ => format!("state.{field}.clone()"),
+                            _ => format!(
+                                "state.lock().expect(\"actor state mutex\").{field}.clone()"
+                            ),
                         },
                         Value::Object { expression, class } if class == reference.class => format!(
                             "{expression}.ok_or(jars_runtime::JavaError::NullPointer)?.__get_{field}().await?"
@@ -1260,7 +1262,9 @@ impl<'a> Body<'a> {
                     let field = rust_ident(&reference.name)?;
                     match receiver {
                         Value::This if reference.class == self.program.name => {
-                            self.statements.push(format!("state.{field} = {value};"));
+                            self.statements.push(format!(
+                                "state.lock().expect(\"actor state mutex\").{field} = {value};"
+                            ));
                         }
                         Value::Object { expression, class } if class == reference.class => {
                             self.statements.push(format!(
@@ -1837,7 +1841,7 @@ fn instance_method(
     let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
-        "async fn {name}_impl<S: jars_runtime::Spawner>(state: &mut {}State, program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
+        "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
         rust_ident(&program.name)?,
         method.signature.returns.rust(&program.name)?,
     );
@@ -1917,7 +1921,7 @@ fn actor_code(
     let mut variants = vec![format!("Init {{ {constructor_message_fields} }}")];
     let mut proxies = Vec::new();
     let mut dispatch = vec![format!(
-        "{class}Message::Init {{ {} }} => {{ let value = {class}::init_impl(&mut state, &actor_program{}).await; let _ = reply.send(value); }}",
+        "{class}Message::Init {{ {} }} => {{ let value = {class}::init_impl(handler_state, &handler_program{}).await; let _ = reply.send(value); }}",
         reply_fields(&constructor_args, "reply"),
         if constructor_args.is_empty() {
             String::new()
@@ -1926,7 +1930,7 @@ fn actor_code(
         },
     )];
     implementations.push(format!(
-        "async fn init_impl<S: jars_runtime::Spawner>(state: &mut {class}State, program: &super::Program<S>, {constructor_parameters}) -> Result<(), jars_runtime::JavaError> {{\n{constructor_body}\nOk(())\n}}"
+        "async fn init_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{class}State>>, program: &super::Program<S>, {constructor_parameters}) -> Result<(), jars_runtime::JavaError> {{\n{constructor_body}\nOk(())\n}}"
     ));
     for field in program.fields.iter().filter(|field| !field.is_static) {
         let field_name = rust_ident(&field.name)?;
@@ -1940,10 +1944,10 @@ fn actor_code(
             "{setter} {{ value: {ty}, reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>> }}"
         ));
         dispatch.push(format!(
-            "{class}Message::{getter} {{ reply }} => {{ let _ = reply.send(Ok(state.{field_name}.clone())); }}"
+            "{class}Message::{getter} {{ reply }} => {{ let _ = reply.send(Ok(handler_state.lock().expect(\"actor state mutex\").{field_name}.clone())); }}"
         ));
         dispatch.push(format!(
-            "{class}Message::{setter} {{ value, reply }} => {{ state.{field_name} = value; let _ = reply.send(Ok(())); }}"
+            "{class}Message::{setter} {{ value, reply }} => {{ handler_state.lock().expect(\"actor state mutex\").{field_name} = value; let _ = reply.send(Ok(())); }}"
         ));
         proxies.push(format!(
             "pub async fn {getter}(&self) -> Result<{ty}, jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{getter} {{ reply }}).await?;\nresponse.recv().await?\n}}\npub async fn {setter}(&self, value: {ty}) -> Result<(), jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{setter} {{ value, reply }}).await?;\nresponse.recv().await?\n}}"
@@ -1960,19 +1964,20 @@ fn actor_code(
         variants.push(variant);
         proxies.push(proxy);
         dispatch.push(format!(
-            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(&mut state, &actor_program{}).await; let _ = reply.send(value); }}",
+            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(handler_state, &handler_program{}).await; let _ = reply.send(value); }}",
             reply_fields(&args, "reply"),
             if args.is_empty() { String::new() } else { format!(", {args}") },
         ));
     }
     Ok(format!(
-        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(program: &super::Program<S>{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nlet actor_program = program.clone();\nlet spawner = actor_program.spawner.clone();\nspawner.spawn(async move {{\nlet mut state = {class}State {{ {field_initializers} }};\nwhile let Ok(message) = mailbox.recv().await {{ match message {{ {} }} }}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
+        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(program: &super::Program<S>{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nlet actor_program = program.clone();\nlet spawner = actor_program.spawner.clone();\nspawner.spawn(async move {{\nuse jars_runtime::{{FutureExt as _, StreamExt as _}};\nlet state = std::rc::Rc::new(std::sync::Mutex::new({class}State {{ {field_initializers} }}));\nlet mut in_flight: jars_runtime::FuturesUnordered<std::pin::Pin<std::boxed::Box<dyn std::future::Future<Output = ()>>>> = jars_runtime::FuturesUnordered::new();\nloop {{\nif in_flight.is_empty() {{\nlet message = match mailbox.recv().await {{ Ok(message) => message, Err(_) => break }};\nlet handler_state = state.clone(); let handler_program = actor_program.clone();\nin_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }}));\n}} else {{\njars_runtime::select_biased! {{\nmessage = mailbox.recv().fuse() => match message {{\nOk(message) => {{ let handler_state = state.clone(); let handler_program = actor_program.clone(); in_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }})); }},\nErr(_) => break,\n}},\n_ = in_flight.next().fuse() => {{}},\n}}\n}}\n}}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
         variants.join(", "),
         if constructor_parameters.is_empty() {
             String::new()
         } else {
             format!(", {constructor_parameters}")
         },
+        dispatch.join(", "),
         dispatch.join(", "),
         reply_fields(&constructor_args, "reply"),
         implementations.join("\n"),

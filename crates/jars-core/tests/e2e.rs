@@ -133,7 +133,7 @@ fn accumulator_serializes_private_state_through_its_actor() {
     let (stdout, generated) = compile_and_run("Accumulator");
     assert_eq!(stdout, "42\n");
     assert!(generated.contains("total: i32") || generated.contains("total : i32"));
-    assert!(generated.contains("state.total ="));
+    assert!(generated.contains("state.lock().expect(\"actor state mutex\").total ="));
 }
 
 #[test]
@@ -207,6 +207,14 @@ fn invokeinterface_dispatches_to_a_concrete_actor() {
     let (stdout, generated) = compile_set_and_run(&["InterfaceMain", "Score", "ScoreBox"]);
     assert_eq!(stdout, "42\n");
     assert!(generated.contains("ScoreBoxMessage"));
+}
+
+#[test]
+fn actor_cycles_make_progress_with_multiple_in_flight_handlers() {
+    let (stdout, generated) = compile_set_and_run(&["CycleMain", "CycleA", "CycleB"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("FuturesUnordered"));
+    assert!(generated.contains("std::sync::Mutex"));
 }
 
 #[test]
