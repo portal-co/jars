@@ -4,13 +4,16 @@
 
 `jars-core::compile_class` accepts one default-package `.class` file and emits
 a complete Rust binary source file. Generated Java objects are mailbox-backed
-actors and static entry points are generic over `jars_runtime::Spawner`.
-The emitted executable uses `jars_runtime::Runtime`, a deterministic
-single-thread executor.
+actors. Each generated binary creates a shared `Program<S: Spawner>` context;
+static methods take that context, and it owns static storage plus lazy
+`<clinit>` initialization. The emitted executable uses `jars_runtime::Runtime`,
+a deterministic single-thread executor.
 
 The initial supported programs cover `System.out.println`, integer addition,
-same-class static calls, actor-backed object construction and virtual calls,
-and `int` instance fields. Run the verification suite with:
+cross-class static fields, actor-backed object construction, cross-object field
+access, and virtual calls from static or instance code. The compiler remains
+closed-world and AOT-only: generated Rust contains no class-file data or
+bytecode interpreter. Run the verification suite with:
 
 ```sh
 cargo test --workspace

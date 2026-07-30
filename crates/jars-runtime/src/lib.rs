@@ -88,6 +88,7 @@ pub enum JavaError {
     Arithmetic(ArithmeticError),
     NullPointer,
     ClassCast,
+    ClassInitializationFailed(&'static str),
 }
 
 impl From<CallError> for JavaError {
@@ -103,6 +104,9 @@ impl Display for JavaError {
             Self::Arithmetic(error) => error.fmt(f),
             Self::NullPointer => f.write_str("null Java reference"),
             Self::ClassCast => f.write_str("invalid Java reference cast"),
+            Self::ClassInitializationFailed(class) => {
+                write!(f, "class initialization previously failed for {class}")
+            }
         }
     }
 }

@@ -177,11 +177,13 @@ enum Op {
     GetStatic(MemberRef),
     GetField(MemberRef),
     PutField(MemberRef),
+    PutStatic(MemberRef),
     New(String),
     Dup,
     InvokeSpecial(MemberRef),
     InvokeStatic(MemberRef),
     InvokeVirtual(MemberRef),
+    InvokeInterface(MemberRef),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -219,6 +221,19 @@ struct Method {
 struct Field {
     name: String,
     ty: Type,
+    is_static: bool,
+    is_final: bool,
+    is_private: bool,
+    constant: Option<Constant>,
+}
+
+#[derive(Clone, Debug)]
+enum Constant {
+    Int(i32),
+    Long(i64),
+    Float(f32),
+    Double(f64),
+    String(String),
 }
 
 #[derive(Clone, Debug)]
@@ -229,6 +244,7 @@ struct Program {
     is_interface: bool,
     fields: Vec<Field>,
     methods: Vec<Method>,
+    clinit: Option<Method>,
 }
 
 fn invalid(message: impl Into<String>) -> CompileError {
@@ -507,11 +523,31 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
                 descriptor: utf8(reference.name_and_type.descriptor)?,
             })
         }
+        PutStatic { index } => {
+            let reference = pool
+                .retrieve(index)
+                .map_err(|error| CompileError::Parse(error.to_string()))?;
+            Op::PutStatic(MemberRef {
+                class: utf8(reference.class.name)?,
+                name: utf8(reference.name_and_type.name)?,
+                descriptor: utf8(reference.name_and_type.descriptor)?,
+            })
+        }
         InvokeVirtual { index } => {
             let reference = pool
                 .retrieve(index)
                 .map_err(|error| CompileError::Parse(error.to_string()))?;
             Op::InvokeVirtual(MemberRef {
+                class: utf8(reference.class.name)?,
+                name: utf8(reference.name_and_type.name)?,
+                descriptor: utf8(reference.name_and_type.descriptor)?,
+            })
+        }
+        InvokeInterface { index, .. } => {
+            let reference = pool
+                .retrieve(index)
+                .map_err(|error| CompileError::Parse(error.to_string()))?;
+            Op::InvokeInterface(MemberRef {
                 class: utf8(reference.class.name)?,
                 name: utf8(reference.name_and_type.name)?,
                 descriptor: utf8(reference.name_and_type.descriptor)?,
@@ -577,9 +613,6 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
     let mut fields = Vec::new();
     for field in class.fields() {
         let field = field.map_err(|error| CompileError::Parse(error.to_string()))?;
-        if field.access_flags().contains(AccessFlags::STATIC) {
-            return Err(invalid("static fields are not supported in v1"));
-        }
         let name = utf8(
             pool.get(field.name())
                 .map_err(|error| CompileError::Parse(error.to_string()))?
@@ -592,15 +625,49 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
         )?;
         let mut cursor = 0;
         let ty = parse_type(&descriptor, &mut cursor)?;
-        if !matches!(ty, Type::Int | Type::Class(_)) || cursor != descriptor.len() {
-            return Err(invalid(
-                "instance fields must have type int or a compiled class reference",
-            ));
+        if matches!(ty, Type::Void) || cursor != descriptor.len() {
+            return Err(invalid("fields must use a supported non-void descriptor"));
         }
-        fields.push(Field { name, ty });
+        let mut constant = None;
+        for attribute in field.attributes() {
+            let attribute = attribute.map_err(|error| CompileError::Parse(error.to_string()))?;
+            if let AttributeContent::ConstantValue(value) = attribute
+                .read_content(pool)
+                .map_err(|error| CompileError::Parse(error.to_string()))?
+            {
+                constant = Some(
+                    match pool
+                        .get(value.value())
+                        .map_err(|error| CompileError::Parse(error.to_string()))?
+                    {
+                        Item::Integer(value) => Constant::Int(value.value),
+                        Item::Long(value) => Constant::Long(value.value),
+                        Item::Float(value) => Constant::Float(value.value),
+                        Item::Double(value) => Constant::Double(value.value),
+                        Item::String(value) => Constant::String(utf8(
+                            pool.get(value.string)
+                                .map_err(|error| CompileError::Parse(error.to_string()))?
+                                .content,
+                        )?),
+                        other => {
+                            return Err(invalid(format!("unsupported ConstantValue {other:?}")));
+                        }
+                    },
+                );
+            }
+        }
+        fields.push(Field {
+            name,
+            ty,
+            is_static: field.access_flags().contains(AccessFlags::STATIC),
+            is_final: field.access_flags().contains(AccessFlags::FINAL),
+            is_private: field.access_flags().contains(AccessFlags::PRIVATE),
+            constant,
+        });
     }
 
     let mut methods = Vec::new();
+    let mut clinit = None;
     for method in class.methods() {
         let method = method.map_err(|error| CompileError::Parse(error.to_string()))?;
         let name = utf8(
@@ -641,18 +708,21 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
                 instructions = Some(parsed);
             }
         }
-        if name != "<clinit>" {
-            methods.push(Method {
-                name,
-                signature,
-                is_static: method.access_flags().contains(AccessFlags::STATIC),
-                is_public: method.access_flags().contains(AccessFlags::PUBLIC),
-                instructions: match instructions {
-                    Some(instructions) => instructions,
-                    None if method.access_flags().contains(AccessFlags::ABSTRACT) => Vec::new(),
-                    None => return Err(invalid("methods must have Code attributes")),
-                },
-            });
+        let parsed = Method {
+            name: name.clone(),
+            signature,
+            is_static: method.access_flags().contains(AccessFlags::STATIC),
+            is_public: method.access_flags().contains(AccessFlags::PUBLIC),
+            instructions: match instructions {
+                Some(instructions) => instructions,
+                None if method.access_flags().contains(AccessFlags::ABSTRACT) => Vec::new(),
+                None => return Err(invalid("methods must have Code attributes")),
+            },
+        };
+        if name == "<clinit>" {
+            clinit = Some(parsed);
+        } else {
+            methods.push(parsed);
         }
     }
     Ok(Program {
@@ -662,6 +732,7 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
         is_interface: class.access_flags().contains(AccessFlags::INTERFACE),
         fields,
         methods,
+        clinit,
     })
 }
 
@@ -749,7 +820,6 @@ struct Body<'a> {
     program: &'a Program,
     known_classes: &'a [String],
     method: &'a Method,
-    kind: BodyKind,
     stack: Vec<Value>,
     locals: Vec<Option<Value>>,
     statements: Vec<String>,
@@ -797,7 +867,6 @@ impl<'a> Body<'a> {
             program,
             known_classes,
             method,
-            kind,
             stack: Vec::new(),
             locals,
             statements: Vec::new(),
@@ -1052,17 +1121,62 @@ impl<'a> Body<'a> {
                     {
                         self.stack.push(Value::PrintStream);
                     } else {
-                        return Err(unsupported(
-                            self.program,
-                            self.method,
-                            instruction,
-                            "getstatic",
-                        ));
+                        if !self
+                            .known_classes
+                            .iter()
+                            .any(|known| known == &reference.class)
+                        {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "getstatic",
+                            ));
+                        }
+                        let class = rust_ident(&reference.class)?;
+                        let class_path = self.class_path(&reference.class)?;
+                        let field = rust_ident(&reference.name)?;
+                        self.statements
+                            .push(format!("{class_path}__ensure(program).await?;"));
+                        let mut cursor = 0;
+                        let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                        if cursor != reference.descriptor.len() {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "getstatic descriptor",
+                            ));
+                        }
+                        let expression = format!("program.state.borrow().{class}.{field}.clone()");
+                        let value = match ty {
+                            Type::Int => self.temp(expression, Value::Int),
+                            Type::Long => self.temp(expression, Value::Long),
+                            Type::Float => self.temp(expression, Value::Float),
+                            Type::Double => self.temp(expression, Value::Double),
+                            Type::String => self.temp(expression, Value::String),
+                            Type::StringArray => {
+                                self.temp(expression, |expression| Value::Object {
+                                    expression,
+                                    class: "java/lang/String[]".to_owned(),
+                                })
+                            }
+                            Type::Class(class) => {
+                                self.temp(expression, |expression| Value::Object {
+                                    expression,
+                                    class: class.clone(),
+                                })
+                            }
+                            Type::Void => unreachable!(),
+                        };
+                        self.stack.push(value);
                     }
                 }
                 Op::GetField(reference) => {
-                    if !matches!(self.kind, BodyKind::Instance)
-                        || reference.class != self.program.name
+                    if !self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
                     {
                         return Err(unsupported(
                             self.program,
@@ -1071,14 +1185,7 @@ impl<'a> Body<'a> {
                             "getfield",
                         ));
                     }
-                    if !matches!(self.pop(instruction)?, Value::This) {
-                        return Err(stack_error(
-                            self.program,
-                            self.method,
-                            instruction,
-                            "getfield receiver must be this",
-                        ));
-                    }
+                    let receiver = self.pop(instruction)?;
                     let field = rust_ident(&reference.name)?;
                     let mut cursor = 0;
                     let ty = parse_type(&reference.descriptor, &mut cursor)?;
@@ -1090,30 +1197,56 @@ impl<'a> Body<'a> {
                             "getfield descriptor",
                         ));
                     }
-                    let value = match ty {
-                        Type::Int => self.temp(format!("state.{field}"), Value::Int),
-                        Type::Class(class) => {
-                            self.temp(format!("state.{field}.clone()"), |expression| {
-                                Value::Object {
-                                    expression,
-                                    class: class.clone(),
-                                }
-                            })
-                        }
-                        _ => {
+                    let expression = match receiver {
+                        Value::This if reference.class == self.program.name => match ty {
+                            Type::Int | Type::Long | Type::Float | Type::Double => {
+                                format!("state.{field}")
+                            }
+                            _ => format!("state.{field}.clone()"),
+                        },
+                        Value::Object { expression, class } if class == reference.class => format!(
+                            "{expression}.ok_or(jars_runtime::JavaError::NullPointer)?.__get_{field}().await?"
+                        ),
+                        Value::This => {
                             return Err(unsupported(
                                 self.program,
                                 self.method,
                                 instruction,
-                                "getfield descriptor",
+                                "inherited getfield",
                             ));
                         }
+                        _ => {
+                            return Err(stack_error(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "getfield receiver has incompatible class",
+                            ));
+                        }
+                    };
+                    let value = match ty {
+                        Type::Int => self.temp(expression, Value::Int),
+                        Type::Long => self.temp(expression, Value::Long),
+                        Type::Float => self.temp(expression, Value::Float),
+                        Type::Double => self.temp(expression, Value::Double),
+                        Type::String => self.temp(expression, Value::String),
+                        Type::StringArray => self.temp(expression, |expression| Value::Object {
+                            expression,
+                            class: "java/lang/String[]".to_owned(),
+                        }),
+                        Type::Class(class) => self.temp(expression, |expression| Value::Object {
+                            expression,
+                            class: class.clone(),
+                        }),
+                        Type::Void => unreachable!(),
                     };
                     self.stack.push(value);
                 }
                 Op::PutField(reference) => {
-                    if !matches!(self.kind, BodyKind::Instance)
-                        || reference.class != self.program.name
+                    if !self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
                     {
                         return Err(unsupported(
                             self.program,
@@ -1123,21 +1256,60 @@ impl<'a> Body<'a> {
                         ));
                     }
                     let value = self.pop_expression(instruction)?;
-                    if !matches!(self.pop(instruction)?, Value::This) {
-                        return Err(stack_error(
+                    let receiver = self.pop(instruction)?;
+                    let field = rust_ident(&reference.name)?;
+                    match receiver {
+                        Value::This if reference.class == self.program.name => {
+                            self.statements.push(format!("state.{field} = {value};"));
+                        }
+                        Value::Object { expression, class } if class == reference.class => {
+                            self.statements.push(format!(
+                                "{expression}.ok_or(jars_runtime::JavaError::NullPointer)?.__set_{field}({value}).await?;"
+                            ));
+                        }
+                        Value::This => {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "inherited putfield",
+                            ));
+                        }
+                        _ => {
+                            return Err(stack_error(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "putfield receiver has incompatible class",
+                            ));
+                        }
+                    }
+                }
+                Op::PutStatic(reference) => {
+                    if !self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
+                    {
+                        return Err(unsupported(
                             self.program,
                             self.method,
                             instruction,
-                            "putfield receiver must be this",
+                            "putstatic",
                         ));
                     }
+                    let value = self.pop_expression(instruction)?;
+                    let class = rust_ident(&reference.class)?;
+                    let class_path = self.class_path(&reference.class)?;
                     let field = rust_ident(&reference.name)?;
-                    self.statements.push(format!("state.{field} = {value};"));
+                    self.statements
+                        .push(format!("{class_path}__ensure(program).await?;"));
+                    self.statements.push(format!(
+                        "program.state.borrow_mut().{class}.{field} = {value};"
+                    ));
                 }
                 Op::New(class) => {
-                    if !matches!(self.kind, BodyKind::Static)
-                        || !self.known_classes.iter().any(|known| known == class)
-                    {
+                    if !self.known_classes.iter().any(|known| known == class) {
                         return Err(unsupported(self.program, self.method, instruction, "new"));
                     }
                     let id = self.next_uninitialized;
@@ -1173,6 +1345,18 @@ impl<'a> Body<'a> {
                         .iter()
                         .any(|known| known == &reference.class)
                         && reference.name == "<init>"
+                        && matches!(receiver, Value::This)
+                        && args.is_empty()
+                    {
+                        // A derived actor owns the dynamic object's state.  An
+                        // empty superclass constructor has no independent actor
+                        // to initialize, so its constructor edge is represented
+                        // by the already-created derived state.
+                    } else if self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
+                        && reference.name == "<init>"
                     {
                         let Value::Uninitialized(id) = receiver else {
                             return Err(stack_error(
@@ -1188,10 +1372,14 @@ impl<'a> Body<'a> {
                             self.class_path(&reference.class)?,
                             rust_ident(&reference.class)?
                         );
+                        self.statements.push(format!(
+                            "{}__ensure(program).await?;",
+                            self.class_path(&reference.class)?
+                        ));
                         let call_arguments = if args.is_empty() {
-                            "spawner.clone()".to_owned()
+                            "program".to_owned()
                         } else {
-                            format!("spawner.clone(), {}", args.join(", "))
+                            format!("program, {}", args.join(", "))
                         };
                         self.statements.push(format!(
                             "let {variable} = {class}::new({call_arguments}).await?;",
@@ -1214,11 +1402,10 @@ impl<'a> Body<'a> {
                     }
                 }
                 Op::InvokeStatic(reference) => {
-                    if !matches!(self.kind, BodyKind::Static)
-                        || !self
-                            .known_classes
-                            .iter()
-                            .any(|known| known == &reference.class)
+                    if !self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
                     {
                         return Err(unsupported(
                             self.program,
@@ -1234,8 +1421,7 @@ impl<'a> Body<'a> {
                         self.class_path(&reference.class)?,
                         rust_ident(&reference.name)?
                     );
-                    let expression =
-                        format!("{method}(spawner.clone(), {}).await?", args.join(", "));
+                    let expression = format!("{method}(program, {}).await?", args.join(", "));
                     match signature.returns {
                         Type::Int => {
                             let value = self.temp(expression, Value::Int);
@@ -1275,7 +1461,7 @@ impl<'a> Body<'a> {
                         }
                     }
                 }
-                Op::InvokeVirtual(reference) => {
+                Op::InvokeVirtual(reference) | Op::InvokeInterface(reference) => {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
                     let receiver = self.pop(instruction)?;
@@ -1301,14 +1487,13 @@ impl<'a> Body<'a> {
                         }
                         self.statements
                             .push(format!("jars_runtime::println({});", args[0]));
-                    } else if matches!(self.kind, BodyKind::Static)
-                        && self
-                            .known_classes
-                            .iter()
-                            .any(|known| known == &reference.class)
+                    } else if self
+                        .known_classes
+                        .iter()
+                        .any(|known| known == &reference.class)
                     {
-                        let (object, class) = match receiver {
-                            Value::Object { expression, class } => (expression, class),
+                        let object = match receiver {
+                            Value::Object { expression, .. } => expression,
                             _ => {
                                 return Err(stack_error(
                                     self.program,
@@ -1318,14 +1503,6 @@ impl<'a> Body<'a> {
                                 ));
                             }
                         };
-                        if class != reference.class {
-                            return Err(unsupported(
-                                self.program,
-                                self.method,
-                                instruction,
-                                "virtual dispatch through a non-concrete reference",
-                            ));
-                        }
                         let method = rust_ident(&reference.name)?;
                         let expression = format!(
                             "{object}.ok_or(jars_runtime::JavaError::NullPointer)?.{method}({}).await?",
@@ -1380,29 +1557,17 @@ impl<'a> Body<'a> {
                 }
                 Op::IReturn => {
                     let value = self.pop_expression(instruction)?;
-                    match self.kind {
-                        BodyKind::Static => self.statements.push(format!("return Ok({value});")),
-                        BodyKind::Instance => self.statements.push(format!("return {value};")),
-                    }
+                    self.statements.push(format!("return Ok({value});"));
                 }
                 Op::LReturn | Op::FReturn | Op::DReturn => {
                     let value = self.pop_expression(instruction)?;
-                    match self.kind {
-                        BodyKind::Static => self.statements.push(format!("return Ok({value});")),
-                        BodyKind::Instance => self.statements.push(format!("return {value};")),
-                    }
+                    self.statements.push(format!("return Ok({value});"));
                 }
                 Op::AReturn => {
                     let value = self.pop_expression(instruction)?;
-                    match self.kind {
-                        BodyKind::Static => self.statements.push(format!("return Ok({value});")),
-                        BodyKind::Instance => self.statements.push(format!("return {value};")),
-                    }
+                    self.statements.push(format!("return Ok({value});"));
                 }
-                Op::Return => match self.kind {
-                    BodyKind::Static => self.statements.push("return Ok(());".to_owned()),
-                    BodyKind::Instance => self.statements.push("return ();".to_owned()),
-                },
+                Op::Return => self.statements.push("return Ok(());".to_owned()),
                 Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) => {
                     return Err(unsupported(
                         self.program,
@@ -1635,7 +1800,7 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
         .ok_or_else(|| invalid("methods must contain at least one instruction"))?
         .offset;
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(_spawner: S, {parameters}) -> Result<i32, jars_runtime::JavaError> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(_program: &super::Program<S>, {parameters}) -> Result<i32, jars_runtime::JavaError> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
         arms.join(",\n"),
     ))
 }
@@ -1657,7 +1822,7 @@ fn static_method(
     let body = Body::new(program, known_classes, method, BodyKind::Static).run()?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(spawner: S, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}",
         method.signature.returns.rust(&program.name)?,
     ))
 }
@@ -1672,7 +1837,7 @@ fn instance_method(
     let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
-        "fn {name}_impl(state: &mut {}State, {parameters}) -> {} {{\n{body}\n{fallback}\n}}",
+        "async fn {name}_impl<S: jars_runtime::Spawner>(state: &mut {}State, program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
         rust_ident(&program.name)?,
         method.signature.returns.rust(&program.name)?,
     );
@@ -1714,6 +1879,7 @@ fn actor_code(
     let field_declarations = program
         .fields
         .iter()
+        .filter(|field| !field.is_static)
         .map(|field| {
             Ok(format!(
                 "{}: {}",
@@ -1726,6 +1892,7 @@ fn actor_code(
     let field_initializers = program
         .fields
         .iter()
+        .filter(|field| !field.is_static)
         .map(|field| {
             Ok(format!(
                 "{}: {}",
@@ -1750,7 +1917,7 @@ fn actor_code(
     let mut variants = vec![format!("Init {{ {constructor_message_fields} }}")];
     let mut proxies = Vec::new();
     let mut dispatch = vec![format!(
-        "{class}Message::Init {{ {} }} => {{ {class}::init_impl(&mut state{}); let _ = reply.send(Ok(())); }}",
+        "{class}Message::Init {{ {} }} => {{ let value = {class}::init_impl(&mut state, &actor_program{}).await; let _ = reply.send(value); }}",
         reply_fields(&constructor_args, "reply"),
         if constructor_args.is_empty() {
             String::new()
@@ -1759,8 +1926,29 @@ fn actor_code(
         },
     )];
     implementations.push(format!(
-        "fn init_impl(state: &mut {class}State, {constructor_parameters}) {{\n{constructor_body}\n}}"
+        "async fn init_impl<S: jars_runtime::Spawner>(state: &mut {class}State, program: &super::Program<S>, {constructor_parameters}) -> Result<(), jars_runtime::JavaError> {{\n{constructor_body}\nOk(())\n}}"
     ));
+    for field in program.fields.iter().filter(|field| !field.is_static) {
+        let field_name = rust_ident(&field.name)?;
+        let getter = rust_ident(&format!("__get_{}", field.name))?;
+        let setter = rust_ident(&format!("__set_{}", field.name))?;
+        let ty = field.ty.rust(&program.name)?;
+        variants.push(format!(
+            "{getter} {{ reply: jars_runtime::Reply<Result<{ty}, jars_runtime::JavaError>> }}"
+        ));
+        variants.push(format!(
+            "{setter} {{ value: {ty}, reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>> }}"
+        ));
+        dispatch.push(format!(
+            "{class}Message::{getter} {{ reply }} => {{ let _ = reply.send(Ok(state.{field_name}.clone())); }}"
+        ));
+        dispatch.push(format!(
+            "{class}Message::{setter} {{ value, reply }} => {{ state.{field_name} = value; let _ = reply.send(Ok(())); }}"
+        ));
+        proxies.push(format!(
+            "pub async fn {getter}(&self) -> Result<{ty}, jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{getter} {{ reply }}).await?;\nresponse.recv().await?\n}}\npub async fn {setter}(&self, value: {ty}) -> Result<(), jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{setter} {{ value, reply }}).await?;\nresponse.recv().await?\n}}"
+        ));
+    }
     for method in methods {
         let (implementation, variant, proxy) = instance_method(program, known_classes, method)?;
         let name = rust_ident(&method.name)?;
@@ -1772,13 +1960,13 @@ fn actor_code(
         variants.push(variant);
         proxies.push(proxy);
         dispatch.push(format!(
-            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(&mut state{}); let _ = reply.send(Ok(value)); }}",
+            "{class}Message::{name} {{ {} }} => {{ let value = {class}::{name}_impl(&mut state, &actor_program{}).await; let _ = reply.send(value); }}",
             reply_fields(&args, "reply"),
             if args.is_empty() { String::new() } else { format!(", {args}") },
         ));
     }
     Ok(format!(
-        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(spawner: S{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nspawner.spawn(async move {{\nlet mut state = {class}State {{ {field_initializers} }};\nwhile let Ok(message) = mailbox.recv().await {{ match message {{ {} }} }}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
+        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(program: &super::Program<S>{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nlet actor_program = program.clone();\nlet spawner = actor_program.spawner.clone();\nspawner.spawn(async move {{\nlet mut state = {class}State {{ {field_initializers} }};\nwhile let Ok(message) = mailbox.recv().await {{ match message {{ {} }} }}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
         variants.join(", "),
         if constructor_parameters.is_empty() {
             String::new()
@@ -1792,13 +1980,97 @@ fn actor_code(
     ))
 }
 
+fn constant_expression(constant: &Constant) -> String {
+    match constant {
+        Constant::Int(value) => value.to_string(),
+        Constant::Long(value) => format!("{value}_i64"),
+        Constant::Float(value) => format!("{value:?}_f32"),
+        Constant::Double(value) => format!("{value:?}_f64"),
+        Constant::String(value) => format!("{value:?}"),
+    }
+}
+
+fn static_state_code(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
+    let class = rust_ident(&program.name)?;
+    let fields = program
+        .fields
+        .iter()
+        .filter(|field| field.is_static)
+        .map(|field| {
+            Ok(format!(
+                "pub {}: {}",
+                rust_ident(&field.name)?,
+                field.ty.rust(&program.name)?
+            ))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()?
+        .join(", ");
+    let initializers = program
+        .fields
+        .iter()
+        .filter(|field| field.is_static)
+        .map(|field| {
+            Ok(format!(
+                "{}: {}",
+                rust_ident(&field.name)?,
+                field
+                    .constant
+                    .as_ref()
+                    .map(constant_expression)
+                    .unwrap_or_else(|| default_return(&field.ty).to_owned())
+            ))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()?
+        .join(", ");
+    let clinit = if let Some(method) = &program.clinit {
+        // A class is marked `initializing` before entering its initializer.  Its
+        // own static field operations must therefore access the prepared state
+        // directly; emitting another async `__ensure` call would make the
+        // generated future recursively sized.
+        let body = Body::new(program, known_classes, method, BodyKind::Static)
+            .run()?
+            .replace("__ensure(program).await?;\n", "");
+        format!(
+            "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> {{\n{body}\nOk(())\n}}"
+        )
+    } else {
+        "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(_program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> { Ok(()) }".to_owned()
+    };
+    Ok(format!(
+        "pub struct {class}Statics {{ pub initialized: bool, pub initializing: bool, pub failure: bool, {fields} }}\nimpl {class}Statics {{ pub fn new() -> Self {{ Self {{ initialized: false, initializing: false, failure: false, {initializers} }} }} }}\n\npub(crate) async fn __ensure<S: jars_runtime::Spawner>(program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::JavaError::ClassInitializationFailed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program).await;\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}\n{clinit}"
+    ))
+}
+
+fn program_code(programs: &[Program]) -> Result<String, CompileError> {
+    let declarations = programs
+        .iter()
+        .map(|program| {
+            let class = rust_ident(&program.name)?;
+            Ok(format!("{}: {class}::{class}Statics", class))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()?
+        .join(", ");
+    let initializers = programs
+        .iter()
+        .map(|program| {
+            let class = rust_ident(&program.name)?;
+            Ok(format!("{class}: {class}::{class}Statics::new()"))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()?
+        .join(", ");
+    Ok(format!(
+        "struct ProgramState {{ {declarations} }}\n#[derive(Clone)]\npub struct Program<S: jars_runtime::Spawner> {{ pub(crate) spawner: S, pub(crate) state: std::rc::Rc<std::cell::RefCell<ProgramState>> }}\nimpl<S: jars_runtime::Spawner> Program<S> {{ pub fn new(spawner: S) -> Self {{ Self {{ spawner, state: std::rc::Rc::new(std::cell::RefCell::new(ProgramState {{ {initializers} }})) }} }} }}"
+    ))
+}
+
 fn render_module(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
     let class = rust_ident(&program.name)?;
+    let static_state = static_state_code(program, known_classes)?;
     if program.is_interface {
         if program.methods.iter().any(|method| method.is_static) {
             return Err(invalid("interface static methods are not supported"));
         }
-        return Ok(format!("pub mod {class} {{}}"));
+        return Ok(format!("pub mod {class} {{\n{static_state}\n}}"));
     }
     let statics = program
         .methods
@@ -1819,7 +2091,7 @@ fn render_module(program: &Program, known_classes: &[String]) -> Result<String, 
     if constructors.len() > 1 {
         return Err(invalid("v1 supports one constructor per class"));
     }
-    let actor_needed = !instances.is_empty() || !program.fields.is_empty();
+    let actor_needed = !instances.is_empty() || program.fields.iter().any(|field| !field.is_static);
     let actor = if actor_needed {
         let constructor = constructors
             .first()
@@ -1829,7 +2101,7 @@ fn render_module(program: &Program, known_classes: &[String]) -> Result<String, 
         String::new()
     };
     Ok(format!(
-        "pub mod {class} {{\n{actor}\n{}\n}}",
+        "pub mod {class} {{\n{static_state}\n{actor}\n{}\n}}",
         statics.join("\n")
     ))
 }
@@ -1871,9 +2143,10 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
         .iter()
         .map(|program| render_module(program, &known_classes))
         .collect::<Result<Vec<_>, _>>()?;
+    let program = program_code(programs)?;
     let class = rust_ident(&entry.name)?;
     let source = format!(
-        "{}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet args = std::env::args().skip(1).collect();\nruntime.block_on({class}::main(runtime.clone(), args)).expect(\"Java actor call failed\");\n}}",
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet args = std::env::args().skip(1).collect();\nruntime.block_on({class}::main(&program, args)).expect(\"Java actor call failed\");\n}}",
         modules.join("\n"),
     );
     let file = syn::parse_file(&source)
@@ -1906,6 +2179,70 @@ fn validate_reference_types(programs: &[Program]) -> Result<(), CompileError> {
                 validate_reference_type(parameter, &known_classes)?;
             }
             validate_reference_type(&method.signature.returns, &known_classes)?;
+        }
+    }
+    Ok(())
+}
+
+fn validate_field_accesses(programs: &[Program]) -> Result<(), CompileError> {
+    let by_name = programs
+        .iter()
+        .map(|program| (program.name.as_str(), program))
+        .collect::<HashMap<_, _>>();
+    for program in programs {
+        for method in program.methods.iter().chain(program.clinit.iter()) {
+            for instruction in &method.instructions {
+                let (reference, write, expect_static) = match &instruction.op {
+                    Op::GetField(reference) => (reference, false, false),
+                    Op::PutField(reference) => (reference, true, false),
+                    Op::GetStatic(reference) if reference.class != "java/lang/System" => {
+                        (reference, false, true)
+                    }
+                    Op::PutStatic(reference) => (reference, true, true),
+                    _ => continue,
+                };
+                let owner = by_name.get(reference.class.as_str()).ok_or_else(|| {
+                    invalid(format!(
+                        "field owner `{}` is not in the compilation set",
+                        reference.class
+                    ))
+                })?;
+                let field = owner
+                    .fields
+                    .iter()
+                    .find(|field| field.name == reference.name)
+                    .ok_or_else(|| {
+                        invalid(format!(
+                            "field `{}.{}` is not defined",
+                            reference.class, reference.name
+                        ))
+                    })?;
+                if field.is_static != expect_static {
+                    return Err(invalid(format!(
+                        "field access kind does not match `{}.{}`",
+                        reference.class, reference.name
+                    )));
+                }
+                if field.is_private && program.name != owner.name {
+                    return Err(invalid(format!(
+                        "private field `{}.{}` is accessed from `{}`",
+                        owner.name, field.name, program.name
+                    )));
+                }
+                if write && field.is_final {
+                    let legal = if field.is_static {
+                        method.name == "<clinit>" && program.name == owner.name
+                    } else {
+                        method.name == "<init>" && program.name == owner.name
+                    };
+                    if !legal {
+                        return Err(invalid(format!(
+                            "final field `{}.{}` may only be assigned by its declaring initializer",
+                            owner.name, field.name
+                        )));
+                    }
+                }
+            }
         }
     }
     Ok(())
@@ -2020,6 +2357,7 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
     }
     validate_hierarchy(&programs)?;
     validate_reference_types(&programs)?;
+    validate_field_accesses(&programs)?;
     render(&programs)
 }
 

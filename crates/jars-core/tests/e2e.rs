@@ -172,6 +172,44 @@ fn concrete_object_parameters_returns_and_actor_fields_remain_typed() {
 }
 
 #[test]
+fn public_fields_are_accessed_through_object_actor_messages() {
+    let (stdout, generated) = compile_set_and_run(&["CrossFieldsMain", "PublicBox"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("__get_value"));
+    assert!(generated.contains("__set_value"));
+}
+
+#[test]
+fn instance_code_can_invoke_another_actor_virtually() {
+    let (stdout, generated) = compile_set_and_run(&["GenericVirtualMain", "Relay", "PublicBox"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("relay_impl"));
+    assert!(generated.contains(".read()"));
+}
+
+#[test]
+fn static_fields_are_shared_lazily_initialized_program_state() {
+    let (stdout, generated) = compile_set_and_run(&["StaticFieldsMain", "StaticValues"]);
+    assert_eq!(stdout, "42\n2\n");
+    assert!(generated.contains("pub struct Program"));
+    assert!(generated.contains("StaticValuesStatics"));
+    assert!(generated.contains("__clinit"));
+}
+
+#[test]
+fn concrete_override_is_selected_for_a_base_typed_local() {
+    let (stdout, _) = compile_set_and_run(&["HierarchyMain", "BaseValue", "DerivedValue"]);
+    assert_eq!(stdout, "42\n");
+}
+
+#[test]
+fn invokeinterface_dispatches_to_a_concrete_actor() {
+    let (stdout, generated) = compile_set_and_run(&["InterfaceMain", "Score", "ScoreBox"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("ScoreBoxMessage"));
+}
+
+#[test]
 fn closed_world_linker_accepts_interface_implementation_metadata() {
     let (stdout, generated) = compile_set_and_run(&["Marker", "MarkerMain"]);
     assert_eq!(stdout, "42\n");
