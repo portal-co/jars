@@ -7,3 +7,4 @@ description.workspace = true
 [dependencies]
 async-channel.workspace = true
 futures.workspace = true
+anyhow.workspace = true

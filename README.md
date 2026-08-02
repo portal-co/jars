@@ -9,11 +9,18 @@ static methods take that context, and it owns static storage plus lazy
 `<clinit>` initialization. The emitted executable uses `jars_runtime::Runtime`,
 a deterministic single-thread executor.
 
-The initial supported programs cover `System.out.println`, integer addition,
+Supported generated programs include `System.out.println`, primitive arithmetic,
 cross-class static fields, actor-backed object construction, cross-object field
-access, and virtual calls from static or instance code. The compiler remains
-closed-world and AOT-only: generated Rust contains no class-file data or
-bytecode interpreter. Run the verification suite with:
+access, virtual calls, integer branch state machines, and table/lookup switches.
+Every array descriptor is recursive; generated arrays are typed mailbox actors,
+so array aliases can cross object actors without exposing mutable elements.
+
+Generated Java entry points and public calls return
+`jars_runtime::JavaResult<T>` (an `anyhow::Result<T>`). The runtime exposes
+typed `Error` wrappers for Java-visible arithmetic, null, array, cast, actor,
+and class-initialization failures. The compiler remains closed-world and
+AOT-only: generated Rust contains no class-file data or bytecode interpreter.
+Run the verification suite with:
 
 ```sh
 cargo test --workspace

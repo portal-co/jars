@@ -12,6 +12,11 @@ use futures::{
 /// these keeps generated programs dependent only on `jars-runtime`.
 pub use futures::{FutureExt, StreamExt, select_biased, stream::FuturesUnordered};
 
+/// The result type used at every generated Java boundary.  The concrete error
+/// remains downcastable, so generated exception tables can select Java catch
+/// clauses without giving the generated program a bytecode runtime.
+pub type JavaResult<T> = anyhow::Result<T>;
+
 /// An executor capable of running the background tasks for generated actors.
 ///
 /// Generated Java code is generic over this trait, so consumers may provide an
@@ -85,85 +90,81 @@ impl std::fmt::Display for CallError {
 
 impl std::error::Error for CallError {}
 
-/// Java execution failures that can cross an actor or static-method boundary.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum JavaError {
-    Actor(CallError),
-    Arithmetic(ArithmeticError),
-    NullPointer,
-    ClassCast,
-    ClassInitializationFailed(&'static str),
-}
+macro_rules! java_error {
+    ($name:ident, $text:literal) => {
+        #[derive(Debug)]
+        pub struct $name;
 
-impl From<CallError> for JavaError {
-    fn from(error: CallError) -> Self {
-        Self::Actor(error)
-    }
-}
-
-impl Display for JavaError {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::Actor(error) => error.fmt(f),
-            Self::Arithmetic(error) => error.fmt(f),
-            Self::NullPointer => f.write_str("null Java reference"),
-            Self::ClassCast => f.write_str("invalid Java reference cast"),
-            Self::ClassInitializationFailed(class) => {
-                write!(f, "class initialization previously failed for {class}")
+        impl Display for $name {
+            fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                f.write_str($text)
             }
         }
-    }
+
+        impl std::error::Error for $name {}
+    };
 }
 
-impl std::error::Error for JavaError {}
+java_error!(ArithmeticException, "integer division by zero");
+java_error!(NullPointerException, "null Java reference");
+java_error!(ClassCastException, "invalid Java reference cast");
+java_error!(ArrayIndexOutOfBoundsException, "array index out of bounds");
+java_error!(NegativeArraySizeException, "negative Java array size");
+java_error!(ArrayStoreException, "invalid Java reference array store");
 
-/// Arithmetic failures that Java programs expose before throwable support exists.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum ArithmeticError {
-    DivisionByZero,
-}
+/// Returned after an earlier `<clinit>` failed.  The first caller sees the
+/// original error; later active uses see this cached failure instead.
+#[derive(Debug)]
+pub struct ClassInitializationFailed(pub &'static str);
 
-impl Display for ArithmeticError {
+impl Display for ClassInitializationFailed {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        match self {
-            Self::DivisionByZero => f.write_str("integer division by zero"),
-        }
+        write!(f, "class initialization previously failed for {}", self.0)
     }
 }
 
-impl std::error::Error for ArithmeticError {}
+impl std::error::Error for ClassInitializationFailed {}
+
+pub fn null_pointer() -> anyhow::Error { NullPointerException.into() }
+pub fn class_cast() -> anyhow::Error { ClassCastException.into() }
+pub fn class_initialization_failed(class: &'static str) -> anyhow::Error {
+    ClassInitializationFailed(class).into()
+}
+pub fn array_index_out_of_bounds() -> anyhow::Error { ArrayIndexOutOfBoundsException.into() }
+pub fn negative_array_size() -> anyhow::Error { NegativeArraySizeException.into() }
+pub fn array_store() -> anyhow::Error { ArrayStoreException.into() }
 
 /// Java `int` division, including the specified wrapping `MIN / -1` case.
-pub fn idiv(left: i32, right: i32) -> Result<i32, JavaError> {
+pub fn idiv(left: i32, right: i32) -> JavaResult<i32> {
     if right == 0 {
-        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+        Err(ArithmeticException.into())
     } else {
         Ok(left.wrapping_div(right))
     }
 }
 
 /// Java `int` remainder, including the specified wrapping `MIN % -1` case.
-pub fn irem(left: i32, right: i32) -> Result<i32, JavaError> {
+pub fn irem(left: i32, right: i32) -> JavaResult<i32> {
     if right == 0 {
-        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+        Err(ArithmeticException.into())
     } else {
         Ok(left.wrapping_rem(right))
     }
 }
 
 /// Java `long` division, including the specified wrapping `MIN / -1` case.
-pub fn ldiv(left: i64, right: i64) -> Result<i64, JavaError> {
+pub fn ldiv(left: i64, right: i64) -> JavaResult<i64> {
     if right == 0 {
-        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+        Err(ArithmeticException.into())
     } else {
         Ok(left.wrapping_div(right))
     }
 }
 
 /// Java `long` remainder, including the specified wrapping `MIN % -1` case.
-pub fn lrem(left: i64, right: i64) -> Result<i64, JavaError> {
+pub fn lrem(left: i64, right: i64) -> JavaResult<i64> {
     if right == 0 {
-        Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
+        Err(ArithmeticException.into())
     } else {
         Ok(left.wrapping_rem(right))
     }
@@ -219,6 +220,109 @@ impl<M> Mailbox<M> {
             .recv()
             .await
             .map_err(|_| CallError::ActorStopped)
+    }
+}
+
+/// A typed Java array address.  Arrays are actors just like generated object
+/// instances: aliases can cross object actors, but the mutable elements never
+/// leave this mailbox implementation.
+pub struct JavaArray<T> {
+    actor: ActorRef<ArrayMessage<T>>,
+}
+
+impl<T> Clone for JavaArray<T> {
+    fn clone(&self) -> Self {
+        Self { actor: self.actor.clone() }
+    }
+}
+
+enum ArrayMessage<T> {
+    Length { reply: Reply<JavaResult<i32>> },
+    Get { index: i32, reply: Reply<JavaResult<T>> },
+    Set { index: i32, value: T, reply: Reply<JavaResult<()>> },
+}
+
+impl<T: Clone + 'static> JavaArray<T> {
+    /// Creates a default-filled Java array.  Negative sizes use the Java
+    /// failure rather than Rust's allocation diagnostics.
+    pub fn new<S: Spawner>(spawner: S, length: i32, default: T) -> JavaResult<Self> {
+        if length < 0 {
+            return Err(negative_array_size());
+        }
+        let (actor, mailbox) = actor_channel();
+        spawner.spawn(async move {
+            use futures::{FutureExt as _, StreamExt as _};
+            let state = Rc::new(std::sync::Mutex::new(vec![default; length as usize]));
+            let mut in_flight: FuturesUnordered<
+                std::pin::Pin<Box<dyn Future<Output = ()>>>,
+            > = FuturesUnordered::new();
+            loop {
+                let spawn_handler = |message: ArrayMessage<T>, state: Rc<std::sync::Mutex<Vec<T>>>| {
+                    Box::pin(async move {
+                        match message {
+                            ArrayMessage::Length { reply } => {
+                                let length = state.lock().expect("array state mutex").len() as i32;
+                                let _ = reply.send(Ok(length));
+                            }
+                            ArrayMessage::Get { index, reply } => {
+                                let value = if index < 0 {
+                                    Err(array_index_out_of_bounds())
+                                } else {
+                                    state.lock().expect("array state mutex")
+                                        .get(index as usize)
+                                        .cloned()
+                                        .ok_or_else(array_index_out_of_bounds)
+                                };
+                                let _ = reply.send(value);
+                            }
+                            ArrayMessage::Set { index, value, reply } => {
+                                let result = if index < 0 {
+                                    Err(array_index_out_of_bounds())
+                                } else {
+                                    let mut elements = state.lock().expect("array state mutex");
+                                    match elements.get_mut(index as usize) {
+                                        Some(slot) => { *slot = value; Ok(()) }
+                                        None => Err(array_index_out_of_bounds()),
+                                    }
+                                };
+                                let _ = reply.send(result);
+                            }
+                        }
+                    }) as std::pin::Pin<Box<dyn Future<Output = ()>>>
+                };
+                if in_flight.is_empty() {
+                    let message = match mailbox.recv().await { Ok(message) => message, Err(_) => break };
+                    in_flight.push(spawn_handler(message, state.clone()));
+                } else {
+                    select_biased! {
+                        message = mailbox.recv().fuse() => match message {
+                            Ok(message) => in_flight.push(spawn_handler(message, state.clone())),
+                            Err(_) => break,
+                        },
+                        _ = in_flight.next().fuse() => {},
+                    }
+                }
+            }
+        });
+        Ok(Self { actor })
+    }
+
+    pub async fn length(&self) -> JavaResult<i32> {
+        let (reply, response) = reply();
+        self.actor.send(ArrayMessage::Length { reply }).await?;
+        response.recv().await?
+    }
+
+    pub async fn get(&self, index: i32) -> JavaResult<T> {
+        let (reply, response) = reply();
+        self.actor.send(ArrayMessage::Get { index, reply }).await?;
+        response.recv().await?
+    }
+
+    pub async fn set(&self, index: i32, value: T) -> JavaResult<()> {
+        let (reply, response) = reply();
+        self.actor.send(ArrayMessage::Set { index, value, reply }).await?;
+        response.recv().await?
     }
 }
 
@@ -318,15 +422,25 @@ mod tests {
 
     #[test]
     fn java_integer_helpers_match_wrapping_and_zero_division_rules() {
-        assert_eq!(idiv(i32::MIN, -1), Ok(i32::MIN));
-        assert_eq!(irem(i32::MIN, -1), Ok(0));
-        assert_eq!(ldiv(i64::MIN, -1), Ok(i64::MIN));
-        assert_eq!(lrem(i64::MIN, -1), Ok(0));
+        assert_eq!(idiv(i32::MIN, -1).unwrap(), i32::MIN);
+        assert_eq!(irem(i32::MIN, -1).unwrap(), 0);
+        assert_eq!(ldiv(i64::MIN, -1).unwrap(), i64::MIN);
+        assert_eq!(lrem(i64::MIN, -1).unwrap(), 0);
         assert_eq!(iushr(-1, 1), i32::MAX);
         assert_eq!(lushr(-1, 1), i64::MAX);
-        assert_eq!(
-            idiv(1, 0),
-            Err(JavaError::Arithmetic(ArithmeticError::DivisionByZero))
-        );
+        assert!(idiv(1, 0).unwrap_err().is::<ArithmeticException>());
+    }
+
+    #[test]
+    fn arrays_serialize_mutation_inside_their_actor() {
+        let runtime = Runtime::new();
+        runtime.block_on(async {
+            let array = JavaArray::new(runtime.clone(), 2, 0_i32).unwrap();
+            array.set(0, 40).await.unwrap();
+            array.set(1, 2).await.unwrap();
+            assert_eq!(array.length().await.unwrap(), 2);
+            assert_eq!(array.get(0).await.unwrap() + array.get(1).await.unwrap(), 42);
+            assert!(array.get(2).await.unwrap_err().is::<ArrayIndexOutOfBoundsException>());
+        });
     }
 }

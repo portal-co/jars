@@ -235,14 +235,36 @@ fn long_float_and_double_methods_are_emitted_aot() {
 }
 
 #[test]
-fn unsupported_bytecode_has_a_source_location() {
-    let temp = tempfile::tempdir().unwrap();
-    let error = compile_class(&compile_java("Unsupported", &temp)).unwrap_err();
-    assert!(matches!(
-        error,
-        jars_core::CompileError::Unsupported { class, method, .. }
-            if class == "Unsupported" && method == "main"
-    ));
+fn arrays_are_actor_backed_and_aot_lowered() {
+    let (stdout, generated) = compile_and_run("Unsupported");
+    assert_eq!(stdout, "1\n");
+    assert!(generated.contains("JavaArray"));
+    assert!(generated.contains("length"));
+}
+
+#[test]
+fn typed_array_reads_and_writes_cross_an_array_actor() {
+    let (stdout, generated) = compile_and_run("Arrays");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("JavaArray::<i32>::new"));
+    assert!(generated.contains(".set("));
+    assert!(generated.contains(".get("));
+}
+
+#[test]
+fn multianewarray_creates_nested_actor_backed_arrays() {
+    let (stdout, generated) = compile_and_run("MultiArrays");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("for index"));
+    assert!(generated.contains("JavaArray"));
+}
+
+#[test]
+fn table_and_lookup_switches_are_aot_state_machine_arms() {
+    let (stdout, generated) = compile_and_run("Switches");
+    assert_eq!(stdout, "42\n42\n");
+    assert!(generated.contains("pc = match value"));
+    assert!(!generated.contains("RawInstruction"));
 }
 
 #[test]

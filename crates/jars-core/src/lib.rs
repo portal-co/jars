@@ -73,26 +73,33 @@ impl std::error::Error for CompileError {}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Type {
+    Boolean,
+    Byte,
+    Char,
+    Short,
     Int,
     Long,
     Float,
     Double,
     Void,
     String,
-    StringArray,
     Class(String),
+    Array(Box<Type>),
 }
 
 impl Type {
     fn rust(&self, current_class: &str) -> Result<String, CompileError> {
         match self {
+            Self::Boolean => Ok("bool".to_owned()),
+            Self::Byte => Ok("i8".to_owned()),
+            Self::Char => Ok("u16".to_owned()),
+            Self::Short => Ok("i16".to_owned()),
             Self::Int => Ok("i32".to_owned()),
             Self::Long => Ok("i64".to_owned()),
             Self::Float => Ok("f32".to_owned()),
             Self::Double => Ok("f64".to_owned()),
             Self::Void => Ok("()".to_owned()),
             Self::String => Ok("&'static str".to_owned()),
-            Self::StringArray => Ok("Vec<String>".to_owned()),
             Self::Class(name) if name == current_class => {
                 Ok(format!("Option<{}>", rust_ident(name)?))
             }
@@ -101,6 +108,17 @@ impl Type {
                 rust_ident(name)?,
                 rust_ident(name)?
             )),
+            Self::Array(element) => Ok(format!(
+                "Option<jars_runtime::JavaArray<{}>>",
+                element.array_element_rust(current_class)?
+            )),
+        }
+    }
+
+    fn array_element_rust(&self, current_class: &str) -> Result<String, CompileError> {
+        match self {
+            Self::String => Ok("String".to_owned()),
+            _ => self.rust(current_class),
         }
     }
 }
@@ -167,6 +185,29 @@ enum Op {
     IInc(usize, i32),
     Goto(i32),
     If(IfKind, i32),
+    LookupSwitch { default: i32, cases: Vec<(i32, i32)> },
+    TableSwitch { default: i32, cases: Vec<(i32, i32)> },
+    AConstNull,
+    NewArray(Type),
+    MultiNewArray(Type, u8),
+    ArrayLength,
+    IALoad,
+    IAStore,
+    LALoad,
+    LAStore,
+    FALoad,
+    FAStore,
+    DALoad,
+    DAStore,
+    BALoad,
+    BAStore,
+    CALoad,
+    CAStore,
+    SALoad,
+    SAStore,
+    AALoad,
+    AAStore,
+    AThrow,
     IReturn,
     LReturn,
     FReturn,
@@ -200,6 +241,10 @@ enum IfKind {
     ICmpGe,
     ICmpGt,
     ICmpLe,
+    ACmpEq,
+    ACmpNe,
+    Null,
+    NonNull,
 }
 
 #[derive(Clone, Debug)]
@@ -297,7 +342,19 @@ fn item_member_ref(
 
 fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
     let remainder = &input[*cursor..];
-    if remainder.starts_with('I') {
+    if remainder.starts_with('Z') {
+        *cursor += 1;
+        Ok(Type::Boolean)
+    } else if remainder.starts_with('B') {
+        *cursor += 1;
+        Ok(Type::Byte)
+    } else if remainder.starts_with('C') {
+        *cursor += 1;
+        Ok(Type::Char)
+    } else if remainder.starts_with('S') {
+        *cursor += 1;
+        Ok(Type::Short)
+    } else if remainder.starts_with('I') {
         *cursor += 1;
         Ok(Type::Int)
     } else if remainder.starts_with('J') {
@@ -315,9 +372,9 @@ fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
     } else if remainder.starts_with("Ljava/lang/String;") {
         *cursor += "Ljava/lang/String;".len();
         Ok(Type::String)
-    } else if remainder.starts_with("[Ljava/lang/String;") {
-        *cursor += "[Ljava/lang/String;".len();
-        Ok(Type::StringArray)
+    } else if remainder.starts_with('[') {
+        *cursor += 1;
+        Ok(Type::Array(Box::new(parse_type(input, cursor)?)))
     } else if remainder.starts_with('L') {
         let end = remainder.find(';').ok_or_else(|| {
             invalid(format!(
@@ -360,9 +417,65 @@ fn parse_signature(descriptor: &str) -> Result<Signature, CompileError> {
     })
 }
 
+fn array_component_type(name: &str) -> Result<Type, CompileError> {
+    if name == "java/lang/String" {
+        return Ok(Type::String);
+    }
+    if name.starts_with('[') {
+        let mut cursor = 0;
+        let ty = parse_type(name, &mut cursor)?;
+        if cursor == name.len() {
+            return Ok(ty);
+        }
+    }
+    if !name.is_empty() && !name.contains('/') {
+        return Ok(Type::Class(name.to_owned()));
+    }
+    Err(invalid(format!("unsupported array component `{name}`")))
+}
+
 fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<Op, CompileError> {
     use RawInstruction::*;
     let op = match raw {
+        AConstNull => Op::AConstNull,
+        ANewArray { index } => Op::NewArray(array_component_type(&class_name(pool, index)?)?),
+        NewArray { atype } => Op::NewArray(match atype {
+            noak::reader::attributes::ArrayType::Boolean => Type::Boolean,
+            noak::reader::attributes::ArrayType::Byte => Type::Byte,
+            noak::reader::attributes::ArrayType::Char => Type::Char,
+            noak::reader::attributes::ArrayType::Short => Type::Short,
+            noak::reader::attributes::ArrayType::Int => Type::Int,
+            noak::reader::attributes::ArrayType::Long => Type::Long,
+            noak::reader::attributes::ArrayType::Float => Type::Float,
+            noak::reader::attributes::ArrayType::Double => Type::Double,
+        }),
+        MultiANewArray { index, dimensions } => {
+            let descriptor = class_name(pool, index)?;
+            let mut cursor = 0;
+            let ty = parse_type(&descriptor, &mut cursor)?;
+            if cursor != descriptor.len() || !matches!(ty, Type::Array(_)) {
+                return Err(invalid(format!("invalid multianewarray descriptor `{descriptor}`")));
+            }
+            Op::MultiNewArray(ty, dimensions)
+        }
+        ArrayLength => Op::ArrayLength,
+        IALoad => Op::IALoad,
+        IAStore => Op::IAStore,
+        LALoad => Op::LALoad,
+        LAStore => Op::LAStore,
+        FALoad => Op::FALoad,
+        FAStore => Op::FAStore,
+        DALoad => Op::DALoad,
+        DAStore => Op::DAStore,
+        BALoad => Op::BALoad,
+        BAStore => Op::BAStore,
+        CALoad => Op::CALoad,
+        CAStore => Op::CAStore,
+        SALoad => Op::SALoad,
+        SAStore => Op::SAStore,
+        AALoad => Op::AALoad,
+        AAStore => Op::AAStore,
+        AThrow => Op::AThrow,
         IConstM1 => Op::IConst(-1),
         IConst0 => Op::IConst(0),
         IConst1 => Op::IConst(1),
@@ -485,6 +598,18 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IfICmpGe { offset } => Op::If(IfKind::ICmpGe, offset.into()),
         IfICmpGt { offset } => Op::If(IfKind::ICmpGt, offset.into()),
         IfICmpLe { offset } => Op::If(IfKind::ICmpLe, offset.into()),
+        IfACmpEq { offset } => Op::If(IfKind::ACmpEq, offset.into()),
+        IfACmpNe { offset } => Op::If(IfKind::ACmpNe, offset.into()),
+        IfNull { offset } => Op::If(IfKind::Null, offset.into()),
+        IfNonNull { offset } => Op::If(IfKind::NonNull, offset.into()),
+        LookupSwitch(switch) => Op::LookupSwitch {
+            default: switch.default_offset(),
+            cases: switch.pairs().map(|pair| (pair.key(), pair.offset())).collect(),
+        },
+        TableSwitch(switch) => Op::TableSwitch {
+            default: switch.default_offset(),
+            cases: switch.pairs().map(|pair| (pair.key(), pair.offset())).collect(),
+        },
         IReturn => Op::IReturn,
         LReturn => Op::LReturn,
         FReturn => Op::FReturn,
@@ -793,6 +918,8 @@ enum Value {
     PrintStream,
     This,
     Object { expression: String, class: String },
+    Array { expression: String, element: Type },
+    Null,
     Uninitialized(usize),
 }
 
@@ -805,6 +932,8 @@ impl Value {
             | Self::Double(value)
             | Self::String(value) => Some(value),
             Self::Object { expression, .. } => Some(expression),
+            Self::Array { expression, .. } => Some(expression),
+            Self::Null => Some("None"),
             _ => None,
         }
     }
@@ -842,14 +971,16 @@ impl<'a> Body<'a> {
         let mut slot = locals.len();
         for (index, ty) in method.signature.parameters.iter().enumerate() {
             let value = match ty {
-                Type::Int => Value::Int(format!("arg{index}")),
+                Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                    Value::Int(format!("arg{index}"))
+                }
                 Type::Long => Value::Long(format!("arg{index}")),
                 Type::Float => Value::Float(format!("arg{index}")),
                 Type::Double => Value::Double(format!("arg{index}")),
                 Type::String => Value::String(format!("arg{index}")),
-                Type::StringArray => Value::Object {
+                Type::Array(element) => Value::Array {
                     expression: format!("arg{index}"),
-                    class: "java/lang/String[]".to_owned(),
+                    element: (**element).clone(),
                 },
                 Type::Class(class) => Value::Object {
                     expression: format!("arg{index}"),
@@ -951,9 +1082,182 @@ impl<'a> Body<'a> {
         Ok(args)
     }
 
+    fn pop_array(
+        &mut self,
+        instruction: &Instruction,
+    ) -> Result<(String, Type), CompileError> {
+        match self.pop(instruction)? {
+            Value::Array { expression, element } => Ok((expression, element)),
+            value => Err(stack_error(
+                self.program,
+                self.method,
+                instruction,
+                format!("expected array reference, found {}", match value {
+                    Value::Null => "null without a verifier type",
+                    _ => "non-array value",
+                }),
+            )),
+        }
+    }
+
+    fn array_default(element: &Type) -> Result<String, CompileError> {
+        Ok(match element {
+            Type::Boolean => "false".to_owned(),
+            Type::Byte => "0_i8".to_owned(),
+            Type::Char => "0_u16".to_owned(),
+            Type::Short => "0_i16".to_owned(),
+            Type::Int => "0_i32".to_owned(),
+            Type::Long => "0_i64".to_owned(),
+            Type::Float => "0.0_f32".to_owned(),
+            Type::Double => "0.0_f64".to_owned(),
+            Type::String => "String::new()".to_owned(),
+            Type::Class(_) | Type::Array(_) => "None".to_owned(),
+            Type::Void => return Err(invalid("void cannot be an array element")),
+        })
+    }
+
+    fn multi_array_code(
+        &mut self,
+        ty: &Type,
+        active_dimensions: usize,
+        lengths: &[String],
+        depth: usize,
+    ) -> Result<(String, String), CompileError> {
+        let Type::Array(element) = ty else {
+            return Err(invalid("multianewarray descriptor is not an array"));
+        };
+        let name = format!("array{}", self.next_temp);
+        self.next_temp += 1;
+        let element_rust = element.array_element_rust(&self.program.name)?;
+        let default = if depth + 1 < active_dimensions {
+            "None".to_owned()
+        } else {
+            Self::array_default(element)?
+        };
+        let mut code = format!(
+            "let {name} = Some(jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), {}, {default})?);",
+            lengths[depth]
+        );
+        if depth + 1 < active_dimensions {
+            let (child, child_code) = self.multi_array_code(element, active_dimensions, lengths, depth + 1)?;
+            let index = format!("index{}", self.next_temp);
+            self.next_temp += 1;
+            code.push_str(&format!(
+                "for {index} in 0..{} {{ {child_code} {name}.as_ref().expect(\"new Java array\").set({index}, {child}).await?; }}",
+                lengths[depth]
+            ));
+        }
+        Ok((name, code))
+    }
+
     fn run(mut self) -> Result<String, CompileError> {
         for instruction in &self.method.instructions {
             match &instruction.op {
+                Op::AConstNull => self.stack.push(Value::Null),
+                Op::NewArray(element) => {
+                    let length = self.pop_expression(instruction)?;
+                    let rust = element.array_element_rust(&self.program.name)?;
+                    let default = Self::array_default(element)?;
+                    let expression = format!(
+                        "Some(jars_runtime::JavaArray::<{rust}>::new(program.spawner.clone(), {length}, {default})?)"
+                    );
+                    let value = self.temp(expression, |expression| Value::Array {
+                        expression,
+                        element: element.clone(),
+                    });
+                    self.stack.push(value);
+                }
+                Op::MultiNewArray(ty, dimensions) => {
+                    let Type::Array(element) = ty else { unreachable!() };
+                    let mut lengths = Vec::with_capacity((*dimensions).into());
+                    for _ in 0..*dimensions {
+                        lengths.push(self.pop_expression(instruction)?);
+                    }
+                    lengths.reverse();
+                    let (expression, code) = self.multi_array_code(ty, (*dimensions).into(), &lengths, 0)?;
+                    self.statements.push(code);
+                    self.stack.push(Value::Array { expression, element: (**element).clone() });
+                }
+                Op::ArrayLength => {
+                    let (array, _) = self.pop_array(instruction)?;
+                    let value = self.temp(
+                        format!("{array}.ok_or_else(jars_runtime::null_pointer)?.length().await?"),
+                        Value::Int,
+                    );
+                    self.stack.push(value);
+                }
+                Op::IALoad | Op::LALoad | Op::FALoad | Op::DALoad | Op::BALoad | Op::CALoad | Op::SALoad => {
+                    let index = self.pop_expression(instruction)?;
+                    let (array, element) = self.pop_array(instruction)?;
+                    let get = format!("{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?");
+                    let (expression, value): (String, Value) = match &instruction.op {
+                        Op::IALoad => (get, Value::Int(String::new())),
+                        Op::LALoad => (get, Value::Long(String::new())),
+                        Op::FALoad => (get, Value::Float(String::new())),
+                        Op::DALoad => (get, Value::Double(String::new())),
+                        Op::BALoad | Op::CALoad | Op::SALoad => (format!("({get}) as i32"), Value::Int(String::new())),
+                        _ => unreachable!(),
+                    };
+                    let valid = matches!(
+                        (&instruction.op, &element),
+                        (Op::IALoad, Type::Int)
+                            | (Op::LALoad, Type::Long)
+                            | (Op::FALoad, Type::Float)
+                            | (Op::DALoad, Type::Double)
+                            | (Op::BALoad, Type::Boolean | Type::Byte)
+                            | (Op::CALoad, Type::Char)
+                            | (Op::SALoad, Type::Short)
+                    );
+                    if !valid {
+                        return Err(stack_error(self.program, self.method, instruction, "array opcode does not match element type"));
+                    }
+                    let value = match value {
+                        Value::Int(_) => self.temp(expression, Value::Int),
+                        Value::Long(_) => self.temp(expression, Value::Long),
+                        Value::Float(_) => self.temp(expression, Value::Float),
+                        Value::Double(_) => self.temp(expression, Value::Double),
+                        _ => unreachable!(),
+                    };
+                    self.stack.push(value);
+                }
+                Op::IAStore | Op::LAStore | Op::FAStore | Op::DAStore | Op::BAStore | Op::CAStore | Op::SAStore => {
+                    let value = self.pop_expression(instruction)?;
+                    let index = self.pop_expression(instruction)?;
+                    let (array, element) = self.pop_array(instruction)?;
+                    let stored = match (&instruction.op, &element) {
+                        (Op::IAStore, Type::Int) | (Op::LAStore, Type::Long) | (Op::FAStore, Type::Float) | (Op::DAStore, Type::Double) => value,
+                        (Op::BAStore, Type::Boolean) => format!("{value} != 0"),
+                        (Op::BAStore, Type::Byte) => format!("{value} as i8"),
+                        (Op::CAStore, Type::Char) => format!("{value} as u16"),
+                        (Op::SAStore, Type::Short) => format!("{value} as i16"),
+                        _ => return Err(stack_error(self.program, self.method, instruction, "array opcode does not match element type")),
+                    };
+                    self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {stored}).await?;"));
+                }
+                Op::AALoad => {
+                    let index = self.pop_expression(instruction)?;
+                    let (array, element) = self.pop_array(instruction)?;
+                    let expression = format!("{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?");
+                    let value = match element {
+                        Type::Class(class) => self.temp(expression, |expression| Value::Object { expression, class }),
+                        Type::Array(element) => self.temp(expression, |expression| Value::Array { expression, element: *element }),
+                        Type::String => self.temp(expression, Value::String),
+                        _ => return Err(stack_error(self.program, self.method, instruction, "aaload on primitive array")),
+                    };
+                    self.stack.push(value);
+                }
+                Op::AAStore => {
+                    let value = self.pop_expression(instruction)?;
+                    let index = self.pop_expression(instruction)?;
+                    let (array, element) = self.pop_array(instruction)?;
+                    if !matches!(element, Type::Class(_) | Type::Array(_) | Type::String) {
+                        return Err(stack_error(self.program, self.method, instruction, "aastore on primitive array"));
+                    }
+                    self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {value}).await?;"));
+                }
+                Op::AThrow => {
+                    return Err(unsupported(self.program, self.method, instruction, "athrow requires exception-table state-machine lowering"));
+                }
                 Op::IConst(value) => self.stack.push(Value::Int(value.to_string())),
                 Op::LConst(value) => self.stack.push(Value::Long(format!("{value}_i64"))),
                 Op::FConst(value) => self.stack.push(Value::Float(format!("{value:?}_f32"))),
@@ -969,6 +1273,10 @@ impl<'a> Body<'a> {
                         Value::Object { expression, class } => Value::Object {
                             expression: format!("{expression}.clone()"),
                             class,
+                        },
+                        Value::Array { expression, element } => Value::Array {
+                            expression: format!("{expression}.clone()"),
+                            element,
                         },
                         other => other,
                     });
@@ -1001,6 +1309,11 @@ impl<'a> Body<'a> {
                                 expression: local,
                                 class,
                             },
+                            Value::Array { element, .. } => Value::Array {
+                                expression: local,
+                                element,
+                            },
+                            Value::Null => Value::Null,
                             _ => unreachable!(),
                         },
                     );
@@ -1150,17 +1463,15 @@ impl<'a> Body<'a> {
                         }
                         let expression = format!("program.state.borrow().{class}.{field}.clone()");
                         let value = match ty {
-                            Type::Int => self.temp(expression, Value::Int),
+                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => self.temp(expression, Value::Int),
                             Type::Long => self.temp(expression, Value::Long),
                             Type::Float => self.temp(expression, Value::Float),
                             Type::Double => self.temp(expression, Value::Double),
                             Type::String => self.temp(expression, Value::String),
-                            Type::StringArray => {
-                                self.temp(expression, |expression| Value::Object {
-                                    expression,
-                                    class: "java/lang/String[]".to_owned(),
-                                })
-                            }
+                            Type::Array(element) => self.temp(expression, |expression| Value::Array {
+                                expression,
+                                element: (*element).clone(),
+                            }),
                             Type::Class(class) => {
                                 self.temp(expression, |expression| Value::Object {
                                     expression,
@@ -1207,7 +1518,7 @@ impl<'a> Body<'a> {
                             ),
                         },
                         Value::Object { expression, class } if class == reference.class => format!(
-                            "{expression}.ok_or(jars_runtime::JavaError::NullPointer)?.__get_{field}().await?"
+                            "{expression}.ok_or_else(jars_runtime::null_pointer)?.__get_{field}().await?"
                         ),
                         Value::This => {
                             return Err(unsupported(
@@ -1227,14 +1538,14 @@ impl<'a> Body<'a> {
                         }
                     };
                     let value = match ty {
-                        Type::Int => self.temp(expression, Value::Int),
+                        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => self.temp(expression, Value::Int),
                         Type::Long => self.temp(expression, Value::Long),
                         Type::Float => self.temp(expression, Value::Float),
                         Type::Double => self.temp(expression, Value::Double),
                         Type::String => self.temp(expression, Value::String),
-                        Type::StringArray => self.temp(expression, |expression| Value::Object {
+                        Type::Array(element) => self.temp(expression, |expression| Value::Array {
                             expression,
-                            class: "java/lang/String[]".to_owned(),
+                            element: (*element).clone(),
                         }),
                         Type::Class(class) => self.temp(expression, |expression| Value::Object {
                             expression,
@@ -1268,7 +1579,7 @@ impl<'a> Body<'a> {
                         }
                         Value::Object { expression, class } if class == reference.class => {
                             self.statements.push(format!(
-                                "{expression}.ok_or(jars_runtime::JavaError::NullPointer)?.__set_{field}({value}).await?;"
+                                "{expression}.ok_or_else(jars_runtime::null_pointer)?.__set_{field}({value}).await?;"
                             ));
                         }
                         Value::This => {
@@ -1427,7 +1738,7 @@ impl<'a> Body<'a> {
                     );
                     let expression = format!("{method}(program, {}).await?", args.join(", "));
                     match signature.returns {
-                        Type::Int => {
+                        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
                             let value = self.temp(expression, Value::Int);
                             self.stack.push(value);
                         }
@@ -1448,13 +1759,9 @@ impl<'a> Body<'a> {
                             self.stack.push(value);
                         }
                         Type::Void => self.statements.push(format!("{expression};")),
-                        Type::StringArray => {
-                            return Err(unsupported(
-                                self.program,
-                                self.method,
-                                instruction,
-                                "array return",
-                            ));
+                        Type::Array(element) => {
+                            let value = self.temp(expression, |expression| Value::Array { expression, element: (*element).clone() });
+                            self.stack.push(value);
                         }
                         Type::Class(class) => {
                             let value = self.temp(expression, |expression| Value::Object {
@@ -1509,11 +1816,11 @@ impl<'a> Body<'a> {
                         };
                         let method = rust_ident(&reference.name)?;
                         let expression = format!(
-                            "{object}.ok_or(jars_runtime::JavaError::NullPointer)?.{method}({}).await?",
+                            "{object}.ok_or_else(jars_runtime::null_pointer)?.{method}({}).await?",
                             args.join(", ")
                         );
                         match signature.returns {
-                            Type::Int => {
+                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
                                 let value = self.temp(expression, Value::Int);
                                 self.stack.push(value);
                             }
@@ -1534,13 +1841,9 @@ impl<'a> Body<'a> {
                                 self.stack.push(value);
                             }
                             Type::Void => self.statements.push(format!("{expression};")),
-                            Type::StringArray => {
-                                return Err(unsupported(
-                                    self.program,
-                                    self.method,
-                                    instruction,
-                                    "array return",
-                                ));
+                            Type::Array(element) => {
+                                let value = self.temp(expression, |expression| Value::Array { expression, element: (*element).clone() });
+                                self.stack.push(value);
                             }
                             Type::Class(class) => {
                                 let value = self.temp(expression, |expression| Value::Object {
@@ -1572,7 +1875,7 @@ impl<'a> Body<'a> {
                     self.statements.push(format!("return Ok({value});"));
                 }
                 Op::Return => self.statements.push("return Ok(());".to_owned()),
-                Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) => {
+                Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) | Op::LookupSwitch { .. } | Op::TableSwitch { .. } => {
                     return Err(unsupported(
                         self.program,
                         self.method,
@@ -1607,14 +1910,14 @@ fn reply_fields(parameters: &str, reply: &str) -> String {
 
 fn default_return(ty: &Type) -> &'static str {
     match ty {
-        Type::Int => "0",
+        Type::Boolean => "false",
+        Type::Byte | Type::Char | Type::Short | Type::Int => "0",
         Type::Long => "0",
         Type::Float => "0.0",
         Type::Double => "0.0",
         Type::Void => "()",
         Type::String => "\"\"",
-        Type::StringArray => "Vec::new()",
-        Type::Class(_) => "None",
+        Type::Class(_) | Type::Array(_) => "None",
     }
 }
 
@@ -1760,6 +2063,10 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
                     IfKind::ICmpGe => ("left >= right", 2),
                     IfKind::ICmpGt => ("left > right", 2),
                     IfKind::ICmpLe => ("left <= right", 2),
+                    IfKind::ACmpEq => ("left == right", 2),
+                    IfKind::ACmpNe => ("left != right", 2),
+                    IfKind::Null => ("value == 0", 1),
+                    IfKind::NonNull => ("value != 0", 1),
                 };
                 let values = if pops == 1 {
                     "let value = stack.pop().expect(\"verified JVM stack\");"
@@ -1775,6 +2082,21 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
                         instruction,
                         "conditional falls off method"
                     ))?,
+                )
+            }
+            Op::LookupSwitch { default, cases } | Op::TableSwitch { default, cases } => {
+                let default = branch_target(program, method, instruction, *default)?;
+                let cases = cases
+                    .iter()
+                    .map(|(key, delta)| {
+                        Ok(format!(
+                            "{key} => {},",
+                            branch_target(program, method, instruction, *delta)?
+                        ))
+                    })
+                    .collect::<Result<String, CompileError>>()?;
+                format!(
+                    "let value = stack.pop().expect(\"verified JVM stack\"); pc = match value {{ {cases} _ => {default}, }}; continue;"
                 )
             }
             Op::IReturn => "return Ok(stack.pop().expect(\"verified JVM stack\"));".to_owned(),
@@ -1804,7 +2126,7 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
         .ok_or_else(|| invalid("methods must contain at least one instruction"))?
         .offset;
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(_program: &super::Program<S>, {parameters}) -> Result<i32, jars_runtime::JavaError> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(_program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<i32> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
         arms.join(",\n"),
     ))
 }
@@ -1817,7 +2139,7 @@ fn static_method(
     if method
         .instructions
         .iter()
-        .any(|instruction| matches!(&instruction.op, Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _)))
+        .any(|instruction| matches!(&instruction.op, Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) | Op::LookupSwitch { .. } | Op::TableSwitch { .. }))
     {
         return aot_int_static_method(program, method);
     }
@@ -1826,7 +2148,7 @@ fn static_method(
     let body = Body::new(program, known_classes, method, BodyKind::Static).run()?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}",
         method.signature.returns.rust(&program.name)?,
     ))
 }
@@ -1841,7 +2163,7 @@ fn instance_method(
     let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
-        "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> Result<{}, jars_runtime::JavaError> {{\n{body}\nOk({fallback})\n}}",
+        "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n{body}\nOk({fallback})\n}}",
         rust_ident(&program.name)?,
         method.signature.returns.rust(&program.name)?,
     );
@@ -1850,7 +2172,7 @@ fn instance_method(
         reply_fields(
             &parameters,
             &format!(
-                "reply: jars_runtime::Reply<Result<{}, jars_runtime::JavaError>>",
+                "reply: jars_runtime::Reply<jars_runtime::JavaResult<{}>>",
                 method.signature.returns.rust(&program.name)?,
             ),
         ),
@@ -1860,7 +2182,7 @@ fn instance_method(
         .collect::<Vec<_>>()
         .join(", ");
     let proxy = format!(
-        "pub async fn {name}(&self{}) -> Result<{}, jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({}Message::{name} {{ {} }}).await?;\nresponse.recv().await?\n}}",
+        "pub async fn {name}(&self{}) -> jars_runtime::JavaResult<{}> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({}Message::{name} {{ {} }}).await?;\nresponse.recv().await?\n}}",
         if parameters.is_empty() {
             String::new()
         } else {
@@ -1909,7 +2231,7 @@ fn actor_code(
     let constructor_parameters = parameters(program, constructor)?;
     let constructor_message_fields = reply_fields(
         &constructor_parameters,
-        "reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>>",
+        "reply: jars_runtime::Reply<jars_runtime::JavaResult<()>>",
     );
     let constructor_body =
         Body::new(program, known_classes, constructor, BodyKind::Instance).run()?;
@@ -1930,7 +2252,7 @@ fn actor_code(
         },
     )];
     implementations.push(format!(
-        "async fn init_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{class}State>>, program: &super::Program<S>, {constructor_parameters}) -> Result<(), jars_runtime::JavaError> {{\n{constructor_body}\nOk(())\n}}"
+        "async fn init_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{class}State>>, program: &super::Program<S>, {constructor_parameters}) -> jars_runtime::JavaResult<()> {{\n{constructor_body}\nOk(())\n}}"
     ));
     for field in program.fields.iter().filter(|field| !field.is_static) {
         let field_name = rust_ident(&field.name)?;
@@ -1938,10 +2260,10 @@ fn actor_code(
         let setter = rust_ident(&format!("__set_{}", field.name))?;
         let ty = field.ty.rust(&program.name)?;
         variants.push(format!(
-            "{getter} {{ reply: jars_runtime::Reply<Result<{ty}, jars_runtime::JavaError>> }}"
+            "{getter} {{ reply: jars_runtime::Reply<jars_runtime::JavaResult<{ty}>> }}"
         ));
         variants.push(format!(
-            "{setter} {{ value: {ty}, reply: jars_runtime::Reply<Result<(), jars_runtime::JavaError>> }}"
+            "{setter} {{ value: {ty}, reply: jars_runtime::Reply<jars_runtime::JavaResult<()>> }}"
         ));
         dispatch.push(format!(
             "{class}Message::{getter} {{ reply }} => {{ let _ = reply.send(Ok(handler_state.lock().expect(\"actor state mutex\").{field_name}.clone())); }}"
@@ -1950,7 +2272,7 @@ fn actor_code(
             "{class}Message::{setter} {{ value, reply }} => {{ handler_state.lock().expect(\"actor state mutex\").{field_name} = value; let _ = reply.send(Ok(())); }}"
         ));
         proxies.push(format!(
-            "pub async fn {getter}(&self) -> Result<{ty}, jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{getter} {{ reply }}).await?;\nresponse.recv().await?\n}}\npub async fn {setter}(&self, value: {ty}) -> Result<(), jars_runtime::JavaError> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{setter} {{ value, reply }}).await?;\nresponse.recv().await?\n}}"
+            "pub async fn {getter}(&self) -> jars_runtime::JavaResult<{ty}> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{getter} {{ reply }}).await?;\nresponse.recv().await?\n}}\npub async fn {setter}(&self, value: {ty}) -> jars_runtime::JavaResult<()> {{\nlet (reply, response) = jars_runtime::reply();\nself.actor.send({class}Message::{setter} {{ value, reply }}).await?;\nresponse.recv().await?\n}}"
         ));
     }
     for method in methods {
@@ -1970,7 +2292,7 @@ fn actor_code(
         ));
     }
     Ok(format!(
-        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(program: &super::Program<S>{}) -> Result<Self, jars_runtime::JavaError> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nlet actor_program = program.clone();\nlet spawner = actor_program.spawner.clone();\nspawner.spawn(async move {{\nuse jars_runtime::{{FutureExt as _, StreamExt as _}};\nlet state = std::rc::Rc::new(std::sync::Mutex::new({class}State {{ {field_initializers} }}));\nlet mut in_flight: jars_runtime::FuturesUnordered<std::pin::Pin<std::boxed::Box<dyn std::future::Future<Output = ()>>>> = jars_runtime::FuturesUnordered::new();\nloop {{\nif in_flight.is_empty() {{\nlet message = match mailbox.recv().await {{ Ok(message) => message, Err(_) => break }};\nlet handler_state = state.clone(); let handler_program = actor_program.clone();\nin_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }}));\n}} else {{\njars_runtime::select_biased! {{\nmessage = mailbox.recv().fuse() => match message {{\nOk(message) => {{ let handler_state = state.clone(); let handler_program = actor_program.clone(); in_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }})); }},\nErr(_) => break,\n}},\n_ = in_flight.next().fuse() => {{}},\n}}\n}}\n}}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
+        "struct {class}State {{ {field_declarations} }}\nenum {class}Message {{ {} }}\n#[derive(Clone)]\npub struct {class} {{ actor: jars_runtime::ActorRef<{class}Message> }}\nimpl {class} {{\npub async fn new<S: jars_runtime::Spawner>(program: &super::Program<S>{}) -> jars_runtime::JavaResult<Self> {{\nlet (actor, mailbox) = jars_runtime::actor_channel();\nlet actor_program = program.clone();\nlet spawner = actor_program.spawner.clone();\nspawner.spawn(async move {{\nuse jars_runtime::{{FutureExt as _, StreamExt as _}};\nlet state = std::rc::Rc::new(std::sync::Mutex::new({class}State {{ {field_initializers} }}));\nlet mut in_flight: jars_runtime::FuturesUnordered<std::pin::Pin<std::boxed::Box<dyn std::future::Future<Output = ()>>>> = jars_runtime::FuturesUnordered::new();\nloop {{\nif in_flight.is_empty() {{\nlet message = match mailbox.recv().await {{ Ok(message) => message, Err(_) => break }};\nlet handler_state = state.clone(); let handler_program = actor_program.clone();\nin_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }}));\n}} else {{\njars_runtime::select_biased! {{\nmessage = mailbox.recv().fuse() => match message {{\nOk(message) => {{ let handler_state = state.clone(); let handler_program = actor_program.clone(); in_flight.push(std::boxed::Box::pin(async move {{ match message {{ {} }} }})); }},\nErr(_) => break,\n}},\n_ = in_flight.next().fuse() => {{}},\n}}\n}}\n}}\n}});\nlet (reply, response) = jars_runtime::reply();\nactor.send({class}Message::Init {{ {} }}).await?;\nresponse.recv().await??;\nOk(Self {{ actor }})\n}}\n{}\n{}\n}}",
         variants.join(", "),
         if constructor_parameters.is_empty() {
             String::new()
@@ -2036,13 +2358,13 @@ fn static_state_code(program: &Program, known_classes: &[String]) -> Result<Stri
             .run()?
             .replace("__ensure(program).await?;\n", "");
         format!(
-            "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> {{\n{body}\nOk(())\n}}"
+            "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
         )
     } else {
-        "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(_program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> { Ok(()) }".to_owned()
+        "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(_program: &super::Program<S>) -> jars_runtime::JavaResult<()> { Ok(()) }".to_owned()
     };
     Ok(format!(
-        "pub struct {class}Statics {{ pub initialized: bool, pub initializing: bool, pub failure: bool, {fields} }}\nimpl {class}Statics {{ pub fn new() -> Self {{ Self {{ initialized: false, initializing: false, failure: false, {initializers} }} }} }}\n\npub(crate) async fn __ensure<S: jars_runtime::Spawner>(program: &super::Program<S>) -> Result<(), jars_runtime::JavaError> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::JavaError::ClassInitializationFailed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program).await;\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}\n{clinit}"
+        "pub struct {class}Statics {{ pub initialized: bool, pub initializing: bool, pub failure: bool, {fields} }}\nimpl {class}Statics {{ pub fn new() -> Self {{ Self {{ initialized: false, initializing: false, failure: false, {initializers} }} }} }}\n\npub(crate) async fn __ensure<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::class_initialization_failed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program).await;\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}\n{clinit}"
     ))
 }
 
@@ -2119,7 +2441,7 @@ fn entry_point(programs: &[Program]) -> Result<&Program, CompileError> {
                 method.is_public
                     && method.is_static
                     && method.name == "main"
-                    && method.signature.parameters == [Type::StringArray]
+                    && method.signature.parameters == [Type::Array(Box::new(Type::String))]
                     && method.signature.returns == Type::Void
             })
         })
@@ -2151,7 +2473,7 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
     let program = program_code(programs)?;
     let class = rust_ident(&entry.name)?;
     let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet args = std::env::args().skip(1).collect();\nruntime.block_on({class}::main(&program, args)).expect(\"Java actor call failed\");\n}}",
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, String::new())?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, value).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
         modules.join("\n"),
     );
     let file = syn::parse_file(&source)
@@ -2371,9 +2693,9 @@ mod tests {
     use super::*;
 
     #[test]
-    fn descriptors_accept_wide_numeric_types_and_reject_unimplemented_ones() {
+    fn descriptors_accept_numeric_and_recursive_array_types() {
         assert!(parse_signature("(JFD)V").is_ok());
-        assert!(parse_signature("(Z)V").is_err());
+        assert!(parse_signature("(Z[[I[[[Ljava/lang/String;)V").is_ok());
         assert!(parse_signature("(I").is_err());
     }
 

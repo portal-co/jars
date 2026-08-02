@@ -15,4 +15,5 @@ proc-macro2 = { version = "1.0", default-features = false }
 prettyplease = "0.2.37"
 async-channel = "2.5"
 futures = "0.3"
+anyhow = "1.0"
 tempfile = "3.20"
