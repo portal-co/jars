@@ -16,6 +16,7 @@ pub use futures::{FutureExt, StreamExt, select_biased, stream::FuturesUnordered}
 /// remains downcastable, so generated exception tables can select Java catch
 /// clauses without giving the generated program a bytecode runtime.
 pub type JavaResult<T> = anyhow::Result<T>;
+pub type JavaError = anyhow::Error;
 
 /// An executor capable of running the background tasks for generated actors.
 ///
@@ -125,14 +126,46 @@ impl Display for ClassInitializationFailed {
 
 impl std::error::Error for ClassInitializationFailed {}
 
-pub fn null_pointer() -> anyhow::Error { NullPointerException.into() }
-pub fn class_cast() -> anyhow::Error { ClassCastException.into() }
+pub fn null_pointer() -> anyhow::Error {
+    NullPointerException.into()
+}
+pub fn class_cast() -> anyhow::Error {
+    ClassCastException.into()
+}
 pub fn class_initialization_failed(class: &'static str) -> anyhow::Error {
     ClassInitializationFailed(class).into()
 }
-pub fn array_index_out_of_bounds() -> anyhow::Error { ArrayIndexOutOfBoundsException.into() }
-pub fn negative_array_size() -> anyhow::Error { NegativeArraySizeException.into() }
-pub fn array_store() -> anyhow::Error { ArrayStoreException.into() }
+pub fn array_index_out_of_bounds() -> anyhow::Error {
+    ArrayIndexOutOfBoundsException.into()
+}
+pub fn negative_array_size() -> anyhow::Error {
+    NegativeArraySizeException.into()
+}
+pub fn array_store() -> anyhow::Error {
+    ArrayStoreException.into()
+}
+
+/// Matches the closed runtime throwable hierarchy without reflection.  The AOT
+/// compiler embeds only the requested class name from an exception table.
+pub fn catches(error: &JavaError, class: &str) -> bool {
+    match class {
+        "java/lang/ArithmeticException" => error.is::<ArithmeticException>(),
+        "java/lang/NullPointerException" => error.is::<NullPointerException>(),
+        "java/lang/ClassCastException" => error.is::<ClassCastException>(),
+        "java/lang/ArrayIndexOutOfBoundsException" => error.is::<ArrayIndexOutOfBoundsException>(),
+        "java/lang/NegativeArraySizeException" => error.is::<NegativeArraySizeException>(),
+        "java/lang/ArrayStoreException" => error.is::<ArrayStoreException>(),
+        "java/lang/Exception" | "java/lang/RuntimeException" | "java/lang/Throwable" => {
+            error.is::<ArithmeticException>()
+                || error.is::<NullPointerException>()
+                || error.is::<ClassCastException>()
+                || error.is::<ArrayIndexOutOfBoundsException>()
+                || error.is::<NegativeArraySizeException>()
+                || error.is::<ArrayStoreException>()
+        }
+        _ => false,
+    }
+}
 
 /// Java `int` division, including the specified wrapping `MIN / -1` case.
 pub fn idiv(left: i32, right: i32) -> JavaResult<i32> {
@@ -232,14 +265,25 @@ pub struct JavaArray<T> {
 
 impl<T> Clone for JavaArray<T> {
     fn clone(&self) -> Self {
-        Self { actor: self.actor.clone() }
+        Self {
+            actor: self.actor.clone(),
+        }
     }
 }
 
 enum ArrayMessage<T> {
-    Length { reply: Reply<JavaResult<i32>> },
-    Get { index: i32, reply: Reply<JavaResult<T>> },
-    Set { index: i32, value: T, reply: Reply<JavaResult<()>> },
+    Length {
+        reply: Reply<JavaResult<i32>>,
+    },
+    Get {
+        index: i32,
+        reply: Reply<JavaResult<T>>,
+    },
+    Set {
+        index: i32,
+        value: T,
+        reply: Reply<JavaResult<()>>,
+    },
 }
 
 impl<T: Clone + 'static> JavaArray<T> {
@@ -253,45 +297,58 @@ impl<T: Clone + 'static> JavaArray<T> {
         spawner.spawn(async move {
             use futures::{FutureExt as _, StreamExt as _};
             let state = Rc::new(std::sync::Mutex::new(vec![default; length as usize]));
-            let mut in_flight: FuturesUnordered<
-                std::pin::Pin<Box<dyn Future<Output = ()>>>,
-            > = FuturesUnordered::new();
+            let mut in_flight: FuturesUnordered<std::pin::Pin<Box<dyn Future<Output = ()>>>> =
+                FuturesUnordered::new();
             loop {
-                let spawn_handler = |message: ArrayMessage<T>, state: Rc<std::sync::Mutex<Vec<T>>>| {
-                    Box::pin(async move {
-                        match message {
-                            ArrayMessage::Length { reply } => {
-                                let length = state.lock().expect("array state mutex").len() as i32;
-                                let _ = reply.send(Ok(length));
+                let spawn_handler =
+                    |message: ArrayMessage<T>, state: Rc<std::sync::Mutex<Vec<T>>>| {
+                        Box::pin(async move {
+                            match message {
+                                ArrayMessage::Length { reply } => {
+                                    let length =
+                                        state.lock().expect("array state mutex").len() as i32;
+                                    let _ = reply.send(Ok(length));
+                                }
+                                ArrayMessage::Get { index, reply } => {
+                                    let value = if index < 0 {
+                                        Err(array_index_out_of_bounds())
+                                    } else {
+                                        state
+                                            .lock()
+                                            .expect("array state mutex")
+                                            .get(index as usize)
+                                            .cloned()
+                                            .ok_or_else(array_index_out_of_bounds)
+                                    };
+                                    let _ = reply.send(value);
+                                }
+                                ArrayMessage::Set {
+                                    index,
+                                    value,
+                                    reply,
+                                } => {
+                                    let result = if index < 0 {
+                                        Err(array_index_out_of_bounds())
+                                    } else {
+                                        let mut elements = state.lock().expect("array state mutex");
+                                        match elements.get_mut(index as usize) {
+                                            Some(slot) => {
+                                                *slot = value;
+                                                Ok(())
+                                            }
+                                            None => Err(array_index_out_of_bounds()),
+                                        }
+                                    };
+                                    let _ = reply.send(result);
+                                }
                             }
-                            ArrayMessage::Get { index, reply } => {
-                                let value = if index < 0 {
-                                    Err(array_index_out_of_bounds())
-                                } else {
-                                    state.lock().expect("array state mutex")
-                                        .get(index as usize)
-                                        .cloned()
-                                        .ok_or_else(array_index_out_of_bounds)
-                                };
-                                let _ = reply.send(value);
-                            }
-                            ArrayMessage::Set { index, value, reply } => {
-                                let result = if index < 0 {
-                                    Err(array_index_out_of_bounds())
-                                } else {
-                                    let mut elements = state.lock().expect("array state mutex");
-                                    match elements.get_mut(index as usize) {
-                                        Some(slot) => { *slot = value; Ok(()) }
-                                        None => Err(array_index_out_of_bounds()),
-                                    }
-                                };
-                                let _ = reply.send(result);
-                            }
-                        }
-                    }) as std::pin::Pin<Box<dyn Future<Output = ()>>>
-                };
+                        }) as std::pin::Pin<Box<dyn Future<Output = ()>>>
+                    };
                 if in_flight.is_empty() {
-                    let message = match mailbox.recv().await { Ok(message) => message, Err(_) => break };
+                    let message = match mailbox.recv().await {
+                        Ok(message) => message,
+                        Err(_) => break,
+                    };
                     in_flight.push(spawn_handler(message, state.clone()));
                 } else {
                     select_biased! {
@@ -321,7 +378,13 @@ impl<T: Clone + 'static> JavaArray<T> {
 
     pub async fn set(&self, index: i32, value: T) -> JavaResult<()> {
         let (reply, response) = reply();
-        self.actor.send(ArrayMessage::Set { index, value, reply }).await?;
+        self.actor
+            .send(ArrayMessage::Set {
+                index,
+                value,
+                reply,
+            })
+            .await?;
         response.recv().await?
     }
 }
@@ -439,8 +502,17 @@ mod tests {
             array.set(0, 40).await.unwrap();
             array.set(1, 2).await.unwrap();
             assert_eq!(array.length().await.unwrap(), 2);
-            assert_eq!(array.get(0).await.unwrap() + array.get(1).await.unwrap(), 42);
-            assert!(array.get(2).await.unwrap_err().is::<ArrayIndexOutOfBoundsException>());
+            assert_eq!(
+                array.get(0).await.unwrap() + array.get(1).await.unwrap(),
+                42
+            );
+            assert!(
+                array
+                    .get(2)
+                    .await
+                    .unwrap_err()
+                    .is::<ArrayIndexOutOfBoundsException>()
+            );
         });
     }
 }

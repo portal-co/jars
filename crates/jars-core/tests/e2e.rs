@@ -146,6 +146,44 @@ fn arithmetic_branches_and_back_edges_are_emitted_as_aot_state_machines() {
 }
 
 #[test]
+fn exception_table_catches_an_aot_arithmetic_failure() {
+    let (stdout, generated) = compile_and_run("CatchArithmetic");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("pending_exception"));
+    assert!(generated.contains("jars_runtime::catches"));
+}
+
+#[test]
+fn catch_all_finally_handler_can_rethrow_to_an_outer_handler() {
+    let (stdout, generated) = compile_and_run("FinallyRethrows");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("exception_locals"));
+    assert!(generated.contains("athrow requires a throwable operand"));
+}
+
+#[test]
+fn athrow_null_is_lowered_to_a_catchable_null_pointer_exception() {
+    let (stdout, generated) = compile_and_run("ThrowNull");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("jars_runtime::null_pointer"));
+}
+
+#[test]
+fn exception_table_handles_a_static_call_failure_from_another_class() {
+    let (stdout, generated) = compile_set_and_run(&["CrossExceptionMain", "ExceptionHelper"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("super::ExceptionHelper::fail(program).await"));
+}
+
+#[test]
+fn exception_table_uses_the_first_matching_typed_handler() {
+    let (stdout, generated) = compile_and_run("CatchOrdering");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("java/lang/NullPointerException"));
+    assert!(generated.contains("java/lang/RuntimeException"));
+}
+
+#[test]
 fn closed_class_set_links_cross_class_static_calls_aot() {
     let (stdout, generated) = compile_set_and_run(&["CrossMain", "Helper"]);
     assert_eq!(stdout, "42\n");

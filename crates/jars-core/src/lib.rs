@@ -185,8 +185,14 @@ enum Op {
     IInc(usize, i32),
     Goto(i32),
     If(IfKind, i32),
-    LookupSwitch { default: i32, cases: Vec<(i32, i32)> },
-    TableSwitch { default: i32, cases: Vec<(i32, i32)> },
+    LookupSwitch {
+        default: i32,
+        cases: Vec<(i32, i32)>,
+    },
+    TableSwitch {
+        default: i32,
+        cases: Vec<(i32, i32)>,
+    },
     AConstNull,
     NewArray(Type),
     MultiNewArray(Type, u8),
@@ -254,12 +260,21 @@ struct Instruction {
 }
 
 #[derive(Clone, Debug)]
+struct ExceptionHandler {
+    start: u32,
+    end: u32,
+    handler: u32,
+    catch_type: Option<String>,
+}
+
+#[derive(Clone, Debug)]
 struct Method {
     name: String,
     signature: Signature,
     is_static: bool,
     is_public: bool,
     instructions: Vec<Instruction>,
+    handlers: Vec<ExceptionHandler>,
 }
 
 #[derive(Clone, Debug)]
@@ -454,7 +469,9 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
             let mut cursor = 0;
             let ty = parse_type(&descriptor, &mut cursor)?;
             if cursor != descriptor.len() || !matches!(ty, Type::Array(_)) {
-                return Err(invalid(format!("invalid multianewarray descriptor `{descriptor}`")));
+                return Err(invalid(format!(
+                    "invalid multianewarray descriptor `{descriptor}`"
+                )));
             }
             Op::MultiNewArray(ty, dimensions)
         }
@@ -604,11 +621,17 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         IfNonNull { offset } => Op::If(IfKind::NonNull, offset.into()),
         LookupSwitch(switch) => Op::LookupSwitch {
             default: switch.default_offset(),
-            cases: switch.pairs().map(|pair| (pair.key(), pair.offset())).collect(),
+            cases: switch
+                .pairs()
+                .map(|pair| (pair.key(), pair.offset()))
+                .collect(),
         },
         TableSwitch(switch) => Op::TableSwitch {
             default: switch.default_offset(),
-            cases: switch.pairs().map(|pair| (pair.key(), pair.offset())).collect(),
+            cases: switch
+                .pairs()
+                .map(|pair| (pair.key(), pair.offset()))
+                .collect(),
         },
         IReturn => Op::IReturn,
         LReturn => Op::LReturn,
@@ -807,6 +830,7 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
         )?;
         let signature = parse_signature(&descriptor)?;
         let mut instructions = None;
+        let mut handlers = Vec::new();
         for attribute in method.attributes() {
             let attribute = attribute.map_err(|error| CompileError::Parse(error.to_string()))?;
             if let AttributeContent::Code(code) = attribute
@@ -814,6 +838,21 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
                 .map_err(|error| CompileError::Parse(error.to_string()))?
             {
                 let code = code;
+                handlers = code
+                    .exception_handlers()
+                    .map(|handler| {
+                        let catch_type = handler
+                            .catch_type()
+                            .map(|index| class_name(pool, index))
+                            .transpose()?;
+                        Ok(ExceptionHandler {
+                            start: handler.start().as_u32(),
+                            end: handler.end().as_u32(),
+                            handler: handler.handler().as_u32(),
+                            catch_type,
+                        })
+                    })
+                    .collect::<Result<Vec<_>, CompileError>>()?;
                 let mut parsed = Vec::new();
                 for instruction in code.raw_instructions() {
                     let (offset, raw) =
@@ -843,6 +882,7 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
                 None if method.access_flags().contains(AccessFlags::ABSTRACT) => Vec::new(),
                 None => return Err(invalid("methods must have Code attributes")),
             },
+            handlers,
         };
         if name == "<clinit>" {
             clinit = Some(parsed);
@@ -1082,20 +1122,23 @@ impl<'a> Body<'a> {
         Ok(args)
     }
 
-    fn pop_array(
-        &mut self,
-        instruction: &Instruction,
-    ) -> Result<(String, Type), CompileError> {
+    fn pop_array(&mut self, instruction: &Instruction) -> Result<(String, Type), CompileError> {
         match self.pop(instruction)? {
-            Value::Array { expression, element } => Ok((expression, element)),
+            Value::Array {
+                expression,
+                element,
+            } => Ok((expression, element)),
             value => Err(stack_error(
                 self.program,
                 self.method,
                 instruction,
-                format!("expected array reference, found {}", match value {
-                    Value::Null => "null without a verifier type",
-                    _ => "non-array value",
-                }),
+                format!(
+                    "expected array reference, found {}",
+                    match value {
+                        Value::Null => "null without a verifier type",
+                        _ => "non-array value",
+                    }
+                ),
             )),
         }
     }
@@ -1139,7 +1182,8 @@ impl<'a> Body<'a> {
             lengths[depth]
         );
         if depth + 1 < active_dimensions {
-            let (child, child_code) = self.multi_array_code(element, active_dimensions, lengths, depth + 1)?;
+            let (child, child_code) =
+                self.multi_array_code(element, active_dimensions, lengths, depth + 1)?;
             let index = format!("index{}", self.next_temp);
             self.next_temp += 1;
             code.push_str(&format!(
@@ -1168,15 +1212,21 @@ impl<'a> Body<'a> {
                     self.stack.push(value);
                 }
                 Op::MultiNewArray(ty, dimensions) => {
-                    let Type::Array(element) = ty else { unreachable!() };
+                    let Type::Array(element) = ty else {
+                        unreachable!()
+                    };
                     let mut lengths = Vec::with_capacity((*dimensions).into());
                     for _ in 0..*dimensions {
                         lengths.push(self.pop_expression(instruction)?);
                     }
                     lengths.reverse();
-                    let (expression, code) = self.multi_array_code(ty, (*dimensions).into(), &lengths, 0)?;
+                    let (expression, code) =
+                        self.multi_array_code(ty, (*dimensions).into(), &lengths, 0)?;
                     self.statements.push(code);
-                    self.stack.push(Value::Array { expression, element: (**element).clone() });
+                    self.stack.push(Value::Array {
+                        expression,
+                        element: (**element).clone(),
+                    });
                 }
                 Op::ArrayLength => {
                     let (array, _) = self.pop_array(instruction)?;
@@ -1186,16 +1236,26 @@ impl<'a> Body<'a> {
                     );
                     self.stack.push(value);
                 }
-                Op::IALoad | Op::LALoad | Op::FALoad | Op::DALoad | Op::BALoad | Op::CALoad | Op::SALoad => {
+                Op::IALoad
+                | Op::LALoad
+                | Op::FALoad
+                | Op::DALoad
+                | Op::BALoad
+                | Op::CALoad
+                | Op::SALoad => {
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
-                    let get = format!("{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?");
+                    let get = format!(
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?"
+                    );
                     let (expression, value): (String, Value) = match &instruction.op {
                         Op::IALoad => (get, Value::Int(String::new())),
                         Op::LALoad => (get, Value::Long(String::new())),
                         Op::FALoad => (get, Value::Float(String::new())),
                         Op::DALoad => (get, Value::Double(String::new())),
-                        Op::BALoad | Op::CALoad | Op::SALoad => (format!("({get}) as i32"), Value::Int(String::new())),
+                        Op::BALoad | Op::CALoad | Op::SALoad => {
+                            (format!("({get}) as i32"), Value::Int(String::new()))
+                        }
                         _ => unreachable!(),
                     };
                     let valid = matches!(
@@ -1209,7 +1269,12 @@ impl<'a> Body<'a> {
                             | (Op::SALoad, Type::Short)
                     );
                     if !valid {
-                        return Err(stack_error(self.program, self.method, instruction, "array opcode does not match element type"));
+                        return Err(stack_error(
+                            self.program,
+                            self.method,
+                            instruction,
+                            "array opcode does not match element type",
+                        ));
                     }
                     let value = match value {
                         Value::Int(_) => self.temp(expression, Value::Int),
@@ -1220,29 +1285,59 @@ impl<'a> Body<'a> {
                     };
                     self.stack.push(value);
                 }
-                Op::IAStore | Op::LAStore | Op::FAStore | Op::DAStore | Op::BAStore | Op::CAStore | Op::SAStore => {
+                Op::IAStore
+                | Op::LAStore
+                | Op::FAStore
+                | Op::DAStore
+                | Op::BAStore
+                | Op::CAStore
+                | Op::SAStore => {
                     let value = self.pop_expression(instruction)?;
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
                     let stored = match (&instruction.op, &element) {
-                        (Op::IAStore, Type::Int) | (Op::LAStore, Type::Long) | (Op::FAStore, Type::Float) | (Op::DAStore, Type::Double) => value,
+                        (Op::IAStore, Type::Int)
+                        | (Op::LAStore, Type::Long)
+                        | (Op::FAStore, Type::Float)
+                        | (Op::DAStore, Type::Double) => value,
                         (Op::BAStore, Type::Boolean) => format!("{value} != 0"),
                         (Op::BAStore, Type::Byte) => format!("{value} as i8"),
                         (Op::CAStore, Type::Char) => format!("{value} as u16"),
                         (Op::SAStore, Type::Short) => format!("{value} as i16"),
-                        _ => return Err(stack_error(self.program, self.method, instruction, "array opcode does not match element type")),
+                        _ => {
+                            return Err(stack_error(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "array opcode does not match element type",
+                            ));
+                        }
                     };
                     self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {stored}).await?;"));
                 }
                 Op::AALoad => {
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
-                    let expression = format!("{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?");
+                    let expression = format!(
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?"
+                    );
                     let value = match element {
-                        Type::Class(class) => self.temp(expression, |expression| Value::Object { expression, class }),
-                        Type::Array(element) => self.temp(expression, |expression| Value::Array { expression, element: *element }),
+                        Type::Class(class) => {
+                            self.temp(expression, |expression| Value::Object { expression, class })
+                        }
+                        Type::Array(element) => self.temp(expression, |expression| Value::Array {
+                            expression,
+                            element: *element,
+                        }),
                         Type::String => self.temp(expression, Value::String),
-                        _ => return Err(stack_error(self.program, self.method, instruction, "aaload on primitive array")),
+                        _ => {
+                            return Err(stack_error(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "aaload on primitive array",
+                            ));
+                        }
                     };
                     self.stack.push(value);
                 }
@@ -1251,12 +1346,22 @@ impl<'a> Body<'a> {
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
                     if !matches!(element, Type::Class(_) | Type::Array(_) | Type::String) {
-                        return Err(stack_error(self.program, self.method, instruction, "aastore on primitive array"));
+                        return Err(stack_error(
+                            self.program,
+                            self.method,
+                            instruction,
+                            "aastore on primitive array",
+                        ));
                     }
                     self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {value}).await?;"));
                 }
                 Op::AThrow => {
-                    return Err(unsupported(self.program, self.method, instruction, "athrow requires exception-table state-machine lowering"));
+                    return Err(unsupported(
+                        self.program,
+                        self.method,
+                        instruction,
+                        "athrow requires exception-table state-machine lowering",
+                    ));
                 }
                 Op::IConst(value) => self.stack.push(Value::Int(value.to_string())),
                 Op::LConst(value) => self.stack.push(Value::Long(format!("{value}_i64"))),
@@ -1274,7 +1379,10 @@ impl<'a> Body<'a> {
                             expression: format!("{expression}.clone()"),
                             class,
                         },
-                        Value::Array { expression, element } => Value::Array {
+                        Value::Array {
+                            expression,
+                            element,
+                        } => Value::Array {
                             expression: format!("{expression}.clone()"),
                             element,
                         },
@@ -1463,15 +1571,19 @@ impl<'a> Body<'a> {
                         }
                         let expression = format!("program.state.borrow().{class}.{field}.clone()");
                         let value = match ty {
-                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => self.temp(expression, Value::Int),
+                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                                self.temp(expression, Value::Int)
+                            }
                             Type::Long => self.temp(expression, Value::Long),
                             Type::Float => self.temp(expression, Value::Float),
                             Type::Double => self.temp(expression, Value::Double),
                             Type::String => self.temp(expression, Value::String),
-                            Type::Array(element) => self.temp(expression, |expression| Value::Array {
-                                expression,
-                                element: (*element).clone(),
-                            }),
+                            Type::Array(element) => {
+                                self.temp(expression, |expression| Value::Array {
+                                    expression,
+                                    element: (*element).clone(),
+                                })
+                            }
                             Type::Class(class) => {
                                 self.temp(expression, |expression| Value::Object {
                                     expression,
@@ -1538,7 +1650,9 @@ impl<'a> Body<'a> {
                         }
                     };
                     let value = match ty {
-                        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => self.temp(expression, Value::Int),
+                        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                            self.temp(expression, Value::Int)
+                        }
                         Type::Long => self.temp(expression, Value::Long),
                         Type::Float => self.temp(expression, Value::Float),
                         Type::Double => self.temp(expression, Value::Double),
@@ -1760,7 +1874,10 @@ impl<'a> Body<'a> {
                         }
                         Type::Void => self.statements.push(format!("{expression};")),
                         Type::Array(element) => {
-                            let value = self.temp(expression, |expression| Value::Array { expression, element: (*element).clone() });
+                            let value = self.temp(expression, |expression| Value::Array {
+                                expression,
+                                element: (*element).clone(),
+                            });
                             self.stack.push(value);
                         }
                         Type::Class(class) => {
@@ -1842,7 +1959,10 @@ impl<'a> Body<'a> {
                             }
                             Type::Void => self.statements.push(format!("{expression};")),
                             Type::Array(element) => {
-                                let value = self.temp(expression, |expression| Value::Array { expression, element: (*element).clone() });
+                                let value = self.temp(expression, |expression| Value::Array {
+                                    expression,
+                                    element: (*element).clone(),
+                                });
                                 self.stack.push(value);
                             }
                             Type::Class(class) => {
@@ -1875,7 +1995,11 @@ impl<'a> Body<'a> {
                     self.statements.push(format!("return Ok({value});"));
                 }
                 Op::Return => self.statements.push("return Ok(());".to_owned()),
-                Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) | Op::LookupSwitch { .. } | Op::TableSwitch { .. } => {
+                Op::IInc(_, _)
+                | Op::Goto(_)
+                | Op::If(_, _)
+                | Op::LookupSwitch { .. }
+                | Op::TableSwitch { .. } => {
                     return Err(unsupported(
                         self.program,
                         self.method,
@@ -1948,12 +2072,37 @@ fn branch_target(
     Ok(target as u32)
 }
 
+fn exception_dispatch(method: &Method) -> String {
+    let checks = method
+        .handlers
+        .iter()
+        .map(|handler| {
+            let catch = handler
+                .catch_type
+                .as_ref()
+                .map(|class| format!("jars_runtime::catches(&error, {class:?})"))
+                .unwrap_or_else(|| "true".to_owned());
+            format!(
+                "if pc >= {} && pc < {} && {catch} {{ Some({}) }} else ",
+                handler.start, handler.end, handler.handler
+            )
+        })
+        .collect::<String>();
+    format!(
+        "let target = {checks}{{ None }}; if let Some(target) = target {{ pending_exception = Some(error); stack.clear(); pc = target; continue; }} return Err(error);"
+    )
+}
+
 /// Emits an AOT state machine for integer-only static methods with branches.
 ///
 /// There is no bytecode representation at run time: every bytecode instruction
 /// becomes one Rust `match` arm.  `pc`, locals and the operand stack are merely
 /// the activation record required to preserve JVM ordering across back-edges.
-fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, CompileError> {
+fn aot_int_static_method(
+    program: &Program,
+    known_classes: &[String],
+    method: &Method,
+) -> Result<String, CompileError> {
     if method.signature.returns != Type::Int
         || method
             .signature
@@ -1970,7 +2119,11 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
         .instructions
         .iter()
         .filter_map(|instruction| match &instruction.op {
-            Op::ILoad(index) | Op::IStore(index) | Op::IInc(index, _) => Some(*index),
+            Op::ILoad(index)
+            | Op::IStore(index)
+            | Op::ALoad(index)
+            | Op::AStore(index)
+            | Op::IInc(index, _) => Some(*index),
             _ => None,
         })
         .chain(std::iter::once(
@@ -1998,6 +2151,18 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
             Op::ILoad(local) => format!("stack.push(locals[{local}]); {}", continue_at(next)?),
             Op::IStore(local) => format!(
                 "locals[{local}] = stack.pop().expect(\"verified JVM stack\"); {}",
+                continue_at(next)?
+            ),
+            Op::ALoad(local) => format!(
+                "thrown = Some(exception_locals[{local}].take().expect(\"initialized throwable local\")); {}",
+                continue_at(next)?
+            ),
+            Op::AStore(local) => format!(
+                "exception_locals[{local}] = Some(pending_exception.take().expect(\"exception handler entry\")); {}",
+                continue_at(next)?
+            ),
+            Op::AConstNull => format!(
+                "thrown = Some(jars_runtime::null_pointer()); {}",
                 continue_at(next)?
             ),
             Op::IInc(local, value) => format!(
@@ -2036,8 +2201,9 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
                 } else {
                     "irem"
                 };
+                let dispatch = exception_dispatch(method);
                 format!(
-                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); stack.push(jars_runtime::{operation}(left, right)?); {}",
+                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); match jars_runtime::{operation}(left, right) {{ Ok(value) => stack.push(value), Err(error) => {{ {dispatch} }} }} {}",
                     continue_at(next)?
                 )
             }
@@ -2099,6 +2265,67 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
                     "let value = stack.pop().expect(\"verified JVM stack\"); pc = match value {{ {cases} _ => {default}, }}; continue;"
                 )
             }
+            Op::InvokeStatic(reference) => {
+                let signature = parse_signature(&reference.descriptor)?;
+                if signature.returns != Type::Int
+                    || signature
+                        .parameters
+                        .iter()
+                        .any(|parameter| *parameter != Type::Int)
+                {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "non-int invokestatic in integer state machine",
+                    ));
+                }
+                if !known_classes.iter().any(|class| class == &reference.class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "invokestatic owner outside the compilation set",
+                    ));
+                }
+                let mut arguments = Vec::with_capacity(signature.parameters.len());
+                for index in (0..signature.parameters.len()).rev() {
+                    arguments.push(format!(
+                        "let argument{index} = stack.pop().expect(\"verified JVM stack\");"
+                    ));
+                }
+                arguments.reverse();
+                let method_path = if reference.class == program.name {
+                    rust_ident(&reference.name)?
+                } else {
+                    format!(
+                        "super::{}::{}",
+                        rust_ident(&reference.class)?,
+                        rust_ident(&reference.name)?,
+                    )
+                };
+                let arguments = (0..signature.parameters.len())
+                    .map(|index| format!("argument{index}"))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                let call = if arguments.is_empty() {
+                    format!("{method_path}(program).await")
+                } else {
+                    format!("{method_path}(program, {arguments}).await")
+                };
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "{} match {call} {{ Ok(value) => stack.push(value), Err(error) => {{ {dispatch} }} }} {}",
+                    arguments,
+                    continue_at(next)?,
+                )
+            }
+            Op::AThrow => {
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "let error = thrown.take().expect(\"athrow requires a throwable operand\"); {dispatch}"
+                )
+            }
             Op::IReturn => "return Ok(stack.pop().expect(\"verified JVM stack\"));".to_owned(),
             _ => {
                 return Err(unsupported(
@@ -2126,7 +2353,7 @@ fn aot_int_static_method(program: &Program, method: &Method) -> Result<String, C
         .ok_or_else(|| invalid("methods must contain at least one instruction"))?
         .offset;
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(_program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<i32> {{\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
+        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<i32> {{\n__ensure(program).await?;\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut exception_locals: Vec<Option<jars_runtime::JavaError>> = (0..{max_local}).map(|_| None).collect();\nlet mut thrown: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
         arms.join(",\n"),
     ))
 }
@@ -2136,12 +2363,19 @@ fn static_method(
     known_classes: &[String],
     method: &Method,
 ) -> Result<String, CompileError> {
-    if method
-        .instructions
-        .iter()
-        .any(|instruction| matches!(&instruction.op, Op::IInc(_, _) | Op::Goto(_) | Op::If(_, _) | Op::LookupSwitch { .. } | Op::TableSwitch { .. }))
+    if !method.handlers.is_empty()
+        || method.instructions.iter().any(|instruction| {
+            matches!(
+                &instruction.op,
+                Op::IInc(_, _)
+                    | Op::Goto(_)
+                    | Op::If(_, _)
+                    | Op::LookupSwitch { .. }
+                    | Op::TableSwitch { .. }
+            )
+        })
     {
-        return aot_int_static_method(program, method);
+        return aot_int_static_method(program, known_classes, method);
     }
     let name = rust_ident(&method.name)?;
     let parameters = parameters(program, method)?;
@@ -2575,6 +2809,53 @@ fn validate_field_accesses(programs: &[Program]) -> Result<(), CompileError> {
     Ok(())
 }
 
+fn validate_exception_tables(programs: &[Program]) -> Result<(), CompileError> {
+    for program in programs {
+        for method in program.methods.iter().chain(program.clinit.iter()) {
+            let offsets = method
+                .instructions
+                .iter()
+                .map(|instruction| instruction.offset)
+                .collect::<HashSet<_>>();
+            for handler in &method.handlers {
+                if handler.start >= handler.end {
+                    return Err(invalid(format!(
+                        "exception table range {}..{} in {}.{} is empty or inverted",
+                        handler.start, handler.end, program.name, method.name
+                    )));
+                }
+                if !offsets.contains(&handler.start) {
+                    return Err(invalid(format!(
+                        "exception table start {} in {}.{} is not an instruction boundary",
+                        handler.start, program.name, method.name
+                    )));
+                }
+                if !offsets.contains(&handler.handler) {
+                    return Err(invalid(format!(
+                        "exception table handler {} in {}.{} is not an instruction boundary",
+                        handler.handler, program.name, method.name
+                    )));
+                }
+                // `end` may legally be the code length, which has no
+                // instruction at that offset.  It must otherwise be a
+                // boundary between two emitted instruction arms.
+                if !offsets.contains(&handler.end)
+                    && method
+                        .instructions
+                        .last()
+                        .is_some_and(|instruction| handler.end <= instruction.offset)
+                {
+                    return Err(invalid(format!(
+                        "exception table end {} in {}.{} is not an instruction boundary",
+                        handler.end, program.name, method.name
+                    )));
+                }
+            }
+        }
+    }
+    Ok(())
+}
+
 fn validate_hierarchy(programs: &[Program]) -> Result<(), CompileError> {
     let by_name = programs
         .iter()
@@ -2685,6 +2966,7 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
     validate_hierarchy(&programs)?;
     validate_reference_types(&programs)?;
     validate_field_accesses(&programs)?;
+    validate_exception_tables(&programs)?;
     render(&programs)
 }
 
