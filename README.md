@@ -16,6 +16,11 @@ the current exception-table state-machine subset (typed catches, catch-all
 handlers used for `finally`, rethrow, and failures returned from generated static
 calls). Exception tables are retained only while compiling; emitted Rust retains
 no class-file or bytecode representation.
+
+Control-flow and exception-table bodies share an emitted typed activation frame
+for supported numeric values and throwable/null operands. That frame is reused
+by static methods, actor method handlers, and supported `<clinit>` bodies; its
+state remains local to one generated invocation and does not expose actor state.
 Every array descriptor is recursive; generated arrays are typed mailbox actors,
 so array aliases can cross object actors without exposing mutable elements.
 

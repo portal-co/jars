@@ -2093,28 +2093,70 @@ fn exception_dispatch(method: &Method) -> String {
     )
 }
 
-/// Emits an AOT state machine for integer-only static methods with branches.
-///
-/// There is no bytecode representation at run time: every bytecode instruction
-/// becomes one Rust `match` arm.  `pc`, locals and the operand stack are merely
-/// the activation record required to preserve JVM ordering across back-edges.
-fn aot_int_static_method(
+fn frame_variant(ty: &Type, expression: impl AsRef<str>) -> Result<String, CompileError> {
+    let expression = expression.as_ref();
+    match ty {
+        Type::Int => Ok(format!("FrameValue::I32({expression})")),
+        Type::Long => Ok(format!("FrameValue::I64({expression})")),
+        Type::Float => Ok(format!("FrameValue::F32({expression})")),
+        Type::Double => Ok(format!("FrameValue::F64({expression})")),
+        _ => Err(invalid(
+            "the current typed frame does not model this value type",
+        )),
+    }
+}
+
+fn frame_pop(ty: &Type) -> Result<&'static str, CompileError> {
+    match ty {
+        Type::Int => Ok("pop_i32"),
+        Type::Long => Ok("pop_i64"),
+        Type::Float => Ok("pop_f32"),
+        Type::Double => Ok("pop_f64"),
+        _ => Err(invalid(
+            "the current typed frame does not model this value type",
+        )),
+    }
+}
+
+fn frame_type_supported(ty: &Type) -> bool {
+    matches!(
+        ty,
+        Type::Int | Type::Long | Type::Float | Type::Double | Type::Void
+    )
+}
+
+/// Emits the shared, typed activation-frame state machine used by supported
+/// static control-flow and exception-table bodies.  Each local and operand is
+/// a tagged Rust value; the compiler emits only the tag operations required by
+/// the parsed instructions, never a bytecode representation or interpreter.
+fn aot_typed_frame(
     program: &Program,
     known_classes: &[String],
     method: &Method,
+    first_local: usize,
 ) -> Result<String, CompileError> {
-    if method.signature.returns != Type::Int
+    if !frame_type_supported(&method.signature.returns)
         || method
             .signature
             .parameters
             .iter()
-            .any(|parameter| *parameter != Type::Int)
+            .any(|parameter| !frame_type_supported(parameter) || *parameter == Type::Void)
     {
         return Err(invalid(format!(
-            "AOT control-flow method {}.{} must use only int parameters and an int return",
+            "typed AOT frame for {}.{} currently supports int, long, float, double, and void only",
             program.name, method.name
         )));
     }
+    let parameter_slots = method
+        .signature
+        .parameters
+        .iter()
+        .scan(first_local, |slot, ty| {
+            let current = *slot;
+            *slot += 1 + usize::from(matches!(ty, Type::Long | Type::Double));
+            Some(current)
+        })
+        .collect::<Vec<_>>();
     let max_local = method
         .instructions
         .iter()
@@ -2123,12 +2165,16 @@ fn aot_int_static_method(
             | Op::IStore(index)
             | Op::ALoad(index)
             | Op::AStore(index)
+            | Op::LLoad(index)
+            | Op::LStore(index)
+            | Op::FLoad(index)
+            | Op::FStore(index)
+            | Op::DLoad(index)
+            | Op::DStore(index)
             | Op::IInc(index, _) => Some(*index),
             _ => None,
         })
-        .chain(std::iter::once(
-            method.signature.parameters.len().saturating_sub(1),
-        ))
+        .chain(parameter_slots.iter().copied())
         .max()
         .unwrap_or(0)
         + 1;
@@ -2147,26 +2193,65 @@ fn aot_int_static_method(
                 })
         };
         let arm = match &instruction.op {
-            Op::IConst(value) => format!("stack.push({value}); {}", continue_at(next)?),
-            Op::ILoad(local) => format!("stack.push(locals[{local}]); {}", continue_at(next)?),
+            Op::IConst(value) => format!(
+                "stack.push(FrameValue::I32({value})); {}",
+                continue_at(next)?
+            ),
+            Op::LConst(value) => format!(
+                "stack.push(FrameValue::I64({value}_i64)); {}",
+                continue_at(next)?
+            ),
+            Op::FConst(value) => format!(
+                "stack.push(FrameValue::F32({value:?}_f32)); {}",
+                continue_at(next)?
+            ),
+            Op::DConst(value) => format!(
+                "stack.push(FrameValue::F64({value:?}_f64)); {}",
+                continue_at(next)?
+            ),
+            Op::ILoad(local) => format!(
+                "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::I32(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::I32(value)); {}",
+                continue_at(next)?
+            ),
             Op::IStore(local) => format!(
-                "locals[{local}] = stack.pop().expect(\"verified JVM stack\"); {}",
+                "locals[{local}] = Some(FrameValue::I32(pop_i32(&mut stack))); {}",
                 continue_at(next)?
             ),
             Op::ALoad(local) => format!(
-                "thrown = Some(exception_locals[{local}].take().expect(\"initialized throwable local\")); {}",
+                "stack.push(locals[{local}].take().expect(\"initialized reference local\")); {}",
                 continue_at(next)?
             ),
             Op::AStore(local) => format!(
-                "exception_locals[{local}] = Some(pending_exception.take().expect(\"exception handler entry\")); {}",
+                "locals[{local}] = Some(FrameValue::Throwable(pending_exception.take().expect(\"exception handler entry\"))); {}",
                 continue_at(next)?
             ),
-            Op::AConstNull => format!(
-                "thrown = Some(jars_runtime::null_pointer()); {}",
+            Op::AConstNull => format!("stack.push(FrameValue::Null); {}", continue_at(next)?),
+            Op::LLoad(local) => format!(
+                "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::I64(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::I64(value)); {}",
+                continue_at(next)?
+            ),
+            Op::FLoad(local) => format!(
+                "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::F32(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::F32(value)); {}",
+                continue_at(next)?
+            ),
+            Op::DLoad(local) => format!(
+                "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::F64(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::F64(value)); {}",
+                continue_at(next)?
+            ),
+            Op::LStore(local) => format!(
+                "locals[{local}] = Some(FrameValue::I64(pop_i64(&mut stack))); {}",
+                continue_at(next)?
+            ),
+            Op::FStore(local) => format!(
+                "locals[{local}] = Some(FrameValue::F32(pop_f32(&mut stack))); {}",
+                continue_at(next)?
+            ),
+            Op::DStore(local) => format!(
+                "locals[{local}] = Some(FrameValue::F64(pop_f64(&mut stack))); {}",
                 continue_at(next)?
             ),
             Op::IInc(local, value) => format!(
-                "locals[{local}] = locals[{local}].wrapping_add({value}); {}",
+                "let value = match locals[{local}].take().expect(\"initialized local\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified local type\") }}; locals[{local}] = Some(FrameValue::I32(value.wrapping_add({value}))); {}",
                 continue_at(next)?
             ),
             Op::IAdd
@@ -2191,7 +2276,7 @@ fn aot_int_static_method(
                     _ => unreachable!(),
                 };
                 format!(
-                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); stack.push({expression}); {}",
+                    "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack); stack.push(FrameValue::I32({expression})); {}",
                     continue_at(next)?
                 )
             }
@@ -2203,12 +2288,76 @@ fn aot_int_static_method(
                 };
                 let dispatch = exception_dispatch(method);
                 format!(
-                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\"); match jars_runtime::{operation}(left, right) {{ Ok(value) => stack.push(value), Err(error) => {{ {dispatch} }} }} {}",
+                    "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack); match jars_runtime::{operation}(left, right) {{ Ok(value) => stack.push(FrameValue::I32(value)), Err(error) => {{ {dispatch} }} }} {}",
                     continue_at(next)?
                 )
             }
             Op::INeg => format!(
-                "let value = stack.pop().expect(\"verified JVM stack\"); stack.push(value.wrapping_neg()); {}",
+                "let value = pop_i32(&mut stack); stack.push(FrameValue::I32(value.wrapping_neg())); {}",
+                continue_at(next)?
+            ),
+            Op::LAdd | Op::LSub | Op::LMul => {
+                let expression = match &instruction.op {
+                    Op::LAdd => "left.wrapping_add(right)",
+                    Op::LSub => "left.wrapping_sub(right)",
+                    Op::LMul => "left.wrapping_mul(right)",
+                    _ => unreachable!(),
+                };
+                format!(
+                    "let right = pop_i64(&mut stack); let left = pop_i64(&mut stack); stack.push(FrameValue::I64({expression})); {}",
+                    continue_at(next)?
+                )
+            }
+            Op::LDiv | Op::LRem => {
+                let operation = if matches!(&instruction.op, Op::LDiv) {
+                    "ldiv"
+                } else {
+                    "lrem"
+                };
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "let right = pop_i64(&mut stack); let left = pop_i64(&mut stack); match jars_runtime::{operation}(left, right) {{ Ok(value) => stack.push(FrameValue::I64(value)), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::LNeg => format!(
+                "let value = pop_i64(&mut stack); stack.push(FrameValue::I64(value.wrapping_neg())); {}",
+                continue_at(next)?
+            ),
+            Op::FAdd | Op::FSub | Op::FMul | Op::FDiv | Op::FRem => {
+                let operation = match &instruction.op {
+                    Op::FAdd => "+",
+                    Op::FSub => "-",
+                    Op::FMul => "*",
+                    Op::FDiv => "/",
+                    Op::FRem => "%",
+                    _ => unreachable!(),
+                };
+                format!(
+                    "let right = pop_f32(&mut stack); let left = pop_f32(&mut stack); stack.push(FrameValue::F32(left {operation} right)); {}",
+                    continue_at(next)?
+                )
+            }
+            Op::FNeg => format!(
+                "let value = pop_f32(&mut stack); stack.push(FrameValue::F32(-value)); {}",
+                continue_at(next)?
+            ),
+            Op::DAdd | Op::DSub | Op::DMul | Op::DDiv | Op::DRem => {
+                let operation = match &instruction.op {
+                    Op::DAdd => "+",
+                    Op::DSub => "-",
+                    Op::DMul => "*",
+                    Op::DDiv => "/",
+                    Op::DRem => "%",
+                    _ => unreachable!(),
+                };
+                format!(
+                    "let right = pop_f64(&mut stack); let left = pop_f64(&mut stack); stack.push(FrameValue::F64(left {operation} right)); {}",
+                    continue_at(next)?
+                )
+            }
+            Op::DNeg => format!(
+                "let value = pop_f64(&mut stack); stack.push(FrameValue::F64(-value)); {}",
                 continue_at(next)?
             ),
             Op::Goto(delta) => format!(
@@ -2235,9 +2384,9 @@ fn aot_int_static_method(
                     IfKind::NonNull => ("value != 0", 1),
                 };
                 let values = if pops == 1 {
-                    "let value = stack.pop().expect(\"verified JVM stack\");"
+                    "let value = pop_i32(&mut stack);"
                 } else {
-                    "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\");"
+                    "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);"
                 };
                 format!(
                     "{values} if {condition} {{ pc = {}; }} else {{ pc = {}; }} continue;",
@@ -2262,22 +2411,21 @@ fn aot_int_static_method(
                     })
                     .collect::<Result<String, CompileError>>()?;
                 format!(
-                    "let value = stack.pop().expect(\"verified JVM stack\"); pc = match value {{ {cases} _ => {default}, }}; continue;"
+                    "let value = pop_i32(&mut stack); pc = match value {{ {cases} _ => {default}, }}; continue;"
                 )
             }
             Op::InvokeStatic(reference) => {
                 let signature = parse_signature(&reference.descriptor)?;
-                if signature.returns != Type::Int
-                    || signature
-                        .parameters
-                        .iter()
-                        .any(|parameter| *parameter != Type::Int)
+                if !frame_type_supported(&signature.returns)
+                    || signature.parameters.iter().any(|parameter| {
+                        !frame_type_supported(parameter) || *parameter == Type::Void
+                    })
                 {
                     return Err(unsupported(
                         program,
                         method,
                         instruction,
-                        "non-int invokestatic in integer state machine",
+                        "invokestatic type outside the typed frame subset",
                     ));
                 }
                 if !known_classes.iter().any(|class| class == &reference.class) {
@@ -2289,10 +2437,9 @@ fn aot_int_static_method(
                     ));
                 }
                 let mut arguments = Vec::with_capacity(signature.parameters.len());
-                for index in (0..signature.parameters.len()).rev() {
-                    arguments.push(format!(
-                        "let argument{index} = stack.pop().expect(\"verified JVM stack\");"
-                    ));
+                for (index, ty) in signature.parameters.iter().enumerate().rev() {
+                    let pop = frame_pop(ty)?;
+                    arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                 }
                 arguments.reverse();
                 let method_path = if reference.class == program.name {
@@ -2314,19 +2461,83 @@ fn aot_int_static_method(
                     format!("{method_path}(program, {arguments}).await")
                 };
                 let dispatch = exception_dispatch(method);
+                let success = if signature.returns == Type::Void {
+                    "Ok(()) => {}".to_owned()
+                } else {
+                    format!(
+                        "Ok(value) => stack.push({})",
+                        frame_variant(&signature.returns, "value")?
+                    )
+                };
                 format!(
-                    "{} match {call} {{ Ok(value) => stack.push(value), Err(error) => {{ {dispatch} }} }} {}",
+                    "{} match {call} {{ {success}, Err(error) => {{ {dispatch} }} }} {}",
                     arguments,
                     continue_at(next)?,
                 )
             }
+            Op::GetStatic(reference) | Op::PutStatic(reference) => {
+                if !known_classes.iter().any(|class| class == &reference.class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "getstatic/putstatic owner outside the compilation set",
+                    ));
+                }
+                let mut cursor = 0;
+                let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                if cursor != reference.descriptor.len()
+                    || !frame_type_supported(&ty)
+                    || ty == Type::Void
+                {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "getstatic/putstatic type outside the typed frame subset",
+                    ));
+                }
+                let owner = rust_ident(&reference.class)?;
+                let field = rust_ident(&reference.name)?;
+                let dispatch = exception_dispatch(method);
+                let access = match &instruction.op {
+                    Op::GetStatic(_) => format!(
+                        "let value = program.state.borrow().{owner}.{field}; stack.push({});",
+                        frame_variant(&ty, "value")?
+                    ),
+                    Op::PutStatic(_) => {
+                        let pop = frame_pop(&ty)?;
+                        format!(
+                            "let value = {pop}(&mut stack); program.state.borrow_mut().{owner}.{field} = value;"
+                        )
+                    }
+                    _ => unreachable!(),
+                };
+                if reference.class == program.name {
+                    // The class has already been marked `initializing` before
+                    // entering `<clinit>`. Re-entering its async `__ensure`
+                    // here would create a recursively sized future; Java
+                    // instead observes the prepared/default static state.
+                    format!("{access} {}", continue_at(next)?)
+                } else {
+                    let ensure = format!("super::{owner}::__ensure(program).await");
+                    format!(
+                        "match {ensure} {{ Ok(()) => {{ {access} }}, Err(error) => {{ {dispatch} }} }} {}",
+                        continue_at(next)?
+                    )
+                }
+            }
             Op::AThrow => {
                 let dispatch = exception_dispatch(method);
                 format!(
-                    "let error = thrown.take().expect(\"athrow requires a throwable operand\"); {dispatch}"
+                    "let error = match stack.pop().expect(\"athrow requires a throwable operand\") {{ FrameValue::Throwable(error) => error, FrameValue::Null => jars_runtime::null_pointer(), _ => unreachable!(\"verified throwable operand\") }}; {dispatch}"
                 )
             }
-            Op::IReturn => "return Ok(stack.pop().expect(\"verified JVM stack\"));".to_owned(),
+            Op::IReturn => "return Ok(pop_i32(&mut stack));".to_owned(),
+            Op::LReturn => "return Ok(pop_i64(&mut stack));".to_owned(),
+            Op::FReturn => "return Ok(pop_f32(&mut stack));".to_owned(),
+            Op::DReturn => "return Ok(pop_f64(&mut stack));".to_owned(),
+            Op::Return => "return Ok(());".to_owned(),
             _ => {
                 return Err(unsupported(
                     program,
@@ -2338,24 +2549,57 @@ fn aot_int_static_method(
         };
         arms.push(format!("{} => {{ {arm} }}", instruction.offset));
     }
-    let parameters = parameters(program, method)?;
     let initial_locals = method
         .signature
         .parameters
         .iter()
+        .zip(parameter_slots)
         .enumerate()
-        .map(|(index, _)| format!("locals[{index}] = arg{index};"))
-        .collect::<String>();
-    let name = rust_ident(&method.name)?;
+        .map(|(index, (ty, local))| {
+            Ok(format!(
+                "locals[{local}] = Some({});",
+                frame_variant(ty, format!("arg{index}"))?
+            ))
+        })
+        .collect::<Result<String, CompileError>>()?;
     let entry = method
         .instructions
         .first()
         .ok_or_else(|| invalid("methods must contain at least one instruction"))?
         .offset;
     Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<i32> {{\n__ensure(program).await?;\nlet mut locals = vec![0_i32; {max_local}];\n{initial_locals}\nlet mut stack: Vec<i32> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut exception_locals: Vec<Option<jars_runtime::JavaError>> = (0..{max_local}).map(|_| None).collect();\nlet mut thrown: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}\n}}",
+        "enum FrameValue {{ I32(i32), I64(i64), F32(f32), F64(f64), Throwable(jars_runtime::JavaError), Null }}\nfn pop_i32(stack: &mut Vec<FrameValue>) -> i32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_i64(stack: &mut Vec<FrameValue>) -> i64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f32(stack: &mut Vec<FrameValue>) -> f32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f64(stack: &mut Vec<FrameValue>) -> f64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nlet mut locals: Vec<Option<FrameValue>> = (0..{max_local}).map(|_| None).collect();\n{initial_locals}\nlet mut stack: Vec<FrameValue> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}",
         arms.join(",\n"),
     ))
+}
+
+fn aot_typed_static_method(
+    program: &Program,
+    known_classes: &[String],
+    method: &Method,
+) -> Result<String, CompileError> {
+    let name = rust_ident(&method.name)?;
+    let parameters = parameters(program, method)?;
+    let frame = aot_typed_frame(program, known_classes, method, 0)?;
+    Ok(format!(
+        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n__ensure(program).await?;\n{frame}\n}}",
+        method.signature.returns.rust(&program.name)?,
+    ))
+}
+
+fn requires_typed_frame(method: &Method) -> bool {
+    !method.handlers.is_empty()
+        || method.instructions.iter().any(|instruction| {
+            matches!(
+                instruction.op,
+                Op::IInc(_, _)
+                    | Op::Goto(_)
+                    | Op::If(_, _)
+                    | Op::LookupSwitch { .. }
+                    | Op::TableSwitch { .. }
+                    | Op::AThrow
+            )
+        })
 }
 
 fn static_method(
@@ -2363,19 +2607,8 @@ fn static_method(
     known_classes: &[String],
     method: &Method,
 ) -> Result<String, CompileError> {
-    if !method.handlers.is_empty()
-        || method.instructions.iter().any(|instruction| {
-            matches!(
-                &instruction.op,
-                Op::IInc(_, _)
-                    | Op::Goto(_)
-                    | Op::If(_, _)
-                    | Op::LookupSwitch { .. }
-                    | Op::TableSwitch { .. }
-            )
-        })
-    {
-        return aot_int_static_method(program, known_classes, method);
+    if requires_typed_frame(method) {
+        return aot_typed_static_method(program, known_classes, method);
     }
     let name = rust_ident(&method.name)?;
     let parameters = parameters(program, method)?;
@@ -2394,7 +2627,11 @@ fn instance_method(
 ) -> Result<(String, String, String), CompileError> {
     let name = rust_ident(&method.name)?;
     let parameters = parameters(program, method)?;
-    let body = Body::new(program, known_classes, method, BodyKind::Instance).run()?;
+    let body = if requires_typed_frame(method) {
+        aot_typed_frame(program, known_classes, method, 1)?
+    } else {
+        Body::new(program, known_classes, method, BodyKind::Instance).run()?
+    };
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
         "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n{body}\nOk({fallback})\n}}",
@@ -2588,9 +2825,13 @@ fn static_state_code(program: &Program, known_classes: &[String]) -> Result<Stri
         // own static field operations must therefore access the prepared state
         // directly; emitting another async `__ensure` call would make the
         // generated future recursively sized.
-        let body = Body::new(program, known_classes, method, BodyKind::Static)
-            .run()?
-            .replace("__ensure(program).await?;\n", "");
+        let body = if requires_typed_frame(method) {
+            aot_typed_frame(program, known_classes, method, 0)?
+        } else {
+            Body::new(program, known_classes, method, BodyKind::Static)
+                .run()?
+                .replace("__ensure(program).await?;\n", "")
+        };
         format!(
             "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
         )

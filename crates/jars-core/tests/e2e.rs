@@ -184,6 +184,31 @@ fn exception_table_uses_the_first_matching_typed_handler() {
 }
 
 #[test]
+fn typed_frame_handles_long_locals_operands_and_exceptional_return() {
+    let (stdout, generated) = compile_and_run("TypedLongCatch");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("enum FrameValue"));
+    assert!(generated.contains("I64(i64)"));
+    assert!(generated.contains("pop_i64"));
+}
+
+#[test]
+fn typed_frame_is_reused_by_an_actor_method_implementation() {
+    let (stdout, generated) = compile_and_run("InstanceTypedCatch");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("async fn divide_impl"));
+    assert!(generated.contains("enum FrameValue"));
+}
+
+#[test]
+fn typed_frame_is_reused_by_control_flow_in_class_initialization() {
+    let (stdout, generated) = compile_and_run("TypedClinit");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("async fn __clinit"));
+    assert!(generated.contains("program.state.borrow_mut().TypedClinit.result"));
+}
+
+#[test]
 fn closed_class_set_links_cross_class_static_calls_aot() {
     let (stdout, generated) = compile_set_and_run(&["CrossMain", "Helper"]);
     assert_eq!(stdout, "42\n");
