@@ -44,20 +44,27 @@ fn manifest(name: &str) -> FixtureManifest {
     toml::from_str(&fs::read_to_string(path).unwrap()).unwrap()
 }
 
-fn create_jar(classes: &Path, output: &Path) {
-    let file = File::create(output).unwrap();
-    let mut writer = ZipWriter::new(file);
+fn add_class_files(writer: &mut ZipWriter<File>, directory: &Path, prefix: &Path) {
     let options = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
-    for class in fs::read_dir(classes).unwrap() {
+    for class in fs::read_dir(directory).unwrap() {
         let class = class.unwrap();
+        let name = prefix.join(class.file_name());
+        if class.path().is_dir() {
+            add_class_files(writer, &class.path(), &name);
+            continue;
+        }
         if class.path().extension() != Some(OsStr::new("class")) {
             continue;
         }
-        writer
-            .start_file(class.file_name().to_string_lossy(), options)
-            .unwrap();
+        writer.start_file(name.to_string_lossy(), options).unwrap();
         writer.write_all(&fs::read(class.path()).unwrap()).unwrap();
     }
+}
+
+fn create_jar(classes: &Path, output: &Path) {
+    let file = File::create(output).unwrap();
+    let mut writer = ZipWriter::new(file);
+    add_class_files(&mut writer, classes, Path::new(""));
     writer.finish().unwrap();
 }
 
@@ -82,6 +89,109 @@ fn minimal_class(name: &str) -> Vec<u8> {
     push_u16(&mut bytes, 2);
     push_u16(&mut bytes, 4);
     push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    bytes
+}
+
+fn static_void_class(name: &str, method: &str, code: &[u8]) -> Vec<u8> {
+    fn push_u16(bytes: &mut Vec<u8>, value: u16) {
+        bytes.extend(value.to_be_bytes());
+    }
+    fn push_u32(bytes: &mut Vec<u8>, value: u32) {
+        bytes.extend(value.to_be_bytes());
+    }
+    fn push_utf8(bytes: &mut Vec<u8>, value: &str) {
+        bytes.push(1);
+        push_u16(bytes, value.len().try_into().unwrap());
+        bytes.extend(value.as_bytes());
+    }
+
+    let mut bytes = Vec::new();
+    bytes.extend(0xCAFE_BABEu32.to_be_bytes());
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 52);
+    push_u16(&mut bytes, 8);
+    push_utf8(&mut bytes, name);
+    bytes.extend([7, 0, 1]);
+    push_utf8(&mut bytes, "java/lang/Object");
+    bytes.extend([7, 0, 3]);
+    push_utf8(&mut bytes, method);
+    push_utf8(&mut bytes, "()V");
+    push_utf8(&mut bytes, "Code");
+    push_u16(&mut bytes, 0x0021);
+    push_u16(&mut bytes, 2);
+    push_u16(&mut bytes, 4);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 1);
+    push_u16(&mut bytes, 0x0009);
+    push_u16(&mut bytes, 5);
+    push_u16(&mut bytes, 6);
+    push_u16(&mut bytes, 1);
+    push_u16(&mut bytes, 7);
+    push_u32(&mut bytes, (12 + code.len()).try_into().unwrap());
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u32(&mut bytes, code.len().try_into().unwrap());
+    bytes.extend(code);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    bytes
+}
+
+fn executable_class(name: &str) -> Vec<u8> {
+    static_void_class(name, "run", &[0xb1])
+}
+
+fn invokes_static_void_class(name: &str, owner: &str, method: &str) -> Vec<u8> {
+    fn push_u16(bytes: &mut Vec<u8>, value: u16) {
+        bytes.extend(value.to_be_bytes());
+    }
+    fn push_u32(bytes: &mut Vec<u8>, value: u32) {
+        bytes.extend(value.to_be_bytes());
+    }
+    fn push_utf8(bytes: &mut Vec<u8>, value: &str) {
+        bytes.push(1);
+        push_u16(bytes, value.len().try_into().unwrap());
+        bytes.extend(value.as_bytes());
+    }
+
+    let mut bytes = Vec::new();
+    bytes.extend(0xCAFE_BABEu32.to_be_bytes());
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 52);
+    push_u16(&mut bytes, 13);
+    push_utf8(&mut bytes, name);
+    bytes.extend([7, 0, 1]);
+    push_utf8(&mut bytes, "java/lang/Object");
+    bytes.extend([7, 0, 3]);
+    push_utf8(&mut bytes, "run");
+    push_utf8(&mut bytes, "()V");
+    push_utf8(&mut bytes, "Code");
+    push_utf8(&mut bytes, owner);
+    bytes.extend([7, 0, 8]);
+    push_utf8(&mut bytes, method);
+    bytes.extend([12, 0, 10, 0, 6]);
+    bytes.extend([10, 0, 9, 0, 11]);
+    push_u16(&mut bytes, 0x0021);
+    push_u16(&mut bytes, 2);
+    push_u16(&mut bytes, 4);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 1);
+    push_u16(&mut bytes, 0x0009);
+    push_u16(&mut bytes, 5);
+    push_u16(&mut bytes, 6);
+    push_u16(&mut bytes, 1);
+    push_u16(&mut bytes, 7);
+    push_u32(&mut bytes, 16);
+    push_u16(&mut bytes, 0);
+    push_u16(&mut bytes, 0);
+    push_u32(&mut bytes, 4);
+    bytes.extend([0xb8, 0, 12, 0xb1]);
     push_u16(&mut bytes, 0);
     push_u16(&mut bytes, 0);
     push_u16(&mut bytes, 0);
@@ -224,6 +334,51 @@ fn jar_reader_reaches_a_declared_entry_without_retaining_the_archive() {
             descriptor,
         }) if class == "Empty" && method == "run" && descriptor == "()V"
     ));
+}
+
+#[test]
+fn jar_reader_accepts_a_package_qualified_binary_name() {
+    let temp = tempfile::tempdir().unwrap();
+    let jar = temp.path().join("packaged.jar");
+    write_single_class_jar(&jar, "app/Empty");
+    assert!(matches!(
+        compile_jars(&[jar], &JarEntrypoint::new("app/Empty", "run", "()V")),
+        Err(CompileError::MissingEntryMethod { class, .. }) if class == "app/Empty"
+    ));
+}
+
+#[test]
+fn package_qualified_static_entry_is_emitted_with_a_rust_safe_symbol() {
+    let temp = tempfile::tempdir().unwrap();
+    let jar = temp.path().join("packaged-entry.jar");
+    write_class_jar(&jar, "app/Entry", &executable_class("app/Entry"));
+    let generated = compile_jars(&[jar], &JarEntrypoint::new("app/Entry", "run", "()V")).unwrap();
+    assert!(generated.contains("pub mod __jars_class_6170702f456e747279"));
+    assert!(!generated.contains("app/Entry"));
+}
+
+#[test]
+fn package_qualified_static_calls_link_through_the_closed_jar_classpath() {
+    let temp = tempfile::tempdir().unwrap();
+    let app = temp.path().join("app.jar");
+    let library = temp.path().join("library.jar");
+    write_class_jar(
+        &app,
+        "app/Entry",
+        &invokes_static_void_class("app/Entry", "library/Library", "touch"),
+    );
+    write_class_jar(
+        &library,
+        "library/Library",
+        &static_void_class("library/Library", "touch", &[0xb1]),
+    );
+    let generated = compile_jars(
+        &[app, library],
+        &JarEntrypoint::new("app/Entry", "run", "()V"),
+    )
+    .unwrap();
+    assert!(generated.contains("pub mod __jars_class_6c6962726172792f4c696272617279"));
+    assert!(generated.contains("super::__jars_class_6c6962726172792f4c696272617279::touch"));
 }
 
 #[test]

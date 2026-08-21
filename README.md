@@ -15,8 +15,8 @@ entries, follows the reachable closed class set from that entrypoint, and emits
 only the selected classes. Duplicate and missing classes, multi-release JARs,
 and unmodeled Java platform classes produce structured compiler diagnostics.
 The JAR is an import format only: neither the generated Rust nor its runtime
-retains archive/class-file data or dynamically loads classes. The current
-default-package restriction still applies to reachable application classes;
+retains archive/class-file data or dynamically loads classes. Package-qualified
+class names are retained as JVM identities and encoded only for Rust symbols;
 the modeled platform surface is intentionally limited to the APIs already
 lowered by the compiler.
 

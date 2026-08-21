@@ -1,5 +1,5 @@
 name = "unsupported-platform"
-entry_class = "UnsupportedPlatform"
+entry_class = "app/UnsupportedPlatform"
 entry_method = "run"
 entry_descriptor = "()V"
 expected_error = "unsupported_platform"

@@ -1,9 +1,8 @@
 //! A deliberately small Java class-file to actor-oriented Rust compiler.
 //!
 //! The public surface is intentionally narrow: `compile_class` accepts one
-//! default-package class, while `compile_jars` imports a reachable closed set
-//! from explicit JARs. Both emit complete Rust binaries which depend on
-//! `jars-runtime`.
+//! class, while `compile_jars` imports a reachable closed set from explicit
+//! JARs. Both emit complete Rust binaries which depend on `jars-runtime`.
 
 use std::{
     collections::{BTreeMap, HashMap, HashSet, VecDeque},
@@ -134,9 +133,9 @@ impl std::error::Error for CompileError {}
 
 /// A static method used as the root of a closed JAR compilation.
 ///
-/// Class names use JVM binary-name syntax, such as `Example` for the currently
-/// supported default package. The importer deliberately does not infer an entry
-/// point from a manifest in the input archive.
+/// Class names use JVM binary-name syntax, such as `com/example/Entry`. The
+/// importer deliberately does not infer an entry point from a manifest in the
+/// input archive.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct JarEntrypoint {
     pub class: String,
@@ -194,12 +193,12 @@ impl Type {
             Self::Void => Ok("()".to_owned()),
             Self::String => Ok("&'static str".to_owned()),
             Self::Class(name) if name == current_class => {
-                Ok(format!("Option<{}>", rust_ident(name)?))
+                Ok(format!("Option<{}>", class_ident(name)?))
             }
             Self::Class(name) => Ok(format!(
                 "Option<super::{}::{}>",
-                rust_ident(name)?,
-                rust_ident(name)?
+                class_ident(name)?,
+                class_ident(name)?
             )),
             Self::Array(element) => Ok(format!(
                 "Option<jars_runtime::JavaArray<{}>>",
@@ -491,7 +490,7 @@ fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
             ))
         })?;
         let name = &remainder[1..end];
-        if name.is_empty() || name.contains('/') {
+        if !is_binary_class_name(name) {
             return Err(invalid(format!(
                 "unsupported descriptor fragment `{remainder}`"
             )));
@@ -537,7 +536,7 @@ fn array_component_type(name: &str) -> Result<Type, CompileError> {
             return Ok(ty);
         }
     }
-    if !name.is_empty() && !name.contains('/') {
+    if is_binary_class_name(name) {
         return Ok(Type::Class(name.to_owned()));
     }
     Err(invalid(format!("unsupported array component `{name}`")))
@@ -835,8 +834,10 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
     let class = Class::new(bytes).map_err(|error| CompileError::Parse(error.to_string()))?;
     let pool = class.pool();
     let program_name = class_name(pool, class.this_class())?;
-    if program_name.contains('/') {
-        return Err(invalid("packages are not supported in v1"));
+    if !is_binary_class_name(&program_name) {
+        return Err(invalid(format!(
+            "invalid class binary name `{program_name}`"
+        )));
     }
     let superclass = class
         .super_class()
@@ -1015,6 +1016,53 @@ fn rust_ident(name: &str) -> Result<String, CompileError> {
     Ok(escaped)
 }
 
+fn is_binary_class_name(name: &str) -> bool {
+    !name.is_empty()
+        && name.split('/').all(|segment| {
+            !segment.is_empty()
+                && !segment
+                    .bytes()
+                    .any(|byte| matches!(byte, b'.' | b';' | b'['))
+        })
+}
+
+/// Maps a JVM binary class name to a Rust identifier without changing the
+/// familiar spelling of ordinary default-package fixture classes. Package
+/// separators, inner-class markers, and non-ASCII names are encoded as UTF-8
+/// bytes so the generated identifier never needs to interpret Java names at
+/// runtime.
+fn class_ident(name: &str) -> Result<String, CompileError> {
+    if !is_binary_class_name(name) {
+        return Err(invalid(format!("invalid class binary name `{name}`")));
+    }
+    if !name.contains('/') {
+        if let Ok(identifier) = rust_ident(name) {
+            return Ok(identifier);
+        }
+    }
+    Ok(format!(
+        "__jars_class_{}",
+        name.as_bytes()
+            .iter()
+            .map(|byte| format!("{byte:02x}"))
+            .collect::<String>()
+    ))
+}
+
+fn validate_class_idents(programs: &[Program]) -> Result<(), CompileError> {
+    let mut by_identifier = HashMap::new();
+    for program in programs {
+        let identifier = class_ident(&program.name)?;
+        if let Some(previous) = by_identifier.insert(identifier.clone(), &program.name) {
+            return Err(invalid(format!(
+                "classes `{previous}` and `{}` both map to Rust identifier `{identifier}`",
+                program.name
+            )));
+        }
+    }
+    Ok(())
+}
+
 fn unsupported(
     program: &Program,
     method: &Method,
@@ -1145,7 +1193,7 @@ impl<'a> Body<'a> {
         if class == self.program.name {
             Ok(String::new())
         } else if self.known_classes.iter().any(|known| known == class) {
-            Ok(format!("super::{}::", rust_ident(class)?))
+            Ok(format!("super::{}::", class_ident(class)?))
         } else {
             Err(invalid(format!(
                 "class `{class}` is not in the compilation set"
@@ -1649,7 +1697,7 @@ impl<'a> Body<'a> {
                                 "getstatic",
                             ));
                         }
-                        let class = rust_ident(&reference.class)?;
+                        let class = class_ident(&reference.class)?;
                         let class_path = self.class_path(&reference.class)?;
                         let field = rust_ident(&reference.name)?;
                         self.statements
@@ -1823,7 +1871,7 @@ impl<'a> Body<'a> {
                         ));
                     }
                     let value = self.pop_expression(instruction)?;
-                    let class = rust_ident(&reference.class)?;
+                    let class = class_ident(&reference.class)?;
                     let class_path = self.class_path(&reference.class)?;
                     let field = rust_ident(&reference.name)?;
                     self.statements
@@ -1894,7 +1942,7 @@ impl<'a> Body<'a> {
                         let class = format!(
                             "{}{}",
                             self.class_path(&reference.class)?,
-                            rust_ident(&reference.class)?
+                            class_ident(&reference.class)?
                         );
                         self.statements.push(format!(
                             "{}__ensure(program).await?;",
@@ -2542,7 +2590,7 @@ fn aot_typed_frame(
                 } else {
                     format!(
                         "super::{}::{}",
-                        rust_ident(&reference.class)?,
+                        class_ident(&reference.class)?,
                         rust_ident(&reference.name)?,
                     )
                 };
@@ -2592,7 +2640,7 @@ fn aot_typed_frame(
                         "getstatic/putstatic type outside the typed frame subset",
                     ));
                 }
-                let owner = rust_ident(&reference.class)?;
+                let owner = class_ident(&reference.class)?;
                 let field = rust_ident(&reference.name)?;
                 let dispatch = exception_dispatch(method);
                 let access = match &instruction.op {
@@ -2730,7 +2778,7 @@ fn instance_method(
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
         "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n{body}\nOk({fallback})\n}}",
-        rust_ident(&program.name)?,
+        class_ident(&program.name)?,
         method.signature.returns.rust(&program.name)?,
     );
     let variant = format!(
@@ -2755,7 +2803,7 @@ fn instance_method(
             format!(", {parameters}")
         },
         method.signature.returns.rust(&program.name)?,
-        rust_ident(&program.name)?,
+        class_ident(&program.name)?,
         reply_fields(&arguments, "reply"),
     );
     Ok((implementation, variant, proxy))
@@ -2767,7 +2815,7 @@ fn actor_code(
     constructor: &Method,
     methods: &[&Method],
 ) -> Result<String, CompileError> {
-    let class = rust_ident(&program.name)?;
+    let class = class_ident(&program.name)?;
     let field_declarations = program
         .fields
         .iter()
@@ -2884,7 +2932,7 @@ fn constant_expression(constant: &Constant) -> String {
 }
 
 fn static_state_code(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
-    let class = rust_ident(&program.name)?;
+    let class = class_ident(&program.name)?;
     let fields = program
         .fields
         .iter()
@@ -2942,7 +2990,7 @@ fn program_code(programs: &[Program]) -> Result<String, CompileError> {
     let declarations = programs
         .iter()
         .map(|program| {
-            let class = rust_ident(&program.name)?;
+            let class = class_ident(&program.name)?;
             Ok(format!("{}: {class}::{class}Statics", class))
         })
         .collect::<Result<Vec<_>, CompileError>>()?
@@ -2950,7 +2998,7 @@ fn program_code(programs: &[Program]) -> Result<String, CompileError> {
     let initializers = programs
         .iter()
         .map(|program| {
-            let class = rust_ident(&program.name)?;
+            let class = class_ident(&program.name)?;
             Ok(format!("{class}: {class}::{class}Statics::new()"))
         })
         .collect::<Result<Vec<_>, CompileError>>()?
@@ -2961,7 +3009,7 @@ fn program_code(programs: &[Program]) -> Result<String, CompileError> {
 }
 
 fn render_module(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
-    let class = rust_ident(&program.name)?;
+    let class = class_ident(&program.name)?;
     let static_state = static_state_code(program, known_classes)?;
     if program.is_interface {
         if program.methods.iter().any(|method| method.is_static) {
@@ -3041,7 +3089,7 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
         .map(|program| render_module(program, &known_classes))
         .collect::<Result<Vec<_>, _>>()?;
     let program = program_code(programs)?;
-    let class = rust_ident(&entry.name)?;
+    let class = class_ident(&entry.name)?;
     let source = format!(
         "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, String::new())?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, value).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
         modules.join("\n"),
@@ -3052,12 +3100,16 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
 }
 
 fn validate_reference_type(ty: &Type, known_classes: &[String]) -> Result<(), CompileError> {
-    if let Type::Class(class) = ty {
-        if !known_classes.iter().any(|known| known == class) {
-            return Err(invalid(format!(
-                "reference type `{class}` is not in the compilation set"
-            )));
+    match ty {
+        Type::Class(class) => {
+            if !known_classes.iter().any(|known| known == class) {
+                return Err(invalid(format!(
+                    "reference type `{class}` is not in the compilation set"
+                )));
+            }
         }
+        Type::Array(element) => validate_reference_type(element, known_classes)?,
+        _ => {}
     }
     Ok(())
 }
@@ -3286,6 +3338,7 @@ fn compile_programs(programs: Vec<Program>) -> Result<String, CompileError> {
             )));
         }
     }
+    validate_class_idents(&programs)?;
     validate_hierarchy(&programs)?;
     validate_reference_types(&programs)?;
     validate_field_accesses(&programs)?;
@@ -3515,7 +3568,7 @@ fn render_declared_entry(
             method: entry.method.clone(),
             descriptor: entry.descriptor.clone(),
         })?;
-    let class = rust_ident(&entry_program.name)?;
+    let class = class_ident(&entry_program.name)?;
     let method = rust_ident(&entry_method.name)?;
     let invocation = match (
         &entry_method.signature.parameters[..],
@@ -3554,9 +3607,9 @@ fn render_declared_entry(
 /// Rust executable rooted at `entry`.
 ///
 /// The archive is only an input format: class bytes are parsed while compiling
-/// and are not retained by the generated program. The current compiler accepts
-/// default-package classes only; package-qualified class entries fail with the
-/// existing unsupported-package diagnostic when they become reachable.
+/// and are not retained by the generated program. Package-qualified binary
+/// names remain the compiler identity and are deterministically encoded only
+/// where Rust identifiers are needed.
 pub fn compile_jars(
     paths: &[impl AsRef<Path>],
     entry: &JarEntrypoint,
@@ -3606,6 +3659,7 @@ pub fn compile_jars(
             )));
         }
     }
+    validate_class_idents(&programs)?;
     validate_hierarchy(&programs)?;
     validate_reference_types(&programs)?;
     validate_field_accesses(&programs)?;
@@ -3638,11 +3692,24 @@ mod tests {
     fn descriptors_accept_numeric_and_recursive_array_types() {
         assert!(parse_signature("(JFD)V").is_ok());
         assert!(parse_signature("(Z[[I[[[Ljava/lang/String;)V").is_ok());
+        assert!(parse_signature("(Lapp/Entry;)[Llibrary/Value;").is_ok());
         assert!(parse_signature("(I").is_err());
     }
 
     #[test]
     fn rust_keywords_are_escaped() {
         assert_eq!(rust_ident("type").unwrap(), "r#type");
+    }
+
+    #[test]
+    fn package_and_inner_class_binary_names_are_encoded_for_rust() {
+        assert_eq!(
+            class_ident("app/Entry").unwrap(),
+            "__jars_class_6170702f456e747279"
+        );
+        assert_eq!(
+            class_ident("app/Entry$Inner").unwrap(),
+            "__jars_class_6170702f456e74727924496e6e6572"
+        );
     }
 }

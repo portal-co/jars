@@ -1,5 +1,5 @@
 name = "cross-jar"
-entry_class = "JarApp"
+entry_class = "app/JarApp"
 entry_method = "run"
 entry_descriptor = "()V"
 expected_stdout = "42\n"
