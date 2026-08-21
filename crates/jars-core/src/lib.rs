@@ -1,12 +1,16 @@
 //! A deliberately small Java class-file to actor-oriented Rust compiler.
 //!
 //! The public surface is intentionally narrow: `compile_class` accepts one
-//! default-package class and emits a complete Rust binary which depends on
+//! default-package class, while `compile_jars` imports a reachable closed set
+//! from explicit JARs. Both emit complete Rust binaries which depend on
 //! `jars-runtime`.
 
 use std::{
-    collections::{HashMap, HashSet},
+    collections::{BTreeMap, HashMap, HashSet, VecDeque},
     fmt,
+    fs::File,
+    io::Read,
+    path::{Path, PathBuf},
 };
 
 use noak::{
@@ -24,6 +28,28 @@ pub enum CompileError {
     InvalidClass(String),
     MissingEntryPoint {
         class: String,
+    },
+    Jar {
+        jar: PathBuf,
+        detail: String,
+    },
+    DuplicateClass {
+        class: String,
+        first: PathBuf,
+        second: PathBuf,
+    },
+    MissingClass {
+        class: String,
+        referenced_by: String,
+    },
+    MissingEntryMethod {
+        class: String,
+        method: String,
+        descriptor: String,
+    },
+    UnsupportedPlatformClass {
+        class: String,
+        referenced_by: String,
     },
     Unsupported {
         class: String,
@@ -47,6 +73,41 @@ impl fmt::Display for CompileError {
             Self::MissingEntryPoint { class } => {
                 write!(f, "{class} does not define public static main(String[])")
             }
+            Self::Jar { jar, detail } => {
+                write!(f, "could not import JAR {}: {detail}", jar.display())
+            }
+            Self::DuplicateClass {
+                class,
+                first,
+                second,
+            } => write!(
+                f,
+                "class `{class}` is present in both {} and {}",
+                first.display(),
+                second.display()
+            ),
+            Self::MissingClass {
+                class,
+                referenced_by,
+            } => write!(
+                f,
+                "class `{class}` referenced by `{referenced_by}` is not present in the JAR classpath"
+            ),
+            Self::MissingEntryMethod {
+                class,
+                method,
+                descriptor,
+            } => write!(
+                f,
+                "{class} does not define public static {method}{descriptor}"
+            ),
+            Self::UnsupportedPlatformClass {
+                class,
+                referenced_by,
+            } => write!(
+                f,
+                "Java platform class `{class}` referenced by `{referenced_by}` is not modeled by jars-runtime"
+            ),
             Self::Unsupported {
                 class,
                 method,
@@ -70,6 +131,38 @@ impl fmt::Display for CompileError {
 }
 
 impl std::error::Error for CompileError {}
+
+/// A static method used as the root of a closed JAR compilation.
+///
+/// Class names use JVM binary-name syntax, such as `Example` for the currently
+/// supported default package. The importer deliberately does not infer an entry
+/// point from a manifest in the input archive.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct JarEntrypoint {
+    pub class: String,
+    pub method: String,
+    pub descriptor: String,
+}
+
+impl JarEntrypoint {
+    #[must_use]
+    pub fn new(
+        class: impl Into<String>,
+        method: impl Into<String>,
+        descriptor: impl Into<String>,
+    ) -> Self {
+        Self {
+            class: class.into(),
+            method: method.into(),
+            descriptor: descriptor.into(),
+        }
+    }
+
+    #[must_use]
+    pub fn main(class: impl Into<String>) -> Self {
+        Self::new(class, "main", "([Ljava/lang/String;)V")
+    }
+}
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 enum Type {
@@ -270,6 +363,7 @@ struct ExceptionHandler {
 #[derive(Clone, Debug)]
 struct Method {
     name: String,
+    descriptor: String,
     signature: Signature,
     is_static: bool,
     is_public: bool,
@@ -874,6 +968,7 @@ fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
         }
         let parsed = Method {
             name: name.clone(),
+            descriptor,
             signature,
             is_static: method.access_flags().contains(AccessFlags::STATIC),
             is_public: method.access_flags().contains(AccessFlags::PUBLIC),
@@ -3176,23 +3271,10 @@ fn validate_hierarchy(programs: &[Program]) -> Result<(), CompileError> {
     Ok(())
 }
 
-/// Compiles one default-package Java class file into a complete Rust source file.
-pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
-    compile_classes(&[bytes])
-}
-
-/// Compiles a closed, default-package class set into one AOT Rust source file.
-///
-/// References to classes outside `classes` are rejected during code generation;
-/// the generated modules call each other directly and retain no class-file data.
-pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
-    if classes.is_empty() {
+fn compile_programs(programs: Vec<Program>) -> Result<String, CompileError> {
+    if programs.is_empty() {
         return Err(invalid("the compilation set is empty"));
     }
-    let programs = classes
-        .iter()
-        .map(|bytes| parse_program(bytes))
-        .collect::<Result<Vec<_>, _>>()?;
     for (index, program) in programs.iter().enumerate() {
         if programs[..index]
             .iter()
@@ -3209,6 +3291,343 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
     validate_field_accesses(&programs)?;
     validate_exception_tables(&programs)?;
     render(&programs)
+}
+
+#[derive(Debug)]
+struct JarClass {
+    bytes: Vec<u8>,
+    origin: PathBuf,
+}
+
+fn class_name_from_bytes(bytes: &[u8]) -> Result<String, CompileError> {
+    let class = Class::new(bytes).map_err(|error| CompileError::Parse(error.to_string()))?;
+    let version = class.version();
+    if version.major > 65 || version.is_preview() {
+        return Err(invalid(format!(
+            "unsupported class-file version {}.{}",
+            version.major, version.minor
+        )));
+    }
+    class_name(class.pool(), class.this_class())
+}
+
+fn read_jar_classpath(
+    paths: &[impl AsRef<Path>],
+) -> Result<BTreeMap<String, JarClass>, CompileError> {
+    if paths.is_empty() {
+        return Err(invalid("the JAR classpath is empty"));
+    }
+
+    let mut classes: BTreeMap<String, JarClass> = BTreeMap::new();
+    for path in paths {
+        let path = path.as_ref();
+        let file = File::open(path).map_err(|error| CompileError::Jar {
+            jar: path.to_owned(),
+            detail: error.to_string(),
+        })?;
+        let mut archive = zip::ZipArchive::new(file).map_err(|error| CompileError::Jar {
+            jar: path.to_owned(),
+            detail: error.to_string(),
+        })?;
+        for index in 0..archive.len() {
+            let mut entry = archive.by_index(index).map_err(|error| CompileError::Jar {
+                jar: path.to_owned(),
+                detail: error.to_string(),
+            })?;
+            let entry_name = entry.name().to_owned();
+            if entry_name.starts_with("META-INF/versions/") && entry_name.ends_with(".class") {
+                return Err(CompileError::Jar {
+                    jar: path.to_owned(),
+                    detail: "multi-release JAR class entries are not supported".to_owned(),
+                });
+            }
+            if !entry_name.ends_with(".class") || entry_name.ends_with('/') {
+                continue;
+            }
+            let mut bytes = Vec::new();
+            entry
+                .read_to_end(&mut bytes)
+                .map_err(|error| CompileError::Jar {
+                    jar: path.to_owned(),
+                    detail: format!("could not read `{entry_name}`: {error}"),
+                })?;
+            let class = class_name_from_bytes(&bytes).map_err(|error| CompileError::Jar {
+                jar: path.to_owned(),
+                detail: format!("could not read `{entry_name}`: {error}"),
+            })?;
+            if entry_name != format!("{class}.class") {
+                return Err(CompileError::Jar {
+                    jar: path.to_owned(),
+                    detail: format!(
+                        "class entry `{entry_name}` declares `{class}`, expected `{class}.class`"
+                    ),
+                });
+            }
+            if let Some(previous) = classes.get(&class) {
+                return Err(CompileError::DuplicateClass {
+                    class,
+                    first: previous.origin.clone(),
+                    second: path.to_owned(),
+                });
+            }
+            classes.insert(
+                class,
+                JarClass {
+                    bytes,
+                    origin: path.to_owned(),
+                },
+            );
+        }
+    }
+    Ok(classes)
+}
+
+fn modeled_platform_class(class: &str) -> bool {
+    matches!(
+        class,
+        "java/lang/Object"
+            | "java/lang/String"
+            | "java/lang/System"
+            | "java/io/PrintStream"
+            | "java/lang/Throwable"
+            | "java/lang/Exception"
+            | "java/lang/RuntimeException"
+            | "java/lang/ArithmeticException"
+            | "java/lang/NullPointerException"
+            | "java/lang/ClassCastException"
+            | "java/lang/ArrayIndexOutOfBoundsException"
+            | "java/lang/NegativeArraySizeException"
+            | "java/lang/ArrayStoreException"
+            | "java/lang/Cloneable"
+            | "java/io/Serializable"
+    )
+}
+
+fn add_type_dependencies(ty: &Type, dependencies: &mut Vec<String>) {
+    match ty {
+        Type::Class(class) => dependencies.push(class.clone()),
+        Type::Array(element) => add_type_dependencies(element, dependencies),
+        _ => {}
+    }
+}
+
+fn add_signature_dependencies(signature: &Signature, dependencies: &mut Vec<String>) {
+    for parameter in &signature.parameters {
+        add_type_dependencies(parameter, dependencies);
+    }
+    add_type_dependencies(&signature.returns, dependencies);
+}
+
+fn add_member_dependencies(
+    reference: &MemberRef,
+    dependencies: &mut Vec<String>,
+) -> Result<(), CompileError> {
+    dependencies.push(reference.class.clone());
+    // Platform members are classified by their owner before inspecting their
+    // descriptors.  Their descriptors routinely contain package-qualified
+    // JDK types that are intentionally outside the default-package compiler
+    // subset; modeled calls are lowered by the emitter, and unmodeled calls
+    // receive the stable platform diagnostic below.
+    if reference.class.starts_with("java/") {
+        return Ok(());
+    }
+    let signature = if reference.descriptor.starts_with('(') {
+        parse_signature(&reference.descriptor)?
+    } else {
+        let mut cursor = 0;
+        let ty = parse_type(&reference.descriptor, &mut cursor)?;
+        if cursor != reference.descriptor.len() {
+            return Err(invalid(format!(
+                "invalid field descriptor `{}`",
+                reference.descriptor
+            )));
+        }
+        Signature {
+            parameters: Vec::new(),
+            returns: ty,
+        }
+    };
+    add_signature_dependencies(&signature, dependencies);
+    Ok(())
+}
+
+fn program_dependencies(program: &Program) -> Result<Vec<String>, CompileError> {
+    let mut dependencies = Vec::new();
+    if let Some(superclass) = &program.superclass {
+        dependencies.push(superclass.clone());
+    }
+    dependencies.extend(program.interfaces.iter().cloned());
+    for field in &program.fields {
+        add_type_dependencies(&field.ty, &mut dependencies);
+    }
+    for method in program.methods.iter().chain(program.clinit.iter()) {
+        add_signature_dependencies(&method.signature, &mut dependencies);
+        for handler in &method.handlers {
+            if let Some(class) = &handler.catch_type {
+                dependencies.push(class.clone());
+            }
+        }
+        for instruction in &method.instructions {
+            match &instruction.op {
+                Op::New(class) => dependencies.push(class.clone()),
+                Op::NewArray(ty) | Op::MultiNewArray(ty, _) => {
+                    add_type_dependencies(ty, &mut dependencies)
+                }
+                Op::GetStatic(reference)
+                | Op::GetField(reference)
+                | Op::PutField(reference)
+                | Op::PutStatic(reference)
+                | Op::InvokeSpecial(reference)
+                | Op::InvokeStatic(reference)
+                | Op::InvokeVirtual(reference)
+                | Op::InvokeInterface(reference) => {
+                    add_member_dependencies(reference, &mut dependencies)?;
+                }
+                _ => {}
+            }
+        }
+    }
+    Ok(dependencies)
+}
+
+fn render_declared_entry(
+    programs: &[Program],
+    entry: &JarEntrypoint,
+) -> Result<String, CompileError> {
+    let entry_program = programs
+        .iter()
+        .find(|program| program.name == entry.class)
+        .ok_or_else(|| CompileError::MissingClass {
+            class: entry.class.clone(),
+            referenced_by: "the declared entrypoint".to_owned(),
+        })?;
+    let entry_method = entry_program
+        .methods
+        .iter()
+        .find(|method| {
+            method.is_public
+                && method.is_static
+                && method.name == entry.method
+                && method.descriptor == entry.descriptor
+        })
+        .ok_or_else(|| CompileError::MissingEntryMethod {
+            class: entry.class.clone(),
+            method: entry.method.clone(),
+            descriptor: entry.descriptor.clone(),
+        })?;
+    let class = rust_ident(&entry_program.name)?;
+    let method = rust_ident(&entry_method.name)?;
+    let invocation = match (
+        &entry_method.signature.parameters[..],
+        &entry_method.signature.returns,
+    ) {
+        ([], Type::Void) => format!("{class}::{method}(&program).await"),
+        ([Type::Array(element)], Type::Void) if **element == Type::String => format!(
+            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, String::new())?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, value).await?; }}\n{class}::{method}(&program, Some(args)).await"
+        ),
+        _ => {
+            return Err(invalid(format!(
+                "JAR entrypoint {}.{}{} must be public static void with no arguments or String[]",
+                entry.class, entry.method, entry.descriptor
+            )));
+        }
+    };
+    let known_classes = programs
+        .iter()
+        .map(|program| program.name.clone())
+        .collect::<Vec<_>>();
+    let modules = programs
+        .iter()
+        .map(|program| render_module(program, &known_classes))
+        .collect::<Result<Vec<_>, _>>()?;
+    let program = program_code(programs)?;
+    let source = format!(
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nruntime.block_on(async {{\n{invocation}\n}}).expect(\"Java actor call failed\");\n}}",
+        modules.join("\n"),
+    );
+    let file = syn::parse_file(&source)
+        .map_err(|error| invalid(format!("internal generated Rust was invalid: {error}")))?;
+    Ok(prettyplease::unparse(&file))
+}
+
+/// Imports the reachable closed class set from explicit JARs and emits an AOT
+/// Rust executable rooted at `entry`.
+///
+/// The archive is only an input format: class bytes are parsed while compiling
+/// and are not retained by the generated program. The current compiler accepts
+/// default-package classes only; package-qualified class entries fail with the
+/// existing unsupported-package diagnostic when they become reachable.
+pub fn compile_jars(
+    paths: &[impl AsRef<Path>],
+    entry: &JarEntrypoint,
+) -> Result<String, CompileError> {
+    let classes = read_jar_classpath(paths)?;
+    let mut pending = VecDeque::from([(entry.class.clone(), "the declared entrypoint".to_owned())]);
+    let mut queued = HashSet::from([entry.class.clone()]);
+    let mut programs = BTreeMap::new();
+
+    while let Some((class, referenced_by)) = pending.pop_front() {
+        let class_file = classes
+            .get(&class)
+            .ok_or_else(|| CompileError::MissingClass {
+                class: class.clone(),
+                referenced_by,
+            })?;
+        let program = parse_program(&class_file.bytes)?;
+        for dependency in program_dependencies(&program)? {
+            if modeled_platform_class(&dependency) {
+                continue;
+            }
+            if dependency.starts_with("java/") {
+                return Err(CompileError::UnsupportedPlatformClass {
+                    class: dependency,
+                    referenced_by: program.name.clone(),
+                });
+            }
+            if queued.insert(dependency.clone()) {
+                pending.push_back((dependency, program.name.clone()));
+            }
+        }
+        programs.insert(class, program);
+    }
+
+    let programs = programs.into_values().collect::<Vec<_>>();
+    if programs.is_empty() {
+        return Err(invalid("the compilation set is empty"));
+    }
+    for (index, program) in programs.iter().enumerate() {
+        if programs[..index]
+            .iter()
+            .any(|previous| previous.name == program.name)
+        {
+            return Err(invalid(format!(
+                "the compilation set contains duplicate class `{}`",
+                program.name
+            )));
+        }
+    }
+    validate_hierarchy(&programs)?;
+    validate_reference_types(&programs)?;
+    validate_field_accesses(&programs)?;
+    validate_exception_tables(&programs)?;
+    render_declared_entry(&programs, entry)
+}
+
+/// Compiles one default-package Java class file into a complete Rust source file.
+pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
+    compile_classes(&[bytes])
+}
+
+/// Compiles a closed, default-package class set into one AOT Rust source file.
+///
+/// References to classes outside `classes` are rejected during code generation;
+/// the generated modules call each other directly and retain no class-file data.
+pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
+    let programs = classes
+        .iter()
+        .map(|bytes| parse_program(bytes))
+        .collect::<Result<Vec<_>, _>>()?;
+    compile_programs(programs)
 }
 
 #[cfg(test)]

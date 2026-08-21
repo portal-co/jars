@@ -10,6 +10,9 @@ proc-macro2.workspace = true
 quote.workspace = true
 syn.workspace = true
 prettyplease.workspace = true
+zip.workspace = true
 
 [dev-dependencies]
 tempfile.workspace = true
+serde.workspace = true
+toml.workspace = true

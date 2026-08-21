@@ -1,0 +1,15 @@
+name = "cross-jar"
+entry_class = "JarApp"
+entry_method = "run"
+entry_descriptor = "()V"
+expected_stdout = "42\n"
+expected_exit = 0
+
+[[jars]]
+name = "dependency"
+sources = ["dependency/JarLibrary.java", "dependency/Unreachable.java"]
+
+[[jars]]
+name = "app"
+classpath = ["dependency"]
+sources = ["app/JarApp.java"]
