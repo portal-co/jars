@@ -21,6 +21,8 @@ use noak::{
     },
 };
 
+mod stdlib;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CompileError {
     Parse(String),
@@ -194,6 +196,14 @@ impl Type {
             Self::String => Ok("&'static str".to_owned()),
             Self::Class(name) if name == current_class => {
                 Ok(format!("Option<{}>", class_ident(name)?))
+            }
+            Self::Class(name) if stdlib::class(name).is_some() => {
+                match stdlib::class(name).and_then(|entry| entry.rust_type) {
+                    Some(rust_type) => Ok(format!("Option<{rust_type}>")),
+                    None => Err(invalid(format!(
+                        "stdlib class `{name}` has no Rust representation"
+                    ))),
+                }
             }
             Self::Class(name) => Ok(format!(
                 "Option<super::{}::{}>",
@@ -1098,7 +1108,11 @@ enum Value {
     Float(String),
     Double(String),
     String(String),
-    PrintStream,
+    /// An instance of a registered stdlib class (`stdlib::StdClass`), such as
+    /// `System.out`.  `expression` is always `Option<...>`-typed text, the
+    /// same convention `Object` uses, so instance-method lowering can reuse
+    /// the same `.ok_or_else(jars_runtime::null_pointer)?` unwrap template.
+    Platform { expression: String, class: String },
     This,
     Object { expression: String, class: String },
     Array { expression: String, element: Type },
@@ -1114,6 +1128,7 @@ impl Value {
             | Self::Float(value)
             | Self::Double(value)
             | Self::String(value) => Some(value),
+            Self::Platform { expression, .. } => Some(expression),
             Self::Object { expression, .. } => Some(expression),
             Self::Array { expression, .. } => Some(expression),
             Self::Null => Some("None"),
@@ -1679,11 +1694,21 @@ impl<'a> Body<'a> {
                     self.stack.push(value);
                 }
                 Op::GetStatic(reference) => {
-                    if reference.class == "java/lang/System"
-                        && reference.name == "out"
-                        && reference.descriptor == "Ljava/io/PrintStream;"
+                    if let Some(stdlib::StdMember::StaticField { lower }) =
+                        stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                     {
-                        self.stack.push(Value::PrintStream);
+                        let mut cursor = 0;
+                        let Type::Class(value_class) = parse_type(&reference.descriptor, &mut cursor)?
+                        else {
+                            return Err(invalid(format!(
+                                "stdlib static field `{}.{}` has a non-class descriptor",
+                                reference.class, reference.name
+                            )));
+                        };
+                        self.stack.push(Value::Platform {
+                            expression: lower(),
+                            class: value_class,
+                        });
                     } else {
                         if !self
                             .known_classes
@@ -1903,13 +1928,22 @@ impl<'a> Body<'a> {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
                     let receiver = self.pop(instruction)?;
-                    if reference.class == "java/lang/Object" && reference.name == "<init>" {
+                    let stdlib_ctor = stdlib::member(
+                        &reference.class,
+                        &reference.name,
+                        &reference.descriptor,
+                    )
+                    .and_then(|member| match member {
+                        stdlib::StdMember::Constructor { lower } => Some(lower),
+                        _ => None,
+                    });
+                    if stdlib_ctor.is_some_and(|lower| lower(&[]).is_none()) {
                         if !matches!(receiver, Value::This) || !args.is_empty() {
                             return Err(unsupported(
                                 self.program,
                                 self.method,
                                 instruction,
-                                "Object.<init>",
+                                "stdlib no-op constructor",
                             ));
                         }
                     } else if self
@@ -1974,26 +2008,32 @@ impl<'a> Body<'a> {
                     }
                 }
                 Op::InvokeStatic(reference) => {
-                    if !self
-                        .known_classes
-                        .iter()
-                        .any(|known| known == &reference.class)
-                    {
-                        return Err(unsupported(
-                            self.program,
-                            self.method,
-                            instruction,
-                            "invokestatic",
-                        ));
-                    }
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
-                    let method = format!(
-                        "{}{}",
-                        self.class_path(&reference.class)?,
-                        rust_ident(&reference.name)?
-                    );
-                    let expression = format!("{method}(program, {}).await?", args.join(", "));
+                    let expression = if let Some(stdlib::StdMember::StaticMethod { lower }) =
+                        stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                    {
+                        lower(&args)
+                    } else {
+                        if !self
+                            .known_classes
+                            .iter()
+                            .any(|known| known == &reference.class)
+                        {
+                            return Err(unsupported(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "invokestatic",
+                            ));
+                        }
+                        let method = format!(
+                            "{}{}",
+                            self.class_path(&reference.class)?,
+                            rust_ident(&reference.name)?
+                        );
+                        format!("{method}(program, {}).await?", args.join(", "))
+                    };
                     match signature.returns {
                         Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
                             let value = self.temp(expression, Value::Int);
@@ -2036,28 +2076,65 @@ impl<'a> Body<'a> {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
                     let receiver = self.pop(instruction)?;
-                    if reference.class == "java/io/PrintStream" && reference.name == "println" {
-                        if !matches!(receiver, Value::PrintStream)
-                            || args.len() != 1
-                            || !matches!(signature.returns, Type::Void)
-                            || !matches!(
-                                signature.parameters.as_slice(),
-                                [Type::Int]
-                                    | [Type::Long]
-                                    | [Type::Float]
-                                    | [Type::Double]
-                                    | [Type::String]
-                            )
-                        {
-                            return Err(unsupported(
+                    if let Some(stdlib::StdMember::InstanceMethod { lower }) =
+                        stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                    {
+                        let Value::Platform { expression, class } = receiver else {
+                            return Err(stack_error(
                                 self.program,
                                 self.method,
                                 instruction,
-                                "PrintStream.println",
+                                "virtual receiver is not a platform value",
+                            ));
+                        };
+                        if class != reference.class {
+                            return Err(stack_error(
+                                self.program,
+                                self.method,
+                                instruction,
+                                "platform receiver has incompatible class",
                             ));
                         }
-                        self.statements
-                            .push(format!("jars_runtime::println({});", args[0]));
+                        let receiver_expr =
+                            format!("{expression}.ok_or_else(jars_runtime::null_pointer)?");
+                        let expression = lower(&receiver_expr, &args);
+                        match signature.returns {
+                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                                let value = self.temp(expression, Value::Int);
+                                self.stack.push(value);
+                            }
+                            Type::Long => {
+                                let value = self.temp(expression, Value::Long);
+                                self.stack.push(value);
+                            }
+                            Type::Float => {
+                                let value = self.temp(expression, Value::Float);
+                                self.stack.push(value);
+                            }
+                            Type::Double => {
+                                let value = self.temp(expression, Value::Double);
+                                self.stack.push(value);
+                            }
+                            Type::String => {
+                                let value = self.temp(expression, Value::String);
+                                self.stack.push(value);
+                            }
+                            Type::Void => self.statements.push(format!("{expression};")),
+                            Type::Array(element) => {
+                                let value = self.temp(expression, |expression| Value::Array {
+                                    expression,
+                                    element: (*element).clone(),
+                                });
+                                self.stack.push(value);
+                            }
+                            Type::Class(class) => {
+                                let value = self.temp(expression, |expression| Value::Object {
+                                    expression,
+                                    class: class.clone(),
+                                });
+                                self.stack.push(value);
+                            }
+                        }
                     } else if self
                         .known_classes
                         .iter()
@@ -2236,25 +2313,125 @@ fn exception_dispatch(method: &Method) -> String {
     )
 }
 
-fn frame_variant(ty: &Type, expression: impl AsRef<str>) -> Result<String, CompileError> {
+#[derive(Default)]
+struct FrameLayout {
+    references: Vec<Type>,
+    has_this: bool,
+}
+
+impl FrameLayout {
+    fn add_type(&mut self, ty: Type) {
+        match ty {
+            Type::String | Type::Class(_) | Type::Array(_) => {
+                if !self.references.contains(&ty) {
+                    self.references.push(ty.clone());
+                }
+                if let Type::Array(element) = ty {
+                    self.add_type(*element);
+                }
+            }
+            _ => {}
+        }
+    }
+
+    fn reference_variant(&self, ty: &Type) -> Result<String, CompileError> {
+        self.references
+            .iter()
+            .position(|candidate| candidate == ty)
+            .map(|index| format!("R{index}"))
+            .ok_or_else(|| invalid("reference type is absent from the typed frame layout"))
+    }
+}
+
+fn frame_layout(
+    program: &Program,
+    _known_classes: &[String],
+    method: &Method,
+    first_local: usize,
+) -> Result<FrameLayout, CompileError> {
+    let mut layout = FrameLayout {
+        has_this: first_local != 0,
+        ..FrameLayout::default()
+    };
+    for ty in method
+        .signature
+        .parameters
+        .iter()
+        .chain(std::iter::once(&method.signature.returns))
+    {
+        layout.add_type(ty.clone());
+    }
+    for instruction in &method.instructions {
+        match &instruction.op {
+            Op::LdcString(_) => layout.add_type(Type::String),
+            Op::New(class) => layout.add_type(Type::Class(class.clone())),
+            Op::NewArray(element) => layout.add_type(Type::Array(Box::new(element.clone()))),
+            Op::MultiNewArray(ty, _) => layout.add_type(ty.clone()),
+            Op::GetStatic(reference)
+            | Op::PutStatic(reference)
+            | Op::GetField(reference)
+            | Op::PutField(reference) => {
+                let mut cursor = 0;
+                let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                if cursor != reference.descriptor.len() {
+                    return Err(invalid("field descriptor has trailing input"));
+                }
+                layout.add_type(ty);
+                if matches!(instruction.op, Op::GetField(_) | Op::PutField(_)) {
+                    layout.add_type(Type::Class(reference.class.clone()));
+                }
+            }
+            Op::InvokeStatic(reference)
+            | Op::InvokeSpecial(reference)
+            | Op::InvokeVirtual(reference)
+            | Op::InvokeInterface(reference) => {
+                let signature = parse_signature(&reference.descriptor)?;
+                for ty in signature.parameters {
+                    layout.add_type(ty);
+                }
+                layout.add_type(signature.returns);
+                if !matches!(instruction.op, Op::InvokeStatic(_)) {
+                    layout.add_type(Type::Class(reference.class.clone()));
+                }
+            }
+            _ => {}
+        }
+    }
+    let _ = program;
+    Ok(layout)
+}
+
+fn frame_variant(
+    ty: &Type,
+    expression: impl AsRef<str>,
+    layout: &FrameLayout,
+) -> Result<String, CompileError> {
     let expression = expression.as_ref();
     match ty {
         Type::Int => Ok(format!("FrameValue::I32({expression})")),
         Type::Long => Ok(format!("FrameValue::I64({expression})")),
         Type::Float => Ok(format!("FrameValue::F32({expression})")),
         Type::Double => Ok(format!("FrameValue::F64({expression})")),
+        Type::String | Type::Class(_) | Type::Array(_) => Ok(format!(
+            "FrameValue::{}({expression})",
+            layout.reference_variant(ty)?
+        )),
         _ => Err(invalid(
             "the current typed frame does not model this value type",
         )),
     }
 }
 
-fn frame_pop(ty: &Type) -> Result<&'static str, CompileError> {
+fn frame_pop(ty: &Type, layout: &FrameLayout) -> Result<String, CompileError> {
     match ty {
-        Type::Int => Ok("pop_i32"),
-        Type::Long => Ok("pop_i64"),
-        Type::Float => Ok("pop_f32"),
-        Type::Double => Ok("pop_f64"),
+        Type::Int => Ok("pop_i32".to_owned()),
+        Type::Long => Ok("pop_i64".to_owned()),
+        Type::Float => Ok("pop_f32".to_owned()),
+        Type::Double => Ok("pop_f64".to_owned()),
+        Type::String | Type::Class(_) | Type::Array(_) => Ok(format!(
+            "pop_{}",
+            layout.reference_variant(ty)?.to_lowercase()
+        )),
         _ => Err(invalid(
             "the current typed frame does not model this value type",
         )),
@@ -2264,7 +2441,14 @@ fn frame_pop(ty: &Type) -> Result<&'static str, CompileError> {
 fn frame_type_supported(ty: &Type) -> bool {
     matches!(
         ty,
-        Type::Int | Type::Long | Type::Float | Type::Double | Type::Void
+        Type::Int
+            | Type::Long
+            | Type::Float
+            | Type::Double
+            | Type::Void
+            | Type::String
+            | Type::Class(_)
+            | Type::Array(_)
     )
 }
 
@@ -2286,10 +2470,11 @@ fn aot_typed_frame(
             .any(|parameter| !frame_type_supported(parameter) || *parameter == Type::Void)
     {
         return Err(invalid(format!(
-            "typed AOT frame for {}.{} currently supports int, long, float, double, and void only",
+            "typed AOT frame for {}.{} currently supports numeric primitives, strings, closed-world references, arrays, and void",
             program.name, method.name
         )));
     }
+    let layout = frame_layout(program, known_classes, method, first_local)?;
     let parameter_slots = method
         .signature
         .parameters
@@ -2352,6 +2537,11 @@ fn aot_typed_frame(
                 "stack.push(FrameValue::F64({value:?}_f64)); {}",
                 continue_at(next)?
             ),
+            Op::LdcString(value) => format!(
+                "stack.push({}); {}",
+                frame_variant(&Type::String, format!("{value:?}"), &layout)?,
+                continue_at(next)?
+            ),
             Op::ILoad(local) => format!(
                 "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::I32(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::I32(value)); {}",
                 continue_at(next)?
@@ -2361,14 +2551,51 @@ fn aot_typed_frame(
                 continue_at(next)?
             ),
             Op::ALoad(local) => format!(
-                "stack.push(locals[{local}].take().expect(\"initialized reference local\")); {}",
+                "stack.push(load_local(&mut locals, {local})); {}",
                 continue_at(next)?
             ),
             Op::AStore(local) => format!(
-                "locals[{local}] = Some(FrameValue::Throwable(pending_exception.take().expect(\"exception handler entry\"))); {}",
+                "locals[{local}] = Some(match pending_exception.take() {{ Some(error) => FrameValue::Throwable(error), None => stack.pop().expect(\"verified JVM stack\") }}); {}",
                 continue_at(next)?
             ),
             Op::AConstNull => format!("stack.push(FrameValue::Null); {}", continue_at(next)?),
+            Op::NewArray(element) => {
+                let ty = Type::Array(Box::new(element.clone()));
+                let element_rust = element.array_element_rust(&program.name)?;
+                let default = Body::array_default(element)?;
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "let length = pop_i32(&mut stack); match jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), length, {default}) {{ Ok(array) => stack.push({}), Err(error) => {{ {dispatch} }} }} {}",
+                    frame_variant(&ty, "Some(array)", &layout)?,
+                    continue_at(next)?
+                )
+            }
+            Op::ArrayLength => {
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(_)))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.length().await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "arraylength has no array type in the typed frame layout",
+                    ));
+                }
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "let array = stack.pop().expect(\"verified JVM stack\"); let length = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified arraylength receiver\"), }}; match length {{ Ok(value) => stack.push(FrameValue::I32(value)), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
             Op::LLoad(local) => format!(
                 "let value = match locals[{local}].as_ref().expect(\"initialized local\") {{ FrameValue::I64(value) => *value, _ => unreachable!(\"verified local type\") }}; stack.push(FrameValue::I64(value)); {}",
                 continue_at(next)?
@@ -2508,28 +2735,53 @@ fn aot_typed_frame(
                 branch_target(program, method, instruction, *delta)?
             ),
             Op::If(kind, delta) => {
-                let (condition, pops) = match kind {
-                    IfKind::Eq => ("value == 0", 1),
-                    IfKind::Ne => ("value != 0", 1),
-                    IfKind::Lt => ("value < 0", 1),
-                    IfKind::Ge => ("value >= 0", 1),
-                    IfKind::Gt => ("value > 0", 1),
-                    IfKind::Le => ("value <= 0", 1),
-                    IfKind::ICmpEq => ("left == right", 2),
-                    IfKind::ICmpNe => ("left != right", 2),
-                    IfKind::ICmpLt => ("left < right", 2),
-                    IfKind::ICmpGe => ("left >= right", 2),
-                    IfKind::ICmpGt => ("left > right", 2),
-                    IfKind::ICmpLe => ("left <= right", 2),
-                    IfKind::ACmpEq => ("left == right", 2),
-                    IfKind::ACmpNe => ("left != right", 2),
-                    IfKind::Null => ("value == 0", 1),
-                    IfKind::NonNull => ("value != 0", 1),
-                };
-                let values = if pops == 1 {
-                    "let value = pop_i32(&mut stack);"
-                } else {
-                    "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);"
+                let (values, condition) = match kind {
+                    IfKind::Eq => ("let value = pop_i32(&mut stack);", "value == 0"),
+                    IfKind::Ne => ("let value = pop_i32(&mut stack);", "value != 0"),
+                    IfKind::Lt => ("let value = pop_i32(&mut stack);", "value < 0"),
+                    IfKind::Ge => ("let value = pop_i32(&mut stack);", "value >= 0"),
+                    IfKind::Gt => ("let value = pop_i32(&mut stack);", "value > 0"),
+                    IfKind::Le => ("let value = pop_i32(&mut stack);", "value <= 0"),
+                    IfKind::ICmpEq => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left == right",
+                    ),
+                    IfKind::ICmpNe => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left != right",
+                    ),
+                    IfKind::ICmpLt => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left < right",
+                    ),
+                    IfKind::ICmpGe => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left >= right",
+                    ),
+                    IfKind::ICmpGt => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left > right",
+                    ),
+                    IfKind::ICmpLe => (
+                        "let right = pop_i32(&mut stack); let left = pop_i32(&mut stack);",
+                        "left <= right",
+                    ),
+                    IfKind::ACmpEq => (
+                        "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\");",
+                        "same_reference(&left, &right)",
+                    ),
+                    IfKind::ACmpNe => (
+                        "let right = stack.pop().expect(\"verified JVM stack\"); let left = stack.pop().expect(\"verified JVM stack\");",
+                        "!same_reference(&left, &right)",
+                    ),
+                    IfKind::Null => (
+                        "let value = stack.pop().expect(\"verified JVM stack\");",
+                        "is_null(&value)",
+                    ),
+                    IfKind::NonNull => (
+                        "let value = stack.pop().expect(\"verified JVM stack\");",
+                        "!is_null(&value)",
+                    ),
                 };
                 format!(
                     "{values} if {condition} {{ pc = {}; }} else {{ pc = {}; }} continue;",
@@ -2571,60 +2823,166 @@ fn aot_typed_frame(
                         "invokestatic type outside the typed frame subset",
                     ));
                 }
-                if !known_classes.iter().any(|class| class == &reference.class) {
+                if let Some(stdlib::StdMember::StaticMethod { lower }) =
+                    stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                {
+                    let mut arguments = Vec::with_capacity(signature.parameters.len());
+                    for (index, ty) in signature.parameters.iter().enumerate().rev() {
+                        let pop = frame_pop(ty, &layout)?;
+                        arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
+                    }
+                    arguments.reverse();
+                    let argument_names = (0..signature.parameters.len())
+                        .map(|index| format!("argument{index}"))
+                        .collect::<Vec<_>>();
+                    let call = lower(&argument_names);
+                    let push = if signature.returns == Type::Void {
+                        format!("{call};")
+                    } else {
+                        format!(
+                            "stack.push({});",
+                            frame_variant(&signature.returns, &call, &layout)?
+                        )
+                    };
+                    format!("{} {push} {}", arguments.join(" "), continue_at(next)?)
+                } else if !known_classes.iter().any(|class| class == &reference.class) {
                     return Err(unsupported(
                         program,
                         method,
                         instruction,
                         "invokestatic owner outside the compilation set",
                     ));
-                }
-                let mut arguments = Vec::with_capacity(signature.parameters.len());
-                for (index, ty) in signature.parameters.iter().enumerate().rev() {
-                    let pop = frame_pop(ty)?;
-                    arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
-                }
-                arguments.reverse();
-                let method_path = if reference.class == program.name {
-                    rust_ident(&reference.name)?
                 } else {
+                    let mut arguments = Vec::with_capacity(signature.parameters.len());
+                    for (index, ty) in signature.parameters.iter().enumerate().rev() {
+                        let pop = frame_pop(ty, &layout)?;
+                        arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
+                    }
+                    arguments.reverse();
+                    let method_path = if reference.class == program.name {
+                        rust_ident(&reference.name)?
+                    } else {
+                        format!(
+                            "super::{}::{}",
+                            class_ident(&reference.class)?,
+                            rust_ident(&reference.name)?,
+                        )
+                    };
+                    let arguments_joined = (0..signature.parameters.len())
+                        .map(|index| format!("argument{index}"))
+                        .collect::<Vec<_>>()
+                        .join(", ");
+                    let call = if arguments_joined.is_empty() {
+                        format!("{method_path}(program).await")
+                    } else {
+                        format!("{method_path}(program, {arguments_joined}).await")
+                    };
+                    let dispatch = exception_dispatch(method);
+                    let success = if signature.returns == Type::Void {
+                        "Ok(()) => {}".to_owned()
+                    } else {
+                        format!(
+                            "Ok(value) => stack.push({})",
+                            frame_variant(&signature.returns, "value", &layout)?
+                        )
+                    };
                     format!(
-                        "super::{}::{}",
-                        class_ident(&reference.class)?,
-                        rust_ident(&reference.name)?,
+                        "{} match {call} {{ {success}, Err(error) => {{ {dispatch} }} }} {}",
+                        arguments.join(" "),
+                        continue_at(next)?,
                     )
-                };
-                let arguments = (0..signature.parameters.len())
-                    .map(|index| format!("argument{index}"))
-                    .collect::<Vec<_>>()
-                    .join(", ");
-                let call = if arguments.is_empty() {
-                    format!("{method_path}(program).await")
-                } else {
-                    format!("{method_path}(program, {arguments}).await")
-                };
-                let dispatch = exception_dispatch(method);
-                let success = if signature.returns == Type::Void {
-                    "Ok(()) => {}".to_owned()
-                } else {
-                    format!(
-                        "Ok(value) => stack.push({})",
-                        frame_variant(&signature.returns, "value")?
-                    )
-                };
-                format!(
-                    "{} match {call} {{ {success}, Err(error) => {{ {dispatch} }} }} {}",
-                    arguments,
-                    continue_at(next)?,
-                )
+                }
             }
             Op::GetStatic(reference) | Op::PutStatic(reference) => {
-                if !known_classes.iter().any(|class| class == &reference.class) {
+                let stdlib_field = match &instruction.op {
+                    Op::GetStatic(_) => {
+                        stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                            .and_then(|member| match member {
+                                stdlib::StdMember::StaticField { lower } => Some(lower),
+                                _ => None,
+                            })
+                    }
+                    _ => None,
+                };
+                if let Some(lower) = stdlib_field {
+                    let mut cursor = 0;
+                    let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                    if cursor != reference.descriptor.len()
+                        || !frame_type_supported(&ty)
+                        || ty == Type::Void
+                    {
+                        return Err(unsupported(
+                            program,
+                            method,
+                            instruction,
+                            "getstatic type outside the typed frame subset",
+                        ));
+                    }
+                    let value = lower();
+                    format!(
+                        "stack.push({}); {}",
+                        frame_variant(&ty, &value, &layout)?,
+                        continue_at(next)?
+                    )
+                } else if !known_classes.iter().any(|class| class == &reference.class) {
                     return Err(unsupported(
                         program,
                         method,
                         instruction,
                         "getstatic/putstatic owner outside the compilation set",
+                    ));
+                } else {
+                    let mut cursor = 0;
+                    let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                    if cursor != reference.descriptor.len()
+                        || !frame_type_supported(&ty)
+                        || ty == Type::Void
+                    {
+                        return Err(unsupported(
+                            program,
+                            method,
+                            instruction,
+                            "getstatic/putstatic type outside the typed frame subset",
+                        ));
+                    }
+                    let owner = class_ident(&reference.class)?;
+                    let field = rust_ident(&reference.name)?;
+                    let dispatch = exception_dispatch(method);
+                    let access = match &instruction.op {
+                        Op::GetStatic(_) => format!(
+                            "let value = program.state.borrow().{owner}.{field}.clone(); stack.push({});",
+                            frame_variant(&ty, "value", &layout)?
+                        ),
+                        Op::PutStatic(_) => {
+                            let pop = frame_pop(&ty, &layout)?;
+                            format!(
+                                "let value = {pop}(&mut stack); program.state.borrow_mut().{owner}.{field} = value;"
+                            )
+                        }
+                        _ => unreachable!(),
+                    };
+                    if reference.class == program.name {
+                        // The class has already been marked `initializing` before
+                        // entering `<clinit>`. Re-entering its async `__ensure`
+                        // here would create a recursively sized future; Java
+                        // instead observes the prepared/default static state.
+                        format!("{access} {}", continue_at(next)?)
+                    } else {
+                        let ensure = format!("super::{owner}::__ensure(program).await");
+                        format!(
+                            "match {ensure} {{ Ok(()) => {{ {access} }}, Err(error) => {{ {dispatch} }} }} {}",
+                            continue_at(next)?
+                        )
+                    }
+                }
+            }
+            Op::GetField(reference) => {
+                if !known_classes.iter().any(|class| class == &reference.class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "getfield owner outside the compilation set",
                     ));
                 }
                 let mut cursor = 0;
@@ -2637,36 +2995,147 @@ fn aot_typed_frame(
                         program,
                         method,
                         instruction,
-                        "getstatic/putstatic type outside the typed frame subset",
+                        "getfield type outside the typed frame subset",
                     ));
                 }
-                let owner = class_ident(&reference.class)?;
                 let field = rust_ident(&reference.name)?;
-                let dispatch = exception_dispatch(method);
-                let access = match &instruction.op {
-                    Op::GetStatic(_) => format!(
-                        "let value = program.state.borrow().{owner}.{field}; stack.push({});",
-                        frame_variant(&ty, "value")?
-                    ),
-                    Op::PutStatic(_) => {
-                        let pop = frame_pop(&ty)?;
-                        format!(
-                            "let value = {pop}(&mut stack); program.state.borrow_mut().{owner}.{field} = value;"
-                        )
-                    }
-                    _ => unreachable!(),
-                };
-                if reference.class == program.name {
-                    // The class has already been marked `initializing` before
-                    // entering `<clinit>`. Re-entering its async `__ensure`
-                    // here would create a recursively sized future; Java
-                    // instead observes the prepared/default static state.
-                    format!("{access} {}", continue_at(next)?)
-                } else {
-                    let ensure = format!("super::{owner}::__ensure(program).await");
+                let receiver = layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                let direct_this = if first_local != 0 && reference.class == program.name {
                     format!(
-                        "match {ensure} {{ Ok(()) => {{ {access} }}, Err(error) => {{ {dispatch} }} }} {}",
-                        continue_at(next)?
+                        "FrameValue::This => Ok(state.lock().expect(\"actor state mutex\").{field}.clone()),"
+                    )
+                } else {
+                    String::new()
+                };
+                let dispatch = exception_dispatch(method);
+                let value = frame_variant(&ty, "value", &layout)?;
+                format!(
+                    "let receiver = stack.pop().expect(\"verified JVM stack\"); let value = match receiver {{ {direct_this} FrameValue::{receiver}(receiver) => match receiver {{ Some(receiver) => receiver.__get_{field}().await, None => Err(jars_runtime::null_pointer()), }}, FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified getfield receiver\"), }}; match value {{ Ok(value) => stack.push({value}), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::PutField(reference) => {
+                if !known_classes.iter().any(|class| class == &reference.class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "putfield owner outside the compilation set",
+                    ));
+                }
+                let mut cursor = 0;
+                let ty = parse_type(&reference.descriptor, &mut cursor)?;
+                if cursor != reference.descriptor.len()
+                    || !frame_type_supported(&ty)
+                    || ty == Type::Void
+                {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "putfield type outside the typed frame subset",
+                    ));
+                }
+                let field = rust_ident(&reference.name)?;
+                let receiver = layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                let pop = frame_pop(&ty, &layout)?;
+                let direct_this = if first_local != 0 && reference.class == program.name {
+                    format!(
+                        "FrameValue::This => {{ state.lock().expect(\"actor state mutex\").{field} = value; Ok(()) }},"
+                    )
+                } else {
+                    String::new()
+                };
+                let dispatch = exception_dispatch(method);
+                format!(
+                    "let value = {pop}(&mut stack); let receiver = stack.pop().expect(\"verified JVM stack\"); let result = match receiver {{ {direct_this} FrameValue::{receiver}(receiver) => match receiver {{ Some(receiver) => receiver.__set_{field}(value).await, None => Err(jars_runtime::null_pointer()), }}, FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified putfield receiver\"), }}; match result {{ Ok(()) => {{}}, Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::InvokeVirtual(reference) => {
+                let signature = parse_signature(&reference.descriptor)?;
+                if !frame_type_supported(&signature.returns)
+                    || signature.parameters.iter().any(|parameter| {
+                        !frame_type_supported(parameter) || *parameter == Type::Void
+                    })
+                {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "invokevirtual type outside the typed frame subset",
+                    ));
+                }
+                if let Some(stdlib::StdMember::InstanceMethod { lower }) =
+                    stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                {
+                    let mut arguments = Vec::with_capacity(signature.parameters.len());
+                    for (index, ty) in signature.parameters.iter().enumerate().rev() {
+                        let pop = frame_pop(ty, &layout)?;
+                        arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
+                    }
+                    arguments.reverse();
+                    let argument_declarations = arguments.join(" ");
+                    let argument_names = (0..signature.parameters.len())
+                        .map(|index| format!("argument{index}"))
+                        .collect::<Vec<_>>();
+                    let receiver_variant =
+                        layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                    let call = lower("_receiver", &argument_names);
+                    let dispatch = exception_dispatch(method);
+                    let push = if signature.returns == Type::Void {
+                        format!("{call};")
+                    } else {
+                        format!(
+                            "stack.push({});",
+                            frame_variant(&signature.returns, &call, &layout)?
+                        )
+                    };
+                    format!(
+                        "{} match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::{receiver_variant}(receiver_option) => match receiver_option {{ Some(_receiver) => {{ {push} }}, None => {{ let error = jars_runtime::null_pointer(); {dispatch} }} }}, FrameValue::Null => {{ let error = jars_runtime::null_pointer(); {dispatch} }}, _ => unreachable!(\"verified invokevirtual receiver\"), }} {}",
+                        argument_declarations,
+                        continue_at(next)?,
+                    )
+                } else if !known_classes.iter().any(|class| class == &reference.class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "invokevirtual owner outside the compilation set",
+                    ));
+                } else {
+                    let mut arguments = Vec::with_capacity(signature.parameters.len());
+                    for (index, ty) in signature.parameters.iter().enumerate().rev() {
+                        let pop = frame_pop(ty, &layout)?;
+                        arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
+                    }
+                    arguments.reverse();
+                    let argument_declarations = arguments.join(" ");
+                    let arguments = (0..signature.parameters.len())
+                        .map(|index| format!("argument{index}"))
+                        .collect::<Vec<_>>()
+                        .join(", ");
+                    let method_name = rust_ident(&reference.name)?;
+                    let receiver =
+                        layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                    let call = if arguments.is_empty() {
+                        format!("receiver.{method_name}().await")
+                    } else {
+                        format!("receiver.{method_name}({arguments}).await")
+                    };
+                    let dispatch = exception_dispatch(method);
+                    let success = if signature.returns == Type::Void {
+                        "Ok(()) => {}".to_owned()
+                    } else {
+                        format!(
+                            "Ok(value) => stack.push({})",
+                            frame_variant(&signature.returns, "value", &layout)?
+                        )
+                    };
+                    format!(
+                        "{} let receiver = stack.pop().expect(\"verified JVM stack\"); let result = match receiver {{ FrameValue::{receiver}(receiver) => match receiver {{ Some(receiver) => {call}, None => Err(jars_runtime::null_pointer()), }}, FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified invokevirtual receiver\"), }}; match result {{ {success}, Err(error) => {{ {dispatch} }} }} {}",
+                        argument_declarations,
+                        continue_at(next)?,
                     )
                 }
             }
@@ -2680,6 +3149,20 @@ fn aot_typed_frame(
             Op::LReturn => "return Ok(pop_i64(&mut stack));".to_owned(),
             Op::FReturn => "return Ok(pop_f32(&mut stack));".to_owned(),
             Op::DReturn => "return Ok(pop_f64(&mut stack));".to_owned(),
+            Op::AReturn => {
+                if method.signature.returns == Type::Void {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "areturn in a void method",
+                    ));
+                }
+                format!(
+                    "return Ok({}(&mut stack));",
+                    frame_pop(&method.signature.returns, &layout)?
+                )
+            }
             Op::Return => "return Ok(());".to_owned(),
             _ => {
                 return Err(unsupported(
@@ -2701,7 +3184,7 @@ fn aot_typed_frame(
         .map(|(index, (ty, local))| {
             Ok(format!(
                 "locals[{local}] = Some({});",
-                frame_variant(ty, format!("arg{index}"))?
+                frame_variant(ty, format!("arg{index}"), &layout)?
             ))
         })
         .collect::<Result<String, CompileError>>()?;
@@ -2710,8 +3193,92 @@ fn aot_typed_frame(
         .first()
         .ok_or_else(|| invalid("methods must contain at least one instruction"))?
         .offset;
+    let reference_variants = layout
+        .references
+        .iter()
+        .enumerate()
+        .map(|(index, ty)| Ok(format!("R{index}({})", ty.rust(&program.name)?)))
+        .collect::<Result<Vec<_>, CompileError>>()?
+        .join(", ");
+    let reference_variants = if reference_variants.is_empty() {
+        String::new()
+    } else {
+        format!(", {reference_variants}")
+    };
+    let reference_pops = layout
+        .references
+        .iter()
+        .enumerate()
+        .map(|(index, ty)| {
+            Ok(format!(
+                "fn pop_r{index}(stack: &mut Vec<FrameValue>) -> {} {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::R{index}(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}",
+                ty.rust(&program.name)?
+            ))
+        })
+        .collect::<Result<String, CompileError>>()?;
+    let mut load_variants = layout
+        .references
+        .iter()
+        .enumerate()
+        .map(|(index, _)| {
+            format!("FrameValue::R{index}(value) => FrameValue::R{index}(value.clone())")
+        })
+        .collect::<Vec<_>>();
+    let this_variant = if layout.has_this { ", This" } else { "" };
+    if layout.has_this {
+        load_variants.push("FrameValue::This => FrameValue::This".to_owned());
+    }
+    load_variants.push("FrameValue::Null => FrameValue::Null".to_owned());
+    let load_variants = load_variants.join(", ");
+    let this_initialize = if layout.has_this {
+        "locals[0] = Some(FrameValue::This);"
+    } else {
+        ""
+    };
+    let null_checks = layout
+        .references
+        .iter()
+        .enumerate()
+        .map(|(index, ty)| match ty {
+            Type::String => format!("FrameValue::R{index}(_) => false"),
+            Type::Class(_) | Type::Array(_) => {
+                format!("FrameValue::R{index}(value) => value.is_none()")
+            }
+            _ => unreachable!("frame layout contains reference types only"),
+        })
+        .collect::<Vec<_>>();
+    let mut null_checks = null_checks;
+    if layout.has_this {
+        null_checks.push("FrameValue::This => false".to_owned());
+    }
+    null_checks.push("FrameValue::Null => true".to_owned());
+    let null_checks = null_checks.join(", ");
+    let reference_equalities = layout
+        .references
+        .iter()
+        .enumerate()
+        .map(|(index, ty)| match ty {
+            Type::String => format!(
+                "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.as_ptr() == right.as_ptr() && left.len() == right.len()"
+            ),
+            Type::Class(_) => format!(
+                "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.__same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
+            ),
+            Type::Array(_) => format!(
+                "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
+            ),
+            _ => unreachable!("frame layout contains reference types only"),
+        })
+        .collect::<Vec<_>>();
+    let mut reference_equalities = reference_equalities;
+    if layout.has_this {
+        reference_equalities.push("(FrameValue::This, FrameValue::This) => true".to_owned());
+    }
+    reference_equalities.push("(FrameValue::Null, FrameValue::Null) => true".to_owned());
+    reference_equalities.push("_ => false".to_owned());
+    let reference_equalities = reference_equalities.join(", ");
     Ok(format!(
-        "enum FrameValue {{ I32(i32), I64(i64), F32(f32), F64(f64), Throwable(jars_runtime::JavaError), Null }}\nfn pop_i32(stack: &mut Vec<FrameValue>) -> i32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_i64(stack: &mut Vec<FrameValue>) -> i64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f32(stack: &mut Vec<FrameValue>) -> f32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f64(stack: &mut Vec<FrameValue>) -> f64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nlet mut locals: Vec<Option<FrameValue>> = (0..{max_local}).map(|_| None).collect();\n{initial_locals}\nlet mut stack: Vec<FrameValue> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}",
+        "enum FrameValue {{ I32(i32), I64(i64), F32(f32), F64(f64){reference_variants}{this_variant}, Throwable(jars_runtime::JavaError), Null }}\nfn pop_i32(stack: &mut Vec<FrameValue>) -> i32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_i64(stack: &mut Vec<FrameValue>) -> i64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f32(stack: &mut Vec<FrameValue>) -> f32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f64(stack: &mut Vec<FrameValue>) -> f64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\n{reference_pops}\nfn is_null(value: &FrameValue) -> bool {{ match value {{ {null_checks}, _ => unreachable!(\"verified reference operand\"), }} }}\nfn same_reference(left: &FrameValue, right: &FrameValue) -> bool {{ match (left, right) {{ {reference_equalities} }} }}\nfn load_local(locals: &mut [Option<FrameValue>], index: usize) -> FrameValue {{ if matches!(locals[index], Some(FrameValue::Throwable(_))) {{ return locals[index].take().expect(\"initialized throwable local\"); }} match locals[index].as_ref().expect(\"initialized local\") {{ FrameValue::I32(value) => FrameValue::I32(*value), FrameValue::I64(value) => FrameValue::I64(*value), FrameValue::F32(value) => FrameValue::F32(*value), FrameValue::F64(value) => FrameValue::F64(*value), {load_variants}, FrameValue::Throwable(_) => unreachable!(\"handled throwable local\"), }} }}\nlet mut locals: Vec<Option<FrameValue>> = (0..{max_local}).map(|_| None).collect();\n{this_initialize}\n{initial_locals}\nlet mut stack: Vec<FrameValue> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}",
         arms.join(",\n"),
     ))
 }
@@ -2855,7 +3422,9 @@ fn actor_code(
         .join(", ");
     let mut implementations = Vec::new();
     let mut variants = vec![format!("Init {{ {constructor_message_fields} }}")];
-    let mut proxies = Vec::new();
+    let mut proxies = vec![
+        "pub fn __same(&self, other: &Self) -> bool { self.actor.same(&other.actor) }".to_owned(),
+    ];
     let mut dispatch = vec![format!(
         "{class}Message::Init {{ {} }} => {{ let value = {class}::init_impl(handler_state, &handler_program{}).await; let _ = reply.send(value); }}",
         reply_fields(&constructor_args, "reply"),
@@ -3144,7 +3713,10 @@ fn validate_field_accesses(programs: &[Program]) -> Result<(), CompileError> {
                 let (reference, write, expect_static) = match &instruction.op {
                     Op::GetField(reference) => (reference, false, false),
                     Op::PutField(reference) => (reference, true, false),
-                    Op::GetStatic(reference) if reference.class != "java/lang/System" => {
+                    Op::GetStatic(reference)
+                        if stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                            .is_none() =>
+                    {
                         (reference, false, true)
                     }
                     Op::PutStatic(reference) => (reference, true, true),
@@ -3435,27 +4007,6 @@ fn read_jar_classpath(
     Ok(classes)
 }
 
-fn modeled_platform_class(class: &str) -> bool {
-    matches!(
-        class,
-        "java/lang/Object"
-            | "java/lang/String"
-            | "java/lang/System"
-            | "java/io/PrintStream"
-            | "java/lang/Throwable"
-            | "java/lang/Exception"
-            | "java/lang/RuntimeException"
-            | "java/lang/ArithmeticException"
-            | "java/lang/NullPointerException"
-            | "java/lang/ClassCastException"
-            | "java/lang/ArrayIndexOutOfBoundsException"
-            | "java/lang/NegativeArraySizeException"
-            | "java/lang/ArrayStoreException"
-            | "java/lang/Cloneable"
-            | "java/io/Serializable"
-    )
-}
-
 fn add_type_dependencies(ty: &Type, dependencies: &mut Vec<String>) {
     match ty {
         Type::Class(class) => dependencies.push(class.clone()),
@@ -3628,7 +4179,7 @@ pub fn compile_jars(
             })?;
         let program = parse_program(&class_file.bytes)?;
         for dependency in program_dependencies(&program)? {
-            if modeled_platform_class(&dependency) {
+            if stdlib::is_known_type(&dependency) {
                 continue;
             }
             if dependency.starts_with("java/") {

@@ -216,12 +216,14 @@ pub fn lushr(value: i64, shift: i32) -> i64 {
 /// A cloneable address for a single serialized actor.
 pub struct ActorRef<M> {
     sender: async_channel::Sender<M>,
+    identity: Rc<()>,
 }
 
 impl<M> Clone for ActorRef<M> {
     fn clone(&self) -> Self {
         Self {
             sender: self.sender.clone(),
+            identity: self.identity.clone(),
         }
     }
 }
@@ -235,10 +237,22 @@ pub struct Mailbox<M> {
 /// callers retain only the cloneable [`ActorRef`].
 pub fn actor_channel<M>() -> (ActorRef<M>, Mailbox<M>) {
     let (sender, receiver) = async_channel::unbounded();
-    (ActorRef { sender }, Mailbox { receiver })
+    (
+        ActorRef {
+            sender,
+            identity: Rc::new(()),
+        },
+        Mailbox { receiver },
+    )
 }
 
 impl<M> ActorRef<M> {
+    /// Compares actor addresses without observing or exposing their state.
+    #[must_use]
+    pub fn same(&self, other: &Self) -> bool {
+        Rc::ptr_eq(&self.identity, &other.identity)
+    }
+
     pub async fn send(&self, message: M) -> Result<(), CallError> {
         self.sender
             .send(message)
@@ -287,6 +301,12 @@ enum ArrayMessage<T> {
 }
 
 impl<T: Clone + 'static> JavaArray<T> {
+    /// Java reference identity for two typed array addresses.
+    #[must_use]
+    pub fn same(&self, other: &Self) -> bool {
+        self.actor.same(&other.actor)
+    }
+
     /// Creates a default-filled Java array.  Negative sizes use the Java
     /// failure rather than Rust's allocation diagnostics.
     pub fn new<S: Spawner>(spawner: S, length: i32, default: T) -> JavaResult<Self> {
@@ -414,6 +434,27 @@ impl<T> Response<T> {
 
 pub fn println<T: Display>(value: T) {
     std::println!("{value}");
+}
+
+/// The Rust representation of `java.io.PrintStream` values such as
+/// `System.out`.  It carries no state: all instances compare equal, matching
+/// the single process-wide stream Java code observes.
+#[derive(Debug, Clone, Copy)]
+pub struct PrintStream;
+
+impl PrintStream {
+    #[must_use]
+    pub fn __same(&self, _other: &Self) -> bool {
+        true
+    }
+}
+
+/// Rust implementations backing `java.lang.Math` static methods.
+pub mod math {
+    #[must_use]
+    pub fn min(a: i32, b: i32) -> i32 {
+        a.min(b)
+    }
 }
 
 #[cfg(test)]

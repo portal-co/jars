@@ -29,11 +29,16 @@ calls). Exception tables are retained only while compiling; emitted Rust retains
 no class-file or bytecode representation.
 
 Control-flow and exception-table bodies share an emitted typed activation frame
-for supported numeric values and throwable/null operands. That frame is reused
-by static methods, actor method handlers, and supported `<clinit>` bodies; its
-state remains local to one generated invocation and does not expose actor state.
-Every array descriptor is recursive; generated arrays are typed mailbox actors,
-so array aliases can cross object actors without exposing mutable elements.
+for supported numeric values, strings, closed-world object references, recursive
+array references, and throwable/null operands. Framed field reads/writes and
+virtual calls relay through the target actor; a state lock is acquired only for
+direct local access and is never held over that relay. The frame also preserves
+actor-address identity for supported object/array reference comparisons. It is
+reused by static methods, actor method handlers, and supported `<clinit>` bodies;
+its state remains local to one generated invocation and does not expose actor
+state. Every array descriptor is recursive; generated arrays are typed mailbox
+actors, so array aliases can cross object actors without exposing mutable
+elements.
 
 Generated Java entry points and public calls return
 `jars_runtime::JavaResult<T>` (an `anyhow::Result<T>`). The runtime exposes

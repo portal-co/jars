@@ -113,6 +113,16 @@ fn hello_world_runs_after_java_to_rust_compilation() {
 }
 
 #[test]
+fn math_min_resolves_through_the_stdlib_registry() {
+    assert_eq!(compile_and_run("MathMin").0, "3\n");
+}
+
+#[test]
+fn println_and_math_min_are_supported_inside_a_typed_frame_method() {
+    assert_eq!(compile_and_run("PrintlnInTypedFrame").0, "42\n");
+}
+
+#[test]
 fn static_add_is_public_and_runs() {
     let (stdout, generated) = compile_and_run("Add");
     assert_eq!(stdout, "42\n");
@@ -157,7 +167,7 @@ fn exception_table_catches_an_aot_arithmetic_failure() {
 fn catch_all_finally_handler_can_rethrow_to_an_outer_handler() {
     let (stdout, generated) = compile_and_run("FinallyRethrows");
     assert_eq!(stdout, "42\n");
-    assert!(generated.contains("exception_locals"));
+    assert!(generated.contains("pending_exception"));
     assert!(generated.contains("athrow requires a throwable operand"));
 }
 
@@ -198,6 +208,43 @@ fn typed_frame_is_reused_by_an_actor_method_implementation() {
     assert_eq!(stdout, "42\n");
     assert!(generated.contains("async fn divide_impl"));
     assert!(generated.contains("enum FrameValue"));
+}
+
+#[test]
+fn typed_frame_relays_cross_object_fields_and_virtual_calls() {
+    let (stdout, generated) = compile_set_and_run(&["FramedObjectOps", "PublicBox"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("__get_value().await"));
+    assert!(generated.contains("__set_value(value).await"));
+    assert!(generated.contains("receiver.read().await"));
+}
+
+#[test]
+fn typed_frame_carries_recursive_arrays_and_awaits_array_actors() {
+    let (stdout, generated) = compile_and_run("FramedArrayRefs");
+    assert_eq!(stdout, "42\n42\n");
+    assert!(generated.contains("R0(Option<jars_runtime::JavaArray"));
+    assert!(generated.contains("array.length().await"));
+    assert!(generated.contains("JavaArray::<i32>::new"));
+}
+
+#[test]
+fn typed_actor_frame_releases_local_state_before_cross_actor_relays() {
+    let (stdout, generated) = compile_set_and_run(&["FramedActorRelay", "PublicBox"]);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("async fn update_impl"));
+    assert!(generated.contains("FrameValue::This"));
+    assert!(generated.contains("receiver.__get_value().await"));
+    assert!(generated.contains("receiver.read().await"));
+}
+
+#[test]
+fn typed_frame_uses_actor_address_identity_for_reference_control_flow() {
+    let (stdout, generated) = compile_set_and_run(&["FramedReferenceControl", "PublicBox"]);
+    assert_eq!(stdout, "42\n-1\n42\n");
+    assert!(generated.contains("fn is_null"));
+    assert!(generated.contains("fn same_reference"));
+    assert!(generated.contains("left.same(right)"));
 }
 
 #[test]
