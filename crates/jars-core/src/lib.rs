@@ -329,6 +329,7 @@ enum Op {
     PutStatic(MemberRef),
     New(String),
     Dup,
+    Pop,
     InvokeSpecial(MemberRef),
     InvokeStatic(MemberRef),
     InvokeVirtual(MemberRef),
@@ -743,6 +744,7 @@ fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<O
         AReturn => Op::AReturn,
         Return => Op::Return,
         Dup => Op::Dup,
+        Pop => Op::Pop,
         New { index } => Op::New(class_name(pool, index)?),
         GetStatic { index } => {
             let reference = pool
@@ -1923,6 +1925,13 @@ impl<'a> Body<'a> {
                         )
                     })?;
                     self.stack.push(value);
+                }
+                Op::Pop => {
+                    // The discarded value's side effects, if any, were already
+                    // emitted as a statement when it was produced (`Body::temp`
+                    // always pushes a `let` binding immediately), so dropping
+                    // the stack entry here is sufficient.
+                    self.pop(instruction)?;
                 }
                 Op::InvokeSpecial(reference) => {
                     let signature = parse_signature(&reference.descriptor)?;
