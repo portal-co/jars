@@ -1,6 +1,12 @@
 # jars
 
-`jars` translates a deliberately small Java class-file subset into Rust.
+`jars` translates a deliberately small Java bytecode subset from Java class
+files through Java 26 (non-preview class-file version 70.0) into Rust.  Its
+owned class-file reader validates the current constant-pool and attribute
+layout directly; it does not depend on a JVM, reflection, or a bytecode
+interpreter.  Format acceptance is intentionally broader than lowering:
+valid Java 26 instructions or JDK APIs outside the modeled AOT subset receive
+compiler diagnostics rather than being interpreted at runtime.
 
 `jars-core::compile_class` accepts one default-package `.class` file and emits
 a complete Rust binary source file. Generated Java objects are mailbox-backed

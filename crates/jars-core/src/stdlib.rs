@@ -15,11 +15,17 @@ pub(crate) enum StdMember {
     /// already suffices and no allocation/statement should be emitted (this
     /// is exactly `Object.<init>`'s shape); `Some(expr)` when `expr`
     /// constructs the new instance.
-    Constructor { lower: fn(args: &[String]) -> Option<String> },
+    Constructor {
+        lower: fn(args: &[String]) -> Option<String>,
+    },
     /// Static fields take no arguments and have no receiver.
     StaticField { lower: fn() -> String },
-    StaticMethod { lower: fn(args: &[String]) -> String },
-    InstanceMethod { lower: fn(receiver: &str, args: &[String]) -> String },
+    StaticMethod {
+        lower: fn(args: &[String]) -> String,
+    },
+    InstanceMethod {
+        lower: fn(receiver: &str, args: &[String]) -> String,
+    },
 }
 
 pub(crate) struct StdEntry {
@@ -47,7 +53,9 @@ pub(crate) struct StdClass {
 static OBJECT_INIT: &[StdEntry] = &[StdEntry {
     name: "<init>",
     descriptor: "()V",
-    member: StdMember::Constructor { lower: |_args| None },
+    member: StdMember::Constructor {
+        lower: |_args| None,
+    },
 }];
 
 static SYSTEM_OUT: &[StdEntry] = &[StdEntry {
@@ -66,27 +74,37 @@ static PRINTLN_ENTRIES: &[StdEntry] = &[
     StdEntry {
         name: "println",
         descriptor: "(I)V",
-        member: StdMember::InstanceMethod { lower: println_lower },
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
     },
     StdEntry {
         name: "println",
         descriptor: "(J)V",
-        member: StdMember::InstanceMethod { lower: println_lower },
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
     },
     StdEntry {
         name: "println",
         descriptor: "(F)V",
-        member: StdMember::InstanceMethod { lower: println_lower },
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
     },
     StdEntry {
         name: "println",
         descriptor: "(D)V",
-        member: StdMember::InstanceMethod { lower: println_lower },
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
     },
     StdEntry {
         name: "println",
         descriptor: "(Ljava/lang/String;)V",
-        member: StdMember::InstanceMethod { lower: println_lower },
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
     },
 ];
 

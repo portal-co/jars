@@ -386,10 +386,21 @@ fn jar_reader_rejects_future_class_file_versions() {
     let temp = tempfile::tempdir().unwrap();
     let jar = temp.path().join("future.jar");
     let mut class = minimal_class("Future");
-    class[6..8].copy_from_slice(&66u16.to_be_bytes());
+    class[6..8].copy_from_slice(&71u16.to_be_bytes());
     write_class_jar(&jar, "Future", &class);
     assert!(matches!(
         compile_jars(&[jar], &JarEntrypoint::new("Future", "run", "()V")),
-        Err(CompileError::Jar { detail, .. }) if detail.contains("unsupported class-file version 66.0")
+        Err(CompileError::Jar { detail, .. }) if detail.contains("unsupported class-file version 71.0")
     ));
+}
+
+#[test]
+fn jar_reader_accepts_java_26_class_file_versions() {
+    let temp = tempfile::tempdir().unwrap();
+    let jar = temp.path().join("java26.jar");
+    let mut class = static_void_class("Java26Entry", "run", &[0xb1]);
+    class[6..8].copy_from_slice(&70u16.to_be_bytes());
+    write_class_jar(&jar, "Java26Entry", &class);
+    let generated = compile_jars(&[jar], &JarEntrypoint::new("Java26Entry", "run", "()V")).unwrap();
+    assert!(generated.contains("pub mod Java26Entry"));
 }

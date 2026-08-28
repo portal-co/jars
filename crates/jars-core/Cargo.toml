@@ -5,7 +5,6 @@ version.workspace = true
 description.workspace = true
 
 [dependencies]
-noak.workspace = true
 proc-macro2.workspace = true
 quote.workspace = true
 syn.workspace = true

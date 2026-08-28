@@ -12,15 +12,7 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use noak::{
-    AccessFlags,
-    reader::{
-        AttributeContent, Class,
-        attributes::RawInstruction,
-        cpool::{self, Item},
-    },
-};
-
+mod classfile;
 mod stdlib;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
@@ -415,104 +407,41 @@ fn invalid(message: impl Into<String>) -> CompileError {
     CompileError::InvalidClass(message.into())
 }
 
-fn utf8(value: &noak::MStr) -> Result<String, CompileError> {
-    value
-        .to_str()
-        .map(str::to_owned)
-        .ok_or_else(|| invalid("class-file modified UTF-8 must be valid UTF-8"))
-}
-
-fn class_name(
-    pool: &cpool::ConstantPool<'_>,
-    index: cpool::Index<cpool::Class<'_>>,
-) -> Result<String, CompileError> {
-    let value = pool
-        .retrieve(index)
-        .map_err(|error| CompileError::Parse(error.to_string()))?;
-    utf8(value.name)
-}
-
-fn member_ref(
-    pool: &cpool::ConstantPool<'_>,
-    class: cpool::Index<cpool::Class<'_>>,
-    name_and_type: cpool::Index<cpool::NameAndType<'_>>,
-) -> Result<MemberRef, CompileError> {
-    let name_and_type = pool
-        .retrieve(name_and_type)
-        .map_err(|error| CompileError::Parse(error.to_string()))?;
-    Ok(MemberRef {
-        class: class_name(pool, class)?,
-        name: utf8(name_and_type.name)?,
-        descriptor: utf8(name_and_type.descriptor)?,
-    })
-}
-
-fn item_member_ref(
-    pool: &cpool::ConstantPool<'_>,
-    item: &Item<'_>,
-) -> Result<MemberRef, CompileError> {
-    match item {
-        Item::MethodRef(reference) => member_ref(pool, reference.class, reference.name_and_type),
-        _ => Err(invalid(
-            "invokespecial/invokestatic must reference a method",
-        )),
-    }
-}
-
 fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
-    let remainder = &input[*cursor..];
-    if remainder.starts_with('Z') {
-        *cursor += 1;
-        Ok(Type::Boolean)
-    } else if remainder.starts_with('B') {
-        *cursor += 1;
-        Ok(Type::Byte)
-    } else if remainder.starts_with('C') {
-        *cursor += 1;
-        Ok(Type::Char)
-    } else if remainder.starts_with('S') {
-        *cursor += 1;
-        Ok(Type::Short)
-    } else if remainder.starts_with('I') {
-        *cursor += 1;
-        Ok(Type::Int)
-    } else if remainder.starts_with('J') {
-        *cursor += 1;
-        Ok(Type::Long)
-    } else if remainder.starts_with('F') {
-        *cursor += 1;
-        Ok(Type::Float)
-    } else if remainder.starts_with('D') {
-        *cursor += 1;
-        Ok(Type::Double)
-    } else if remainder.starts_with('V') {
-        *cursor += 1;
-        Ok(Type::Void)
-    } else if remainder.starts_with("Ljava/lang/String;") {
-        *cursor += "Ljava/lang/String;".len();
-        Ok(Type::String)
-    } else if remainder.starts_with('[') {
-        *cursor += 1;
-        Ok(Type::Array(Box::new(parse_type(input, cursor)?)))
-    } else if remainder.starts_with('L') {
-        let end = remainder.find(';').ok_or_else(|| {
-            invalid(format!(
-                "unterminated reference descriptor fragment `{remainder}`"
-            ))
-        })?;
-        let name = &remainder[1..end];
-        if !is_binary_class_name(name) {
-            return Err(invalid(format!(
-                "unsupported descriptor fragment `{remainder}`"
-            )));
+    let rest = &input[*cursor..];
+    let ty = match rest.as_bytes().first() {
+        Some(b'Z') => Type::Boolean,
+        Some(b'B') => Type::Byte,
+        Some(b'C') => Type::Char,
+        Some(b'S') => Type::Short,
+        Some(b'I') => Type::Int,
+        Some(b'J') => Type::Long,
+        Some(b'F') => Type::Float,
+        Some(b'D') => Type::Double,
+        Some(b'V') => Type::Void,
+        Some(b'[') => {
+            *cursor += 1;
+            return Ok(Type::Array(Box::new(parse_type(input, cursor)?)));
         }
-        *cursor += end + 1;
-        Ok(Type::Class(name.to_owned()))
-    } else {
-        Err(invalid(format!(
-            "unsupported descriptor fragment `{remainder}`"
-        )))
-    }
+        Some(b'L') => {
+            let end = rest
+                .find(';')
+                .ok_or_else(|| invalid("unterminated reference descriptor"))?;
+            let name = &rest[1..end];
+            if name == "java/lang/String" {
+                *cursor += end + 1;
+                return Ok(Type::String);
+            }
+            if !is_binary_class_name(name) {
+                return Err(invalid("invalid reference descriptor"));
+            }
+            *cursor += end + 1;
+            return Ok(Type::Class(name.to_owned()));
+        }
+        _ => return Err(invalid(format!("unsupported descriptor fragment `{rest}`"))),
+    };
+    *cursor += 1;
+    Ok(ty)
 }
 
 fn parse_signature(descriptor: &str) -> Result<Signature, CompileError> {
@@ -548,461 +477,317 @@ fn array_component_type(name: &str) -> Result<Type, CompileError> {
         }
     }
     if is_binary_class_name(name) {
-        return Ok(Type::Class(name.to_owned()));
+        Ok(Type::Class(name.to_owned()))
+    } else {
+        Err(invalid("invalid array component"))
     }
-    Err(invalid(format!("unsupported array component `{name}`")))
 }
 
-fn parse_op(pool: &cpool::ConstantPool<'_>, raw: RawInstruction<'_>) -> Result<Op, CompileError> {
-    use RawInstruction::*;
-    let op = match raw {
-        AConstNull => Op::AConstNull,
-        ANewArray { index } => Op::NewArray(array_component_type(&class_name(pool, index)?)?),
-        NewArray { atype } => Op::NewArray(match atype {
-            noak::reader::attributes::ArrayType::Boolean => Type::Boolean,
-            noak::reader::attributes::ArrayType::Byte => Type::Byte,
-            noak::reader::attributes::ArrayType::Char => Type::Char,
-            noak::reader::attributes::ArrayType::Short => Type::Short,
-            noak::reader::attributes::ArrayType::Int => Type::Int,
-            noak::reader::attributes::ArrayType::Long => Type::Long,
-            noak::reader::attributes::ArrayType::Float => Type::Float,
-            noak::reader::attributes::ArrayType::Double => Type::Double,
-        }),
-        MultiANewArray { index, dimensions } => {
-            let descriptor = class_name(pool, index)?;
+fn parser_error<T>(value: Result<T, classfile::Error>) -> Result<T, CompileError> {
+    value.map_err(|error| CompileError::Parse(error.to_string()))
+}
+fn classfile_member(value: classfile::MemberRef) -> MemberRef {
+    MemberRef {
+        class: value.class,
+        name: value.name,
+        descriptor: value.descriptor,
+    }
+}
+
+fn parse_custom_op(
+    pool: &classfile::ConstantPool,
+    raw: classfile::RawInstruction,
+) -> Result<Op, CompileError> {
+    use classfile::RawInstruction as R;
+    Ok(match raw {
+        R::AConstNull => Op::AConstNull,
+        R::IConst(v) => Op::IConst(v),
+        R::LConst(v) => Op::LConst(v),
+        R::FConst(v) => Op::FConst(v),
+        R::DConst(v) => Op::DConst(v),
+        R::ILoad { index } => Op::ILoad(index.into()),
+        R::IStore { index } => Op::IStore(index.into()),
+        R::ALoad { index } => Op::ALoad(index.into()),
+        R::AStore { index } => Op::AStore(index.into()),
+        R::LLoad { index } => Op::LLoad(index.into()),
+        R::LStore { index } => Op::LStore(index.into()),
+        R::FLoad { index } => Op::FLoad(index.into()),
+        R::FStore { index } => Op::FStore(index.into()),
+        R::DLoad { index } => Op::DLoad(index.into()),
+        R::DStore { index } => Op::DStore(index.into()),
+        R::IAdd => Op::IAdd,
+        R::ISub => Op::ISub,
+        R::IMul => Op::IMul,
+        R::IDiv => Op::IDiv,
+        R::IRem => Op::IRem,
+        R::INeg => Op::INeg,
+        R::IAnd => Op::IAnd,
+        R::IOr => Op::IOr,
+        R::IXor => Op::IXor,
+        R::IShl => Op::IShl,
+        R::IShr => Op::IShr,
+        R::IUshr => Op::IUshr,
+        R::LAdd => Op::LAdd,
+        R::LSub => Op::LSub,
+        R::LMul => Op::LMul,
+        R::LDiv => Op::LDiv,
+        R::LRem => Op::LRem,
+        R::LNeg => Op::LNeg,
+        R::FAdd => Op::FAdd,
+        R::FSub => Op::FSub,
+        R::FMul => Op::FMul,
+        R::FDiv => Op::FDiv,
+        R::FRem => Op::FRem,
+        R::FNeg => Op::FNeg,
+        R::DAdd => Op::DAdd,
+        R::DSub => Op::DSub,
+        R::DMul => Op::DMul,
+        R::DDiv => Op::DDiv,
+        R::DRem => Op::DRem,
+        R::DNeg => Op::DNeg,
+        R::IInc { index, value } => Op::IInc(index.into(), value.into()),
+        R::Goto { offset } => Op::Goto(offset),
+        R::LookupSwitch { default, cases } => Op::LookupSwitch { default, cases },
+        R::TableSwitch { default, cases } => Op::TableSwitch { default, cases },
+        R::If { kind, offset } => Op::If(
+            match kind {
+                classfile::IfKind::Eq => IfKind::Eq,
+                classfile::IfKind::Ne => IfKind::Ne,
+                classfile::IfKind::Lt => IfKind::Lt,
+                classfile::IfKind::Ge => IfKind::Ge,
+                classfile::IfKind::Gt => IfKind::Gt,
+                classfile::IfKind::Le => IfKind::Le,
+                classfile::IfKind::ICmpEq => IfKind::ICmpEq,
+                classfile::IfKind::ICmpNe => IfKind::ICmpNe,
+                classfile::IfKind::ICmpLt => IfKind::ICmpLt,
+                classfile::IfKind::ICmpGe => IfKind::ICmpGe,
+                classfile::IfKind::ICmpGt => IfKind::ICmpGt,
+                classfile::IfKind::ICmpLe => IfKind::ICmpLe,
+                classfile::IfKind::ACmpEq => IfKind::ACmpEq,
+                classfile::IfKind::ACmpNe => IfKind::ACmpNe,
+                classfile::IfKind::Null => IfKind::Null,
+                classfile::IfKind::NonNull => IfKind::NonNull,
+            },
+            offset,
+        ),
+        R::IReturn => Op::IReturn,
+        R::LReturn => Op::LReturn,
+        R::FReturn => Op::FReturn,
+        R::DReturn => Op::DReturn,
+        R::AReturn => Op::AReturn,
+        R::Return => Op::Return,
+        R::Dup => Op::Dup,
+        R::Pop => Op::Pop,
+        R::AThrow => Op::AThrow,
+        R::MultiANewArray { index, dimensions } => {
+            let descriptor = parser_error(pool.class_name(index))?;
             let mut cursor = 0;
             let ty = parse_type(&descriptor, &mut cursor)?;
             if cursor != descriptor.len() || !matches!(ty, Type::Array(_)) {
-                return Err(invalid(format!(
-                    "invalid multianewarray descriptor `{descriptor}`"
-                )));
+                return Err(invalid("invalid multianewarray descriptor"));
             }
             Op::MultiNewArray(ty, dimensions)
         }
-        ArrayLength => Op::ArrayLength,
-        IALoad => Op::IALoad,
-        IAStore => Op::IAStore,
-        LALoad => Op::LALoad,
-        LAStore => Op::LAStore,
-        FALoad => Op::FALoad,
-        FAStore => Op::FAStore,
-        DALoad => Op::DALoad,
-        DAStore => Op::DAStore,
-        BALoad => Op::BALoad,
-        BAStore => Op::BAStore,
-        CALoad => Op::CALoad,
-        CAStore => Op::CAStore,
-        SALoad => Op::SALoad,
-        SAStore => Op::SAStore,
-        AALoad => Op::AALoad,
-        AAStore => Op::AAStore,
-        AThrow => Op::AThrow,
-        IConstM1 => Op::IConst(-1),
-        IConst0 => Op::IConst(0),
-        IConst1 => Op::IConst(1),
-        IConst2 => Op::IConst(2),
-        IConst3 => Op::IConst(3),
-        IConst4 => Op::IConst(4),
-        IConst5 => Op::IConst(5),
-        BIPush { value } => Op::IConst(value.into()),
-        SIPush { value } => Op::IConst(value.into()),
-        LConst0 => Op::LConst(0),
-        LConst1 => Op::LConst(1),
-        FConst0 => Op::FConst(0.0),
-        FConst1 => Op::FConst(1.0),
-        FConst2 => Op::FConst(2.0),
-        DConst0 => Op::DConst(0.0),
-        DConst1 => Op::DConst(1.0),
-        ILoad { index } => Op::ILoad(index.into()),
-        ILoadW { index } => Op::ILoad(index.into()),
-        ILoad0 => Op::ILoad(0),
-        ILoad1 => Op::ILoad(1),
-        ILoad2 => Op::ILoad(2),
-        ILoad3 => Op::ILoad(3),
-        IStore { index } => Op::IStore(index.into()),
-        IStoreW { index } => Op::IStore(index.into()),
-        IStore0 => Op::IStore(0),
-        IStore1 => Op::IStore(1),
-        IStore2 => Op::IStore(2),
-        IStore3 => Op::IStore(3),
-        ALoad { index } => Op::ALoad(index.into()),
-        ALoadW { index } => Op::ALoad(index.into()),
-        ALoad0 => Op::ALoad(0),
-        ALoad1 => Op::ALoad(1),
-        ALoad2 => Op::ALoad(2),
-        ALoad3 => Op::ALoad(3),
-        LLoad { index } => Op::LLoad(index.into()),
-        LLoadW { index } => Op::LLoad(index.into()),
-        LLoad0 => Op::LLoad(0),
-        LLoad1 => Op::LLoad(1),
-        LLoad2 => Op::LLoad(2),
-        LLoad3 => Op::LLoad(3),
-        FLoad { index } => Op::FLoad(index.into()),
-        FLoadW { index } => Op::FLoad(index.into()),
-        FLoad0 => Op::FLoad(0),
-        FLoad1 => Op::FLoad(1),
-        FLoad2 => Op::FLoad(2),
-        FLoad3 => Op::FLoad(3),
-        DLoad { index } => Op::DLoad(index.into()),
-        DLoadW { index } => Op::DLoad(index.into()),
-        DLoad0 => Op::DLoad(0),
-        DLoad1 => Op::DLoad(1),
-        DLoad2 => Op::DLoad(2),
-        DLoad3 => Op::DLoad(3),
-        AStore { index } => Op::AStore(index.into()),
-        AStoreW { index } => Op::AStore(index.into()),
-        AStore0 => Op::AStore(0),
-        AStore1 => Op::AStore(1),
-        AStore2 => Op::AStore(2),
-        AStore3 => Op::AStore(3),
-        LStore { index } => Op::LStore(index.into()),
-        LStoreW { index } => Op::LStore(index.into()),
-        LStore0 => Op::LStore(0),
-        LStore1 => Op::LStore(1),
-        LStore2 => Op::LStore(2),
-        LStore3 => Op::LStore(3),
-        FStore { index } => Op::FStore(index.into()),
-        FStoreW { index } => Op::FStore(index.into()),
-        FStore0 => Op::FStore(0),
-        FStore1 => Op::FStore(1),
-        FStore2 => Op::FStore(2),
-        FStore3 => Op::FStore(3),
-        DStore { index } => Op::DStore(index.into()),
-        DStoreW { index } => Op::DStore(index.into()),
-        DStore0 => Op::DStore(0),
-        DStore1 => Op::DStore(1),
-        DStore2 => Op::DStore(2),
-        DStore3 => Op::DStore(3),
-        IAdd => Op::IAdd,
-        ISub => Op::ISub,
-        IMul => Op::IMul,
-        IDiv => Op::IDiv,
-        IRem => Op::IRem,
-        INeg => Op::INeg,
-        IAnd => Op::IAnd,
-        IOr => Op::IOr,
-        IXor => Op::IXor,
-        IShL => Op::IShl,
-        IShR => Op::IShr,
-        IUShR => Op::IUshr,
-        LAdd => Op::LAdd,
-        LSub => Op::LSub,
-        LMul => Op::LMul,
-        LDiv => Op::LDiv,
-        LRem => Op::LRem,
-        LNeg => Op::LNeg,
-        FAdd => Op::FAdd,
-        FSub => Op::FSub,
-        FMul => Op::FMul,
-        FDiv => Op::FDiv,
-        FRem => Op::FRem,
-        FNeg => Op::FNeg,
-        DAdd => Op::DAdd,
-        DSub => Op::DSub,
-        DMul => Op::DMul,
-        DDiv => Op::DDiv,
-        DRem => Op::DRem,
-        DNeg => Op::DNeg,
-        IInc { index, value } => Op::IInc(index.into(), value.into()),
-        IIncW { index, value } => Op::IInc(index.into(), value.into()),
-        Goto { offset } => Op::Goto(offset.into()),
-        GotoW { offset } => Op::Goto(offset),
-        IfEq { offset } => Op::If(IfKind::Eq, offset.into()),
-        IfNe { offset } => Op::If(IfKind::Ne, offset.into()),
-        IfLt { offset } => Op::If(IfKind::Lt, offset.into()),
-        IfGe { offset } => Op::If(IfKind::Ge, offset.into()),
-        IfGt { offset } => Op::If(IfKind::Gt, offset.into()),
-        IfLe { offset } => Op::If(IfKind::Le, offset.into()),
-        IfICmpEq { offset } => Op::If(IfKind::ICmpEq, offset.into()),
-        IfICmpNe { offset } => Op::If(IfKind::ICmpNe, offset.into()),
-        IfICmpLt { offset } => Op::If(IfKind::ICmpLt, offset.into()),
-        IfICmpGe { offset } => Op::If(IfKind::ICmpGe, offset.into()),
-        IfICmpGt { offset } => Op::If(IfKind::ICmpGt, offset.into()),
-        IfICmpLe { offset } => Op::If(IfKind::ICmpLe, offset.into()),
-        IfACmpEq { offset } => Op::If(IfKind::ACmpEq, offset.into()),
-        IfACmpNe { offset } => Op::If(IfKind::ACmpNe, offset.into()),
-        IfNull { offset } => Op::If(IfKind::Null, offset.into()),
-        IfNonNull { offset } => Op::If(IfKind::NonNull, offset.into()),
-        LookupSwitch(switch) => Op::LookupSwitch {
-            default: switch.default_offset(),
-            cases: switch
-                .pairs()
-                .map(|pair| (pair.key(), pair.offset()))
-                .collect(),
+        R::IALoad => Op::IALoad,
+        R::IAStore => Op::IAStore,
+        R::LALoad => Op::LALoad,
+        R::LAStore => Op::LAStore,
+        R::FALoad => Op::FALoad,
+        R::FAStore => Op::FAStore,
+        R::DALoad => Op::DALoad,
+        R::DAStore => Op::DAStore,
+        R::BALoad => Op::BALoad,
+        R::BAStore => Op::BAStore,
+        R::CALoad => Op::CALoad,
+        R::CAStore => Op::CAStore,
+        R::SALoad => Op::SALoad,
+        R::SAStore => Op::SAStore,
+        R::AALoad => Op::AALoad,
+        R::AAStore => Op::AAStore,
+        R::ArrayLength => Op::ArrayLength,
+        R::New { index } => Op::New(parser_error(pool.class_name(index))?),
+        R::ANewArray { index } => Op::NewArray(array_component_type(&parser_error(
+            pool.class_name(index),
+        )?)?),
+        R::NewArray { atype } => Op::NewArray(match atype {
+            classfile::ArrayType::Boolean => Type::Boolean,
+            classfile::ArrayType::Byte => Type::Byte,
+            classfile::ArrayType::Char => Type::Char,
+            classfile::ArrayType::Short => Type::Short,
+            classfile::ArrayType::Int => Type::Int,
+            classfile::ArrayType::Long => Type::Long,
+            classfile::ArrayType::Float => Type::Float,
+            classfile::ArrayType::Double => Type::Double,
+        }),
+        R::GetStatic { index } => {
+            Op::GetStatic(classfile_member(parser_error(pool.field_ref(index))?))
+        }
+        R::PutStatic { index } => {
+            Op::PutStatic(classfile_member(parser_error(pool.field_ref(index))?))
+        }
+        R::GetField { index } => {
+            Op::GetField(classfile_member(parser_error(pool.field_ref(index))?))
+        }
+        R::PutField { index } => {
+            Op::PutField(classfile_member(parser_error(pool.field_ref(index))?))
+        }
+        R::InvokeSpecial { index } => {
+            Op::InvokeSpecial(classfile_member(parser_error(pool.method_ref(index))?))
+        }
+        R::InvokeStatic { index } => {
+            Op::InvokeStatic(classfile_member(parser_error(pool.method_ref(index))?))
+        }
+        R::InvokeVirtual { index } => {
+            Op::InvokeVirtual(classfile_member(parser_error(pool.method_ref(index))?))
+        }
+        R::InvokeInterface { index } => Op::InvokeInterface(classfile_member(parser_error(
+            pool.interface_method_ref(index),
+        )?)),
+        R::Ldc { index } => match parser_error(pool.constant(index))? {
+            classfile::ConstantValue::String(v) => Op::LdcString(v.to_owned()),
+            classfile::ConstantValue::Integer(v) => Op::IConst(v),
+            classfile::ConstantValue::Float(v) => Op::FConst(v),
+            _ => return Err(invalid("unsupported ldc literal")),
         },
-        TableSwitch(switch) => Op::TableSwitch {
-            default: switch.default_offset(),
-            cases: switch
-                .pairs()
-                .map(|pair| (pair.key(), pair.offset()))
-                .collect(),
+        R::Ldc2 { index } => match parser_error(pool.constant(index))? {
+            classfile::ConstantValue::Long(v) => Op::LConst(v),
+            classfile::ConstantValue::Double(v) => Op::DConst(v),
+            _ => return Err(invalid("unsupported ldc2 literal")),
         },
-        IReturn => Op::IReturn,
-        LReturn => Op::LReturn,
-        FReturn => Op::FReturn,
-        DReturn => Op::DReturn,
-        AReturn => Op::AReturn,
-        Return => Op::Return,
-        Dup => Op::Dup,
-        Pop => Op::Pop,
-        New { index } => Op::New(class_name(pool, index)?),
-        GetStatic { index } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::GetStatic(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
+        R::Unsupported { opcode } => {
+            return Err(invalid(format!(
+                "unsupported bytecode opcode 0x{opcode:02x}"
+            )));
         }
-        GetField { index } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::GetField(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
-        }
-        PutField { index } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::PutField(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
-        }
-        PutStatic { index } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::PutStatic(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
-        }
-        InvokeVirtual { index } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::InvokeVirtual(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
-        }
-        InvokeInterface { index, .. } => {
-            let reference = pool
-                .retrieve(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?;
-            Op::InvokeInterface(MemberRef {
-                class: utf8(reference.class.name)?,
-                name: utf8(reference.name_and_type.name)?,
-                descriptor: utf8(reference.name_and_type.descriptor)?,
-            })
-        }
-        InvokeSpecial { index } => Op::InvokeSpecial(item_member_ref(
-            pool,
-            pool.get(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?,
-        )?),
-        InvokeStatic { index } => Op::InvokeStatic(item_member_ref(
-            pool,
-            pool.get(index)
-                .map_err(|error| CompileError::Parse(error.to_string()))?,
-        )?),
-        LdC { index } | LdCW { index } => match pool
-            .get(index)
-            .map_err(|error| CompileError::Parse(error.to_string()))?
-        {
-            Item::String(value) => Op::LdcString(utf8(
-                pool.get(value.string)
-                    .map_err(|error| CompileError::Parse(error.to_string()))?
-                    .content,
-            )?),
-            Item::Integer(value) => Op::IConst(value.value),
-            Item::Float(value) => Op::FConst(value.value),
-            other => return Err(invalid(format!("unsupported ldc constant {other:?}"))),
-        },
-        LdC2W { index } => match pool
-            .get(index)
-            .map_err(|error| CompileError::Parse(error.to_string()))?
-        {
-            Item::Long(value) => Op::LConst(value.value),
-            Item::Double(value) => Op::DConst(value.value),
-            other => return Err(invalid(format!("unsupported ldc2 constant {other:?}"))),
-        },
-        other => return Err(invalid(format!("unsupported bytecode {other:?}"))),
-    };
-    Ok(op)
+    })
 }
 
-fn parse_program(bytes: &[u8]) -> Result<Program, CompileError> {
-    let class = Class::new(bytes).map_err(|error| CompileError::Parse(error.to_string()))?;
-    let pool = class.pool();
-    let program_name = class_name(pool, class.this_class())?;
-    if !is_binary_class_name(&program_name) {
-        return Err(invalid(format!(
-            "invalid class binary name `{program_name}`"
-        )));
+fn parse_program_custom(bytes: &[u8]) -> Result<Program, CompileError> {
+    let class = parser_error(classfile::parse(bytes))?;
+    let pool = &class.constant_pool;
+    let name = parser_error(pool.class_name(class.this_class))?;
+    if !is_binary_class_name(&name) {
+        return Err(invalid("invalid class binary name"));
     }
-    let superclass = class
-        .super_class()
-        .map(|index| class_name(pool, index))
-        .transpose()?;
+    let superclass = if class.super_class == 0 {
+        None
+    } else {
+        Some(parser_error(pool.class_name(class.super_class))?)
+    };
     let interfaces = class
-        .interfaces()
-        .into_iter()
-        .map(|interface| {
-            interface
-                .map_err(|error| CompileError::Parse(error.to_string()))
-                .and_then(|index| class_name(pool, index))
-        })
+        .interfaces
+        .iter()
+        .map(|i| parser_error(pool.class_name(*i)))
         .collect::<Result<Vec<_>, _>>()?;
-
-    let mut fields = Vec::new();
-    for field in class.fields() {
-        let field = field.map_err(|error| CompileError::Parse(error.to_string()))?;
-        let name = utf8(
-            pool.get(field.name())
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-                .content,
-        )?;
-        let descriptor = utf8(
-            pool.get(field.descriptor())
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-                .content,
-        )?;
-        let mut cursor = 0;
-        let ty = parse_type(&descriptor, &mut cursor)?;
-        if matches!(ty, Type::Void) || cursor != descriptor.len() {
-            return Err(invalid("fields must use a supported non-void descriptor"));
-        }
-        let mut constant = None;
-        for attribute in field.attributes() {
-            let attribute = attribute.map_err(|error| CompileError::Parse(error.to_string()))?;
-            if let AttributeContent::ConstantValue(value) = attribute
-                .read_content(pool)
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-            {
-                constant = Some(
-                    match pool
-                        .get(value.value())
-                        .map_err(|error| CompileError::Parse(error.to_string()))?
-                    {
-                        Item::Integer(value) => Constant::Int(value.value),
-                        Item::Long(value) => Constant::Long(value.value),
-                        Item::Float(value) => Constant::Float(value.value),
-                        Item::Double(value) => Constant::Double(value.value),
-                        Item::String(value) => Constant::String(utf8(
-                            pool.get(value.string)
-                                .map_err(|error| CompileError::Parse(error.to_string()))?
-                                .content,
-                        )?),
-                        other => {
-                            return Err(invalid(format!("unsupported ConstantValue {other:?}")));
-                        }
-                    },
-                );
+    let fields = class
+        .fields
+        .iter()
+        .map(|field| {
+            let descriptor = parser_error(pool.utf8(field.descriptor_index))?;
+            let mut cursor = 0;
+            let ty = parse_type(descriptor, &mut cursor)?;
+            if ty == Type::Void || cursor != descriptor.len() {
+                return Err(invalid("invalid field descriptor"));
             }
-        }
-        fields.push(Field {
-            name,
-            ty,
-            is_static: field.access_flags().contains(AccessFlags::STATIC),
-            is_final: field.access_flags().contains(AccessFlags::FINAL),
-            is_private: field.access_flags().contains(AccessFlags::PRIVATE),
-            constant,
-        });
-    }
-
+            let mut constant = None;
+            for attribute in &field.attributes {
+                if let Some(index) = parser_error(classfile::constant_value(attribute))? {
+                    if constant.is_some() {
+                        return Err(invalid("field has multiple ConstantValue attributes"));
+                    }
+                    constant = Some(match parser_error(pool.constant(index))? {
+                        classfile::ConstantValue::Integer(value) => Constant::Int(value),
+                        classfile::ConstantValue::Long(value) => Constant::Long(value),
+                        classfile::ConstantValue::Float(value) => Constant::Float(value),
+                        classfile::ConstantValue::Double(value) => Constant::Double(value),
+                        classfile::ConstantValue::String(value) => {
+                            Constant::String(value.to_owned())
+                        }
+                    });
+                }
+            }
+            Ok(Field {
+                name: parser_error(pool.utf8(field.name_index))?.to_owned(),
+                ty,
+                is_static: field.access_flags & 8 != 0,
+                is_final: field.access_flags & 16 != 0,
+                is_private: field.access_flags & 2 != 0,
+                constant,
+            })
+        })
+        .collect::<Result<Vec<_>, CompileError>>()?;
     let mut methods = Vec::new();
     let mut clinit = None;
-    for method in class.methods() {
-        let method = method.map_err(|error| CompileError::Parse(error.to_string()))?;
-        let name = utf8(
-            pool.get(method.name())
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-                .content,
-        )?;
-        let descriptor = utf8(
-            pool.get(method.descriptor())
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-                .content,
-        )?;
+    for member in &class.methods {
+        let method_name = parser_error(pool.utf8(member.name_index))?.to_owned();
+        let descriptor = parser_error(pool.utf8(member.descriptor_index))?.to_owned();
         let signature = parse_signature(&descriptor)?;
         let mut instructions = None;
         let mut handlers = Vec::new();
-        for attribute in method.attributes() {
-            let attribute = attribute.map_err(|error| CompileError::Parse(error.to_string()))?;
-            if let AttributeContent::Code(code) = attribute
-                .read_content(pool)
-                .map_err(|error| CompileError::Parse(error.to_string()))?
-            {
-                let code = code;
+        for attribute in &member.attributes {
+            if let Some(code) = parser_error(classfile::code(attribute, pool))? {
                 handlers = code
-                    .exception_handlers()
+                    .exception_handlers
+                    .iter()
                     .map(|handler| {
-                        let catch_type = handler
-                            .catch_type()
-                            .map(|index| class_name(pool, index))
-                            .transpose()?;
                         Ok(ExceptionHandler {
-                            start: handler.start().as_u32(),
-                            end: handler.end().as_u32(),
-                            handler: handler.handler().as_u32(),
-                            catch_type,
+                            start: handler.start.into(),
+                            end: handler.end.into(),
+                            handler: handler.handler.into(),
+                            catch_type: if handler.catch_type == 0 {
+                                None
+                            } else {
+                                Some(parser_error(pool.class_name(handler.catch_type))?)
+                            },
                         })
                     })
                     .collect::<Result<Vec<_>, CompileError>>()?;
-                let mut parsed = Vec::new();
-                for instruction in code.raw_instructions() {
-                    let (offset, raw) =
-                        instruction.map_err(|error| CompileError::Parse(error.to_string()))?;
-                    let offset = offset.as_u32();
-                    let op = parse_op(pool, raw).map_err(|error| match error {
-                        CompileError::InvalidClass(operation) => CompileError::Unsupported {
-                            class: program_name.clone(),
-                            method: name.clone(),
-                            offset,
-                            operation,
-                        },
-                        other => other,
-                    })?;
-                    parsed.push(Instruction { offset, op });
-                }
-                instructions = Some(parsed);
+                instructions = Some(
+                    parser_error(classfile::instructions(&code.code))?
+                        .into_iter()
+                        .map(|(offset, raw)| {
+                            parse_custom_op(pool, raw)
+                                .map(|op| Instruction { offset, op })
+                                .map_err(|error| match error {
+                                    CompileError::InvalidClass(operation) => {
+                                        CompileError::Unsupported {
+                                            class: name.clone(),
+                                            method: method_name.clone(),
+                                            offset,
+                                            operation,
+                                        }
+                                    }
+                                    other => other,
+                                })
+                        })
+                        .collect::<Result<Vec<_>, CompileError>>()?,
+                );
             }
         }
         let parsed = Method {
-            name: name.clone(),
+            name: method_name.clone(),
             descriptor,
             signature,
-            is_static: method.access_flags().contains(AccessFlags::STATIC),
-            is_public: method.access_flags().contains(AccessFlags::PUBLIC),
+            is_static: member.access_flags & 8 != 0,
+            is_public: member.access_flags & 1 != 0,
             instructions: match instructions {
-                Some(instructions) => instructions,
-                None if method.access_flags().contains(AccessFlags::ABSTRACT) => Vec::new(),
+                Some(value) => value,
+                None if member.access_flags & 0x400 != 0 => Vec::new(),
                 None => return Err(invalid("methods must have Code attributes")),
             },
             handlers,
         };
-        if name == "<clinit>" {
-            clinit = Some(parsed);
+        if method_name == "<clinit>" {
+            clinit = Some(parsed)
         } else {
-            methods.push(parsed);
+            methods.push(parsed)
         }
     }
     Ok(Program {
-        name: program_name,
+        name,
         superclass,
         interfaces,
-        is_interface: class.access_flags().contains(AccessFlags::INTERFACE),
+        is_interface: class.access_flags & 0x200 != 0,
         fields,
         methods,
         clinit,
@@ -1114,10 +899,19 @@ enum Value {
     /// `System.out`.  `expression` is always `Option<...>`-typed text, the
     /// same convention `Object` uses, so instance-method lowering can reuse
     /// the same `.ok_or_else(jars_runtime::null_pointer)?` unwrap template.
-    Platform { expression: String, class: String },
+    Platform {
+        expression: String,
+        class: String,
+    },
     This,
-    Object { expression: String, class: String },
-    Array { expression: String, element: Type },
+    Object {
+        expression: String,
+        class: String,
+    },
+    Array {
+        expression: String,
+        element: Type,
+    },
     Null,
     Uninitialized(usize),
 }
@@ -1700,7 +1494,8 @@ impl<'a> Body<'a> {
                         stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                     {
                         let mut cursor = 0;
-                        let Type::Class(value_class) = parse_type(&reference.descriptor, &mut cursor)?
+                        let Type::Class(value_class) =
+                            parse_type(&reference.descriptor, &mut cursor)?
                         else {
                             return Err(invalid(format!(
                                 "stdlib static field `{}.{}` has a non-class descriptor",
@@ -1937,15 +1732,12 @@ impl<'a> Body<'a> {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
                     let receiver = self.pop(instruction)?;
-                    let stdlib_ctor = stdlib::member(
-                        &reference.class,
-                        &reference.name,
-                        &reference.descriptor,
-                    )
-                    .and_then(|member| match member {
-                        stdlib::StdMember::Constructor { lower } => Some(lower),
-                        _ => None,
-                    });
+                    let stdlib_ctor =
+                        stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                            .and_then(|member| match member {
+                                stdlib::StdMember::Constructor { lower } => Some(lower),
+                                _ => None,
+                            });
                     if stdlib_ctor.is_some_and(|lower| lower(&[]).is_none()) {
                         if !matches!(receiver, Value::This) || !args.is_empty() {
                             return Err(unsupported(
@@ -2484,6 +2276,14 @@ fn aot_typed_frame(
         )));
     }
     let layout = frame_layout(program, known_classes, method, first_local)?;
+    let uninitialized = method
+        .instructions
+        .iter()
+        .filter_map(|instruction| match &instruction.op {
+            Op::New(class) => Some(class.clone()),
+            _ => None,
+        })
+        .collect::<Vec<_>>();
     let parameter_slots = method
         .signature
         .parameters
@@ -2568,6 +2368,114 @@ fn aot_typed_frame(
                 continue_at(next)?
             ),
             Op::AConstNull => format!("stack.push(FrameValue::Null); {}", continue_at(next)?),
+            Op::New(class) => {
+                if !known_classes.iter().any(|known| known == class) {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "new owner outside the compilation set",
+                    ));
+                }
+                let site = method.instructions[..index]
+                    .iter()
+                    .filter(|candidate| matches!(&candidate.op, Op::New(_)))
+                    .count();
+                format!("stack.push(FrameValue::U{site}); {}", continue_at(next)?)
+            }
+            Op::Dup => format!(
+                "let value = duplicate(stack.last().expect(\"verified JVM stack\")); stack.push(value); {}",
+                continue_at(next)?
+            ),
+            Op::Pop => format!(
+                "let _ = stack.pop().expect(\"verified JVM stack\"); {}",
+                continue_at(next)?
+            ),
+            Op::InvokeSpecial(reference) => {
+                let signature = parse_signature(&reference.descriptor)?;
+                if reference.name != "<init>"
+                    || !frame_type_supported(&signature.returns)
+                    || signature
+                        .parameters
+                        .iter()
+                        .any(|ty| !frame_type_supported(ty) || *ty == Type::Void)
+                {
+                    return Err(unsupported(program, method, instruction, "invokespecial"));
+                }
+                let mut arguments = Vec::with_capacity(signature.parameters.len());
+                for (argument, ty) in signature.parameters.iter().enumerate().rev() {
+                    let pop = frame_pop(ty, &layout)?;
+                    arguments.push(format!("let argument{argument} = {pop}(&mut stack);"));
+                }
+                arguments.reverse();
+                let arguments_joined = (0..signature.parameters.len())
+                    .map(|argument| format!("argument{argument}"))
+                    .collect::<Vec<_>>()
+                    .join(", ");
+                if let Some(stdlib::StdMember::Constructor { lower }) =
+                    stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                {
+                    if lower(&[]).is_none() && signature.parameters.is_empty() {
+                        format!(
+                            "{} match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::This => {{}}, _ => unreachable!(\"supported stdlib constructor receiver\"), }} {}",
+                            arguments.join(" "),
+                            continue_at(next)?
+                        )
+                    } else {
+                        return Err(unsupported(
+                            program,
+                            method,
+                            instruction,
+                            "stdlib constructor",
+                        ));
+                    }
+                } else if known_classes.iter().any(|known| known == &reference.class) {
+                    let owner = class_ident(&reference.class)?;
+                    let path = if reference.class == program.name {
+                        String::new()
+                    } else {
+                        format!("super::{owner}::")
+                    };
+                    let matching_sites = uninitialized
+                        .iter()
+                        .enumerate()
+                        .filter(|(_, class)| *class == &reference.class)
+                        .map(|(site, _)| {
+                            let variant = layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                            let call_arguments = if arguments_joined.is_empty() {
+                                "program".to_owned()
+                            } else {
+                                format!("program, {arguments_joined}")
+                            };
+                            let dispatch = exception_dispatch(method);
+                            Ok(format!(
+                                "FrameValue::U{site} => match {path}__ensure(program).await {{ Ok(()) => match {path}{owner}::new({call_arguments}).await {{ Ok(value) => {{ for local in &mut locals {{ if matches!(local, Some(FrameValue::U{site})) {{ *local = Some(FrameValue::{variant}(Some(value.clone()))); }} }} for value_slot in &mut stack {{ if matches!(value_slot, FrameValue::U{site}) {{ *value_slot = FrameValue::{variant}(Some(value.clone())); }} }} }}, Err(error) => {{ {dispatch} }} }}, Err(error) => {{ {dispatch} }} }}"
+                            ))
+                        })
+                        .collect::<Result<Vec<_>, CompileError>>()?
+                        .join(", ");
+                    if matching_sites.is_empty() && !signature.parameters.is_empty() {
+                        return Err(unsupported(
+                            program,
+                            method,
+                            instruction,
+                            "super constructor with parameters",
+                        ));
+                    }
+                    format!(
+                        "{} match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::This => {{}}, {matching_sites} _ => unreachable!(\"verified constructor receiver\"), }} {}",
+                        arguments.join(" "),
+                        continue_at(next)?
+                    )
+                } else {
+                    return Err(unsupported(
+                        program,
+                        method,
+                        instruction,
+                        "invokespecial owner outside the compilation set",
+                    ));
+                }
+            }
             Op::NewArray(element) => {
                 let ty = Type::Array(Box::new(element.clone()));
                 let element_rust = element.array_element_rust(&program.name)?;
@@ -3061,7 +2969,7 @@ fn aot_typed_frame(
                     continue_at(next)?
                 )
             }
-            Op::InvokeVirtual(reference) => {
+            Op::InvokeVirtual(reference) | Op::InvokeInterface(reference) => {
                 let signature = parse_signature(&reference.descriptor)?;
                 if !frame_type_supported(&signature.returns)
                     || signature.parameters.iter().any(|parameter| {
@@ -3072,7 +2980,7 @@ fn aot_typed_frame(
                         program,
                         method,
                         instruction,
-                        "invokevirtual type outside the typed frame subset",
+                        "virtual call type outside the typed frame subset",
                     ));
                 }
                 if let Some(stdlib::StdMember::InstanceMethod { lower }) =
@@ -3110,7 +3018,7 @@ fn aot_typed_frame(
                         program,
                         method,
                         instruction,
-                        "invokevirtual owner outside the compilation set",
+                        "virtual call owner outside the compilation set",
                     ));
                 } else {
                     let mut arguments = Vec::with_capacity(signature.parameters.len());
@@ -3214,6 +3122,15 @@ fn aot_typed_frame(
     } else {
         format!(", {reference_variants}")
     };
+    let uninitialized_variants = (0..uninitialized.len())
+        .map(|site| format!("U{site}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let uninitialized_variants = if uninitialized_variants.is_empty() {
+        String::new()
+    } else {
+        format!(", {uninitialized_variants}")
+    };
     let reference_pops = layout
         .references
         .iter()
@@ -3237,6 +3154,9 @@ fn aot_typed_frame(
     if layout.has_this {
         load_variants.push("FrameValue::This => FrameValue::This".to_owned());
     }
+    load_variants.extend(
+        (0..uninitialized.len()).map(|site| format!("FrameValue::U{site} => FrameValue::U{site}")),
+    );
     load_variants.push("FrameValue::Null => FrameValue::Null".to_owned());
     let load_variants = load_variants.join(", ");
     let this_initialize = if layout.has_this {
@@ -3287,27 +3207,21 @@ fn aot_typed_frame(
     reference_equalities.push("_ => false".to_owned());
     let reference_equalities = reference_equalities.join(", ");
     Ok(format!(
-        "enum FrameValue {{ I32(i32), I64(i64), F32(f32), F64(f64){reference_variants}{this_variant}, Throwable(jars_runtime::JavaError), Null }}\nfn pop_i32(stack: &mut Vec<FrameValue>) -> i32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_i64(stack: &mut Vec<FrameValue>) -> i64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f32(stack: &mut Vec<FrameValue>) -> f32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f64(stack: &mut Vec<FrameValue>) -> f64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\n{reference_pops}\nfn is_null(value: &FrameValue) -> bool {{ match value {{ {null_checks}, _ => unreachable!(\"verified reference operand\"), }} }}\nfn same_reference(left: &FrameValue, right: &FrameValue) -> bool {{ match (left, right) {{ {reference_equalities} }} }}\nfn load_local(locals: &mut [Option<FrameValue>], index: usize) -> FrameValue {{ if matches!(locals[index], Some(FrameValue::Throwable(_))) {{ return locals[index].take().expect(\"initialized throwable local\"); }} match locals[index].as_ref().expect(\"initialized local\") {{ FrameValue::I32(value) => FrameValue::I32(*value), FrameValue::I64(value) => FrameValue::I64(*value), FrameValue::F32(value) => FrameValue::F32(*value), FrameValue::F64(value) => FrameValue::F64(*value), {load_variants}, FrameValue::Throwable(_) => unreachable!(\"handled throwable local\"), }} }}\nlet mut locals: Vec<Option<FrameValue>> = (0..{max_local}).map(|_| None).collect();\n{this_initialize}\n{initial_locals}\nlet mut stack: Vec<FrameValue> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}",
+        "enum FrameValue {{ I32(i32), I64(i64), F32(f32), F64(f64){reference_variants}{this_variant}{uninitialized_variants}, Throwable(jars_runtime::JavaError), Null }}\nfn pop_i32(stack: &mut Vec<FrameValue>) -> i32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_i64(stack: &mut Vec<FrameValue>) -> i64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::I64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f32(stack: &mut Vec<FrameValue>) -> f32 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F32(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\nfn pop_f64(stack: &mut Vec<FrameValue>) -> f64 {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::F64(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}\n{reference_pops}\nfn duplicate(value: &FrameValue) -> FrameValue {{ match value {{ FrameValue::I32(value) => FrameValue::I32(*value), FrameValue::I64(value) => FrameValue::I64(*value), FrameValue::F32(value) => FrameValue::F32(*value), FrameValue::F64(value) => FrameValue::F64(*value), {load_variants}, FrameValue::Throwable(_) => unreachable!(\"throwable cannot be duplicated in the supported subset\"), }} }}\nfn is_null(value: &FrameValue) -> bool {{ match value {{ {null_checks}, _ => unreachable!(\"verified reference operand\"), }} }}\nfn same_reference(left: &FrameValue, right: &FrameValue) -> bool {{ match (left, right) {{ {reference_equalities} }} }}\nfn load_local(locals: &mut [Option<FrameValue>], index: usize) -> FrameValue {{ if matches!(locals[index], Some(FrameValue::Throwable(_))) {{ return locals[index].take().expect(\"initialized throwable local\"); }} match locals[index].as_ref().expect(\"initialized local\") {{ FrameValue::I32(value) => FrameValue::I32(*value), FrameValue::I64(value) => FrameValue::I64(*value), FrameValue::F32(value) => FrameValue::F32(*value), FrameValue::F64(value) => FrameValue::F64(*value), {load_variants}, FrameValue::Throwable(_) => unreachable!(\"handled throwable local\"), }} }}\nlet mut locals: Vec<Option<FrameValue>> = (0..{max_local}).map(|_| None).collect();\n{this_initialize}\n{initial_locals}\nlet mut stack: Vec<FrameValue> = Vec::new();\nlet mut pending_exception: Option<jars_runtime::JavaError> = None;\nlet mut pc: u32 = {entry};\nloop {{ match pc {{ {} , _ => unreachable!(\"verified JVM program counter\"), }} }}",
         arms.join(",\n"),
     ))
 }
 
-fn aot_typed_static_method(
+/// The sole method-body entry point.  The typed frame is necessary for control
+/// flow and exception dispatch.  Straight-line code retains the compact body
+/// lowering until its remaining operations have been moved into that table.
+fn lower_method_body(
     program: &Program,
     known_classes: &[String],
     method: &Method,
+    kind: BodyKind,
 ) -> Result<String, CompileError> {
-    let name = rust_ident(&method.name)?;
-    let parameters = parameters(program, method)?;
-    let frame = aot_typed_frame(program, known_classes, method, 0)?;
-    Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n__ensure(program).await?;\n{frame}\n}}",
-        method.signature.returns.rust(&program.name)?,
-    ))
-}
-
-fn requires_typed_frame(method: &Method) -> bool {
-    !method.handlers.is_empty()
+    let needs_typed_frame = !method.handlers.is_empty()
         || method.instructions.iter().any(|instruction| {
             matches!(
                 instruction.op,
@@ -3318,7 +3232,19 @@ fn requires_typed_frame(method: &Method) -> bool {
                     | Op::TableSwitch { .. }
                     | Op::AThrow
             )
-        })
+        });
+    if !needs_typed_frame {
+        return Body::new(program, known_classes, method, kind).run();
+    }
+    aot_typed_frame(
+        program,
+        known_classes,
+        method,
+        match kind {
+            BodyKind::Static => 0,
+            BodyKind::Instance => 1,
+        },
+    )
 }
 
 fn static_method(
@@ -3326,12 +3252,9 @@ fn static_method(
     known_classes: &[String],
     method: &Method,
 ) -> Result<String, CompileError> {
-    if requires_typed_frame(method) {
-        return aot_typed_static_method(program, known_classes, method);
-    }
     let name = rust_ident(&method.name)?;
     let parameters = parameters(program, method)?;
-    let body = Body::new(program, known_classes, method, BodyKind::Static).run()?;
+    let body = lower_method_body(program, known_classes, method, BodyKind::Static)?;
     let fallback = default_return(&method.signature.returns);
     Ok(format!(
         "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}",
@@ -3346,11 +3269,7 @@ fn instance_method(
 ) -> Result<(String, String, String), CompileError> {
     let name = rust_ident(&method.name)?;
     let parameters = parameters(program, method)?;
-    let body = if requires_typed_frame(method) {
-        aot_typed_frame(program, known_classes, method, 1)?
-    } else {
-        Body::new(program, known_classes, method, BodyKind::Instance).run()?
-    };
+    let body = lower_method_body(program, known_classes, method, BodyKind::Instance)?;
     let fallback = default_return(&method.signature.returns);
     let implementation = format!(
         "async fn {name}_impl<S: jars_runtime::Spawner>(state: std::rc::Rc<std::sync::Mutex<{}State>>, program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n{body}\nOk({fallback})\n}}",
@@ -3424,7 +3343,7 @@ fn actor_code(
         "reply: jars_runtime::Reply<jars_runtime::JavaResult<()>>",
     );
     let constructor_body =
-        Body::new(program, known_classes, constructor, BodyKind::Instance).run()?;
+        lower_method_body(program, known_classes, constructor, BodyKind::Instance)?;
     let constructor_args = (0..constructor.signature.parameters.len())
         .map(|index| format!("arg{index}"))
         .collect::<Vec<_>>()
@@ -3546,13 +3465,8 @@ fn static_state_code(program: &Program, known_classes: &[String]) -> Result<Stri
         // own static field operations must therefore access the prepared state
         // directly; emitting another async `__ensure` call would make the
         // generated future recursively sized.
-        let body = if requires_typed_frame(method) {
-            aot_typed_frame(program, known_classes, method, 0)?
-        } else {
-            Body::new(program, known_classes, method, BodyKind::Static)
-                .run()?
-                .replace("__ensure(program).await?;\n", "")
-        };
+        let body = lower_method_body(program, known_classes, method, BodyKind::Static)?
+            .replace("__ensure(program).await?;\n", "");
         format!(
             "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
         )
@@ -3723,8 +3637,12 @@ fn validate_field_accesses(programs: &[Program]) -> Result<(), CompileError> {
                     Op::GetField(reference) => (reference, false, false),
                     Op::PutField(reference) => (reference, true, false),
                     Op::GetStatic(reference)
-                        if stdlib::member(&reference.class, &reference.name, &reference.descriptor)
-                            .is_none() =>
+                        if stdlib::member(
+                            &reference.class,
+                            &reference.name,
+                            &reference.descriptor,
+                        )
+                        .is_none() =>
                     {
                         (reference, false, true)
                     }
@@ -3934,15 +3852,8 @@ struct JarClass {
 }
 
 fn class_name_from_bytes(bytes: &[u8]) -> Result<String, CompileError> {
-    let class = Class::new(bytes).map_err(|error| CompileError::Parse(error.to_string()))?;
-    let version = class.version();
-    if version.major > 65 || version.is_preview() {
-        return Err(invalid(format!(
-            "unsupported class-file version {}.{}",
-            version.major, version.minor
-        )));
-    }
-    class_name(class.pool(), class.this_class())
+    let class = parser_error(classfile::parse(bytes))?;
+    parser_error(class.constant_pool.class_name(class.this_class))
 }
 
 fn read_jar_classpath(
@@ -4186,7 +4097,7 @@ pub fn compile_jars(
                 class: class.clone(),
                 referenced_by,
             })?;
-        let program = parse_program(&class_file.bytes)?;
+        let program = parse_program_custom(&class_file.bytes)?;
         for dependency in program_dependencies(&program)? {
             if stdlib::is_known_type(&dependency) {
                 continue;
@@ -4239,7 +4150,7 @@ pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
 pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
     let programs = classes
         .iter()
-        .map(|bytes| parse_program(bytes))
+        .map(|bytes| parse_program_custom(bytes))
         .collect::<Result<Vec<_>, _>>()?;
     compile_programs(programs)
 }
@@ -4248,12 +4159,65 @@ pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
 mod tests {
     use super::*;
 
+    fn java_26_main_class() -> Vec<u8> {
+        fn u16(bytes: &mut Vec<u8>, value: u16) {
+            bytes.extend(value.to_be_bytes());
+        }
+        fn u32(bytes: &mut Vec<u8>, value: u32) {
+            bytes.extend(value.to_be_bytes());
+        }
+        fn utf8(bytes: &mut Vec<u8>, value: &str) {
+            bytes.push(1);
+            u16(bytes, value.len().try_into().unwrap());
+            bytes.extend(value.as_bytes());
+        }
+
+        let mut bytes = Vec::new();
+        bytes.extend(0xcafe_babe_u32.to_be_bytes());
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 70);
+        u16(&mut bytes, 8);
+        utf8(&mut bytes, "Java26Main");
+        bytes.extend([7, 0, 1]);
+        utf8(&mut bytes, "java/lang/Object");
+        bytes.extend([7, 0, 3]);
+        utf8(&mut bytes, "main");
+        utf8(&mut bytes, "([Ljava/lang/String;)V");
+        utf8(&mut bytes, "Code");
+        u16(&mut bytes, 0x0021);
+        u16(&mut bytes, 2);
+        u16(&mut bytes, 4);
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 1);
+        u16(&mut bytes, 0x0009);
+        u16(&mut bytes, 5);
+        u16(&mut bytes, 6);
+        u16(&mut bytes, 1);
+        u16(&mut bytes, 7);
+        u32(&mut bytes, 13);
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 1);
+        u32(&mut bytes, 1);
+        bytes.push(0xb1);
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 0);
+        u16(&mut bytes, 0);
+        bytes
+    }
+
     #[test]
     fn descriptors_accept_numeric_and_recursive_array_types() {
         assert!(parse_signature("(JFD)V").is_ok());
         assert!(parse_signature("(Z[[I[[[Ljava/lang/String;)V").is_ok());
         assert!(parse_signature("(Lapp/Entry;)[Llibrary/Value;").is_ok());
         assert!(parse_signature("(I").is_err());
+    }
+
+    #[test]
+    fn public_compiler_accepts_a_java_26_class_file() {
+        let generated = compile_class(&java_26_main_class()).unwrap();
+        assert!(generated.contains("pub mod Java26Main"));
     }
 
     #[test]
