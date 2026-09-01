@@ -137,6 +137,31 @@ pub struct JarEntrypoint {
     pub descriptor: String,
 }
 
+/// Controls deterministic selection of classes from a multi-release JAR.
+///
+/// The target is an import decision, not the host JVM.  Keeping it explicit
+/// makes an AOT build repeatable on machines with different JDKs installed.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct JarImportOptions {
+    /// Java feature release used when selecting `META-INF/versions/N` entries.
+    pub target_release: u16,
+}
+
+impl JarImportOptions {
+    #[must_use]
+    pub const fn for_release(target_release: u16) -> Self {
+        Self { target_release }
+    }
+}
+
+impl Default for JarImportOptions {
+    fn default() -> Self {
+        // Java 8 was the original, non-multi-release JAR contract of this
+        // importer.  Callers that want overlays opt in explicitly.
+        Self::for_release(8)
+    }
+}
+
 impl JarEntrypoint {
     #[must_use]
     pub fn new(
@@ -326,6 +351,10 @@ enum Op {
     InvokeStatic(MemberRef),
     InvokeVirtual(MemberRef),
     InvokeInterface(MemberRef),
+    /// A structurally valid bytecode operation that has no AOT lowering yet.
+    /// It is retained while discovering the class graph, then diagnosed only
+    /// if the selected member-reachable closure actually executes it.
+    Unsupported(String),
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -371,6 +400,21 @@ struct Method {
     is_public: bool,
     instructions: Vec<Instruction>,
     handlers: Vec<ExceptionHandler>,
+}
+
+#[derive(Clone, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
+struct MethodKey {
+    name: String,
+    descriptor: String,
+}
+
+impl MethodKey {
+    fn new(name: impl Into<String>, descriptor: impl Into<String>) -> Self {
+        Self {
+            name: name.into(),
+            descriptor: descriptor.into(),
+        }
+    }
 }
 
 #[derive(Clone, Debug)]
@@ -746,19 +790,17 @@ fn parse_program_custom(bytes: &[u8]) -> Result<Program, CompileError> {
                     parser_error(classfile::instructions(&code.code))?
                         .into_iter()
                         .map(|(offset, raw)| {
-                            parse_custom_op(pool, raw)
-                                .map(|op| Instruction { offset, op })
-                                .map_err(|error| match error {
-                                    CompileError::InvalidClass(operation) => {
-                                        CompileError::Unsupported {
-                                            class: name.clone(),
-                                            method: method_name.clone(),
-                                            offset,
-                                            operation,
-                                        }
-                                    }
-                                    other => other,
-                                })
+                            match parse_custom_op(pool, raw) {
+                                Ok(op) => Ok(Instruction { offset, op }),
+                                // Decode every method in a real library class,
+                                // but defer the lowering diagnostic until the
+                                // member is selected by the JAR entrypoint.
+                                Err(CompileError::InvalidClass(operation)) => Ok(Instruction {
+                                    offset,
+                                    op: Op::Unsupported(operation),
+                                }),
+                                Err(other) => Err(other),
+                            }
                         })
                         .collect::<Result<Vec<_>, CompileError>>()?,
                 );
@@ -1069,8 +1111,25 @@ impl<'a> Body<'a> {
         signature: &Signature,
     ) -> Result<Vec<String>, CompileError> {
         let mut args = Vec::with_capacity(signature.parameters.len());
-        for _ in &signature.parameters {
-            args.push(self.pop_expression(instruction)?);
+        for parameter in signature.parameters.iter().rev() {
+            let value = self.pop(instruction)?;
+            let expression = match (parameter, value) {
+                (Type::Class(class), Value::String(expression))
+                    if class == "java/lang/CharSequence" =>
+                {
+                    format!("Some({expression})")
+                }
+                (Type::Class(_) | Type::Array(_), Value::Null) => "None".to_owned(),
+                (_, value) => value.expression().map(str::to_owned).ok_or_else(|| {
+                    stack_error(
+                        self.program,
+                        self.method,
+                        instruction,
+                        "cannot pass this value as a method argument",
+                    )
+                })?,
+            };
+            args.push(expression);
         }
         args.reverse();
         Ok(args)
@@ -1151,6 +1210,14 @@ impl<'a> Body<'a> {
     fn run(mut self) -> Result<String, CompileError> {
         for instruction in &self.method.instructions {
             match &instruction.op {
+                Op::Unsupported(operation) => {
+                    return Err(unsupported(
+                        self.program,
+                        self.method,
+                        instruction,
+                        operation.clone(),
+                    ));
+                }
                 Op::AConstNull => self.stack.push(Value::Null),
                 Op::NewArray(element) => {
                     let length = self.pop_expression(instruction)?;
@@ -2209,7 +2276,9 @@ fn frame_variant(
 ) -> Result<String, CompileError> {
     let expression = expression.as_ref();
     match ty {
-        Type::Int => Ok(format!("FrameValue::I32({expression})")),
+        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+            Ok(format!("FrameValue::I32({expression} as i32)"))
+        }
         Type::Long => Ok(format!("FrameValue::I64({expression})")),
         Type::Float => Ok(format!("FrameValue::F32({expression})")),
         Type::Double => Ok(format!("FrameValue::F64({expression})")),
@@ -2225,11 +2294,17 @@ fn frame_variant(
 
 fn frame_pop(ty: &Type, layout: &FrameLayout) -> Result<String, CompileError> {
     match ty {
-        Type::Int => Ok("pop_i32".to_owned()),
+        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+            Ok("pop_i32".to_owned())
+        }
         Type::Long => Ok("pop_i64".to_owned()),
         Type::Float => Ok("pop_f32".to_owned()),
         Type::Double => Ok("pop_f64".to_owned()),
-        Type::String | Type::Class(_) | Type::Array(_) => Ok(format!(
+        Type::String => Ok(format!(
+            "pop_{}",
+            layout.reference_variant(ty)?.to_lowercase()
+        )),
+        Type::Class(_) | Type::Array(_) => Ok(format!(
             "pop_{}",
             layout.reference_variant(ty)?.to_lowercase()
         )),
@@ -2242,7 +2317,11 @@ fn frame_pop(ty: &Type, layout: &FrameLayout) -> Result<String, CompileError> {
 fn frame_type_supported(ty: &Type) -> bool {
     matches!(
         ty,
-        Type::Int
+        Type::Boolean
+            | Type::Byte
+            | Type::Char
+            | Type::Short
+            | Type::Int
             | Type::Long
             | Type::Float
             | Type::Double
@@ -3062,7 +3141,21 @@ fn aot_typed_frame(
                     "let error = match stack.pop().expect(\"athrow requires a throwable operand\") {{ FrameValue::Throwable(error) => error, FrameValue::Null => jars_runtime::null_pointer(), _ => unreachable!(\"verified throwable operand\") }}; {dispatch}"
                 )
             }
-            Op::IReturn => "return Ok(pop_i32(&mut stack));".to_owned(),
+            Op::IReturn => match method.signature.returns {
+                Type::Boolean => "return Ok(pop_i32(&mut stack) != 0);".to_owned(),
+                Type::Byte => "return Ok(pop_i32(&mut stack) as i8);".to_owned(),
+                Type::Char => "return Ok(pop_i32(&mut stack) as u16);".to_owned(),
+                Type::Short => "return Ok(pop_i32(&mut stack) as i16);".to_owned(),
+                Type::Int => "return Ok(pop_i32(&mut stack));".to_owned(),
+                _ => {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "ireturn does not match the declared return type",
+                    ));
+                }
+            },
             Op::LReturn => "return Ok(pop_i64(&mut stack));".to_owned(),
             Op::FReturn => "return Ok(pop_f32(&mut stack));".to_owned(),
             Op::DReturn => "return Ok(pop_f64(&mut stack));".to_owned(),
@@ -3136,8 +3229,30 @@ fn aot_typed_frame(
         .iter()
         .enumerate()
         .map(|(index, ty)| {
+            let alternatives = match ty {
+                Type::String => {
+                    format!("FrameValue::R{index}(value) => value,")
+                }
+                Type::Class(class) if class == "java/lang/CharSequence" => {
+                    let string = layout
+                        .references
+                        .iter()
+                        .position(|candidate| *candidate == Type::String)
+                        .map(|string_index| {
+                            format!("FrameValue::R{string_index}(value) => Some(value),")
+                        })
+                        .unwrap_or_default();
+                    format!(
+                        "FrameValue::R{index}(value) => value, {string} FrameValue::Null => None,"
+                    )
+                }
+                Type::Class(_) | Type::Array(_) => {
+                    format!("FrameValue::R{index}(value) => value, FrameValue::Null => None,")
+                }
+                _ => unreachable!("frame layout contains reference types only"),
+            };
             Ok(format!(
-                "fn pop_r{index}(stack: &mut Vec<FrameValue>) -> {} {{ match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::R{index}(value) => value, _ => unreachable!(\"verified JVM operand type\"), }} }}",
+                "fn pop_r{index}(stack: &mut Vec<FrameValue>) -> {} {{ match stack.pop().expect(\"verified JVM stack\") {{ {alternatives} _ => unreachable!(\"verified JVM operand type\"), }} }}",
                 ty.rust(&program.name)?
             ))
         })
@@ -3189,6 +3304,9 @@ fn aot_typed_frame(
         .map(|(index, ty)| match ty {
             Type::String => format!(
                 "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.as_ptr() == right.as_ptr() && left.len() == right.len()"
+            ),
+            Type::Class(class) if class == "java/lang/CharSequence" => format!(
+                "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.as_ptr() == right.as_ptr() && left.len() == right.len(), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
             ),
             Type::Class(_) => format!(
                 "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.__same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
@@ -3512,7 +3630,10 @@ fn render_module(program: &Program, known_classes: &[String]) -> Result<String, 
     let statics = program
         .methods
         .iter()
-        .filter(|method| method.is_static && method.is_public)
+        // A selected private static helper is still a direct Rust call from a
+        // selected method in the same generated module.  Rust visibility here
+        // is an implementation detail, never a Java reflective surface.
+        .filter(|method| method.is_static)
         .map(|method| static_method(program, known_classes, method))
         .collect::<Result<Vec<_>, _>>()?;
     let constructors = program
@@ -3594,7 +3715,7 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
 fn validate_reference_type(ty: &Type, known_classes: &[String]) -> Result<(), CompileError> {
     match ty {
         Type::Class(class) => {
-            if !known_classes.iter().any(|known| known == class) {
+            if !stdlib::is_known_type(class) && !known_classes.iter().any(|known| known == class) {
                 return Err(invalid(format!(
                     "reference type `{class}` is not in the compilation set"
                 )));
@@ -3849,6 +3970,7 @@ fn compile_programs(programs: Vec<Program>) -> Result<String, CompileError> {
 struct JarClass {
     bytes: Vec<u8>,
     origin: PathBuf,
+    release: u16,
 }
 
 fn class_name_from_bytes(bytes: &[u8]) -> Result<String, CompileError> {
@@ -3858,9 +3980,13 @@ fn class_name_from_bytes(bytes: &[u8]) -> Result<String, CompileError> {
 
 fn read_jar_classpath(
     paths: &[impl AsRef<Path>],
+    options: JarImportOptions,
 ) -> Result<BTreeMap<String, JarClass>, CompileError> {
     if paths.is_empty() {
         return Err(invalid("the JAR classpath is empty"));
+    }
+    if options.target_release < 8 {
+        return Err(invalid("the JAR target release must be at least Java 8"));
     }
 
     let mut classes: BTreeMap<String, JarClass> = BTreeMap::new();
@@ -3874,21 +4000,95 @@ fn read_jar_classpath(
             jar: path.to_owned(),
             detail: error.to_string(),
         })?;
+        let multi_release = match archive.by_name("META-INF/MANIFEST.MF") {
+            Ok(mut manifest) => {
+                let mut value = String::new();
+                manifest
+                    .read_to_string(&mut value)
+                    .map_err(|error| CompileError::Jar {
+                        jar: path.to_owned(),
+                        detail: format!("could not read manifest: {error}"),
+                    })?;
+                value
+                    .lines()
+                    .any(|line| line.trim().eq_ignore_ascii_case("Multi-Release: true"))
+            }
+            Err(zip::result::ZipError::FileNotFound) => false,
+            Err(error) => {
+                return Err(CompileError::Jar {
+                    jar: path.to_owned(),
+                    detail: format!("could not read manifest: {error}"),
+                });
+            }
+        };
+
+        // Select the base entry or the highest eligible overlay for every
+        // logical class name before parsing it.  `module-info` describes the
+        // archive module and is not a loadable closed-world program class.
+        let mut selected: BTreeMap<String, (String, u16)> = BTreeMap::new();
         for index in 0..archive.len() {
-            let mut entry = archive.by_index(index).map_err(|error| CompileError::Jar {
+            let entry = archive.by_index(index).map_err(|error| CompileError::Jar {
                 jar: path.to_owned(),
                 detail: error.to_string(),
             })?;
             let entry_name = entry.name().to_owned();
-            if entry_name.starts_with("META-INF/versions/") && entry_name.ends_with(".class") {
-                return Err(CompileError::Jar {
-                    jar: path.to_owned(),
-                    detail: "multi-release JAR class entries are not supported".to_owned(),
-                });
-            }
             if !entry_name.ends_with(".class") || entry_name.ends_with('/') {
                 continue;
             }
+            let (logical_name, release) =
+                if let Some(rest) = entry_name.strip_prefix("META-INF/versions/") {
+                    let Some((release, logical_name)) = rest.split_once('/') else {
+                        return Err(CompileError::Jar {
+                            jar: path.to_owned(),
+                            detail: format!("invalid multi-release class entry `{entry_name}`"),
+                        });
+                    };
+                    let release = release.parse::<u16>().map_err(|_| CompileError::Jar {
+                        jar: path.to_owned(),
+                        detail: format!("invalid multi-release release in `{entry_name}`"),
+                    })?;
+                    if release < 9 || logical_name.is_empty() {
+                        return Err(CompileError::Jar {
+                            jar: path.to_owned(),
+                            detail: format!("invalid multi-release class entry `{entry_name}`"),
+                        });
+                    }
+                    if !multi_release {
+                        return Err(CompileError::Jar {
+                            jar: path.to_owned(),
+                            detail: "multi-release class entries require Multi-Release: true"
+                                .to_owned(),
+                        });
+                    }
+                    (logical_name.to_owned(), release)
+                } else {
+                    (entry_name.clone(), 0)
+                };
+            if logical_name == "module-info.class" || release > options.target_release {
+                continue;
+            }
+            match selected.get(&logical_name) {
+                Some((_, previous_release)) if *previous_release > release => {}
+                Some((previous, previous_release)) if *previous_release == release => {
+                    return Err(CompileError::Jar {
+                        jar: path.to_owned(),
+                        detail: format!(
+                            "multiple entries select `{logical_name}` for Java {release}: `{previous}` and `{entry_name}`"
+                        ),
+                    });
+                }
+                _ => {
+                    selected.insert(logical_name, (entry_name, release));
+                }
+            }
+        }
+        for (logical_name, (entry_name, release)) in selected {
+            let mut entry = archive
+                .by_name(&entry_name)
+                .map_err(|error| CompileError::Jar {
+                    jar: path.to_owned(),
+                    detail: error.to_string(),
+                })?;
             let mut bytes = Vec::new();
             entry
                 .read_to_end(&mut bytes)
@@ -3900,11 +4100,11 @@ fn read_jar_classpath(
                 jar: path.to_owned(),
                 detail: format!("could not read `{entry_name}`: {error}"),
             })?;
-            if entry_name != format!("{class}.class") {
+            if logical_name != format!("{class}.class") {
                 return Err(CompileError::Jar {
                     jar: path.to_owned(),
                     detail: format!(
-                        "class entry `{entry_name}` declares `{class}`, expected `{class}.class`"
+                        "class entry `{entry_name}` declares `{class}`, expected `{logical_name}`"
                     ),
                 });
             }
@@ -3920,6 +4120,7 @@ fn read_jar_classpath(
                 JarClass {
                     bytes,
                     origin: path.to_owned(),
+                    release,
                 },
             );
         }
@@ -4014,6 +4215,304 @@ fn program_dependencies(program: &Program) -> Result<Vec<String>, CompileError> 
     Ok(dependencies)
 }
 
+fn method_dependencies(method: &Method) -> Result<Vec<String>, CompileError> {
+    let mut dependencies = Vec::new();
+    add_signature_dependencies(&method.signature, &mut dependencies);
+    for handler in &method.handlers {
+        if let Some(class) = &handler.catch_type {
+            dependencies.push(class.clone());
+        }
+    }
+    for instruction in &method.instructions {
+        match &instruction.op {
+            Op::New(class) => dependencies.push(class.clone()),
+            Op::NewArray(ty) | Op::MultiNewArray(ty, _) => {
+                add_type_dependencies(ty, &mut dependencies)
+            }
+            Op::GetStatic(reference)
+            | Op::GetField(reference)
+            | Op::PutField(reference)
+            | Op::PutStatic(reference)
+            | Op::InvokeSpecial(reference)
+            | Op::InvokeStatic(reference)
+            | Op::InvokeVirtual(reference)
+            | Op::InvokeInterface(reference) => {
+                add_member_dependencies(reference, &mut dependencies)?;
+            }
+            _ => {}
+        }
+    }
+    Ok(dependencies)
+}
+
+fn active_class_dependencies(program: &Program) -> Vec<String> {
+    let mut dependencies = Vec::new();
+    if let Some(superclass) = &program.superclass {
+        dependencies.push(superclass.clone());
+    }
+    dependencies.extend(program.interfaces.iter().cloned());
+    // Fields are emitted as generated static/actor state even when no method
+    // reads them. Their types therefore remain part of the closed set.
+    for field in &program.fields {
+        add_type_dependencies(&field.ty, &mut dependencies);
+    }
+    dependencies
+}
+
+fn enqueue_dependency(
+    dependency: String,
+    referenced_by: &str,
+    classes: &BTreeMap<String, JarClass>,
+    active: &mut VecDeque<(String, String)>,
+    active_set: &mut HashSet<String>,
+) -> Result<(), CompileError> {
+    if stdlib::is_known_type(&dependency) {
+        return Ok(());
+    }
+    if dependency.starts_with("java/") {
+        return Err(CompileError::UnsupportedPlatformClass {
+            class: dependency,
+            referenced_by: referenced_by.to_owned(),
+        });
+    }
+    if !classes.contains_key(&dependency) {
+        return Err(CompileError::MissingClass {
+            class: dependency,
+            referenced_by: referenced_by.to_owned(),
+        });
+    }
+    if active_set.insert(dependency.clone()) {
+        active.push_back((dependency, referenced_by.to_owned()));
+    }
+    Ok(())
+}
+
+/// Parses only the classes needed by `entry`, then retains only methods that
+/// are directly reachable from it (plus required `<clinit>` bodies).  Parsing
+/// remains structural for every member, so malformed class files still fail
+/// early; unlowered bytecodes in unrelated methods are never emitted.
+fn select_jar_programs(
+    classes: &BTreeMap<String, JarClass>,
+    entry: &JarEntrypoint,
+) -> Result<Vec<Program>, CompileError> {
+    let mut active = VecDeque::from([(entry.class.clone(), "the declared entrypoint".to_owned())]);
+    let mut active_set = HashSet::from([entry.class.clone()]);
+    let mut method_queue = VecDeque::from([(
+        entry.class.clone(),
+        MethodKey::new(&entry.method, &entry.descriptor),
+        "the declared entrypoint".to_owned(),
+    )]);
+    let mut selected: BTreeMap<String, HashSet<MethodKey>> = BTreeMap::new();
+    let mut programs = BTreeMap::<String, Program>::new();
+
+    while !active.is_empty() || !method_queue.is_empty() {
+        while let Some((class, referenced_by)) = active.pop_front() {
+            let class_file = classes
+                .get(&class)
+                .ok_or_else(|| CompileError::MissingClass {
+                    class: class.clone(),
+                    referenced_by,
+                })?;
+            let program = if let Some(program) = programs.get(&class) {
+                program.clone()
+            } else {
+                parse_program_custom(&class_file.bytes)?
+            };
+            for dependency in active_class_dependencies(&program) {
+                enqueue_dependency(
+                    dependency,
+                    &program.name,
+                    classes,
+                    &mut active,
+                    &mut active_set,
+                )?;
+            }
+            if let Some(clinit) = &program.clinit {
+                method_queue.push_back((
+                    program.name.clone(),
+                    MethodKey::new("<clinit>", &clinit.descriptor),
+                    program.name.clone(),
+                ));
+            }
+            programs.entry(class).or_insert(program);
+        }
+
+        let Some((class, key, referenced_by)) = method_queue.pop_front() else {
+            continue;
+        };
+        if !active_set.contains(&class) {
+            active_set.insert(class.clone());
+            active.push_back((class.clone(), referenced_by));
+            method_queue.push_front((class, key, "selected method owner".to_owned()));
+            continue;
+        }
+        let Some(program) = programs.get(&class) else {
+            // The active queue will parse it on the next outer iteration.
+            method_queue.push_front((class, key, referenced_by));
+            continue;
+        };
+        if !selected
+            .entry(class.clone())
+            .or_default()
+            .insert(key.clone())
+        {
+            continue;
+        }
+        let method = if key.name == "<clinit>" {
+            program
+                .clinit
+                .as_ref()
+                .filter(|method| method.descriptor == key.descriptor)
+        } else {
+            program
+                .methods
+                .iter()
+                .find(|method| method.name == key.name && method.descriptor == key.descriptor)
+        }
+        .ok_or_else(|| {
+            if class == entry.class
+                && key.name == entry.method
+                && key.descriptor == entry.descriptor
+            {
+                CompileError::MissingEntryMethod {
+                    class: class.clone(),
+                    method: key.name.clone(),
+                    descriptor: key.descriptor.clone(),
+                }
+            } else {
+                invalid(format!("method `{}.{}` is not defined", class, key.name))
+            }
+        })?;
+        for dependency in method_dependencies(method)? {
+            enqueue_dependency(
+                dependency,
+                &program.name,
+                classes,
+                &mut active,
+                &mut active_set,
+            )?;
+        }
+        for instruction in &method.instructions {
+            let reference = match &instruction.op {
+                Op::InvokeSpecial(reference)
+                | Op::InvokeStatic(reference)
+                | Op::InvokeVirtual(reference)
+                | Op::InvokeInterface(reference)
+                    if !reference.class.starts_with("java/") =>
+                {
+                    Some(reference)
+                }
+                _ => None,
+            };
+            if let Some(reference) = reference {
+                method_queue.push_back((
+                    reference.class.clone(),
+                    MethodKey::new(&reference.name, &reference.descriptor),
+                    program.name.clone(),
+                ));
+            }
+        }
+    }
+
+    let mut selected_programs = programs
+        .into_iter()
+        .map(|(class, mut program)| {
+            let selected_methods = selected.remove(&class).unwrap_or_default();
+            program.methods.retain(|method| {
+                selected_methods.contains(&MethodKey::new(&method.name, &method.descriptor))
+            });
+            if let Some(clinit) = &program.clinit
+                && !selected_methods.contains(&MethodKey::new("<clinit>", &clinit.descriptor))
+            {
+                program.clinit = None;
+            }
+            program
+        })
+        .collect::<Vec<_>>();
+    selected_programs.sort_by(|left, right| left.name.cmp(&right.name));
+    Ok(selected_programs)
+}
+
+/// Produces a deterministic Markdown report for a real JAR classpath using
+/// the same owned parser and import-selection rules as [`compile_jars`].
+///
+/// It intentionally reports both the selected member closure and class-wide
+/// references: the latter makes future expansion blockers visible without
+/// allowing unrelated methods to affect the AOT output.
+pub fn triage_jars(
+    paths: &[impl AsRef<Path>],
+    entry: &JarEntrypoint,
+    options: JarImportOptions,
+) -> Result<String, CompileError> {
+    let classes = read_jar_classpath(paths, options)?;
+    let programs = select_jar_programs(&classes, entry)?;
+    let mut report = format!(
+        "# JAR triage\n\nTarget Java release: {}\n\nEntrypoint: `{}.{}`{}\n\n## Selected closure\n\n",
+        options.target_release, entry.class, entry.method, entry.descriptor
+    );
+    for program in &programs {
+        let class_file = classes.get(&program.name).expect("selected JAR class");
+        let parsed = parser_error(classfile::parse(&class_file.bytes))?;
+        let methods = program
+            .methods
+            .iter()
+            .map(|method| format!("`{}{}`", method.name, method.descriptor))
+            .chain(
+                program
+                    .clinit
+                    .iter()
+                    .map(|method| format!("`{}{}`", method.name, method.descriptor)),
+            )
+            .collect::<Vec<_>>()
+            .join(", ");
+        report.push_str(&format!(
+            "- `{}` — Java class-file {}.{}, selected JAR release {}, source `{}`; members: {}\n",
+            program.name,
+            parsed.version.major,
+            parsed.version.minor,
+            class_file.release,
+            class_file.origin.display(),
+            if methods.is_empty() {
+                "(none)"
+            } else {
+                &methods
+            },
+        ));
+    }
+    report.push_str("\n## Class-wide references\n\n");
+    for program in &programs {
+        let original = parse_program_custom(&classes[&program.name].bytes)?;
+        let mut dependencies = program_dependencies(&original)?;
+        dependencies.sort();
+        dependencies.dedup();
+        let jdk = dependencies
+            .iter()
+            .filter(|dependency| dependency.starts_with("java/"))
+            .cloned()
+            .collect::<Vec<_>>();
+        let third_party = dependencies
+            .iter()
+            .filter(|dependency| !dependency.starts_with("java/"))
+            .cloned()
+            .collect::<Vec<_>>();
+        let jdk = if jdk.is_empty() {
+            "(none)".to_owned()
+        } else {
+            jdk.join(", ")
+        };
+        let third_party = if third_party.is_empty() {
+            "(none)".to_owned()
+        } else {
+            third_party.join(", ")
+        };
+        report.push_str(&format!(
+            "- `{}`\n  - JDK: {}\n  - non-JDK: {}\n",
+            program.name, jdk, third_party,
+        ));
+    }
+    Ok(report)
+}
+
 fn render_declared_entry(
     programs: &[Program],
     entry: &JarEntrypoint,
@@ -4085,37 +4584,18 @@ pub fn compile_jars(
     paths: &[impl AsRef<Path>],
     entry: &JarEntrypoint,
 ) -> Result<String, CompileError> {
-    let classes = read_jar_classpath(paths)?;
-    let mut pending = VecDeque::from([(entry.class.clone(), "the declared entrypoint".to_owned())]);
-    let mut queued = HashSet::from([entry.class.clone()]);
-    let mut programs = BTreeMap::new();
+    compile_jars_with_options(paths, entry, JarImportOptions::default())
+}
 
-    while let Some((class, referenced_by)) = pending.pop_front() {
-        let class_file = classes
-            .get(&class)
-            .ok_or_else(|| CompileError::MissingClass {
-                class: class.clone(),
-                referenced_by,
-            })?;
-        let program = parse_program_custom(&class_file.bytes)?;
-        for dependency in program_dependencies(&program)? {
-            if stdlib::is_known_type(&dependency) {
-                continue;
-            }
-            if dependency.starts_with("java/") {
-                return Err(CompileError::UnsupportedPlatformClass {
-                    class: dependency,
-                    referenced_by: program.name.clone(),
-                });
-            }
-            if queued.insert(dependency.clone()) {
-                pending.push_back((dependency, program.name.clone()));
-            }
-        }
-        programs.insert(class, program);
-    }
-
-    let programs = programs.into_values().collect::<Vec<_>>();
+/// Like [`compile_jars`], with an explicit target used to select
+/// multi-release JAR entries.
+pub fn compile_jars_with_options(
+    paths: &[impl AsRef<Path>],
+    entry: &JarEntrypoint,
+    options: JarImportOptions,
+) -> Result<String, CompileError> {
+    let classes = read_jar_classpath(paths, options)?;
+    let programs = select_jar_programs(&classes, entry)?;
     if programs.is_empty() {
         return Err(invalid("the compilation set is empty"));
     }

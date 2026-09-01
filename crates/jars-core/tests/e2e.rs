@@ -14,10 +14,20 @@ fn fixture(name: &str) -> PathBuf {
         .join(format!("{name}.java"))
 }
 
+fn homebrew_javac() -> PathBuf {
+    let path = PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac");
+    assert!(
+        path.is_file(),
+        "Homebrew OpenJDK 21 is required for e2e fixtures: expected {}",
+        path.display()
+    );
+    path
+}
+
 fn compile_java(name: &str, temp: &TempDir) -> Vec<u8> {
     let classes = temp.path().join("classes");
     fs::create_dir(&classes).unwrap();
-    let output = Command::new("javac")
+    let output = Command::new(homebrew_javac())
         .arg("-d")
         .arg(&classes)
         .arg(fixture(name))
@@ -66,7 +76,7 @@ fn compile_set_and_run(names: &[&str]) -> (String, String) {
     let temp = tempfile::tempdir().unwrap();
     let classes = temp.path().join("classes");
     fs::create_dir(&classes).unwrap();
-    let mut command = Command::new("javac");
+    let mut command = Command::new(homebrew_javac());
     command.arg("-d").arg(&classes);
     for name in names {
         command.arg(fixture(name));

@@ -145,6 +145,27 @@ pub fn array_store() -> anyhow::Error {
     ArrayStoreException.into()
 }
 
+/// An immutable Java regular-expression value retained only for supported
+/// class initialization.  The compiler does not expose matching operations
+/// for it yet, so this stores its source without loading JDK classes or using
+/// reflection at runtime.
+#[derive(Clone, Debug)]
+pub struct JavaPattern {
+    source: &'static str,
+}
+
+impl JavaPattern {
+    #[must_use]
+    pub const fn compile(source: &'static str) -> Self {
+        Self { source }
+    }
+
+    #[must_use]
+    pub const fn source(&self) -> &'static str {
+        self.source
+    }
+}
+
 /// Matches the closed runtime throwable hierarchy without reflection.  The AOT
 /// compiler embeds only the requested class name from an exception table.
 pub fn catches(error: &JavaError, class: &str) -> bool {

@@ -73,6 +73,13 @@ fn println_lower(_receiver: &str, args: &[String]) -> String {
 static PRINTLN_ENTRIES: &[StdEntry] = &[
     StdEntry {
         name: "println",
+        descriptor: "(Z)V",
+        member: StdMember::InstanceMethod {
+            lower: println_lower,
+        },
+    },
+    StdEntry {
+        name: "println",
         descriptor: "(I)V",
         member: StdMember::InstanceMethod {
             lower: println_lower,
@@ -128,6 +135,20 @@ pub(crate) static CLASSES: &[StdClass] = &[
         rust_type: None,
         members: &[],
     },
+    // The first Commons Lang slice treats CharSequence values as immutable
+    // Strings.  Other CharSequence implementations remain outside the AOT
+    // subset until their concrete representation is modeled.
+    StdClass {
+        name: "java/lang/CharSequence",
+        rust_type: Some("&'static str"),
+        members: &[StdEntry {
+            name: "length",
+            descriptor: "()I",
+            member: StdMember::InstanceMethod {
+                lower: |receiver, _args| format!("{receiver}.len() as i32"),
+            },
+        }],
+    },
     StdClass {
         name: "java/lang/System",
         rust_type: None,
@@ -137,6 +158,20 @@ pub(crate) static CLASSES: &[StdClass] = &[
         name: "java/io/PrintStream",
         rust_type: Some("jars_runtime::PrintStream"),
         members: PRINTLN_ENTRIES,
+    },
+    // This is deliberately initialization-only support.  Commons Lang's
+    // StringUtils eagerly creates one immutable Pattern in <clinit>; no regex
+    // matching API is exposed until a separately triaged slice needs it.
+    StdClass {
+        name: "java/util/regex/Pattern",
+        rust_type: Some("jars_runtime::JavaPattern"),
+        members: &[StdEntry {
+            name: "compile",
+            descriptor: "(Ljava/lang/String;)Ljava/util/regex/Pattern;",
+            member: StdMember::StaticMethod {
+                lower: |args| format!("Some(jars_runtime::JavaPattern::compile({}))", args[0]),
+            },
+        }],
     },
     StdClass {
         name: "java/lang/Math",
@@ -235,7 +270,10 @@ mod tests {
             member("java/io/PrintStream", "println", "(I)V"),
             Some(StdMember::InstanceMethod { .. })
         ));
-        assert!(member("java/io/PrintStream", "println", "(Z)V").is_none());
+        assert!(matches!(
+            member("java/io/PrintStream", "println", "(Z)V"),
+            Some(StdMember::InstanceMethod { .. })
+        ));
     }
 
     #[test]

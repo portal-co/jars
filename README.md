@@ -18,8 +18,13 @@ a deterministic single-thread executor.
 `jars-core::compile_jars` accepts an explicitly ordered JAR classpath and a
 `JarEntrypoint` (`class`, `method`, and JVM descriptor). It indexes archive
 entries, follows the reachable closed class set from that entrypoint, and emits
-only the selected classes. Duplicate and missing classes, multi-release JARs,
-and unmodeled Java platform classes produce structured compiler diagnostics.
+only the selected classes. Duplicate and missing classes, malformed
+multi-release layouts, and unmodeled Java platform classes produce structured
+compiler diagnostics.
+`compile_jars_with_options` accepts an explicit Java feature release and uses
+it to choose the highest eligible multi-release class entry deterministically;
+the default importer retains Java 8/base-entry selection. Member reachability
+is at method granularity, while required class initialization remains explicit.
 The JAR is an import format only: neither the generated Rust nor its runtime
 retains archive/class-file data or dynamically loads classes. Package-qualified
 class names are retained as JVM identities and encoded only for Rust symbols;
@@ -63,6 +68,15 @@ directly with:
 
 ```sh
 cargo test -p jars-core --test jar_harness
+```
+
+Use the parser-backed triage helper before adding a real third-party JAR or a
+new language/runtime dependency. It reports the selected member closure and
+class-wide JDK/non-JDK references using the same importer as compilation:
+
+```sh
+cargo run -p jars-core --bin jars-triage -- \
+  21 app/Entry run '()V' app.jar library.jar
 ```
 
 Generated Rust needs a `jars-runtime` dependency, for example:

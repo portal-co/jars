@@ -8,7 +8,10 @@ use std::{
     process::Command,
 };
 
-use jars_core::{CompileError, JarEntrypoint, compile_jars};
+use jars_core::{
+    CompileError, JarEntrypoint, JarImportOptions, compile_jars, compile_jars_with_options,
+    triage_jars,
+};
 use serde::Deserialize;
 use tempfile::TempDir;
 use zip::{CompressionMethod, ZipWriter, write::SimpleFileOptions};
@@ -22,6 +25,7 @@ struct FixtureManifest {
     expected_stdout: Option<String>,
     expected_exit: Option<i32>,
     expected_error: Option<String>,
+    target_release: Option<u16>,
     jars: Vec<JarFixture>,
 }
 
@@ -30,7 +34,9 @@ struct JarFixture {
     name: String,
     #[serde(default)]
     classpath: Vec<String>,
+    #[serde(default)]
     sources: Vec<PathBuf>,
+    artifact: Option<PathBuf>,
 }
 
 fn fixture_root() -> PathBuf {
@@ -66,6 +72,16 @@ fn create_jar(classes: &Path, output: &Path) {
     let mut writer = ZipWriter::new(file);
     add_class_files(&mut writer, classes, Path::new(""));
     writer.finish().unwrap();
+}
+
+fn homebrew_javac() -> PathBuf {
+    let path = PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac");
+    assert!(
+        path.is_file(),
+        "Homebrew OpenJDK 21 is required for JAR fixtures: expected {}",
+        path.display()
+    );
+    path
 }
 
 fn minimal_class(name: &str) -> Vec<u8> {
@@ -211,6 +227,28 @@ fn write_class_jar(path: &Path, class: &str, bytes: &[u8]) {
     writer.finish().unwrap();
 }
 
+fn write_multi_release_jar(path: &Path, multi_release: bool) {
+    let file = File::create(path).unwrap();
+    let mut writer = ZipWriter::new(file);
+    let options = SimpleFileOptions::default().compression_method(CompressionMethod::Deflated);
+    writer.start_file("META-INF/MANIFEST.MF", options).unwrap();
+    let manifest = if multi_release {
+        "Manifest-Version: 1.0\nMulti-Release: true\n\n"
+    } else {
+        "Manifest-Version: 1.0\n\n"
+    };
+    writer.write_all(manifest.as_bytes()).unwrap();
+    writer.start_file("Entry.class", options).unwrap();
+    writer.write_all(&executable_class("Entry")).unwrap();
+    let mut overlay = executable_class("Entry");
+    overlay[6..8].copy_from_slice(&53u16.to_be_bytes());
+    writer
+        .start_file("META-INF/versions/9/Entry.class", options)
+        .unwrap();
+    writer.write_all(&overlay).unwrap();
+    writer.finish().unwrap();
+}
+
 fn write_single_class_jar(path: &Path, class: &str) {
     write_class_jar(path, class, &minimal_class(class));
 }
@@ -220,10 +258,25 @@ fn build_jars(manifest: &FixtureManifest, temp: &TempDir) -> Vec<PathBuf> {
     let mut class_dirs = HashMap::new();
     let mut jars = Vec::new();
     for jar in &manifest.jars {
+        if let Some(artifact) = &jar.artifact {
+            assert!(
+                jar.sources.is_empty(),
+                "artifact JAR fixtures cannot also list sources"
+            );
+            let artifact = root.join(artifact);
+            assert!(
+                artifact.is_file(),
+                "missing vendored JAR fixture {}",
+                artifact.display()
+            );
+            class_dirs.insert(jar.name.clone(), artifact.clone());
+            jars.push(artifact);
+            continue;
+        }
         let classes = temp.path().join(format!("{}-classes", jar.name));
         fs::create_dir(&classes).unwrap();
-        let mut javac = Command::new("javac");
-        javac.arg("-d").arg(&classes);
+        let mut javac = Command::new(homebrew_javac());
+        javac.args(["--release", "8", "-d"]).arg(&classes);
         if !jar.classpath.is_empty() {
             let entries = jar
                 .classpath
@@ -291,7 +344,15 @@ fn run_fixture(manifest_name: &str) {
             ));
         }
         None => {
-            let generated = compile_jars(&jars, &entry).unwrap();
+            let generated = match manifest.target_release {
+                Some(target_release) => compile_jars_with_options(
+                    &jars,
+                    &entry,
+                    JarImportOptions::for_release(target_release),
+                )
+                .unwrap(),
+                None => compile_jars(&jars, &entry).unwrap(),
+            };
             assert!(!generated.contains("ZipArchive"));
             assert!(!generated.contains("RawInstruction"));
             let output = run_generated(&manifest.name, &generated, &temp);
@@ -312,13 +373,68 @@ fn run_fixture(manifest_name: &str) {
 }
 
 #[test]
+fn commons_lang_fixture_has_a_real_jar_parser_triage_snapshot() {
+    let manifest = manifest("commons-lang");
+    let temp = tempfile::tempdir().unwrap();
+    let jars = build_jars(&manifest, &temp);
+    let entry = JarEntrypoint::new(
+        &manifest.entry_class,
+        &manifest.entry_method,
+        &manifest.entry_descriptor,
+    );
+    let report = triage_jars(
+        &jars,
+        &entry,
+        JarImportOptions::for_release(manifest.target_release.unwrap()),
+    )
+    .unwrap();
+    assert!(report.contains("org/apache/commons/lang3/StringUtils"));
+    assert!(report.contains("isEmpty(Ljava/lang/CharSequence;)Z"));
+    assert!(report.contains("selected JAR release 0"));
+    assert!(report.contains("java/util/regex/Pattern"));
+}
+
+#[test]
 fn manifest_harness_imports_a_reachable_cross_jar_closure_and_runs_it() {
     run_fixture("cross-jar");
 }
 
 #[test]
+fn manifest_harness_imports_a_real_commons_lang_jar_and_runs_it() {
+    run_fixture("commons-lang");
+}
+
+#[test]
 fn manifest_harness_classifies_unmodeled_platform_dependencies() {
     run_fixture("unsupported-platform");
+}
+
+#[test]
+fn multi_release_selection_uses_the_explicit_target_release() {
+    let temp = tempfile::tempdir().unwrap();
+    let jar = temp.path().join("multi-release.jar");
+    write_multi_release_jar(&jar, true);
+    let entry = JarEntrypoint::new("Entry", "run", "()V");
+    let base = triage_jars(&[&jar], &entry, JarImportOptions::for_release(8)).unwrap();
+    let overlay = triage_jars(&[&jar], &entry, JarImportOptions::for_release(9)).unwrap();
+    assert!(base.contains("Java class-file 52.0, selected JAR release 0"));
+    assert!(overlay.contains("Java class-file 53.0, selected JAR release 9"));
+}
+
+#[test]
+fn multi_release_entries_require_the_manifest_declaration() {
+    let temp = tempfile::tempdir().unwrap();
+    let jar = temp.path().join("not-multi-release.jar");
+    write_multi_release_jar(&jar, false);
+    assert!(matches!(
+        triage_jars(
+            &[&jar],
+            &JarEntrypoint::new("Entry", "run", "()V"),
+            JarImportOptions::for_release(21),
+        ),
+        Err(CompileError::Jar { detail, .. })
+            if detail == "multi-release class entries require Multi-Release: true"
+    ));
 }
 
 #[test]
