@@ -112,6 +112,10 @@ java_error!(ClassCastException, "invalid Java reference cast");
 java_error!(ArrayIndexOutOfBoundsException, "array index out of bounds");
 java_error!(NegativeArraySizeException, "negative Java array size");
 java_error!(ArrayStoreException, "invalid Java reference array store");
+java_error!(
+    StringIndexOutOfBoundsException,
+    "string index out of bounds"
+);
 
 /// Returned after an earlier `<clinit>` failed.  The first caller sees the
 /// original error; later active uses see this cached failure instead.
@@ -144,6 +148,34 @@ pub fn negative_array_size() -> anyhow::Error {
 pub fn array_store() -> anyhow::Error {
     ArrayStoreException.into()
 }
+pub fn string_index_out_of_bounds() -> anyhow::Error {
+    StringIndexOutOfBoundsException.into()
+}
+
+/// Java `CharSequence.charAt` for the supported immutable String-backed
+/// representation. It indexes UTF-16 code units, not Rust Unicode scalar
+/// values, so callers observe Java's `char` model.
+pub fn char_sequence_char_at(value: &str, index: i32) -> JavaResult<u16> {
+    let index = usize::try_from(index).map_err(|_| string_index_out_of_bounds())?;
+    value
+        .encode_utf16()
+        .nth(index)
+        .ok_or_else(string_index_out_of_bounds)
+}
+
+/// Java's `Character.isWhitespace(char)` rule for BMP code units. The three
+/// non-breaking spaces and NEXT LINE are deliberately excluded, matching the
+/// Java predicate rather than Rust's broader Unicode whitespace property.
+pub mod character {
+    #[must_use]
+    pub fn is_whitespace(value: u16) -> bool {
+        match value {
+            0x0009..=0x000d | 0x001c..=0x001f => true,
+            0x0085 | 0x00a0 | 0x2007 | 0x202f => false,
+            _ => char::from_u32(u32::from(value)).is_some_and(char::is_whitespace),
+        }
+    }
+}
 
 /// An immutable Java regular-expression value retained only for supported
 /// class initialization.  The compiler does not expose matching operations
@@ -174,6 +206,9 @@ pub fn catches(error: &JavaError, class: &str) -> bool {
         "java/lang/NullPointerException" => error.is::<NullPointerException>(),
         "java/lang/ClassCastException" => error.is::<ClassCastException>(),
         "java/lang/ArrayIndexOutOfBoundsException" => error.is::<ArrayIndexOutOfBoundsException>(),
+        "java/lang/StringIndexOutOfBoundsException" => {
+            error.is::<StringIndexOutOfBoundsException>()
+        }
         "java/lang/NegativeArraySizeException" => error.is::<NegativeArraySizeException>(),
         "java/lang/ArrayStoreException" => error.is::<ArrayStoreException>(),
         "java/lang/Exception" | "java/lang/RuntimeException" | "java/lang/Throwable" => {
@@ -181,6 +216,7 @@ pub fn catches(error: &JavaError, class: &str) -> bool {
                 || error.is::<NullPointerException>()
                 || error.is::<ClassCastException>()
                 || error.is::<ArrayIndexOutOfBoundsException>()
+                || error.is::<StringIndexOutOfBoundsException>()
                 || error.is::<NegativeArraySizeException>()
                 || error.is::<ArrayStoreException>()
         }
@@ -554,6 +590,25 @@ mod tests {
         assert_eq!(iushr(-1, 1), i32::MAX);
         assert_eq!(lushr(-1, 1), i64::MAX);
         assert!(idiv(1, 0).unwrap_err().is::<ArithmeticException>());
+    }
+
+    #[test]
+    fn char_sequence_helpers_follow_java_utf16_and_whitespace_rules() {
+        assert_eq!(char_sequence_char_at("a😀", 0).unwrap(), u16::from(b'a'));
+        assert_eq!(char_sequence_char_at("a😀", 1).unwrap(), 0xd83d);
+        assert_eq!(char_sequence_char_at("a😀", 2).unwrap(), 0xde00);
+        assert!(
+            char_sequence_char_at("a", -1)
+                .unwrap_err()
+                .is::<StringIndexOutOfBoundsException>()
+        );
+        let error = string_index_out_of_bounds();
+        assert!(catches(&error, "java/lang/StringIndexOutOfBoundsException"));
+        assert!(catches(&error, "java/lang/RuntimeException"));
+        assert!(character::is_whitespace(u16::from(b' ')));
+        assert!(character::is_whitespace(u16::from(b'\t')));
+        assert!(!character::is_whitespace(0x00a0));
+        assert!(!character::is_whitespace(0x0085));
     }
 
     #[test]

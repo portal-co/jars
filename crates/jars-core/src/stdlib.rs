@@ -141,11 +141,36 @@ pub(crate) static CLASSES: &[StdClass] = &[
     StdClass {
         name: "java/lang/CharSequence",
         rust_type: Some("&'static str"),
+        members: &[
+            StdEntry {
+                name: "length",
+                descriptor: "()I",
+                member: StdMember::InstanceMethod {
+                    lower: |receiver, _args| format!("{receiver}.len() as i32"),
+                },
+            },
+            StdEntry {
+                name: "charAt",
+                descriptor: "(I)C",
+                member: StdMember::InstanceMethod {
+                    lower: |receiver, args| {
+                        format!(
+                            "jars_runtime::char_sequence_char_at({receiver}, {})?",
+                            args[0]
+                        )
+                    },
+                },
+            },
+        ],
+    },
+    StdClass {
+        name: "java/lang/Character",
+        rust_type: None,
         members: &[StdEntry {
-            name: "length",
-            descriptor: "()I",
-            member: StdMember::InstanceMethod {
-                lower: |receiver, _args| format!("{receiver}.len() as i32"),
+            name: "isWhitespace",
+            descriptor: "(C)Z",
+            member: StdMember::StaticMethod {
+                lower: |args| format!("jars_runtime::character::is_whitespace({} as u16)", args[0]),
             },
         }],
     },
@@ -213,6 +238,11 @@ pub(crate) static CLASSES: &[StdClass] = &[
     },
     StdClass {
         name: "java/lang/ArrayIndexOutOfBoundsException",
+        rust_type: None,
+        members: &[],
+    },
+    StdClass {
+        name: "java/lang/StringIndexOutOfBoundsException",
         rust_type: None,
         members: &[],
     },
