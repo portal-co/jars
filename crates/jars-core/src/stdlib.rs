@@ -173,7 +173,7 @@ mod tests {
     fn generated_table_coerces_strings_and_rust_written_classes() {
         assert_eq!(
             coerce("java/lang/String", "java/lang/CharSequence", "value"),
-            Some("Some(jars_runtime::CharSequence::from_java_string(value))".to_owned())
+            Some("value.map(jars_runtime::CharSequence::from_java_string)".to_owned())
         );
         assert_eq!(
             coerce("java/lang/StringBuilder", "java/lang/CharSequence", "value"),

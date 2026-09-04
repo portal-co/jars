@@ -210,10 +210,9 @@ impl Type {
             Self::Float => Ok("f32".to_owned()),
             Self::Double => Ok("f64".to_owned()),
             Self::Void => Ok("()".to_owned()),
-            // Java strings are never null in the modeled subset, so the
-            // representation is not optional.  Values are owned, runtime
-            // `jars_runtime::JavaString`s rather than only `'static` literals.
-            Self::String => Ok("jars_runtime::JavaString".to_owned()),
+            // String values are owned runtime `JavaString`s and participate in
+            // Java's null model, so every Rust signature is `Option`.
+            Self::String => Ok("Option<jars_runtime::JavaString>".to_owned()),
             Self::Class(name) if name == current_class => {
                 Ok(format!("Option<{}>", class_ident(name)?))
             }
@@ -239,7 +238,7 @@ impl Type {
 
     fn array_element_rust(&self, current_class: &str) -> Result<String, CompileError> {
         match self {
-            Self::String => Ok("jars_runtime::JavaString".to_owned()),
+            Self::String => Ok("Option<jars_runtime::JavaString>".to_owned()),
             _ => self.rust(current_class),
         }
     }
@@ -1196,7 +1195,7 @@ impl<'a> Body<'a> {
             Type::Long => "0_i64".to_owned(),
             Type::Float => "0.0_f32".to_owned(),
             Type::Double => "0.0_f64".to_owned(),
-            Type::String => "jars_runtime::JavaString::new(\"\")".to_owned(),
+            Type::String => "None".to_owned(),
             Type::Class(_) | Type::Array(_) => "None".to_owned(),
             Type::Void => return Err(invalid("void cannot be an array element")),
         })
@@ -1421,7 +1420,7 @@ impl<'a> Body<'a> {
                 Op::LdcString(value) => self
                     .stack
                     .push(Value::String(format!(
-                        "jars_runtime::JavaString::new({value:?})"
+                        "Some(jars_runtime::JavaString::new({value:?}))"
                     ))),
                 Op::ILoad(index) => self.stack.push(self.local(*index, instruction)?),
                 Op::LLoad(index) | Op::FLoad(index) | Op::DLoad(index) => {
@@ -1948,9 +1947,11 @@ impl<'a> Body<'a> {
                 Op::InvokeStatic(reference) => {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
+                    let is_stdlib_call;
                     let expression = if let Some(stdlib::StdMember::StaticMethod { lower }) =
                         stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                     {
+                        is_stdlib_call = true;
                         lower(&args)
                     } else {
                         if !self
@@ -1970,6 +1971,7 @@ impl<'a> Body<'a> {
                             self.class_path(&reference.class)?,
                             rust_ident(&reference.name)?
                         );
+                        is_stdlib_call = false;
                         format!("{method}(program, {}).await?", args.join(", "))
                     };
                     match signature.returns {
@@ -1990,7 +1992,13 @@ impl<'a> Body<'a> {
                             self.stack.push(value);
                         }
                         Type::String => {
-                            let value = self.temp(expression, Value::String);
+                            // Stdlib lowerings produce a bare `JavaString`;
+                            // known-class methods already return the `Option`.
+                            let value = if is_stdlib_call {
+                                self.temp(format!("Some({expression})"), Value::String)
+                            } else {
+                                self.temp(expression, Value::String)
+                            };
                             self.stack.push(value);
                         }
                         Type::Void => self.statements.push(format!("{expression};")),
@@ -2028,24 +2036,28 @@ impl<'a> Body<'a> {
                     if let Some(stdlib::StdMember::InstanceMethod { lower }) =
                         stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                     {
-                        let Value::Platform { expression, class } = receiver else {
-                            return Err(stack_error(
-                                self.program,
-                                self.method,
-                                instruction,
-                                "virtual receiver is not a platform value",
-                            ));
+                        // `String` receivers arrive as dedicated string values
+                        // while other platform receivers arrive as optional
+                        // platform values; both unwrap through the same null
+                        // check below.
+                        let receiver_expr = match receiver {
+                            Value::String(expression) => format!(
+                                "{expression}.ok_or_else(jars_runtime::null_pointer)?"
+                            ),
+                            Value::Platform { expression, class } if class == reference.class => {
+                                format!(
+                                    "{expression}.ok_or_else(jars_runtime::null_pointer)?"
+                                )
+                            }
+                            _ => {
+                                return Err(stack_error(
+                                    self.program,
+                                    self.method,
+                                    instruction,
+                                    "virtual receiver is not a platform value",
+                                ));
+                            }
                         };
-                        if class != reference.class {
-                            return Err(stack_error(
-                                self.program,
-                                self.method,
-                                instruction,
-                                "platform receiver has incompatible class",
-                            ));
-                        }
-                        let receiver_expr =
-                            format!("{expression}.ok_or_else(jars_runtime::null_pointer)?");
                         let expression = lower(&receiver_expr, &args);
                         match signature.returns {
                             Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
@@ -2065,7 +2077,7 @@ impl<'a> Body<'a> {
                                 self.stack.push(value);
                             }
                             Type::String => {
-                                let value = self.temp(expression, Value::String);
+                                let value = self.temp(format!("Some({expression})"), Value::String);
                                 self.stack.push(value);
                             }
                             Type::Void => self.statements.push(format!("{expression};")),
@@ -2209,7 +2221,7 @@ fn default_return(ty: &Type) -> &'static str {
         Type::Float => "0.0",
         Type::Double => "0.0",
         Type::Void => "()",
-        Type::String => "jars_runtime::JavaString::new(\"\")",
+        Type::String => "None",
         Type::Class(_) | Type::Array(_) => "None",
     }
 }
@@ -2262,6 +2274,17 @@ fn exception_dispatch(method: &Method) -> String {
     )
 }
 
+/// Java's verifier treats `Ljava/lang/String;` and `Ljava/lang/Object;`
+/// receivers uniformly, and the shared declaration models `String` as the
+/// dedicated compiler type.  Normalizing `Type::Class("java/lang/String")`
+/// onto `Type::String` lets one frame slot carry both descriptor spellings.
+fn normalize_string_class(ty: Type) -> Type {
+    match ty {
+        Type::Class(class) if class == "java/lang/String" => Type::String,
+        other => other,
+    }
+}
+
 #[derive(Default)]
 struct FrameLayout {
     references: Vec<Type>,
@@ -2270,6 +2293,7 @@ struct FrameLayout {
 
 impl FrameLayout {
     fn add_type(&mut self, ty: Type) {
+        let ty = normalize_string_class(ty);
         match ty {
             Type::String | Type::Class(_) | Type::Array(_) => {
                 if !self.references.contains(&ty) {
@@ -2284,6 +2308,7 @@ impl FrameLayout {
     }
 
     fn reference_variant(&self, ty: &Type) -> Result<String, CompileError> {
+        let ty = &normalize_string_class(ty.clone());
         self.references
             .iter()
             .position(|candidate| candidate == ty)
@@ -2356,6 +2381,7 @@ fn frame_variant(
     layout: &FrameLayout,
 ) -> Result<String, CompileError> {
     let expression = expression.as_ref();
+    let ty = &normalize_string_class(ty.clone());
     match ty {
         Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
             Ok(format!("FrameValue::I32({expression} as i32)"))
@@ -2374,6 +2400,7 @@ fn frame_variant(
 }
 
 fn frame_pop(ty: &Type, layout: &FrameLayout) -> Result<String, CompileError> {
+    let ty = &normalize_string_class(ty.clone());
     match ty {
         Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
             Ok("pop_i32".to_owned())
@@ -2510,7 +2537,7 @@ fn aot_typed_frame(
                 "stack.push({}); {}",
                 frame_variant(
                     &Type::String,
-                    format!("jars_runtime::JavaString::new({value:?})"),
+                    format!("Some(jars_runtime::JavaString::new({value:?}))"),
                     &layout
                 )?,
                 continue_at(next)?
@@ -2950,12 +2977,19 @@ fn aot_typed_frame(
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>();
                     let call = lower(&argument_names);
+                    // String-returning stdlib lowerings produce a bare
+                    // `JavaString`; frame slots model Java null as `Option`.
+                    let call_value = if signature.returns == Type::String {
+                        format!("Some({call})")
+                    } else {
+                        call.clone()
+                    };
                     let push = if signature.returns == Type::Void {
                         format!("{call};")
                     } else {
                         format!(
                             "stack.push({});",
-                            frame_variant(&signature.returns, &call, &layout)?
+                            frame_variant(&signature.returns, &call_value, &layout)?
                         )
                     };
                     format!("{} {push} {}", arguments.join(" "), continue_at(next)?)
@@ -3197,12 +3231,19 @@ fn aot_typed_frame(
                         layout.reference_variant(&Type::Class(reference.class.clone()))?;
                     let call = lower("_receiver", &argument_names);
                     let dispatch = exception_dispatch(method);
+                    // String-returning stdlib lowerings produce a bare
+                    // `JavaString`; frame slots model Java null as `Option`.
+                    let call_value = if signature.returns == Type::String {
+                        format!("Some({call})")
+                    } else {
+                        call.clone()
+                    };
                     let push = if signature.returns == Type::Void {
                         format!("{call};")
                     } else {
                         format!(
                             "stack.push({});",
-                            frame_variant(&signature.returns, &call, &layout)?
+                            frame_variant(&signature.returns, &call_value, &layout)?
                         )
                     };
                     format!(
@@ -3349,7 +3390,9 @@ fn aot_typed_frame(
         .map(|(index, ty)| {
             let alternatives = match ty {
                 Type::String => {
-                    format!("FrameValue::R{index}(value) => value,")
+                    format!(
+                        "FrameValue::R{index}(value) => value, FrameValue::Null => None,"
+                    )
                 }
                 Type::Class(class) => {
                     let coercions = stdlib::class(class)
@@ -3417,12 +3460,9 @@ fn aot_typed_frame(
         .references
         .iter()
         .enumerate()
-        .map(|(index, ty)| match ty {
-            Type::String => format!("FrameValue::R{index}(_) => false"),
-            Type::Class(_) | Type::Array(_) => {
-                format!("FrameValue::R{index}(value) => value.is_none()")
-            }
-            _ => unreachable!("frame layout contains reference types only"),
+        .map(|(index, ty)| {
+            let _ = ty;
+            format!("FrameValue::R{index}(value) => value.is_none()")
         })
         .collect::<Vec<_>>();
     let mut null_checks = null_checks;
@@ -3436,10 +3476,7 @@ fn aot_typed_frame(
         .iter()
         .enumerate()
         .map(|(index, ty)| match ty {
-            Type::String => format!(
-                "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.__same(right)"
-            ),
-            Type::Class(_) => format!(
+            Type::String | Type::Class(_) => format!(
                 "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.__same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
             ),
             Type::Array(_) => format!(
@@ -3673,7 +3710,9 @@ fn constant_expression(constant: &Constant) -> String {
         Constant::Long(value) => format!("{value}_i64"),
         Constant::Float(value) => format!("{value:?}_f32"),
         Constant::Double(value) => format!("{value:?}_f64"),
-        Constant::String(value) => format!("jars_runtime::JavaString::new({value:?})"),
+        Constant::String(value) => {
+            format!("Some(jars_runtime::JavaString::new({value:?}))")
+        }
     }
 }
 
@@ -3835,7 +3874,7 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
     let program = program_code(programs)?;
     let class = class_ident(&entry.name)?;
     let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, jars_runtime::JavaString::new(\"\"))?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, jars_runtime::JavaString::new(value)).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, Some(jars_runtime::JavaString::new(value))).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
         modules.join("\n"),
     );
     let file = syn::parse_file(&source)
@@ -4677,7 +4716,7 @@ fn render_declared_entry(
     ) {
         ([], Type::Void) => format!("{class}::{method}(&program).await"),
         ([Type::Array(element)], Type::Void) if **element == Type::String => format!(
-            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, jars_runtime::JavaString::new(\"\"))?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, jars_runtime::JavaString::new(value)).await?; }}\n{class}::{method}(&program, Some(args)).await"
+            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, Some(jars_runtime::JavaString::new(value))).await?; }}\n{class}::{method}(&program, Some(args)).await"
         ),
         _ => {
             return Err(invalid(format!(

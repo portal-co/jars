@@ -468,6 +468,15 @@ pub fn println<T: Display>(value: T) {
     std::println!("{value}");
 }
 
+/// Prints a nullable Java string: Java's `println(String)` emits the literal
+/// `null` for a null reference.
+pub fn println_string(value: Option<JavaString>) {
+    match value {
+        Some(value) => std::println!("{}", value.as_str()),
+        None => std::println!("null"),
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

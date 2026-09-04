@@ -16,6 +16,19 @@ public final class CommonsLangApp {
         System.out.println(StringUtils.isBlank(new StringBuilder(" \t")));
         System.out.println(StringUtils.isBlank(new StringBuilder("jars")));
         System.out.println(StringUtils.isBlank(new StringBuilder("\u1680")));
+        System.out.println(StringUtils.isNotEmpty(null));
+        System.out.println(StringUtils.isNotEmpty("jars"));
+        System.out.println(StringUtils.trim(null));
+        System.out.println(StringUtils.trim("  jars  "));
+        System.out.println(StringUtils.trim("\u00a0 x \u00a0"));
+        System.out.println(StringUtils.trimToNull(null));
+        System.out.println(StringUtils.trimToNull("  "));
+        System.out.println(StringUtils.trimToNull(" jars "));
+        System.out.println(StringUtils.trimToEmpty(null));
+        System.out.println(StringUtils.trimToEmpty("  "));
+        System.out.println(StringUtils.upperCase(null));
+        System.out.println(StringUtils.upperCase("jars"));
+        System.out.println(StringUtils.lowerCase("JaRs"));
         System.out.println(new StringBuilder("😀").length());
         System.out.println(builderLength(1));
     }

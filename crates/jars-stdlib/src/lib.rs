@@ -27,8 +27,9 @@ macro_rules! java_stdlib {
                 ],
             }
             class {
-                // `String` has a dedicated, non-null compiler representation,
-                // but its runtime values are the owned `JavaString` below.
+                // `String` has a dedicated compiler representation, but its
+                // runtime values are the owned `JavaString` below and follow
+                // the same member-table lowering as every other class.
                 name: "java/lang/String",
                 rust_type: Some("jars_runtime::JavaString"),
                 coercions: [],
@@ -36,9 +37,9 @@ macro_rules! java_stdlib {
                     /// An owned Java `String` value.  Values are computed at
                     /// runtime (literals, later transformations), so the
                     /// characters live in a shared `Rc<String>` rather than
-                    /// only in `'static` literals.  Strings are never null in
-                    /// the modeled subset, so the representation is not
-                    /// optional; actors receive clones that share characters.
+                    /// only in `'static` literals.  Nullable string slots are
+                    /// the compiler's `Option<JavaString>`; non-null slots hold
+                    /// the value directly, so this type itself is never null.
                     #[derive(Clone, Debug)]
                     pub struct JavaString(std::rc::Rc<String>);
 
@@ -60,6 +61,32 @@ macro_rules! java_stdlib {
                         #[must_use]
                         pub fn __same(&self, other: &Self) -> bool {
                             std::rc::Rc::ptr_eq(&self.0, &other.0) || **self.0 == **other.0
+                        }
+
+                        /// Java `String.trim()`: strips code units `<= ' '`
+                        /// (`U+0020`) from both ends, matching the JDK rather
+                        /// than Rust's broader Unicode whitespace.
+                        #[must_use]
+                        pub fn trim(&self) -> Self {
+                            Self::new(
+                                self.as_str()
+                                    .trim_matches(|c: char| c <= '\u{20}'),
+                            )
+                        }
+
+                        /// Java `String.toUpperCase()` under the root locale.
+                        /// Rust's `to_uppercase` is the closest available
+                        /// full-mapping equivalent; locale-sensitive overrides
+                        /// are outside the modeled subset.
+                        #[must_use]
+                        pub fn to_upper_case(&self) -> Self {
+                            Self::new(self.as_str().to_uppercase())
+                        }
+
+                        /// Java `String.toLowerCase()` under the root locale.
+                        #[must_use]
+                        pub fn to_lower_case(&self) -> Self {
+                            Self::new(self.as_str().to_lowercase())
                         }
                     }
 
@@ -96,16 +123,27 @@ macro_rules! java_stdlib {
                         }
                     }
                 },
-                members: [],
+                members: [
+                    // Instance methods on Java strings. The compiler unwraps
+                    // the nullable `Option<JavaString>` receiver before these
+                    // lowerings run.
+                    instance "trim" "()Ljava/lang/String;" |receiver, _args| {
+                        format!("{receiver}.trim()")
+                    };
+                    instance "toUpperCase" "()Ljava/lang/String;" |receiver, _args| {
+                        format!("{receiver}.to_upper_case()")
+                    };
+                    instance "toLowerCase" "()Ljava/lang/String;" |receiver, _args| {
+                        format!("{receiver}.to_lower_case()")
+                    };
+                ],
             }
             class {
                 name: "java/lang/CharSequence",
                 rust_type: Some("jars_runtime::CharSequence"),
                 coercions: [
                     "java/lang/String" => |value| {
-                        format!(
-                            "Some(jars_runtime::CharSequence::from_java_string({value}))"
-                        )
+                        format!("{value}.map(jars_runtime::CharSequence::from_java_string)")
                     },
                     "java/lang/StringBuilder" => |value| {
                         format!(
@@ -428,7 +466,8 @@ macro_rules! java_stdlib {
                     constructor "<init>" "(Ljava/lang/String;)V" |args| {
                         Some(format!(
                             "Some(jars_runtime::JavaStringBuilder::new(program.spawner.clone(), {})?)",
-                            args[0]
+                            // Java's `new StringBuilder(null)` throws NPE.
+                            format!("{}.ok_or_else(jars_runtime::null_pointer)?", args[0])
                         ))
                     };
                     instance "length" "()I" |receiver, _args| {
@@ -511,7 +550,11 @@ macro_rules! java_stdlib {
                         format!("jars_runtime::println({})", args[0])
                     };
                     instance "println" "(Ljava/lang/String;)V" |receiver, args| {
-                        format!("jars_runtime::println({})", args[0])
+                        // Java prints the literal `null` for a null argument.
+                        format!(
+                            "jars_runtime::println_string({})",
+                            args[0]
+                        )
                     };
                 ],
             }
@@ -547,7 +590,10 @@ macro_rules! java_stdlib {
                 },
                 members: [
                     static_method "compile" "(Ljava/lang/String;)Ljava/util/regex/Pattern;" |args| {
-                        format!("Some(jars_runtime::JavaPattern::compile({}))", args[0])
+                        format!(
+                            "Some(jars_runtime::JavaPattern::compile({}.ok_or_else(jars_runtime::null_pointer)?))",
+                            args[0]
+                        )
                     };
                 ],
             }

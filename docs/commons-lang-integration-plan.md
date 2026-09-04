@@ -1,7 +1,9 @@
 # Apache Commons Lang integration shadow plan
 
-Status: `StringUtils.isEmpty` and `StringUtils.isBlank` slices complete; the
-modeled JDK surface is now generated from one shared declaration.
+Status: `StringUtils.isEmpty`, `isBlank`, and the first string-transformation
+slice (`isNotEmpty`, `trim`, `trimToNull`, `trimToEmpty`, `upperCase`,
+`lowerCase`) complete; the modeled JDK surface is generated from one shared
+declaration and `Type::String` values are nullable runtime `JavaString`s.
 
 ## Artifact and reproducibility
 
@@ -19,6 +21,13 @@ modeled JDK surface is now generated from one shared declaration.
 - `jars-stdlib::java_stdlib!` is the single description for supported JDK classes. It generates runtime Rust implementations and the compiler's exact-member table, representations, constructors, and verifier-approved reference coercions. The declaration can include ordinary Rust items for a concrete JDK class; interface implementers use generated traits such as `CharSequenceValue` and carry a Java identity without exposing state.
 - Java strings are owned runtime `JavaString` values, not only `'static` literals: the compiler keeps a dedicated non-null `Type::String` representation, while the runtime representation participates in the same class table, `CharSequence` coercion, and reference-identity rules as other Rust-written JDK classes.
 - The supported platform slice now includes generated `CharSequence.length`/UTF-16 `charAt`, Java `Character.isWhitespace(char)`, `PrintStream.println(boolean)`, and initialization-only `Pattern.compile(String)` for the `StringUtils` initializer. `java.lang.StringBuilder` is the first Rust-written concrete JDK class: its state remains a mailbox actor and it coerces to `CharSequence` through the generated table.
+- String transformations: `java/lang/String` declares instance members
+  (`trim`, `toUpperCase`, `toLowerCase`) and frame slots hold
+  `Option<JavaString>`, so `aconst_null`, `ifnull`/`ifnonnull`, and null-return
+  paths compile. `Type::Class("java/lang/String")` normalizes onto the
+  `Type::String` slot, letting one frame slot carry both descriptor spellings.
+  Stdlib lowerings produce bare `JavaString` and the compiler wraps the frame
+  push in `Some`; known-class calls already return the `Option` signature.
 
 ## Verified integration slice
 
@@ -36,6 +45,24 @@ StringUtils.isBlank(" jars "); // false
 StringUtils.isBlank(new StringBuilder(" \t")); // true
 StringUtils.isBlank(new StringBuilder("jars")); // false
 new StringBuilder("😀").length(); // 2 UTF-16 code units
+```
+
+The string-transformation slice additionally exercises:
+
+```java
+StringUtils.isNotEmpty(null);        // false
+StringUtils.isNotEmpty("jars");      // true
+StringUtils.trim(null);              // null
+StringUtils.trim("  jars  ");        // "jars"
+StringUtils.trim("\u00a0 x \u00a0");  // unchanged: NBSP > U+0020
+StringUtils.trimToNull(null);        // null
+StringUtils.trimToNull("  ");        // null
+StringUtils.trimToNull(" jars ");    // "jars"
+StringUtils.trimToEmpty(null);       // ""
+StringUtils.trimToEmpty("  ");       // ""
+StringUtils.upperCase(null);         // null
+StringUtils.upperCase("jars");       // "JARS"
+StringUtils.lowerCase("JaRs");       // "jars"
 ```
 
 The selected closure is `app/CommonsLangApp.run`, its private branchy `builderLength(int)` helper, `StringUtils.isEmpty(CharSequence)`, `StringUtils.isBlank(CharSequence)`, its private `length(CharSequence)` helper, and `StringUtils.<clinit>`. It runs as generated Rust and verifies null, empty, ASCII and Unicode whitespace, Java's non-breaking-space exception, non-blank input, and concrete `StringBuilder` values crossing the `CharSequence` interface. No class file, JAR data, dynamic loading, reflection, or bytecode interpreter is emitted.
