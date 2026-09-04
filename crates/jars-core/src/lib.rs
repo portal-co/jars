@@ -210,7 +210,10 @@ impl Type {
             Self::Float => Ok("f32".to_owned()),
             Self::Double => Ok("f64".to_owned()),
             Self::Void => Ok("()".to_owned()),
-            Self::String => Ok("&'static str".to_owned()),
+            // Java strings are never null in the modeled subset, so the
+            // representation is not optional.  Values are owned, runtime
+            // `jars_runtime::JavaString`s rather than only `'static` literals.
+            Self::String => Ok("jars_runtime::JavaString".to_owned()),
             Self::Class(name) if name == current_class => {
                 Ok(format!("Option<{}>", class_ident(name)?))
             }
@@ -236,7 +239,7 @@ impl Type {
 
     fn array_element_rust(&self, current_class: &str) -> Result<String, CompileError> {
         match self {
-            Self::String => Ok("String".to_owned()),
+            Self::String => Ok("jars_runtime::JavaString".to_owned()),
             _ => self.rust(current_class),
         }
     }
@@ -1193,7 +1196,7 @@ impl<'a> Body<'a> {
             Type::Long => "0_i64".to_owned(),
             Type::Float => "0.0_f32".to_owned(),
             Type::Double => "0.0_f64".to_owned(),
-            Type::String => "String::new()".to_owned(),
+            Type::String => "jars_runtime::JavaString::new(\"\")".to_owned(),
             Type::Class(_) | Type::Array(_) => "None".to_owned(),
             Type::Void => return Err(invalid("void cannot be an array element")),
         })
@@ -1415,7 +1418,11 @@ impl<'a> Body<'a> {
                 Op::LConst(value) => self.stack.push(Value::Long(format!("{value}_i64"))),
                 Op::FConst(value) => self.stack.push(Value::Float(format!("{value:?}_f32"))),
                 Op::DConst(value) => self.stack.push(Value::Double(format!("{value:?}_f64"))),
-                Op::LdcString(value) => self.stack.push(Value::String(format!("{value:?}"))),
+                Op::LdcString(value) => self
+                    .stack
+                    .push(Value::String(format!(
+                        "jars_runtime::JavaString::new({value:?})"
+                    ))),
                 Op::ILoad(index) => self.stack.push(self.local(*index, instruction)?),
                 Op::LLoad(index) | Op::FLoad(index) | Op::DLoad(index) => {
                     self.stack.push(self.local(*index, instruction)?)
@@ -2202,7 +2209,7 @@ fn default_return(ty: &Type) -> &'static str {
         Type::Float => "0.0",
         Type::Double => "0.0",
         Type::Void => "()",
-        Type::String => "\"\"",
+        Type::String => "jars_runtime::JavaString::new(\"\")",
         Type::Class(_) | Type::Array(_) => "None",
     }
 }
@@ -2501,7 +2508,11 @@ fn aot_typed_frame(
             ),
             Op::LdcString(value) => format!(
                 "stack.push({}); {}",
-                frame_variant(&Type::String, format!("{value:?}"), &layout)?,
+                frame_variant(
+                    &Type::String,
+                    format!("jars_runtime::JavaString::new({value:?})"),
+                    &layout
+                )?,
                 continue_at(next)?
             ),
             Op::ILoad(local) => format!(
@@ -3426,7 +3437,7 @@ fn aot_typed_frame(
         .enumerate()
         .map(|(index, ty)| match ty {
             Type::String => format!(
-                "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.as_ptr() == right.as_ptr() && left.len() == right.len()"
+                "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.__same(right)"
             ),
             Type::Class(_) => format!(
                 "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.__same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
@@ -3662,7 +3673,7 @@ fn constant_expression(constant: &Constant) -> String {
         Constant::Long(value) => format!("{value}_i64"),
         Constant::Float(value) => format!("{value:?}_f32"),
         Constant::Double(value) => format!("{value:?}_f64"),
-        Constant::String(value) => format!("{value:?}"),
+        Constant::String(value) => format!("jars_runtime::JavaString::new({value:?})"),
     }
 }
 
@@ -3824,7 +3835,7 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
     let program = program_code(programs)?;
     let class = class_ident(&entry.name)?;
     let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, String::new())?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, value).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, jars_runtime::JavaString::new(\"\"))?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, jars_runtime::JavaString::new(value)).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
         modules.join("\n"),
     );
     let file = syn::parse_file(&source)
@@ -4666,7 +4677,7 @@ fn render_declared_entry(
     ) {
         ([], Type::Void) => format!("{class}::{method}(&program).await"),
         ([Type::Array(element)], Type::Void) if **element == Type::String => format!(
-            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, String::new())?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, value).await?; }}\n{class}::{method}(&program, Some(args)).await"
+            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, jars_runtime::JavaString::new(\"\"))?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, jars_runtime::JavaString::new(value)).await?; }}\n{class}::{method}(&program, Some(args)).await"
         ),
         _ => {
             return Err(invalid(format!(

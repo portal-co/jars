@@ -33,7 +33,7 @@ pub(crate) struct StdEntry {
 
 /// A closed conversion accepted when Java verification assigns one reference
 /// class to another. The expression is already an `Option<source-rust-type>`
-/// for class sources, or an `&'static str` for `java/lang/String`.
+/// for class sources, or a `jars_runtime::JavaString` for `java/lang/String`.
 pub(crate) struct StdCoercion {
     pub from: &'static str,
     pub lower: fn(&str) -> String,
@@ -42,9 +42,10 @@ pub(crate) struct StdCoercion {
 pub(crate) struct StdClass {
     /// JVM binary name, e.g. `java/lang/CharSequence`.
     pub name: &'static str,
-    /// `None` for type-only classes or `String`, which has its dedicated
-    /// compiler representation. Standard-library runtime classes carry their
-    /// generated `jars_runtime` representation here.
+    /// The `java/lang/String` entry now carries its `JavaString` runtime
+    /// representation like any other Rust-written class, while the compiler
+    /// keeps a dedicated non-null `Type::String` representation. Type-only
+    /// classes remain `None`.
     pub rust_type: Option<&'static str>,
     pub coercions: &'static [StdCoercion],
     pub members: &'static [StdEntry],
@@ -172,7 +173,7 @@ mod tests {
     fn generated_table_coerces_strings_and_rust_written_classes() {
         assert_eq!(
             coerce("java/lang/String", "java/lang/CharSequence", "value"),
-            Some("Some(jars_runtime::CharSequence::from_string(value))".to_owned())
+            Some("Some(jars_runtime::CharSequence::from_java_string(value))".to_owned())
         );
         assert_eq!(
             coerce("java/lang/StringBuilder", "java/lang/CharSequence", "value"),

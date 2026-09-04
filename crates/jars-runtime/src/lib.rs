@@ -572,7 +572,13 @@ mod tests {
             let string = CharSequence::from_string("\u{1680}");
             assert_eq!(string.length().await.unwrap(), 1);
 
-            let builder = JavaStringBuilder::new(runtime.clone(), "a😀").unwrap();
+            let owned = JavaString::new("a😀");
+            assert_eq!(owned.as_str(), "a😀");
+            assert!(owned.__same(&JavaString::new("a😀")));
+            let sequence = CharSequence::from_java_string(owned.clone());
+            assert_eq!(sequence.length().await.unwrap(), 3);
+
+            let builder = JavaStringBuilder::new(runtime.clone(), owned).unwrap();
             let sequence = CharSequence::from_string_builder(builder.clone());
             assert_eq!(sequence.length().await.unwrap(), 3);
             assert_eq!(sequence.char_at(1).await.unwrap(), 0xd83d);

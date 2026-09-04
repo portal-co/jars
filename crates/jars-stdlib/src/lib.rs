@@ -27,12 +27,75 @@ macro_rules! java_stdlib {
                 ],
             }
             class {
-                // `String` has a dedicated compiler representation, but it
-                // remains a legal source for interface coercions below.
+                // `String` has a dedicated, non-null compiler representation,
+                // but its runtime values are the owned `JavaString` below.
                 name: "java/lang/String",
-                rust_type: None,
+                rust_type: Some("jars_runtime::JavaString"),
                 coercions: [],
-                runtime: {},
+                runtime: {
+                    /// An owned Java `String` value.  Values are computed at
+                    /// runtime (literals, later transformations), so the
+                    /// characters live in a shared `Rc<String>` rather than
+                    /// only in `'static` literals.  Strings are never null in
+                    /// the modeled subset, so the representation is not
+                    /// optional; actors receive clones that share characters.
+                    #[derive(Clone, Debug)]
+                    pub struct JavaString(std::rc::Rc<String>);
+
+                    impl JavaString {
+                        #[must_use]
+                        pub fn new(value: impl Into<String>) -> Self {
+                            Self(std::rc::Rc::new(value.into()))
+                        }
+
+                        #[must_use]
+                        pub fn as_str(&self) -> &str {
+                            &self.0
+                        }
+
+                        /// Java reference identity for the modeled slice.  The
+                        /// modeled strings are interned literals, so the
+                        /// compiler lowers `if_acmpeq` by content; distinct
+                        /// clones of one value are also the same reference.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.0, &other.0) || **self.0 == **other.0
+                        }
+                    }
+
+                    impl std::fmt::Display for JavaString {
+                        fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                            f.write_str(&self.0)
+                        }
+                    }
+
+                    impl From<JavaString> for String {
+                        fn from(value: JavaString) -> String {
+                            (*value.0).clone()
+                        }
+                    }
+
+                    impl CharSequenceValue for JavaString {
+                        fn identity(&self) -> CharSequenceIdentity {
+                            CharSequenceIdentity::JavaString(std::rc::Rc::clone(&self.0))
+                        }
+
+                        fn length(
+                            &self,
+                        ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<i32>>>> {
+                            let value = std::rc::Rc::clone(&self.0);
+                            Box::pin(async move { Ok(char_sequence_length(&value)) })
+                        }
+
+                        fn char_at(
+                            &self,
+                            index: i32,
+                        ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<u16>>>> {
+                            let value = std::rc::Rc::clone(&self.0);
+                            Box::pin(async move { char_sequence_char_at(&value, index) })
+                        }
+                    }
+                },
                 members: [],
             }
             class {
@@ -40,7 +103,9 @@ macro_rules! java_stdlib {
                 rust_type: Some("jars_runtime::CharSequence"),
                 coercions: [
                     "java/lang/String" => |value| {
-                        format!("Some(jars_runtime::CharSequence::from_string({value}))")
+                        format!(
+                            "Some(jars_runtime::CharSequence::from_java_string({value}))"
+                        )
                     },
                     "java/lang/StringBuilder" => |value| {
                         format!(
@@ -65,6 +130,7 @@ macro_rules! java_stdlib {
                     #[derive(Clone)]
                     pub enum CharSequenceIdentity {
                         StaticString { address: usize, length: usize },
+                        JavaString(std::rc::Rc<String>),
                         Object(Rc<()>),
                     }
 
@@ -95,6 +161,9 @@ macro_rules! java_stdlib {
                                         length: right_length,
                                     },
                                 ) => left_address == right_address && left_length == right_length,
+                                (Self::JavaString(left), Self::JavaString(right)) => {
+                                    std::rc::Rc::ptr_eq(left, right)
+                                }
                                 (Self::Object(left), Self::Object(right)) => Rc::ptr_eq(left, right),
                                 _ => false,
                             }
@@ -161,6 +230,14 @@ macro_rules! java_stdlib {
                                 identity: value.identity(),
                                 value: Rc::new(value),
                             }
+                        }
+
+                        /// Wraps an owned Java string as a `CharSequence`.
+                        /// The wrapper shares the string's characters and its
+                        /// Java reference identity.
+                        #[must_use]
+                        pub fn from_java_string(value: JavaString) -> Self {
+                            Self::from_rust(value)
                         }
 
                         #[must_use]
@@ -239,7 +316,7 @@ macro_rules! java_stdlib {
                     impl JavaStringBuilder {
                         pub fn new<S: Spawner>(
                             spawner: S,
-                            source: &'static str,
+                            source: JavaString,
                         ) -> JavaResult<Self> {
                             let (actor, mailbox) = actor_channel();
                             spawner.spawn(async move {
@@ -248,7 +325,8 @@ macro_rules! java_stdlib {
                                 // This is an actor even though no mutator is
                                 // in the supported slice yet. Future mutable
                                 // methods add message variants; aliases never
-                                // receive the state directly.
+                                // receive the state directly.  The characters
+                                // are shared through the source string's `Rc`.
                                 let state = Rc::new(std::sync::Mutex::new(source));
                                 let mut in_flight: FuturesUnordered<
                                     std::pin::Pin<Box<dyn Future<Output = ()>>>,
@@ -256,22 +334,24 @@ macro_rules! java_stdlib {
                                 loop {
                                     let spawn_handler =
                                         |message: StringBuilderMessage,
-                                         state: Rc<std::sync::Mutex<&'static str>>| {
+                                         state: Rc<std::sync::Mutex<JavaString>>| {
                                             Box::pin(async move {
                                                 match message {
                                                     StringBuilderMessage::Length { reply } => {
                                                         let length = char_sequence_length(
-                                                            *state
+                                                            state
                                                                 .lock()
-                                                                .expect("string builder state mutex"),
+                                                                .expect("string builder state mutex")
+                                                                .as_str(),
                                                         );
                                                         let _ = reply.send(Ok(length));
                                                     }
                                                     StringBuilderMessage::CharAt { index, reply } => {
                                                         let value = char_sequence_char_at(
-                                                            *state
+                                                            state
                                                                 .lock()
-                                                                .expect("string builder state mutex"),
+                                                                .expect("string builder state mutex")
+                                                                .as_str(),
                                                             index,
                                                         );
                                                         let _ = reply.send(value);
@@ -445,18 +525,18 @@ macro_rules! java_stdlib {
                     /// exposed until a separately triaged slice needs it.
                     #[derive(Clone, Debug)]
                     pub struct JavaPattern {
-                        source: &'static str,
+                        source: JavaString,
                     }
 
                     impl JavaPattern {
                         #[must_use]
-                        pub const fn compile(source: &'static str) -> Self {
+                        pub fn compile(source: JavaString) -> Self {
                             Self { source }
                         }
 
                         #[must_use]
-                        pub const fn source(&self) -> &'static str {
-                            self.source
+                        pub fn source(&self) -> JavaString {
+                            self.source.clone()
                         }
 
                         #[must_use]

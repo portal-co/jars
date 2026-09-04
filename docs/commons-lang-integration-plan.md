@@ -17,6 +17,7 @@ modeled JDK surface is now generated from one shared declaration.
 - `JarImportOptions` selects the highest eligible multi-release entry; module descriptors are metadata, never generated classes.
 - JAR lowering is member-reachable, with every active class's `<clinit>` retained. Unselected methods may contain unlowered bytecode without expanding the generated program.
 - `jars-stdlib::java_stdlib!` is the single description for supported JDK classes. It generates runtime Rust implementations and the compiler's exact-member table, representations, constructors, and verifier-approved reference coercions. The declaration can include ordinary Rust items for a concrete JDK class; interface implementers use generated traits such as `CharSequenceValue` and carry a Java identity without exposing state.
+- Java strings are owned runtime `JavaString` values, not only `'static` literals: the compiler keeps a dedicated non-null `Type::String` representation, while the runtime representation participates in the same class table, `CharSequence` coercion, and reference-identity rules as other Rust-written JDK classes.
 - The supported platform slice now includes generated `CharSequence.length`/UTF-16 `charAt`, Java `Character.isWhitespace(char)`, `PrintStream.println(boolean)`, and initialization-only `Pattern.compile(String)` for the `StringUtils` initializer. `java.lang.StringBuilder` is the first Rust-written concrete JDK class: its state remains a mailbox actor and it coerces to `CharSequence` through the generated table.
 
 ## Verified integration slice

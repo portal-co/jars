@@ -70,7 +70,9 @@ The initial concrete example is `java.lang.StringBuilder`. Its generated Rust
 implementation is mailbox-backed and implements the generated
 `CharSequenceValue` interface, allowing only declaration-approved AOT
 coercions to `CharSequence`. Java object state never crosses that interface or
-escapes the actor.
+escapes the actor. `java.lang.String` values are likewise owned runtime
+`JavaString`s rather than only compile-time literals, so computed strings can
+flow through the same declarations.
 
 Run the verification suite with:
 
