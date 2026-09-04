@@ -1018,6 +1018,16 @@ impl<'a> Body<'a> {
                     expression: format!("arg{index}"),
                     element: (**element).clone(),
                 },
+                Type::Class(class)
+                    if stdlib::class(class)
+                        .and_then(|entry| entry.rust_type)
+                        .is_some() =>
+                {
+                    Value::Platform {
+                        expression: format!("arg{index}"),
+                        class: class.clone(),
+                    }
+                }
                 Type::Class(class) => Value::Object {
                     expression: format!("arg{index}"),
                     class: class.clone(),
@@ -1114,10 +1124,27 @@ impl<'a> Body<'a> {
         for parameter in signature.parameters.iter().rev() {
             let value = self.pop(instruction)?;
             let expression = match (parameter, value) {
-                (Type::Class(class), Value::String(expression))
-                    if class == "java/lang/CharSequence" =>
+                (Type::Class(class), Value::String(expression)) => {
+                    stdlib::coerce("java/lang/String", class, &expression).ok_or_else(|| {
+                        stack_error(
+                            self.program,
+                            self.method,
+                            instruction,
+                            format!("cannot pass String as `{class}`"),
+                        )
+                    })?
+                }
+                (Type::Class(target), Value::Platform { expression, class })
+                    if class != *target =>
                 {
-                    format!("Some({expression})")
+                    stdlib::coerce(&class, target, &expression).ok_or_else(|| {
+                        stack_error(
+                            self.program,
+                            self.method,
+                            instruction,
+                            format!("cannot pass platform class `{class}` as `{target}`"),
+                        )
+                    })?
                 }
                 (Type::Class(_) | Type::Array(_), Value::Null) => "None".to_owned(),
                 (_, value) => value.expression().map(str::to_owned).ok_or_else(|| {
@@ -1396,6 +1423,10 @@ impl<'a> Body<'a> {
                 Op::ALoad(index) => {
                     let value = self.local(*index, instruction)?;
                     self.stack.push(match value {
+                        Value::Platform { expression, class } => Value::Platform {
+                            expression: format!("{expression}.clone()"),
+                            class,
+                        },
                         Value::Object { expression, class } => Value::Object {
                             expression: format!("{expression}.clone()"),
                             class,
@@ -1434,6 +1465,10 @@ impl<'a> Body<'a> {
                             Value::Float(_) => Value::Float(local),
                             Value::Double(_) => Value::Double(local),
                             Value::String(_) => Value::String(local),
+                            Value::Platform { class, .. } => Value::Platform {
+                                expression: local,
+                                class,
+                            },
                             Value::Object { class, .. } => Value::Object {
                                 expression: local,
                                 class,
@@ -1770,7 +1805,9 @@ impl<'a> Body<'a> {
                     ));
                 }
                 Op::New(class) => {
-                    if !self.known_classes.iter().any(|known| known == class) {
+                    if !self.known_classes.iter().any(|known| known == class)
+                        && !stdlib::is_constructible(class)
+                    {
                         return Err(unsupported(self.program, self.method, instruction, "new"));
                     }
                     let id = self.next_uninitialized;
@@ -1805,14 +1842,40 @@ impl<'a> Body<'a> {
                                 stdlib::StdMember::Constructor { lower } => Some(lower),
                                 _ => None,
                             });
-                    if stdlib_ctor.is_some_and(|lower| lower(&[]).is_none()) {
-                        if !matches!(receiver, Value::This) || !args.is_empty() {
-                            return Err(unsupported(
-                                self.program,
-                                self.method,
-                                instruction,
-                                "stdlib no-op constructor",
-                            ));
+                    if let Some(lower) = stdlib_ctor {
+                        match lower(&args) {
+                            None => {
+                                if !matches!(receiver, Value::This) || !args.is_empty() {
+                                    return Err(unsupported(
+                                        self.program,
+                                        self.method,
+                                        instruction,
+                                        "stdlib no-op constructor",
+                                    ));
+                                }
+                            }
+                            Some(expression) => {
+                                let Value::Uninitialized(id) = receiver else {
+                                    return Err(stack_error(
+                                        self.program,
+                                        self.method,
+                                        instruction,
+                                        "stdlib constructor receiver is not uninitialized",
+                                    ));
+                                };
+                                let variable = format!("platform_object{id}");
+                                self.statements
+                                    .push(format!("let {variable} = {expression};"));
+                                for value in &mut self.stack {
+                                    if matches!(value, Value::Uninitialized(other) if *other == id)
+                                    {
+                                        *value = Value::Platform {
+                                            expression: variable.clone(),
+                                            class: reference.class.clone(),
+                                        };
+                                    }
+                                }
+                            }
                         }
                     } else if self
                         .known_classes
@@ -1928,6 +1991,17 @@ impl<'a> Body<'a> {
                             let value = self.temp(expression, |expression| Value::Array {
                                 expression,
                                 element: (*element).clone(),
+                            });
+                            self.stack.push(value);
+                        }
+                        Type::Class(class)
+                            if stdlib::class(&class)
+                                .and_then(|entry| entry.rust_type)
+                                .is_some() =>
+                        {
+                            let value = self.temp(expression, |expression| Value::Platform {
+                                expression,
+                                class: class.clone(),
                             });
                             self.stack.push(value);
                         }
@@ -2448,7 +2522,9 @@ fn aot_typed_frame(
             ),
             Op::AConstNull => format!("stack.push(FrameValue::Null); {}", continue_at(next)?),
             Op::New(class) => {
-                if !known_classes.iter().any(|known| known == class) {
+                if !known_classes.iter().any(|known| known == class)
+                    && !stdlib::is_constructible(class)
+                {
                     return Err(unsupported(
                         program,
                         method,
@@ -2494,19 +2570,50 @@ fn aot_typed_frame(
                 if let Some(stdlib::StdMember::Constructor { lower }) =
                     stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                 {
-                    if lower(&[]).is_none() && signature.parameters.is_empty() {
-                        format!(
+                    match lower(
+                        &(0..signature.parameters.len())
+                            .map(|argument| format!("argument{argument}"))
+                            .collect::<Vec<_>>(),
+                    ) {
+                        None if signature.parameters.is_empty() => format!(
                             "{} match stack.pop().expect(\"verified JVM stack\") {{ FrameValue::This => {{}}, _ => unreachable!(\"supported stdlib constructor receiver\"), }} {}",
                             arguments.join(" "),
                             continue_at(next)?
-                        )
-                    } else {
-                        return Err(unsupported(
-                            program,
-                            method,
-                            instruction,
-                            "stdlib constructor",
-                        ));
+                        ),
+                        Some(expression) => {
+                            let matching_sites = uninitialized
+                                .iter()
+                                .enumerate()
+                                .filter(|(_, class)| *class == &reference.class)
+                                .map(|(site, _)| {
+                                    let variant = layout.reference_variant(&Type::Class(reference.class.clone()))?;
+                                    Ok(format!(
+                                        "FrameValue::U{site} => {{ let value = {expression}; for local in &mut locals {{ if matches!(local, Some(FrameValue::U{site})) {{ *local = Some(FrameValue::{variant}(value.clone())); }} }} for value_slot in &mut stack {{ if matches!(value_slot, FrameValue::U{site}) {{ *value_slot = FrameValue::{variant}(value.clone()); }} }} }},"
+                                    ))
+                                })
+                                .collect::<Result<String, CompileError>>()?;
+                            if matching_sites.is_empty() {
+                                return Err(unsupported(
+                                    program,
+                                    method,
+                                    instruction,
+                                    "stdlib constructor receiver",
+                                ));
+                            }
+                            format!(
+                                "{} match stack.pop().expect(\"verified JVM stack\") {{ {matching_sites} _ => unreachable!(\"verified stdlib constructor receiver\"), }} {}",
+                                arguments.join(" "),
+                                continue_at(next)?
+                            )
+                        }
+                        None => {
+                            return Err(unsupported(
+                                program,
+                                method,
+                                instruction,
+                                "stdlib no-op constructor with arguments",
+                            ));
+                        }
                     }
                 } else if known_classes.iter().any(|known| known == &reference.class) {
                     let owner = class_ident(&reference.class)?;
@@ -3233,20 +3340,36 @@ fn aot_typed_frame(
                 Type::String => {
                     format!("FrameValue::R{index}(value) => value,")
                 }
-                Type::Class(class) if class == "java/lang/CharSequence" => {
-                    let string = layout
-                        .references
-                        .iter()
-                        .position(|candidate| *candidate == Type::String)
-                        .map(|string_index| {
-                            format!("FrameValue::R{string_index}(value) => Some(value),")
+                Type::Class(class) => {
+                    let coercions = stdlib::class(class)
+                        .map(|entry| {
+                            entry
+                                .coercions
+                                .iter()
+                                .filter_map(|coercion| {
+                                    let source_index = if coercion.from == "java/lang/String" {
+                                        layout
+                                            .references
+                                            .iter()
+                                            .position(|candidate| *candidate == Type::String)
+                                    } else {
+                                        layout.references.iter().position(|candidate| {
+                                            matches!(candidate, Type::Class(candidate) if candidate == coercion.from)
+                                        })
+                                    }?;
+                                    Some(format!(
+                                        "FrameValue::R{source_index}(value) => {},",
+                                        (coercion.lower)("value")
+                                    ))
+                                })
+                                .collect::<String>()
                         })
                         .unwrap_or_default();
                     format!(
-                        "FrameValue::R{index}(value) => value, {string} FrameValue::Null => None,"
+                        "FrameValue::R{index}(value) => value, {coercions} FrameValue::Null => None,"
                     )
                 }
-                Type::Class(_) | Type::Array(_) => {
+                Type::Array(_) => {
                     format!("FrameValue::R{index}(value) => value, FrameValue::Null => None,")
                 }
                 _ => unreachable!("frame layout contains reference types only"),
@@ -3304,9 +3427,6 @@ fn aot_typed_frame(
         .map(|(index, ty)| match ty {
             Type::String => format!(
                 "(FrameValue::R{index}(left), FrameValue::R{index}(right)) => left.as_ptr() == right.as_ptr() && left.len() == right.len()"
-            ),
-            Type::Class(class) if class == "java/lang/CharSequence" => format!(
-                "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.as_ptr() == right.as_ptr() && left.len() == right.len(), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"
             ),
             Type::Class(_) => format!(
                 "(FrameValue::R{index}(Some(left)), FrameValue::R{index}(Some(right))) => left.__same(right), (FrameValue::R{index}(None), FrameValue::R{index}(None)) => true, (FrameValue::R{index}(None), FrameValue::Null) | (FrameValue::Null, FrameValue::R{index}(None)) => true"

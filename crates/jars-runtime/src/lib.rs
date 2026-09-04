@@ -152,51 +152,26 @@ pub fn string_index_out_of_bounds() -> anyhow::Error {
     StringIndexOutOfBoundsException.into()
 }
 
-/// Java `CharSequence.charAt` for the supported immutable String-backed
-/// representation. It indexes UTF-16 code units, not Rust Unicode scalar
-/// values, so callers observe Java's `char` model.
-pub fn char_sequence_char_at(value: &str, index: i32) -> JavaResult<u16> {
-    let index = usize::try_from(index).map_err(|_| string_index_out_of_bounds())?;
-    value
-        .encode_utf16()
-        .nth(index)
-        .ok_or_else(string_index_out_of_bounds)
+/// Materializes the runtime half of the shared standard-library declaration.
+/// The same declaration is consumed by `jars-core` to build its exact JVM
+/// member table and Java reference-coercion rules.
+macro_rules! runtime_stdlib {
+    (
+        $(
+            class {
+                name: $name:literal,
+                rust_type: $rust_type:expr,
+                coercions: [$($coercions:tt)*],
+                runtime: { $($runtime:tt)* },
+                members: [$($members:tt)*],
+            }
+        )*
+    ) => {
+        $($($runtime)*)*
+    };
 }
 
-/// Java's `Character.isWhitespace(char)` rule for BMP code units. The three
-/// non-breaking spaces and NEXT LINE are deliberately excluded, matching the
-/// Java predicate rather than Rust's broader Unicode whitespace property.
-pub mod character {
-    #[must_use]
-    pub fn is_whitespace(value: u16) -> bool {
-        match value {
-            0x0009..=0x000d | 0x001c..=0x001f => true,
-            0x0085 | 0x00a0 | 0x2007 | 0x202f => false,
-            _ => char::from_u32(u32::from(value)).is_some_and(char::is_whitespace),
-        }
-    }
-}
-
-/// An immutable Java regular-expression value retained only for supported
-/// class initialization.  The compiler does not expose matching operations
-/// for it yet, so this stores its source without loading JDK classes or using
-/// reflection at runtime.
-#[derive(Clone, Debug)]
-pub struct JavaPattern {
-    source: &'static str,
-}
-
-impl JavaPattern {
-    #[must_use]
-    pub const fn compile(source: &'static str) -> Self {
-        Self { source }
-    }
-
-    #[must_use]
-    pub const fn source(&self) -> &'static str {
-        self.source
-    }
-}
+jars_stdlib::java_stdlib!(runtime_stdlib);
 
 /// Matches the closed runtime throwable hierarchy without reflection.  The AOT
 /// compiler embeds only the requested class name from an exception table.
@@ -493,27 +468,6 @@ pub fn println<T: Display>(value: T) {
     std::println!("{value}");
 }
 
-/// The Rust representation of `java.io.PrintStream` values such as
-/// `System.out`.  It carries no state: all instances compare equal, matching
-/// the single process-wide stream Java code observes.
-#[derive(Debug, Clone, Copy)]
-pub struct PrintStream;
-
-impl PrintStream {
-    #[must_use]
-    pub fn __same(&self, _other: &Self) -> bool {
-        true
-    }
-}
-
-/// Rust implementations backing `java.lang.Math` static methods.
-pub mod math {
-    #[must_use]
-    pub fn min(a: i32, b: i32) -> i32 {
-        a.min(b)
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -609,6 +563,21 @@ mod tests {
         assert!(character::is_whitespace(u16::from(b'\t')));
         assert!(!character::is_whitespace(0x00a0));
         assert!(!character::is_whitespace(0x0085));
+    }
+
+    #[test]
+    fn generated_char_sequence_dispatches_to_a_rust_written_actor_class() {
+        let runtime = Runtime::new();
+        runtime.block_on(async {
+            let string = CharSequence::from_string("\u{1680}");
+            assert_eq!(string.length().await.unwrap(), 1);
+
+            let builder = JavaStringBuilder::new(runtime.clone(), "a😀").unwrap();
+            let sequence = CharSequence::from_string_builder(builder.clone());
+            assert_eq!(sequence.length().await.unwrap(), 3);
+            assert_eq!(sequence.char_at(1).await.unwrap(), 0xd83d);
+            assert!(sequence.__same(&CharSequence::from_string_builder(builder)));
+        });
     }
 
     #[test]

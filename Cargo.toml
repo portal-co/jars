@@ -1,5 +1,5 @@
 [workspace]
-members = ["crates/jars-core", "crates/jars-runtime"]
+members = ["crates/jars-core", "crates/jars-runtime", "crates/jars-stdlib"]
 resolver = "3"
 
 [workspace.package]

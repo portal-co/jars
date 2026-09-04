@@ -56,6 +56,22 @@ Generated Java entry points and public calls return
 typed `Error` wrappers for Java-visible arithmetic, null, array, cast, actor,
 and class-initialization failures. The compiler remains closed-world and
 AOT-only: generated Rust contains no class-file data or bytecode interpreter.
+
+## Generated JDK standard library
+
+`jars-stdlib::java_stdlib!` is the single declaration of modeled JDK classes.
+The runtime macro consumer emits Rust implementations; the compiler consumer
+emits exact JVM member descriptors, lowering expressions, Rust
+representations, constructors, and closed reference coercions. A declaration
+can contain ordinary Rust items for a concrete JDK class, so adding one cannot
+silently leave its runtime and compiler registrations out of sync.
+
+The initial concrete example is `java.lang.StringBuilder`. Its generated Rust
+implementation is mailbox-backed and implements the generated
+`CharSequenceValue` interface, allowing only declaration-approved AOT
+coercions to `CharSequence`. Java object state never crosses that interface or
+escapes the actor.
+
 Run the verification suite with:
 
 ```sh

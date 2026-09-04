@@ -393,6 +393,7 @@ fn commons_lang_fixture_has_a_real_jar_parser_triage_snapshot() {
     assert!(report.contains("isBlank(Ljava/lang/CharSequence;)Z"));
     assert!(report.contains("length(Ljava/lang/CharSequence;)I"));
     assert!(report.contains("java/lang/Character"));
+    assert!(report.contains("java/lang/StringBuilder"));
     assert!(report.contains("selected JAR release 0"));
     assert!(report.contains("java/util/regex/Pattern"));
 }
