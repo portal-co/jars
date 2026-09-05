@@ -1,9 +1,11 @@
 # Apache Commons Lang integration shadow plan
 
-Status: `StringUtils.isEmpty`, `isBlank`, and the first string-transformation
+Status: `StringUtils.isEmpty`, `isBlank`, the first string-transformation
 slice (`isNotEmpty`, `trim`, `trimToNull`, `trimToEmpty`, `upperCase`,
-`lowerCase`) complete; the modeled JDK surface is generated from one shared
-declaration and `Type::String` values are nullable runtime `JavaString`s.
+`lowerCase`), and the code-point slice (`capitalize`, `uncapitalize`,
+`reverse`, `defaultString(String, String)`) complete; the modeled JDK surface
+is generated from one shared declaration and `Type::String` values are
+nullable runtime `JavaString`s.
 
 ## Artifact and reproducibility
 
@@ -22,12 +24,24 @@ declaration and `Type::String` values are nullable runtime `JavaString`s.
 - Java strings are owned runtime `JavaString` values, not only `'static` literals: the compiler keeps a dedicated non-null `Type::String` representation, while the runtime representation participates in the same class table, `CharSequence` coercion, and reference-identity rules as other Rust-written JDK classes.
 - The supported platform slice now includes generated `CharSequence.length`/UTF-16 `charAt`, Java `Character.isWhitespace(char)`, `PrintStream.println(boolean)`, and initialization-only `Pattern.compile(String)` for the `StringUtils` initializer. `java.lang.StringBuilder` is the first Rust-written concrete JDK class: its state remains a mailbox actor and it coerces to `CharSequence` through the generated table.
 - String transformations: `java/lang/String` declares instance members
-  (`trim`, `toUpperCase`, `toLowerCase`) and frame slots hold
-  `Option<JavaString>`, so `aconst_null`, `ifnull`/`ifnonnull`, and null-return
-  paths compile. `Type::Class("java/lang/String")` normalizes onto the
-  `Type::String` slot, letting one frame slot carry both descriptor spellings.
-  Stdlib lowerings produce bare `JavaString` and the compiler wraps the frame
-  push in `Some`; known-class calls already return the `Option` signature.
+  (`trim`, `toUpperCase`, `toLowerCase`, `codePointAt`), the `String(int[],
+  int, int)` constructor, and frame slots hold `Option<JavaString>`, so
+  `aconst_null`, `ifnull`/`ifnonnull`, and null-return paths compile.
+  `Type::Class("java/lang/String")` normalizes onto the `Type::String` slot,
+  letting one frame slot carry both descriptor spellings. Stdlib lowerings
+  produce the full frame value themselves (nullable strings are `Some(...)`;
+  class results are already `Option`), so the compiler pushes them unwrapped.
+- Code-point slice: `Character.toTitleCase(int)` (one-to-one mappings with a
+  Latin digraph table; Rust's `to_titlecase` is unstable),
+  `Character.toLowerCase(int)`, `Character.charCount`, typed-frame
+  `newarray int`/`iaload`/`iastore`, `StringBuilder.reverse()`/`toString()`
+  as mailbox messages, and a closed-world `jars_runtime::JavaObject` with a
+  verifier-approved `String`-to-`Object` widening coercion feeding
+  `Objects.toString(Object, String)`. This unblocked `capitalize`,
+  `uncapitalize`, `reverse`, and `defaultString(String, String)`. Overload
+  name collisions (the generated Rust methods share one name per class, e.g.
+  `defaultString(String)` vs `defaultString(String, String)`) remain a
+  known limitation, so the fixture exercises the two-argument form.
 
 ## Verified integration slice
 
@@ -63,6 +77,18 @@ StringUtils.trimToEmpty("  ");       // ""
 StringUtils.upperCase(null);         // null
 StringUtils.upperCase("jars");       // "JARS"
 StringUtils.lowerCase("JaRs");       // "jars"
+StringUtils.capitalize(null);       // null
+StringUtils.capitalize("jars");     // "Jars"
+StringUtils.capitalize("Jars");     // "Jars" (already title-cased)
+StringUtils.capitalize("\u01c6ars"); // "\u01c5ars" (dž -> Dž titlecase)
+StringUtils.uncapitalize("Jars");   // "jars"
+StringUtils.uncapitalize("jars");   // "jars"
+StringUtils.uncapitalize("\u01c5ars"); // "\u01c6ars"
+StringUtils.reverse(null);          // null
+StringUtils.reverse("jars");        // "sraj"
+StringUtils.reverse("\ud83d\ude00a"); // "a\ud83d\ude00" (surrogate pair kept)
+StringUtils.defaultString(null, "def"); // "def"
+StringUtils.defaultString("jars", "def"); // "jars"
 ```
 
 The selected closure is `app/CommonsLangApp.run`, its private branchy `builderLength(int)` helper, `StringUtils.isEmpty(CharSequence)`, `StringUtils.isBlank(CharSequence)`, its private `length(CharSequence)` helper, and `StringUtils.<clinit>`. It runs as generated Rust and verifies null, empty, ASCII and Unicode whitespace, Java's non-breaking-space exception, non-blank input, and concrete `StringBuilder` values crossing the `CharSequence` interface. No class file, JAR data, dynamic loading, reflection, or bytecode interpreter is emitted.

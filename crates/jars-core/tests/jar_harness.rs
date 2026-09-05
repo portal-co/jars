@@ -340,7 +340,7 @@ fn run_fixture(manifest_name: &str) {
         Some("unsupported_platform") => {
             assert!(matches!(
                 compile_jars(&jars, &entry),
-                Err(CompileError::UnsupportedPlatformClass { class, .. }) if class == "java/util/Objects"
+                Err(CompileError::UnsupportedPlatformClass { class, .. }) if class == "java/util/Arrays"
             ));
         }
         None => {
@@ -353,6 +353,9 @@ fn run_fixture(manifest_name: &str) {
                 .unwrap(),
                 None => compile_jars(&jars, &entry).unwrap(),
             };
+            if std::env::var("JARS_DUMP").is_ok() {
+                std::fs::write(format!("/tmp/{}.rs", manifest.name), &generated).unwrap();
+            }
             assert!(!generated.contains("ZipArchive"));
             assert!(!generated.contains("RawInstruction"));
             let output = run_generated(&manifest.name, &generated, &temp);

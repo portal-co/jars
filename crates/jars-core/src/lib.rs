@@ -1947,11 +1947,9 @@ impl<'a> Body<'a> {
                 Op::InvokeStatic(reference) => {
                     let signature = parse_signature(&reference.descriptor)?;
                     let args = self.arguments(instruction, &signature)?;
-                    let is_stdlib_call;
                     let expression = if let Some(stdlib::StdMember::StaticMethod { lower }) =
                         stdlib::member(&reference.class, &reference.name, &reference.descriptor)
                     {
-                        is_stdlib_call = true;
                         lower(&args)
                     } else {
                         if !self
@@ -1971,7 +1969,6 @@ impl<'a> Body<'a> {
                             self.class_path(&reference.class)?,
                             rust_ident(&reference.name)?
                         );
-                        is_stdlib_call = false;
                         format!("{method}(program, {}).await?", args.join(", "))
                     };
                     match signature.returns {
@@ -1992,13 +1989,7 @@ impl<'a> Body<'a> {
                             self.stack.push(value);
                         }
                         Type::String => {
-                            // Stdlib lowerings produce a bare `JavaString`;
-                            // known-class methods already return the `Option`.
-                            let value = if is_stdlib_call {
-                                self.temp(format!("Some({expression})"), Value::String)
-                            } else {
-                                self.temp(expression, Value::String)
-                            };
+                            let value = self.temp(expression, Value::String);
                             self.stack.push(value);
                         }
                         Type::Void => self.statements.push(format!("{expression};")),
@@ -2600,7 +2591,6 @@ fn aot_typed_frame(
                     let pop = frame_pop(ty, &layout)?;
                     arguments.push(format!("let argument{argument} = {pop}(&mut stack);"));
                 }
-                arguments.reverse();
                 let arguments_joined = (0..signature.parameters.len())
                     .map(|argument| format!("argument{argument}"))
                     .collect::<Vec<_>>()
@@ -2708,6 +2698,58 @@ fn aot_typed_frame(
                 format!(
                     "let length = pop_i32(&mut stack); match jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), length, {default}) {{ Ok(array) => stack.push({}), Err(error) => {{ {dispatch} }} }} {}",
                     frame_variant(&ty, "Some(array)", &layout)?,
+                    continue_at(next)?
+                )
+            }
+            Op::IALoad => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Int))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "iaload has no int-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let value = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified iaload receiver\"), }}; match value {{ Ok(value) => stack.push(FrameValue::I32(value)), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::IAStore => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Int))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "iastore has no int-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let value = pop_i32(&mut stack); let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let result = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified iastore receiver\"), }}; match result {{ Ok(()) => {{}}, Err(error) => {{ {dispatch} }} }} {}",
                     continue_at(next)?
                 )
             }
@@ -2972,24 +3014,16 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                    arguments.reverse();
-                    let argument_names = (0..signature.parameters.len())
+                        let argument_names = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>();
                     let call = lower(&argument_names);
-                    // String-returning stdlib lowerings produce a bare
-                    // `JavaString`; frame slots model Java null as `Option`.
-                    let call_value = if signature.returns == Type::String {
-                        format!("Some({call})")
-                    } else {
-                        call.clone()
-                    };
                     let push = if signature.returns == Type::Void {
                         format!("{call};")
                     } else {
                         format!(
                             "stack.push({});",
-                            frame_variant(&signature.returns, &call_value, &layout)?
+                            frame_variant(&signature.returns, &call, &layout)?
                         )
                     };
                     format!("{} {push} {}", arguments.join(" "), continue_at(next)?)
@@ -3006,8 +3040,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                    arguments.reverse();
-                    let method_path = if reference.class == program.name {
+                        let method_path = if reference.class == program.name {
                         rust_ident(&reference.name)?
                     } else {
                         format!(
@@ -3222,8 +3255,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                    arguments.reverse();
-                    let argument_declarations = arguments.join(" ");
+                        let argument_declarations = arguments.join(" ");
                     let argument_names = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>();
@@ -3231,19 +3263,12 @@ fn aot_typed_frame(
                         layout.reference_variant(&Type::Class(reference.class.clone()))?;
                     let call = lower("_receiver", &argument_names);
                     let dispatch = exception_dispatch(method);
-                    // String-returning stdlib lowerings produce a bare
-                    // `JavaString`; frame slots model Java null as `Option`.
-                    let call_value = if signature.returns == Type::String {
-                        format!("Some({call})")
-                    } else {
-                        call.clone()
-                    };
                     let push = if signature.returns == Type::Void {
                         format!("{call};")
                     } else {
                         format!(
                             "stack.push({});",
-                            frame_variant(&signature.returns, &call_value, &layout)?
+                            frame_variant(&signature.returns, &call, &layout)?
                         )
                     };
                     format!(
@@ -3264,8 +3289,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                    arguments.reverse();
-                    let argument_declarations = arguments.join(" ");
+                        let argument_declarations = arguments.join(" ");
                     let arguments = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>()

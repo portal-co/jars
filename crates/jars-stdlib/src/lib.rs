@@ -18,10 +18,48 @@ macro_rules! java_stdlib {
     ($consumer:ident) => {
         $consumer! {
             class {
+                // The shared superclass slot. Platform members such as
+                // `Objects.toString(Object, String)` accept widened reference
+                // values; the closed-world enum grows with triaged members.
                 name: "java/lang/Object",
-                rust_type: None,
-                coercions: [],
-                runtime: {},
+                rust_type: Some("jars_runtime::JavaObject"),
+                coercions: [
+                    "java/lang/String" => |value| {
+                        format!("{value}.map(jars_runtime::JavaObject::from_string)")
+                    },
+                ],
+                runtime: {
+                    /// The closed-world Java `Object` reference. Java code
+                    /// widens `String` values into `Object`-typed positions;
+                    /// each newly supported kind adds a variant here.
+                    #[derive(Clone, Debug)]
+                    pub enum JavaObject {
+                        Str(JavaString),
+                    }
+
+                    impl JavaObject {
+                        #[must_use]
+                        pub fn from_string(value: JavaString) -> Self {
+                            Self::Str(value)
+                        }
+
+                        /// Java `Object.toString()` for the supported kinds.
+                        #[must_use]
+                        pub fn to_string_value(&self) -> JavaString {
+                            match self {
+                                Self::Str(value) => value.clone(),
+                            }
+                        }
+
+                        /// Java reference identity for the closed world.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            match (self, other) {
+                                (Self::Str(left), Self::Str(right)) => left.__same(right),
+                            }
+                        }
+                    }
+                },
                 members: [
                     constructor "<init>" "()V" |_args| None;
                 ],
@@ -88,6 +126,30 @@ macro_rules! java_stdlib {
                         pub fn to_lower_case(&self) -> Self {
                             Self::new(self.as_str().to_lowercase())
                         }
+
+                        /// Java `String.codePointAt(int)`: the code point at a
+                        /// UTF-16 index, combining a surrogate pair when the
+                        /// index points at a high surrogate.
+                        pub fn code_point_at(&self, index: i32) -> JavaResult<i32> {
+                            let units: Vec<u16> = self.as_str().encode_utf16().collect();
+                            let index = usize::try_from(index)
+                                .map_err(|_| string_index_out_of_bounds())?;
+                            let unit = *units
+                                .get(index)
+                                .ok_or_else(string_index_out_of_bounds)?;
+                            if (0xd800..0xdc00).contains(&unit) {
+                                if let Some(low) = units.get(index + 1) {
+                                    if (0xdc00..0xe000).contains(low) {
+                                        let combined = 0x1_0000
+                                            + ((u32::from(unit) - 0xd800) << 10)
+                                            + (u32::from(*low) - 0xdc00);
+                                        return Ok(i32::try_from(combined)
+                                            .expect("code point fits in i32"));
+                                    }
+                                }
+                            }
+                            Ok(i32::from(unit))
+                        }
                     }
 
                     impl std::fmt::Display for JavaString {
@@ -128,13 +190,24 @@ macro_rules! java_stdlib {
                     // the nullable `Option<JavaString>` receiver before these
                     // lowerings run.
                     instance "trim" "()Ljava/lang/String;" |receiver, _args| {
-                        format!("{receiver}.trim()")
+                        format!("Some({receiver}.trim())")
                     };
                     instance "toUpperCase" "()Ljava/lang/String;" |receiver, _args| {
-                        format!("{receiver}.to_upper_case()")
+                        format!("Some({receiver}.to_upper_case())")
                     };
                     instance "toLowerCase" "()Ljava/lang/String;" |receiver, _args| {
-                        format!("{receiver}.to_lower_case()")
+                        format!("Some({receiver}.to_lower_case())")
+                    };
+                    instance "codePointAt" "(I)I" |receiver, args| {
+                        format!("{receiver}.code_point_at({})?", args[0])
+                    };
+                    constructor "<init>" "([III)V" |args| {
+                        // Java's String(int[], int, int) validates the range
+                        // and throws StringIndexOutOfBoundsException otherwise.
+                        Some(format!(
+                            "Some(jars_runtime::java_string_from_code_points({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}).await?)",
+                            args[0], args[1], args[2]
+                        ))
                     };
                 ],
             }
@@ -306,6 +379,29 @@ macro_rules! java_stdlib {
                         value.encode_utf16().count() as i32
                     }
 
+                    /// Java's `String(int[], int, int)` constructor. Copies
+                    /// `count` valid code points starting at `offset`; range
+                    /// violations and surrogate code points throw the Java
+                    /// string range failure.
+                    pub async fn java_string_from_code_points(
+                        array: JavaArray<i32>,
+                        offset: i32,
+                        count: i32,
+                    ) -> JavaResult<JavaString> {
+                        let length = array.length().await?;
+                        let end = i64::from(offset) + i64::from(count);
+                        if offset < 0 || count < 0 || end > i64::from(length) {
+                            return Err(string_index_out_of_bounds());
+                        }
+                        let mut result = String::new();
+                        for index in offset..offset + count {
+                            let point = array.get(index).await?;
+                            let ch = u32::try_from(point).ok().and_then(char::from_u32);
+                            result.push(ch.ok_or_else(string_index_out_of_bounds)?);
+                        }
+                        Ok(JavaString::new(result))
+                    }
+
                     /// Java `CharSequence.charAt` for the supported immutable
                     /// String-backed representation. It indexes UTF-16 code
                     /// units, not Rust Unicode scalar values.
@@ -348,6 +444,12 @@ macro_rules! java_stdlib {
                         CharAt {
                             index: i32,
                             reply: Reply<JavaResult<u16>>,
+                        },
+                        Reverse {
+                            reply: Reply<JavaResult<()>>,
+                        },
+                        ToStringValue {
+                            reply: Reply<JavaResult<JavaString>>,
                         },
                     }
 
@@ -394,6 +496,31 @@ macro_rules! java_stdlib {
                                                         );
                                                         let _ = reply.send(value);
                                                     }
+                                                    StringBuilderMessage::Reverse { reply } => {
+                                                        // Java reverses by UTF-16 code
+                                                        // units while keeping surrogate
+                                                        // pairs together, which matches
+                                                        // reversing Unicode scalar values.
+                                                        let reversed: String = state
+                                                            .lock()
+                                                            .expect("string builder state mutex")
+                                                            .as_str()
+                                                            .chars()
+                                                            .rev()
+                                                            .collect();
+                                                        *state
+                                                            .lock()
+                                                            .expect("string builder state mutex") =
+                                                            JavaString::new(reversed);
+                                                        let _ = reply.send(Ok(()));
+                                                    }
+                                                    StringBuilderMessage::ToStringValue { reply } => {
+                                                        let value = state
+                                                            .lock()
+                                                            .expect("string builder state mutex")
+                                                            .clone();
+                                                        let _ = reply.send(Ok(value));
+                                                    }
                                                 }
                                             })
                                                 as std::pin::Pin<Box<dyn Future<Output = ()>>>
@@ -439,6 +566,27 @@ macro_rules! java_stdlib {
                                 .await?;
                             response.recv().await?
                         }
+
+                        /// Java `StringBuilder.reverse()`: mutates the actor's
+                        /// state and returns this same handle.
+                        pub async fn reverse(&self) -> JavaResult<Self> {
+                            let (reply, response) = reply();
+                            self.actor
+                                .send(StringBuilderMessage::Reverse { reply })
+                                .await?;
+                            response.recv().await??;
+                            Ok(self.clone())
+                        }
+
+                        /// Java `StringBuilder.toString()`: a Java string with
+                        /// the builder's current characters.
+                        pub async fn to_string_value(&self) -> JavaResult<JavaString> {
+                            let (reply, response) = reply();
+                            self.actor
+                                .send(StringBuilderMessage::ToStringValue { reply })
+                                .await?;
+                            response.recv().await?
+                        }
                     }
 
                     impl CharSequenceValue for JavaStringBuilder {
@@ -476,6 +624,12 @@ macro_rules! java_stdlib {
                     instance "charAt" "(I)C" |receiver, args| {
                         format!("{receiver}.char_at({}).await?", args[0])
                     };
+                    instance "reverse" "()Ljava/lang/StringBuilder;" |receiver, _args| {
+                        format!("Some({receiver}.reverse().await?)")
+                    };
+                    instance "toString" "()Ljava/lang/String;" |receiver, _args| {
+                        format!("Some({receiver}.to_string_value().await?)")
+                    };
                 ],
             }
             class {
@@ -497,11 +651,90 @@ macro_rules! java_stdlib {
                                     .is_some_and(char::is_whitespace),
                             }
                         }
+
+                        /// Java `Character.toTitleCase(int)`. Java only applies
+                        /// one-to-one mappings, so a full mapping that expands
+                        /// (like `ß` to `Ss`) leaves the code point unchanged.
+                        /// Rust's `to_titlecase` is unstable, so the titlecase
+                        /// mappings come from `to_uppercase` plus the four
+                        /// Latin titlecase digraph letters, whose single-char
+                        /// titlecase is the dedicated Lt code point.
+                        #[must_use]
+                        pub fn to_title_case(value: i32) -> i32 {
+                            const DIGRAPHS: [(i32, i32); 8] = [
+                                (0x01c4, 0x01c5), // DŽ -> Dž
+                                (0x01c5, 0x01c5),
+                                (0x01c6, 0x01c5), // dž -> Dž
+                                (0x01c7, 0x01c8), // LJ -> Lj
+                                (0x01c9, 0x01c8), // lj -> Lj
+                                (0x01ca, 0x01cb), // NJ -> Nj
+                                (0x01cb, 0x01cb),
+                                (0x01cc, 0x01cb), // nj -> Nj
+                            ];
+                            if let Some((_, title)) =
+                                DIGRAPHS.iter().find(|(from, _)| *from == value)
+                            {
+                                return i32::try_from(*title)
+                                    .expect("scalar values fit in i32");
+                            }
+                            match value {
+                                0x01f1 => 0x01f2, // DZ -> Dz
+                                0x01f2 => 0x01f2,
+                                0x01f3 => 0x01f2, // dz -> Dz
+                                _ => single_char_mapping(value, char::to_uppercase),
+                            }
+                        }
+
+                        /// Java `Character.toLowerCase(int)` with the same
+                        /// one-to-one mapping rule.
+                        #[must_use]
+                        pub fn to_lower_case(value: i32) -> i32 {
+                            single_char_mapping(value, char::to_lowercase)
+                        }
+
+                        /// Java `Character.charCount(int)`: 2 UTF-16 code
+                        /// units for a supplementary code point, otherwise 1.
+                        #[must_use]
+                        pub fn char_count(value: i32) -> i32 {
+                            1 + i32::from(value >= 0x1_0000)
+                        }
+
+                        /// Applies `map` when it yields exactly one code point;
+                        /// multi-character mappings and invalid code points
+                        /// return the input unchanged, like the JDK.
+                        fn single_char_mapping<I: Iterator<Item = char>>(
+                            value: i32,
+                            map: impl Fn(char) -> I,
+                        ) -> i32 {
+                            let Ok(point) = u32::try_from(value) else {
+                                return value;
+                            };
+                            match char::from_u32(point) {
+                                Some(c) => {
+                                    let mut mapped = map(c);
+                                    match (mapped.next(), mapped.next()) {
+                                        (Some(single), None) => i32::try_from(u32::from(single))
+                                            .expect("scalar values fit in i32"),
+                                        _ => value,
+                                    }
+                                }
+                                None => value,
+                            }
+                        }
                     }
                 },
                 members: [
                     static_method "isWhitespace" "(C)Z" |args| {
                         format!("jars_runtime::character::is_whitespace({} as u16)", args[0])
+                    };
+                    static_method "toTitleCase" "(I)I" |args| {
+                        format!("jars_runtime::character::to_title_case({})", args[0])
+                    };
+                    static_method "toLowerCase" "(I)I" |args| {
+                        format!("jars_runtime::character::to_lower_case({})", args[0])
+                    };
+                    static_method "charCount" "(I)I" |args| {
+                        format!("jars_runtime::character::char_count({})", args[0])
                     };
                 ],
             }
@@ -614,6 +847,26 @@ macro_rules! java_stdlib {
                 members: [
                     static_method "min" "(II)I" |args| {
                         format!("jars_runtime::math::min({}, {})", args[0], args[1])
+                    };
+                ],
+            }
+            class {
+                // Type-only utility holder. Its members consume widened
+                // `Object` references produced by the `java/lang/Object`
+                // coercion table.
+                name: "java/util/Objects",
+                rust_type: None,
+                coercions: [],
+                runtime: {},
+                members: [
+                    static_method "toString"
+                    "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/String;" |args| {
+                        // Java: obj != null ? obj.toString() : default. Both
+                        // arms produce the nullable string result directly.
+                        format!(
+                            "match {} {{ Some(object) => Some(object.to_string_value()), None => {} }}",
+                            args[0], args[1]
+                        )
                     };
                 ],
             }

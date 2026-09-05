@@ -2,7 +2,7 @@ name = "commons-lang"
 entry_class = "app/CommonsLangApp"
 entry_method = "run"
 entry_descriptor = "()V"
-expected_stdout = "true\ntrue\nfalse\ntrue\ntrue\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nnull\njars\n\u00a0 x \u00a0\nnull\nnull\njars\n\n\nnull\nJARS\njars\n2\n2\n"
+expected_stdout = "true\ntrue\nfalse\ntrue\ntrue\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nnull\njars\n\u00a0 x \u00a0\nnull\nnull\njars\n\n\nnull\nJARS\njars\nnull\nJars\nJars\n\u01c5ars\njars\njars\n\u01c6ars\nnull\nsraj\na😀\ndef\njars\n2\n2\n"
 expected_exit = 0
 target_release = 21
 

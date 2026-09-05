@@ -2,6 +2,6 @@ package app;
 
 public class UnsupportedPlatform {
     public static void run() {
-        java.util.Objects.requireNonNull("ok");
+        java.util.Arrays.toString(new int[] {1});
     }
 }
