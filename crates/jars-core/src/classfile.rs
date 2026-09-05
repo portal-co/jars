@@ -460,9 +460,16 @@ impl ConstantPool {
         }
     }
 
+    /// Resolves either constant-pool member-reference kind. `invokestatic`
+    /// may legally target an `InterfaceMethodref` when the owner is an
+    /// interface, so both must resolve through this shared path.
     pub(crate) fn method_ref(&self, index: u16) -> Result<MemberRef, Error> {
         let (class, name_and_type) = match self.entry(index)? {
             CpEntry::MethodRef {
+                class,
+                name_and_type,
+            }
+            | CpEntry::InterfaceMethodRef {
                 class,
                 name_and_type,
             } => (*class, *name_and_type),

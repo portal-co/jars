@@ -2,10 +2,14 @@
 
 Status: `StringUtils.isEmpty`, `isBlank`, the first string-transformation
 slice (`isNotEmpty`, `trim`, `trimToNull`, `trimToEmpty`, `upperCase`,
-`lowerCase`), and the code-point slice (`capitalize`, `uncapitalize`,
-`reverse`, `defaultString(String, String)`) complete; the modeled JDK surface
-is generated from one shared declaration and `Type::String` values are
-nullable runtime `JavaString`s.
+`lowerCase`), the code-point slice (`capitalize`, `uncapitalize`,
+`reverse`, `defaultString(String, String)`), and the CharSequence-predicate
+plus substring slice (`isAlpha` family, `isNumericSpace`, `isAlphaSpace`,
+`substring`, `substringBefore/After(+Last)`, `chop`, `chomp`, `compare`,
+`countMatches`, `wrap`, `deleteWhitespace`, `repeat(char, int)`,
+`join(int[], char, int, int)`) complete; the modeled JDK surface is generated
+from one shared declaration and `Type::String` values are nullable runtime
+`JavaString`s.
 
 ## Artifact and reproducibility
 
@@ -42,6 +46,22 @@ nullable runtime `JavaString`s.
   name collisions (the generated Rust methods share one name per class, e.g.
   `defaultString(String)` vs `defaultString(String, String)`) remain a
   known limitation, so the fixture exercises the two-argument form.
+- Predicate/substring slice: `Character` gains `isLowerCase`,
+  `isUpperCase`, `isLetter`, `isDigit`, and `isLetterOrDigit` statics;
+  `java/lang/String` declares `length`, `isEmpty`, `charAt`, `indexOf(int)`,
+  `indexOf(String)`, `lastIndexOf(String)`, `substring(I)`, `substring(II)`,
+  `compareTo`, `concat`, `startsWith`, and `endsWith` with UTF-16 index
+  semantics; `String(char[])` and `String(char[], int, int)` constructors,
+  typed-frame `newarray char`/`caload`/`castore`, `java/util/Arrays.fill
+  ([CC)V`, `StringBuilder.append(char/String/int)` and
+  `StringBuilder.substring(II)` unblock the `repeat` and `join` closure.
+  Boolean-valued stack operands are now a distinct `Value::Boolean` whose
+  text is a Rust `bool`: boolean stdlib lowerings, boolean known-class
+  returns, and `println(Z)` all speak the same language, and argument
+  binding casts narrow/boolean operands at typed-frame call sites.
+  `invokestatic` now also resolves `InterfaceMethodref` constants (JDK
+  interfaces expose static methods), and `dup` of array operands emits
+  independent handle text instead of cloning a moveable `Option` binding.
 
 ## Verified integration slice
 

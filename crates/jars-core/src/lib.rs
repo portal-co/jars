@@ -935,6 +935,9 @@ fn stack_error(
 #[derive(Clone)]
 enum Value {
     Int(String),
+    /// A `boolean`-typed stack value. Its text is a Rust `bool` expression,
+    /// distinct from [`Value::Int`] whose text is an `i32`.
+    Boolean(String),
     Long(String),
     Float(String),
     Double(String),
@@ -968,6 +971,7 @@ impl Value {
             | Self::Float(value)
             | Self::Double(value)
             | Self::String(value) => Some(value),
+            Self::Boolean(value) => Some(value),
             Self::Platform { expression, .. } => Some(expression),
             Self::Object { expression, .. } => Some(expression),
             Self::Array { expression, .. } => Some(expression),
@@ -1149,6 +1153,12 @@ impl<'a> Body<'a> {
                     })?
                 }
                 (Type::Class(_) | Type::Array(_), Value::Null) => "None".to_owned(),
+                // Narrow and boolean stack operands are carried as i32 text;
+                // cast them to the parameter's Rust type at the call site.
+                (Type::Boolean, Value::Int(expression)) => format!("{expression} != 0"),
+                (Type::Byte, Value::Int(expression)) => format!("{expression} as i8"),
+                (Type::Char, Value::Int(expression)) => format!("{expression} as u16"),
+                (Type::Short, Value::Int(expression)) => format!("{expression} as i16"),
                 (_, value) => value.expression().map(str::to_owned).ok_or_else(|| {
                     stack_error(
                         self.program,
@@ -1644,7 +1654,8 @@ impl<'a> Body<'a> {
                         }
                         let expression = format!("program.state.borrow().{class}.{field}.clone()");
                         let value = match ty {
-                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                            Type::Boolean => self.temp(expression, Value::Boolean),
+                            Type::Byte | Type::Char | Type::Short | Type::Int => {
                                 self.temp(expression, Value::Int)
                             }
                             Type::Long => self.temp(expression, Value::Long),
@@ -1829,6 +1840,19 @@ impl<'a> Body<'a> {
                             "dup on an empty stack",
                         )
                     })?;
+                    // Cloning an array stack entry clones its `Option<…>`
+                    // expression text, not the referenced runtime value, so
+                    // each dup consumer gets an independent handle text.
+                    let value = match value {
+                        Value::Array {
+                            expression,
+                            element,
+                        } => Value::Array {
+                            expression: format!("{expression}.clone()"),
+                            element,
+                        },
+                        other => other,
+                    };
                     self.stack.push(value);
                 }
                 Op::Pop => {
@@ -1972,7 +1996,11 @@ impl<'a> Body<'a> {
                         format!("{method}(program, {}).await?", args.join(", "))
                     };
                     match signature.returns {
-                        Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                        Type::Boolean => {
+                            let value = self.temp(expression, Value::Boolean);
+                            self.stack.push(value);
+                        }
+                        Type::Byte | Type::Char | Type::Short | Type::Int => {
                             let value = self.temp(expression, Value::Int);
                             self.stack.push(value);
                         }
@@ -2051,7 +2079,11 @@ impl<'a> Body<'a> {
                         };
                         let expression = lower(&receiver_expr, &args);
                         match signature.returns {
-                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                            Type::Boolean => {
+                                let value = self.temp(expression, Value::Boolean);
+                                self.stack.push(value);
+                            }
+                            Type::Byte | Type::Char | Type::Short | Type::Int => {
                                 let value = self.temp(expression, Value::Int);
                                 self.stack.push(value);
                             }
@@ -2109,7 +2141,11 @@ impl<'a> Body<'a> {
                             args.join(", ")
                         );
                         match signature.returns {
-                            Type::Boolean | Type::Byte | Type::Char | Type::Short | Type::Int => {
+                            Type::Boolean => {
+                                let value = self.temp(expression, Value::Boolean);
+                                self.stack.push(value);
+                            }
+                            Type::Byte | Type::Char | Type::Short | Type::Int => {
                                 let value = self.temp(expression, Value::Int);
                                 self.stack.push(value);
                             }
@@ -2698,6 +2734,58 @@ fn aot_typed_frame(
                 format!(
                     "let length = pop_i32(&mut stack); match jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), length, {default}) {{ Ok(array) => stack.push({}), Err(error) => {{ {dispatch} }} }} {}",
                     frame_variant(&ty, "Some(array)", &layout)?,
+                    continue_at(next)?
+                )
+            }
+            Op::CALoad => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Char))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "caload has no char-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let value = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified caload receiver\"), }}; match value {{ Ok(value) => stack.push(FrameValue::I32(i32::from(value))), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::CAStore => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Char))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value as u16).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "castore has no char-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let value = pop_i32(&mut stack); let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let result = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified castore receiver\"), }}; match result {{ Ok(()) => {{}}, Err(error) => {{ {dispatch} }} }} {}",
                     continue_at(next)?
                 )
             }

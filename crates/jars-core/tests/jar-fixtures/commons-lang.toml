@@ -2,7 +2,7 @@ name = "commons-lang"
 entry_class = "app/CommonsLangApp"
 entry_method = "run"
 entry_descriptor = "()V"
-expected_stdout = "true\ntrue\nfalse\ntrue\ntrue\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nnull\njars\n\u00a0 x \u00a0\nnull\nnull\njars\n\n\nnull\nJARS\njars\nnull\nJars\nJars\n\u01c5ars\njars\njars\n\u01c6ars\nnull\nsraj\na😀\ndef\njars\n2\n2\n"
+expected_stdout = "true\ntrue\nfalse\ntrue\ntrue\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nfalse\ntrue\nnull\njars\n\u00a0 x \u00a0\nnull\nnull\njars\n\n\nnull\nJARS\njars\nnull\nJars\nJars\n\u01c5ars\njars\njars\n\u01c6ars\nnull\nsraj\na😀\ndef\njars\n2\n2\nfalse\ntrue\nfalse\nfalse\ntrue\ntrue\nfalse\nfalse\ntrue\nfalse\nfalse\ntrue\nfalse\ntrue\ntrue\nfalse\nfalse\ntrue\ntrue\nnull\njars\nar\n\njar\njarJar\njar.jar\n\njar.jar\njar\njar\n\n\nnull\njars\njars\njars\n1\n-1\n0\n-1\n3\n0\n0\nnull\n'ab'\nab\njars\naaa\n\n\n1-2-3\n\n"
 expected_exit = 0
 target_release = 21
 

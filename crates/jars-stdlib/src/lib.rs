@@ -127,6 +127,131 @@ macro_rules! java_stdlib {
                             Self::new(self.as_str().to_lowercase())
                         }
 
+                        /// Java `String.length()`: the UTF-16 code-unit count.
+                        #[must_use]
+                        pub fn length(&self) -> i32 {
+                            self.as_str().encode_utf16().count() as i32
+                        }
+
+                        /// Java `String.isEmpty()`.
+                        #[must_use]
+                        pub fn is_empty(&self) -> bool {
+                            self.0.is_empty()
+                        }
+
+                        /// Java `String.charAt(int)`: the UTF-16 code unit at
+                        /// `index`.
+                        pub fn char_at(&self, index: i32) -> JavaResult<u16> {
+                            char_sequence_char_at(self.as_str(), index)
+                        }
+
+                        fn utf16_units(&self) -> Vec<u16> {
+                            self.as_str().encode_utf16().collect()
+                        }
+
+                        /// Java `String.indexOf(int)`: the first UTF-16 index
+                        /// of the code unit.
+                        #[must_use]
+                        pub fn index_of_unit(&self, unit: i32) -> i32 {
+                            let wanted = unit as u16;
+                            self.as_str()
+                                .encode_utf16()
+                                .position(|unit| unit == wanted)
+                                .map_or(-1, |index| index as i32)
+                        }
+
+                        /// Java `String.indexOf(String)`: the first UTF-16
+                        /// index of the substring.
+                        #[must_use]
+                        pub fn index_of(&self, needle: &Self) -> i32 {
+                            if needle.is_empty() {
+                                return 0;
+                            }
+                            let needle_units = needle.utf16_units();
+                            self.utf16_units()
+                                .windows(needle_units.len())
+                                .position(|window| window == needle_units.as_slice())
+                                .map_or(-1, |index| index as i32)
+                        }
+
+                        /// Java `String.lastIndexOf(String)`: the last UTF-16
+                        /// index of the substring.
+                        #[must_use]
+                        pub fn last_index_of(&self, needle: &Self) -> i32 {
+                            if needle.is_empty() {
+                                return self.length();
+                            }
+                            let needle_units = needle.utf16_units();
+                            self.utf16_units()
+                                .windows(needle_units.len())
+                                .rposition(|window| window == needle_units.as_slice())
+                                .map_or(-1, |index| index as i32)
+                        }
+
+                        /// Java `String.substring(int)`: the tail from a
+                        /// UTF-16 index.
+                        pub fn substring(&self, start: i32) -> JavaResult<Self> {
+                            self.substring_range(start, self.length())
+                        }
+
+                        /// Java `String.substring(int, int)`.
+                        pub fn substring_range(&self, start: i32, end: i32) -> JavaResult<Self> {
+                            let length = self.length();
+                            let start = start.clamp(0, length);
+                            let end = end.clamp(0, length);
+                            if start > end {
+                                return Err(string_index_out_of_bounds());
+                            }
+                            let units: Vec<u16> = self
+                                .as_str()
+                                .encode_utf16()
+                                .skip(start as usize)
+                                .take((end - start) as usize)
+                                .collect();
+                            Ok(Self::new(String::from_utf16(&units).expect(
+                                "sliced UTF-16 stays valid",
+                            )))
+                        }
+
+                        /// Java `String.compareTo(String)`: UTF-16 code-unit
+                        /// lexicographic order, then the length difference.
+                        #[must_use]
+                        pub fn compare_to(&self, other: &Self) -> i32 {
+                            let left = self.utf16_units();
+                            let right = other.utf16_units();
+                            for (left_unit, right_unit) in left.iter().zip(right.iter()) {
+                                if left_unit != right_unit {
+                                    return i32::from(*left_unit) - i32::from(*right_unit);
+                                }
+                            }
+                            left.len() as i32 - right.len() as i32
+                        }
+
+                        /// Java `String.concat(String)`.
+                        #[must_use]
+                        pub fn concat(&self, other: &Self) -> Self {
+                            Self::new(format!("{}{}", self.0, other.0))
+                        }
+
+                        /// Java `String.startsWith(String)`.
+                        #[must_use]
+                        pub fn starts_with(&self, prefix: &Self) -> bool {
+                            self.index_of(prefix) == 0
+                        }
+
+                        /// Java `String.endsWith(String)`.
+                        #[must_use]
+                        pub fn ends_with(&self, suffix: &Self) -> bool {
+                            if suffix.is_empty() {
+                                return true;
+                            }
+                            let needle_units = suffix.utf16_units();
+                            let haystack = self.utf16_units();
+                            haystack.len() >= needle_units.len()
+                                && haystack[haystack.len() - needle_units.len()..]
+                                    == needle_units[..]
+                        }
+
                         /// Java `String.codePointAt(int)`: the code point at a
                         /// UTF-16 index, combining a surrogate pair when the
                         /// index points at a high surrogate.
@@ -201,11 +326,79 @@ macro_rules! java_stdlib {
                     instance "codePointAt" "(I)I" |receiver, args| {
                         format!("{receiver}.code_point_at({})?", args[0])
                     };
+                    instance "length" "()I" |receiver, _args| {
+                        format!("{receiver}.length() as i32")
+                    };
+                    instance "isEmpty" "()Z" |receiver, _args| {
+                        format!("{receiver}.is_empty()")
+                    };
+                    instance "charAt" "(I)C" |receiver, args| {
+                        format!("{receiver}.char_at({})?", args[0])
+                    };
+                    instance "indexOf" "(I)I" |receiver, args| {
+                        format!("{receiver}.index_of_unit({})", args[0])
+                    };
+                    instance "indexOf" "(Ljava/lang/String;)I" |receiver, args| {
+                        format!(
+                            "{receiver}.index_of(&{}.ok_or_else(jars_runtime::null_pointer)?)",
+                            args[0]
+                        )
+                    };
+                    instance "lastIndexOf" "(Ljava/lang/String;)I" |receiver, args| {
+                        format!(
+                            "{receiver}.last_index_of(&{}.ok_or_else(jars_runtime::null_pointer)?)",
+                            args[0]
+                        )
+                    };
+                    instance "substring" "(I)Ljava/lang/String;" |receiver, args| {
+                        format!("Some({receiver}.substring({})?)", args[0])
+                    };
+                    instance "substring" "(II)Ljava/lang/String;" |receiver, args| {
+                        format!("Some({receiver}.substring_range({}, {})?)", args[0], args[1])
+                    };
+                    instance "compareTo" "(Ljava/lang/String;)I" |receiver, args| {
+                        format!(
+                            "{receiver}.compare_to(&{}.ok_or_else(jars_runtime::null_pointer)?)",
+                            args[0]
+                        )
+                    };
+                    instance "concat" "(Ljava/lang/String;)Ljava/lang/String;" |receiver, args| {
+                        format!(
+                            "Some({receiver}.concat(&{}.ok_or_else(jars_runtime::null_pointer)?))",
+                            args[0]
+                        )
+                    };
+                    instance "startsWith" "(Ljava/lang/String;)Z" |receiver, args| {
+                        format!(
+                            "{receiver}.starts_with(&{}.ok_or_else(jars_runtime::null_pointer)?)",
+                            args[0]
+                        )
+                    };
+                    instance "endsWith" "(Ljava/lang/String;)Z" |receiver, args| {
+                        format!(
+                            "{receiver}.ends_with(&{}.ok_or_else(jars_runtime::null_pointer)?)",
+                            args[0]
+                        )
+                    };
                     constructor "<init>" "([III)V" |args| {
                         // Java's String(int[], int, int) validates the range
                         // and throws StringIndexOutOfBoundsException otherwise.
                         Some(format!(
                             "Some(jars_runtime::java_string_from_code_points({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}).await?)",
+                            args[0], args[1], args[2]
+                        ))
+                    };
+                    constructor "<init>" "([C)V" |args| {
+                        // Java's String(char[]) copies the array contents.
+                        Some(format!(
+                            "Some(jars_runtime::java_string_from_chars({}.ok_or_else(jars_runtime::null_pointer)?).await?)",
+                            args[0]
+                        ))
+                    };
+                    constructor "<init>" "([CII)V" |args| {
+                        // Java's String(char[], int, int) validates the range.
+                        Some(format!(
+                            "Some(jars_runtime::java_string_from_char_range({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}).await?)",
                             args[0], args[1], args[2]
                         ))
                     };
@@ -402,6 +595,36 @@ macro_rules! java_stdlib {
                         Ok(JavaString::new(result))
                     }
 
+                    /// Java's `String(char[])` constructor. Copies the UTF-16
+                    /// code units from the array.
+                    pub async fn java_string_from_chars(array: JavaArray<u16>) -> JavaResult<JavaString> {
+                        let length = array.length().await?;
+                        let mut units = Vec::with_capacity(length as usize);
+                        for index in 0..length {
+                            units.push(array.get(index).await?);
+                        }
+                        Ok(JavaString::new(String::from_utf16_lossy(&units)))
+                    }
+
+                    /// Java's `String(char[], int, int)` constructor: copies
+                    /// `count` code units starting at `offset`.
+                    pub async fn java_string_from_char_range(
+                        array: JavaArray<u16>,
+                        offset: i32,
+                        count: i32,
+                    ) -> JavaResult<JavaString> {
+                        let length = array.length().await?;
+                        let end = i64::from(offset) + i64::from(count);
+                        if offset < 0 || count < 0 || end > i64::from(length) {
+                            return Err(string_index_out_of_bounds());
+                        }
+                        let mut units = Vec::with_capacity(count as usize);
+                        for index in offset..offset + count {
+                            units.push(array.get(index).await?);
+                        }
+                        Ok(JavaString::new(String::from_utf16_lossy(&units)))
+                    }
+
                     /// Java `CharSequence.charAt` for the supported immutable
                     /// String-backed representation. It indexes UTF-16 code
                     /// units, not Rust Unicode scalar values.
@@ -450,6 +673,14 @@ macro_rules! java_stdlib {
                         },
                         ToStringValue {
                             reply: Reply<JavaResult<JavaString>>,
+                        },
+                        AppendChar {
+                            unit: u16,
+                            reply: Reply<JavaResult<()>>,
+                        },
+                        AppendString {
+                            text: JavaString,
+                            reply: Reply<JavaResult<()>>,
                         },
                     }
 
@@ -521,6 +752,32 @@ macro_rules! java_stdlib {
                                                             .clone();
                                                         let _ = reply.send(Ok(value));
                                                     }
+                                                    StringBuilderMessage::AppendChar { unit, reply } => {
+                                                        let mut next = state
+                                                            .lock()
+                                                            .expect("string builder state mutex")
+                                                            .as_str()
+                                                            .to_owned();
+                                                        next.push(char::from_u32(u32::from(unit)).expect("valid UTF-16 append unit"));
+                                                        *state
+                                                            .lock()
+                                                            .expect("string builder state mutex") =
+                                                            JavaString::new(next);
+                                                        let _ = reply.send(Ok(()));
+                                                    }
+                                                    StringBuilderMessage::AppendString { text, reply } => {
+                                                        let mut next = state
+                                                            .lock()
+                                                            .expect("string builder state mutex")
+                                                            .as_str()
+                                                            .to_owned();
+                                                        next.push_str(text.as_str());
+                                                        *state
+                                                            .lock()
+                                                            .expect("string builder state mutex") =
+                                                            JavaString::new(next);
+                                                        let _ = reply.send(Ok(()));
+                                                    }
                                                 }
                                             })
                                                 as std::pin::Pin<Box<dyn Future<Output = ()>>>
@@ -546,6 +803,11 @@ macro_rules! java_stdlib {
                                 actor,
                                 identity: CharSequenceIdentity::object(),
                             })
+                        }
+
+                        /// Java's `new StringBuilder()`: an empty builder.
+                        pub fn empty<S: Spawner>(spawner: S) -> JavaResult<Self> {
+                            Self::new(spawner, JavaString::new(""))
                         }
 
                         #[must_use]
@@ -586,6 +848,44 @@ macro_rules! java_stdlib {
                                 .send(StringBuilderMessage::ToStringValue { reply })
                                 .await?;
                             response.recv().await?
+                        }
+
+                        /// Java `StringBuilder.append(char)`.
+                        pub async fn append_char(&self, unit: u16) -> JavaResult<Self> {
+                            let (reply, response) = reply();
+                            self.actor
+                                .send(StringBuilderMessage::AppendChar { unit, reply })
+                                .await?;
+                            response.recv().await??;
+                            Ok(self.clone())
+                        }
+
+                        /// Java `StringBuilder.append(String)`. Java throws
+                        /// NPE for a null argument.
+                        pub async fn append_string(&self, text: JavaString) -> JavaResult<Self> {
+                            let (reply, response) = reply();
+                            self.actor
+                                .send(StringBuilderMessage::AppendString { text, reply })
+                                .await?;
+                            response.recv().await??;
+                            Ok(self.clone())
+                        }
+
+                        /// Java `StringBuilder.append(int)`.
+                        pub async fn append_int(&self, value: i32) -> JavaResult<Self> {
+                            self.append_string(JavaString::new(value.to_string()))
+                                .await
+                        }
+
+                        /// Java `StringBuilder.substring(int, int)`: the
+                        /// current characters between the two UTF-16 indices.
+                        pub async fn substring_range(
+                            &self,
+                            start: i32,
+                            end: i32,
+                        ) -> JavaResult<JavaString> {
+                            let text = self.to_string_value().await?;
+                            text.substring_range(start, end)
                         }
                     }
 
@@ -629,6 +929,24 @@ macro_rules! java_stdlib {
                     };
                     instance "toString" "()Ljava/lang/String;" |receiver, _args| {
                         format!("Some({receiver}.to_string_value().await?)")
+                    };
+                    instance "append" "(C)Ljava/lang/StringBuilder;" |receiver, args| {
+                        format!("Some({receiver}.append_char({} as u16).await?)", args[0])
+                    };
+                    instance "append" "(Ljava/lang/String;)Ljava/lang/StringBuilder;" |receiver, args| {
+                        format!(
+                            "Some({receiver}.append_string({}.ok_or_else(jars_runtime::null_pointer)?).await?)",
+                            args[0]
+                        )
+                    };
+                    instance "append" "(I)Ljava/lang/StringBuilder;" |receiver, args| {
+                        format!("Some({receiver}.append_int({}).await?)", args[0])
+                    };
+                    instance "substring" "(II)Ljava/lang/String;" |receiver, args| {
+                        format!("Some({receiver}.substring_range({}, {}).await?)", args[0], args[1])
+                    };
+                    constructor "<init>" "()V" |_args| {
+                        Some("Some(jars_runtime::JavaStringBuilder::empty(program.spawner.clone())?)".to_owned())
                     };
                 ],
             }
@@ -699,6 +1017,48 @@ macro_rules! java_stdlib {
                             1 + i32::from(value >= 0x1_0000)
                         }
 
+                        /// Java `Character.isLowerCase(char)` under the
+                        /// documented Rust property approximation; the fixture
+                        /// avoids the Nl/No divergence ranges.
+                        #[must_use]
+                        pub fn is_lower_case(value: u16) -> bool {
+                            char::from_u32(u32::from(value))
+                                .is_some_and(char::is_lowercase)
+                        }
+
+                        /// Java `Character.isUpperCase(char)` under the same
+                        /// approximation.
+                        #[must_use]
+                        pub fn is_upper_case(value: u16) -> bool {
+                            char::from_u32(u32::from(value))
+                                .is_some_and(char::is_uppercase)
+                        }
+
+                        /// Java `Character.isLetter(char)` via Rust's
+                        /// alphabetic property (documented approximation of
+                        /// Java's Letter categories).
+                        #[must_use]
+                        pub fn is_letter(value: u16) -> bool {
+                            char::from_u32(u32::from(value))
+                                .is_some_and(char::is_alphabetic)
+                        }
+
+                        /// Java `Character.isDigit(char)`: ASCII digits plus
+                        /// Rust's numeric property (Java is exactly Nd; the
+                        /// fixture avoids the No/Nl divergence ranges).
+                        #[must_use]
+                        pub fn is_digit(value: u16) -> bool {
+                            matches!(value, 0x30..=0x39)
+                                || char::from_u32(u32::from(value))
+                                    .is_some_and(char::is_numeric)
+                        }
+
+                        /// Java `Character.isLetterOrDigit(char)`.
+                        #[must_use]
+                        pub fn is_letter_or_digit(value: u16) -> bool {
+                            is_letter(value) || is_digit(value)
+                        }
+
                         /// Applies `map` when it yields exactly one code point;
                         /// multi-character mappings and invalid code points
                         /// return the input unchanged, like the JDK.
@@ -735,6 +1095,21 @@ macro_rules! java_stdlib {
                     };
                     static_method "charCount" "(I)I" |args| {
                         format!("jars_runtime::character::char_count({})", args[0])
+                    };
+                    static_method "isLowerCase" "(C)Z" |args| {
+                        format!("jars_runtime::character::is_lower_case({} as u16)", args[0])
+                    };
+                    static_method "isUpperCase" "(C)Z" |args| {
+                        format!("jars_runtime::character::is_upper_case({} as u16)", args[0])
+                    };
+                    static_method "isLetter" "(C)Z" |args| {
+                        format!("jars_runtime::character::is_letter({} as u16)", args[0])
+                    };
+                    static_method "isDigit" "(C)Z" |args| {
+                        format!("jars_runtime::character::is_digit({} as u16)", args[0])
+                    };
+                    static_method "isLetterOrDigit" "(C)Z" |args| {
+                        format!("jars_runtime::character::is_letter_or_digit({} as u16)", args[0])
                     };
                 ],
             }
@@ -826,6 +1201,32 @@ macro_rules! java_stdlib {
                         format!(
                             "Some(jars_runtime::JavaPattern::compile({}.ok_or_else(jars_runtime::null_pointer)?))",
                             args[0]
+                        )
+                    };
+                ],
+            }
+            class {
+                name: "java/util/Arrays",
+                rust_type: None,
+                coercions: [],
+                runtime: {
+                    /// Java `Arrays.fill(char[], char)`.
+                    pub async fn java_arrays_fill_char(
+                        array: JavaArray<u16>,
+                        value: u16,
+                    ) -> JavaResult<()> {
+                        let length = array.length().await?;
+                        for index in 0..length {
+                            array.set(index, value).await?;
+                        }
+                        Ok(())
+                    }
+                },
+                members: [
+                    static_method "fill" "([CC)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill_char({}.ok_or_else(jars_runtime::null_pointer)?, {} as u16).await?",
+                            args[0], args[1]
                         )
                     };
                 ],

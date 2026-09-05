@@ -340,7 +340,7 @@ fn run_fixture(manifest_name: &str) {
         Some("unsupported_platform") => {
             assert!(matches!(
                 compile_jars(&jars, &entry),
-                Err(CompileError::UnsupportedPlatformClass { class, .. }) if class == "java/util/Arrays"
+                Err(CompileError::UnsupportedPlatformClass { class, .. }) if class == "java/util/stream/Stream"
             ));
         }
         None => {
