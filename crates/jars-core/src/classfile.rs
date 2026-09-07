@@ -89,6 +89,9 @@ pub(crate) enum ConstantValue<'a> {
     Long(i64),
     Double(f64),
     String(&'a str),
+    /// A class literal (`ldc` of a class constant). Parsed so class-wide
+    /// scanning succeeds; no lowering consumes it yet.
+    Class(#[allow(dead_code)] &'a str),
 }
 
 #[derive(Clone, Debug)]
@@ -534,6 +537,10 @@ impl ConstantPool {
             CpEntry::Long(value) => Ok(ConstantValue::Long(*value)),
             CpEntry::Double(value) => Ok(ConstantValue::Double(*value)),
             CpEntry::String(value) => Ok(ConstantValue::String(self.utf8(*value)?)),
+            // `ldc` may load a class reference (e.g. `Foo.class` literals).
+            // The compiler only consumes string literals today, but the
+            // constant itself must parse so class-wide scanning succeeds.
+            CpEntry::Class(name) => Ok(ConstantValue::Class(self.utf8(*name)?)),
             _ => Err(Error::new(format!(
                 "constant-pool index {index} is not a supported literal"
             ))),

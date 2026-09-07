@@ -1,0 +1,16 @@
+name = "commons-lang-trim"
+entry_class = "app/StringUtilsTrim"
+entry_method = "run"
+entry_descriptor = "()V"
+expected_stdout = "null\njars\n  x  \nnull\nnull\njars\n\n\nnull\nJARS\njars\n"
+expected_exit = 0
+target_release = 21
+
+[[jars]]
+name = "commons-lang3"
+artifact = "third-party/commons-lang3-3.14.0.jar"
+
+[[jars]]
+name = "app"
+classpath = ["commons-lang3"]
+sources = ["commons-lang/trim/StringUtilsTrim.java"]

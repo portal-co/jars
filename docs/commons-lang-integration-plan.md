@@ -63,6 +63,31 @@ from one shared declaration and `Type::String` values are nullable runtime
   interfaces expose static methods), and `dup` of array operands emits
   independent handle text instead of cloning a moveable `Option` binding.
 
+## Fixture layout and coverage tooling
+
+- The commons-lang fixtures are split by slice
+  (`commons-lang-{empty,trim,codepoint,predicates,substring,search,charsequence}`
+  manifests and apps). Each app has a small `expected_stdout` verified against
+  the real JVM, so a failing slice is isolated and new slices add tests
+  without touching existing ones. A shared `main` delegates to `run()` so the
+  same sources run under `java` and under the JAR harness.
+- `jars-coverage` (bin) and `coverage_jars` (API) compile one representative
+  `public static` method per class across an entire JAR and report per-class
+  outcomes plus unmodeled `java/…` dependencies (Markdown or JSON). Coverage
+  entrypoints use the default-argument lowering (`default_argument`):
+  reference parameters pass `None`, primitives zero, and the entry result is
+  discarded through `jars_runtime::JavaUnit`.
+- `cargo test -p jars-core --test coverage_ratchet` is the ratchet: the
+  snapshot of classes/methods compiling across the vendored commons-lang3
+  JAR may only improve. Refresh with
+  `UPDATE_COVERAGE_SNAPSHOT=1 cargo test -p jars-core --test coverage_ratchet`.
+- `scripts/jars-ralph.sh` runs an agentic expansion loop: each iteration
+  launches a fresh Pi session in a dedicated `jars-ralph` git worktree with a
+  prompt built from the current ratchet state; the agent picks a slice from
+  the coverage report, implements it, and commits. The loop merges advancing
+  commits back and stops when the numeric goal is met or after
+  `$MAX_MISSES` consecutive non-improving iterations.
+
 ## Verified integration slice
 
 The real-JAR fixture compiles an application whose static entry invokes:

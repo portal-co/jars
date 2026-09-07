@@ -13,7 +13,10 @@ use std::{
 };
 
 mod classfile;
+mod coverage;
 mod stdlib;
+
+pub use coverage::{ClassCoverage, JarCoverage, MethodCoverage, MethodStatus, coverage_jars};
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CompileError {
@@ -490,6 +493,26 @@ fn parse_type(input: &str, cursor: &mut usize) -> Result<Type, CompileError> {
     Ok(ty)
 }
 
+/// Produces a generated-Rust default argument expression for a parameter
+/// type, used by harness entrypoints (main and coverage compilation) that
+/// call a Java method with placeholder values. Reference types pass `None`
+/// (Java null); primitives pass zero.
+pub(crate) fn default_argument(ty: &Type) -> Option<String> {
+    let value = match ty {
+        Type::Boolean => "false".to_owned(),
+        Type::Byte => "0_i8".to_owned(),
+        Type::Char => "0_u16".to_owned(),
+        Type::Short => "0_i16".to_owned(),
+        Type::Int => "0_i32".to_owned(),
+        Type::Long => "0_i64".to_owned(),
+        Type::Float => "0.0_f32".to_owned(),
+        Type::Double => "0.0_f64".to_owned(),
+        Type::String | Type::Class(_) | Type::Array(_) => "None".to_owned(),
+        Type::Void => return None,
+    };
+    Some(value)
+}
+
 fn parse_signature(descriptor: &str) -> Result<Signature, CompileError> {
     let mut cursor = 0;
     if !descriptor.starts_with('(') {
@@ -748,6 +771,14 @@ fn parse_program_custom(bytes: &[u8]) -> Result<Program, CompileError> {
                         classfile::ConstantValue::Double(value) => Constant::Double(value),
                         classfile::ConstantValue::String(value) => {
                             Constant::String(value.to_owned())
+                        }
+                        // ConstantValue attributes only ever carry primitive
+                        // or String constants; a Class entry here would be an
+                        // invalid class file.
+                        classfile::ConstantValue::Class(_) => {
+                            return Err(invalid(
+                                "field ConstantValue attribute carries a class literal",
+                            ));
                         }
                     });
                 }
@@ -4822,21 +4853,29 @@ fn render_declared_entry(
         })?;
     let class = class_ident(&entry_program.name)?;
     let method = rust_ident(&entry_method.name)?;
-    let invocation = match (
-        &entry_method.signature.parameters[..],
-        &entry_method.signature.returns,
-    ) {
-        ([], Type::Void) => format!("{class}::{method}(&program).await"),
-        ([Type::Array(element)], Type::Void) if **element == Type::String => format!(
-            "let values: Vec<String> = std::env::args().skip(1).collect();\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, Some(jars_runtime::JavaString::new(value))).await?; }}\n{class}::{method}(&program, Some(args)).await"
-        ),
-        _ => {
-            return Err(invalid(format!(
-                "JAR entrypoint {}.{}{} must be public static void with no arguments or String[]",
+    let invocation_arguments = entry_method
+        .signature
+        .parameters
+        .iter()
+        .enumerate()
+        .map(|(index, ty)| default_argument(ty).map(|value| (index, value)))
+        .collect::<Option<Vec<_>>>()
+        .ok_or_else(|| {
+            invalid(format!(
+                "JAR entrypoint {}.{}{} has a parameter type with no default-argument lowering",
                 entry.class, entry.method, entry.descriptor
-            )));
-        }
-    };
+            ))
+        })?;
+    let call = format!(
+        "{class}::{method}(&program{})",
+        invocation_arguments
+            .iter()
+            .map(|(index, value)| format!(", arg{index} = {value}"))
+            .collect::<String>()
+    );
+    // The entry result is discarded uniformly: `JavaUnit` wraps both `()`
+    // and meaningful values so the generated `block_on` can always `.expect`.
+    let invocation = format!("let _entry = jars_runtime::JavaUnit({call}.await);");
     let known_classes = programs
         .iter()
         .map(|program| program.name.clone())
@@ -4847,12 +4886,22 @@ fn render_declared_entry(
         .collect::<Result<Vec<_>, _>>()?;
     let program = program_code(programs)?;
     let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nruntime.block_on(async {{\n{invocation}\n}}).expect(\"Java actor call failed\");\n}}",
+        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet _entry = jars_runtime::JavaUnit(runtime.block_on(async {{\n{invocation}\n}}));\n}}",
         modules.join("\n"),
     );
     let file = syn::parse_file(&source)
         .map_err(|error| invalid(format!("internal generated Rust was invalid: {error}")))?;
     Ok(prettyplease::unparse(&file))
+}
+
+/// Renders the generated Rust for an already-parsed program set rooted at
+/// `entry`. This is the seam the coverage report uses to compile one class in
+/// isolation without re-reading a JAR.
+pub(crate) fn render_jar_program(
+    programs: &[Program],
+    entry: &JarEntrypoint,
+) -> Result<String, CompileError> {
+    render_declared_entry(programs, entry)
 }
 
 /// Imports the reachable closed class set from explicit JARs and emits an AOT

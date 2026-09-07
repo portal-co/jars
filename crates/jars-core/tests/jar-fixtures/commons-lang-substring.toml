@@ -1,0 +1,16 @@
+name = "commons-lang-substring"
+entry_class = "app/StringUtilsSubstring"
+entry_method = "run"
+entry_descriptor = "()V"
+expected_stdout = "null\njars\nar\n\njar\njarJar\njar.jar\n\njar.jar\njar\njar\n\n\nnull\njars\njars\njars\n"
+expected_exit = 0
+target_release = 21
+
+[[jars]]
+name = "commons-lang3"
+artifact = "third-party/commons-lang3-3.14.0.jar"
+
+[[jars]]
+name = "app"
+classpath = ["commons-lang3"]
+sources = ["commons-lang/substring/StringUtilsSubstring.java"]

@@ -1,0 +1,16 @@
+name = "commons-lang-empty"
+entry_class = "app/StringUtilsEmpty"
+entry_method = "run"
+entry_descriptor = "()V"
+expected_stdout = "true\ntrue\nfalse\nfalse\ntrue\n"
+expected_exit = 0
+target_release = 21
+
+[[jars]]
+name = "commons-lang3"
+artifact = "third-party/commons-lang3-3.14.0.jar"
+
+[[jars]]
+name = "app"
+classpath = ["commons-lang3"]
+sources = ["commons-lang/empty/StringUtilsEmpty.java"]

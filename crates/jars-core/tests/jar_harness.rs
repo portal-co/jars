@@ -377,7 +377,7 @@ fn run_fixture(manifest_name: &str) {
 
 #[test]
 fn commons_lang_fixture_has_a_real_jar_parser_triage_snapshot() {
-    let manifest = manifest("commons-lang");
+    let manifest = manifest("commons-lang-predicates");
     let temp = tempfile::tempdir().unwrap();
     let jars = build_jars(&manifest, &temp);
     let entry = JarEntrypoint::new(
@@ -408,7 +408,37 @@ fn manifest_harness_imports_a_reachable_cross_jar_closure_and_runs_it() {
 
 #[test]
 fn manifest_harness_imports_a_real_commons_lang_jar_and_runs_it() {
-    run_fixture("commons-lang");
+    run_fixture("commons-lang-empty");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_trim_slice() {
+    run_fixture("commons-lang-trim");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_codepoint_slice() {
+    run_fixture("commons-lang-codepoint");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_predicates_slice() {
+    run_fixture("commons-lang-predicates");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_substring_slice() {
+    run_fixture("commons-lang-substring");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_search_slice() {
+    run_fixture("commons-lang-search");
+}
+
+#[test]
+fn manifest_harness_runs_the_commons_lang_charsequence_slice() {
+    run_fixture("commons-lang-charsequence");
 }
 
 #[test]

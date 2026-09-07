@@ -464,6 +464,10 @@ impl<T> Response<T> {
     }
 }
 
+/// Wraps an arbitrary Java entrypoint result so generated harness code can
+/// treat `()` and meaningful values uniformly.
+pub struct JavaUnit<T>(pub T);
+
 pub fn println<T: Display>(value: T) {
     std::println!("{value}");
 }
