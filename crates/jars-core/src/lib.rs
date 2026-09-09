@@ -2872,6 +2872,60 @@ fn aot_typed_frame(
                     continue_at(next)?
                 )
             }
+            Op::BALoad => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| {
+                        matches!(ty, Type::Array(element) if matches!(**element, Type::Byte | Type::Boolean))
+                    })
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "baload has no byte-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let value = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified baload receiver\"), }}; match value {{ Ok(value) => stack.push(FrameValue::I32(i32::from(value))), Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
+            Op::BAStore => {
+                let dispatch = exception_dispatch(method);
+                let arrays = layout
+                    .references
+                    .iter()
+                    .enumerate()
+                    .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Byte))
+                    .map(|(index, _)| {
+                        format!(
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value as i8).await, None => Err(jars_runtime::null_pointer()), }},"
+                        )
+                    })
+                    .collect::<String>();
+                if arrays.is_empty() {
+                    return Err(stack_error(
+                        program,
+                        method,
+                        instruction,
+                        "bastore has no byte-array type in the typed frame layout",
+                    ));
+                }
+                format!(
+                    "let value = pop_i32(&mut stack); let index = pop_i32(&mut stack); let array = stack.pop().expect(\"verified JVM stack\"); let result = match array {{ {arrays} FrameValue::Null => Err(jars_runtime::null_pointer()), _ => unreachable!(\"verified bastore receiver\"), }}; match result {{ Ok(()) => {{}}, Err(error) => {{ {dispatch} }} }} {}",
+                    continue_at(next)?
+                )
+            }
             Op::ArrayLength => {
                 let arrays = layout
                     .references
@@ -3168,8 +3222,22 @@ fn aot_typed_frame(
                             rust_ident(&reference.name)?,
                         )
                     };
-                    let arguments_joined = (0..signature.parameters.len())
-                        .map(|index| format!("argument{index}"))
+                    // Narrow and boolean frame values are carried as i32; cast
+                    // each argument to the callee's Rust parameter type.
+                    let arguments_joined = signature
+                        .parameters
+                        .iter()
+                        .enumerate()
+                        .map(|(index, ty)| {
+                            let value = format!("argument{index}");
+                            match ty {
+                                Type::Boolean => format!("{value} != 0"),
+                                Type::Byte => format!("{value} as i8"),
+                                Type::Char => format!("{value} as u16"),
+                                Type::Short => format!("{value} as i16"),
+                                _ => value,
+                            }
+                        })
                         .collect::<Vec<_>>()
                         .join(", ");
                     let call = if arguments_joined.is_empty() {

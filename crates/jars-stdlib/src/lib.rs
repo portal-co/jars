@@ -1210,14 +1210,16 @@ macro_rules! java_stdlib {
                 rust_type: None,
                 coercions: [],
                 runtime: {
-                    /// Java `Arrays.fill(char[], char)`.
-                    pub async fn java_arrays_fill_char(
-                        array: JavaArray<u16>,
-                        value: u16,
+                    /// Java `Arrays.fill(T[], T)` for the modeled element
+                    /// values. Array elements stay inside the array's
+                    /// mailbox; only the length and written slots cross it.
+                    pub async fn java_arrays_fill<T: Clone + 'static>(
+                        array: JavaArray<T>,
+                        value: T,
                     ) -> JavaResult<()> {
                         let length = array.length().await?;
                         for index in 0..length {
-                            array.set(index, value).await?;
+                            array.set(index, value.clone()).await?;
                         }
                         Ok(())
                     }
@@ -1225,7 +1227,52 @@ macro_rules! java_stdlib {
                 members: [
                     static_method "fill" "([CC)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill_char({}.ok_or_else(jars_runtime::null_pointer)?, {} as u16).await?",
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as u16).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([BB)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as i8).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([SS)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as i16).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([II)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([JJ)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([FF)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    static_method "fill" "([DD)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
+                            args[0], args[1]
+                        )
+                    };
+                    // Java `Arrays.fill(T[], T)` accepts a null fill value, so
+                    // the widened reference argument keeps its `Option`.
+                    static_method "fill"
+                    "([Ljava/lang/Object;Ljava/lang/Object;)V" |args| {
+                        format!(
+                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
                             args[0], args[1]
                         )
                     };

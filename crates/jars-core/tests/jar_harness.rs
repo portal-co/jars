@@ -442,6 +442,11 @@ fn manifest_harness_runs_the_commons_lang_charsequence_slice() {
 }
 
 #[test]
+fn manifest_harness_runs_the_commons_lang_arrayfill_slice() {
+    run_fixture("commons-lang-arrayfill");
+}
+
+#[test]
 fn manifest_harness_classifies_unmodeled_platform_dependencies() {
     run_fixture("unsupported-platform");
 }
