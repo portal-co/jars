@@ -15,7 +15,8 @@
 #   scripts/jars-ralph.sh --resume              # reuse the existing worktree
 #
 # Environment:
-#   PI_MODEL          model pattern passed to pi (default: google/gemini-2.5-pro)
+#   PI_PROVIDER       provider name passed to pi (default: surplus-intelligence)
+#   PI_MODEL          model pattern passed to pi (default: glm-5.3-flash)
 #   MAX_MISSES        consecutive non-improving iterations before stopping (default: 3)
 #   GOAL_OK_METHODS   stop when ok_methods reaches this count (default: 0 = no numeric goal)
 #   TIMEOUT_SECONDS   per-iteration pi timeout (default: 5400)
@@ -141,16 +142,16 @@ run_iteration() {
         timeout "$TIMEOUT_SECONDS" \
             git -C "$WORKTREE" rev-parse --verify HEAD >/dev/null 2>&1 && \
             (cd "$WORKTREE" && timeout "$TIMEOUT_SECONDS" pi \
-                --provider "${PI_PROVIDER:-google}" \
-                --model "${PI_MODEL:-gemini-2.5-pro}" \
+                --provider "${PI_PROVIDER:-surplus-intelligence}" \
+                --model "${PI_MODEL:-glm-5.3-flash}" \
                 --mode text \
                 --no-session \
                 -p "$prompt") >"$log" 2>&1 || true
     else
         # macOS: no GNU timeout by default; fall back to perl alarm.
         (cd "$WORKTREE" && perl -e 'alarm shift; exec @ARGV' "$TIMEOUT_SECONDS" \
-            pi --provider "${PI_PROVIDER:-google}" \
-            --model "${PI_MODEL:-gemini-2.5-pro}" \
+            pi --provider "${PI_PROVIDER:-surplus-intelligence}" \
+            --model "${PI_MODEL:-glm-5.3-flash}" \
             --mode text \
             --no-session \
             -p "$prompt") >"$log" 2>&1 || true
