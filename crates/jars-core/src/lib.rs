@@ -4993,7 +4993,10 @@ fn select_jar_programs(
                 }
                 _ => None,
             };
-            if let Some(reference) = reference {
+            if let Some(reference) = reference
+                && stdlib::member(&reference.class, &reference.name, &reference.descriptor)
+                    .is_none()
+            {
                 method_queue.push_back((
                     reference.class.clone(),
                     MethodKey::new(&reference.name, &reference.descriptor),
@@ -5133,8 +5136,7 @@ fn render_declared_entry(
         .signature
         .parameters
         .iter()
-        .enumerate()
-        .map(|(index, ty)| default_argument(ty).map(|value| (index, value)))
+        .map(default_argument)
         .collect::<Option<Vec<_>>>()
         .ok_or_else(|| {
             invalid(format!(
@@ -5146,7 +5148,7 @@ fn render_declared_entry(
         "{class}::{method}(&program{})",
         invocation_arguments
             .iter()
-            .map(|(index, value)| format!(", arg{index} = {value}"))
+            .map(|value| format!(", {value}"))
             .collect::<String>()
     );
     // The entry result is discarded uniformly: `JavaUnit` wraps both `()`

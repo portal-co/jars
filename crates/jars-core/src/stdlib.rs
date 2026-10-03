@@ -183,6 +183,22 @@ mod tests {
     }
 
     #[test]
+    fn commons_logging_factory_returns_a_modeled_log_reference() {
+        assert!(matches!(
+            member(
+                "org/apache/commons/logging/LogFactory",
+                "getLog",
+                "(Ljava/lang/String;)Lorg/apache/commons/logging/Log;"
+            ),
+            Some(StdMember::StaticMethod { .. })
+        ));
+        assert_eq!(
+            class("org/apache/commons/logging/Log").and_then(|entry| entry.rust_type),
+            Some("jars_runtime::JavaLog")
+        );
+    }
+
+    #[test]
     fn object_init_remains_a_no_op_constructor() {
         let Some(StdMember::Constructor { lower }) = member("java/lang/Object", "<init>", "()V")
         else {

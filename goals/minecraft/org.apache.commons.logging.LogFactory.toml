@@ -1,7 +1,0 @@
-class = "org/apache/commons/logging/LogFactory"
-
-[[member]]
-name = "getLog"
-descriptor = "(Ljava/lang/String;)Lorg/apache/commons/logging/Log;"
-kind = "builtin"
-references = 1

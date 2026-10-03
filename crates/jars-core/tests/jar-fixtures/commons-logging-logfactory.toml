@@ -1,0 +1,14 @@
+name = "commons-logging-logfactory"
+entry_class = "LogFactorySmoke"
+entry_method = "main"
+entry_descriptor = "([Ljava/lang/String;)V"
+expected_stdout = "1\n"
+expected_exit = 0
+
+[[jars]]
+name = "commons-logging-smoke"
+sources = [
+  "commons-logging/logfactory/Log.java",
+  "commons-logging/logfactory/LogFactory.java",
+  "commons-logging/logfactory/LogFactorySmoke.java",
+]

@@ -1427,6 +1427,49 @@ macro_rules! java_stdlib {
                 ],
             }
             class {
+                name: "org/apache/commons/logging/LogFactory",
+                rust_type: None,
+                coercions: [],
+                runtime: {},
+                members: [
+                    static_method "getLog"
+                    "(Ljava/lang/String;)Lorg/apache/commons/logging/Log;" |_args| {
+                        "Some(jars_runtime::JavaLog::new())".to_owned()
+                    };
+                ],
+            }
+            class {
+                // A stateless no-op logger handle. Backend discovery is outside
+                // the closed AOT surface; each call returns a distinct Java
+                // reference without relying on process-global logger caches.
+                name: "org/apache/commons/logging/Log",
+                rust_type: Some("jars_runtime::JavaLog"),
+                coercions: [],
+                runtime: {
+                    #[derive(Clone, Debug)]
+                    pub struct JavaLog {
+                        identity: std::rc::Rc<()>,
+                    }
+
+                    impl JavaLog {
+                        #[must_use]
+                        pub fn new() -> Self {
+                            Self {
+                                identity: std::rc::Rc::new(()),
+                            }
+                        }
+
+                        /// Compares Java logger references without exposing
+                        /// any logger implementation state.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.identity, &other.identity)
+                        }
+                    }
+                },
+                members: [],
+            }
+            class {
                 name: "java/util/regex/Pattern",
                 rust_type: Some("jars_runtime::JavaPattern"),
                 coercions: [],

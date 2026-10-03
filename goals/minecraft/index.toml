@@ -3,8 +3,8 @@ entrypoint_class = "net/minecraft/client/main/Main"
 entrypoint_method = "main"
 entrypoint_descriptor = "([Ljava/lang/String;)V"
 target_release = 25
-open_classes = 1354
-open_members = 6054
+open_classes = 1353
+open_members = 6053
 blocked_members = 5471
 
 [[class]]
@@ -9229,13 +9229,6 @@ blocked_members = 0
 [[class]]
 name = "lzma/sdk/lzma/Encoder"
 file = "lzma.sdk.lzma.Encoder.toml"
-references = 1
-open_members = 1
-blocked_members = 0
-
-[[class]]
-name = "org/apache/commons/logging/LogFactory"
-file = "org.apache.commons.logging.LogFactory.toml"
 references = 1
 open_members = 1
 blocked_members = 0

@@ -75,13 +75,14 @@ fn create_jar(classes: &Path, output: &Path) {
 }
 
 fn homebrew_javac() -> PathBuf {
-    let path = PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac");
-    assert!(
-        path.is_file(),
-        "Homebrew OpenJDK 21 is required for JAR fixtures: expected {}",
-        path.display()
-    );
-    path
+    let candidates = [
+        PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac"),
+        PathBuf::from("/usr/bin/javac"),
+    ];
+    candidates
+        .into_iter()
+        .find(|path| path.is_file())
+        .expect("JDK 21 javac is required for JAR fixtures")
 }
 
 fn minimal_class(name: &str) -> Vec<u8> {
@@ -404,6 +405,31 @@ fn commons_lang_fixture_has_a_real_jar_parser_triage_snapshot() {
 #[test]
 fn manifest_harness_imports_a_reachable_cross_jar_closure_and_runs_it() {
     run_fixture("cross-jar");
+}
+
+#[test]
+fn manifest_harness_lowers_commons_logging_get_log_to_a_rust_builtin() {
+    let manifest = manifest("commons-logging-logfactory");
+    let temp = tempfile::tempdir().unwrap();
+    let jars = build_jars(&manifest, &temp);
+    let entry = JarEntrypoint::new(
+        &manifest.entry_class,
+        &manifest.entry_method,
+        &manifest.entry_descriptor,
+    );
+    let generated = compile_jars(&jars, &entry).unwrap();
+    assert!(generated.contains("jars_runtime::JavaLog::new()"));
+    assert!(!generated.contains("pub mod __jars_class_"));
+
+    let output = run_generated(&manifest.name, &generated, &temp);
+    assert_eq!(
+        output.status.code(),
+        Some(manifest.expected_exit.unwrap_or(0))
+    );
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        manifest.expected_stdout.unwrap()
+    );
 }
 
 #[test]
