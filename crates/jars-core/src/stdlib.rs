@@ -183,6 +183,42 @@ mod tests {
     }
 
     #[test]
+    fn producer_record_constructor_uses_its_exact_erased_descriptor() {
+        const DESCRIPTOR: &str = "(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Object;Ljava/lang/Object;)V";
+        let Some(StdMember::Constructor { lower }) = member(
+            "org/apache/kafka/clients/producer/ProducerRecord",
+            "<init>",
+            DESCRIPTOR,
+        ) else {
+            panic!("expected the supported ProducerRecord constructor");
+        };
+        assert!(is_constructible(
+            "org/apache/kafka/clients/producer/ProducerRecord"
+        ));
+        assert_eq!(
+            lower(&[
+                "topic".into(),
+                "partition".into(),
+                "timestamp".into(),
+                "key".into(),
+                "value".into()
+            ]),
+            Some(
+                "Some(jars_runtime::ProducerRecord::new(topic, partition, timestamp, key, value)?)"
+                    .into()
+            )
+        );
+        assert_eq!(
+            coerce("java/lang/String", "java/lang/Object", "key"),
+            Some("key.map(jars_runtime::JavaObject::from_string)".into())
+        );
+        assert_eq!(
+            coerce("java/lang/Integer", "java/lang/Object", "key"),
+            Some("key.map(jars_runtime::JavaObject::from_integer)".into())
+        );
+    }
+
+    #[test]
     fn object_init_remains_a_no_op_constructor() {
         let Some(StdMember::Constructor { lower }) = member("java/lang/Object", "<init>", "()V")
         else {

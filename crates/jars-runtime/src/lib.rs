@@ -112,6 +112,18 @@ java_error!(ClassCastException, "invalid Java reference cast");
 java_error!(ArrayIndexOutOfBoundsException, "array index out of bounds");
 java_error!(NegativeArraySizeException, "negative Java array size");
 java_error!(ArrayStoreException, "invalid Java reference array store");
+
+#[derive(Debug)]
+pub struct IllegalArgumentException(pub String);
+
+impl Display for IllegalArgumentException {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl std::error::Error for IllegalArgumentException {}
+
 java_error!(
     StringIndexOutOfBoundsException,
     "string index out of bounds"
@@ -151,6 +163,9 @@ pub fn array_store() -> anyhow::Error {
 pub fn string_index_out_of_bounds() -> anyhow::Error {
     StringIndexOutOfBoundsException.into()
 }
+pub fn illegal_argument(message: impl Into<String>) -> anyhow::Error {
+    IllegalArgumentException(message.into()).into()
+}
 
 /// Materializes the runtime half of the shared standard-library declaration.
 /// The same declaration is consumed by `jars-core` to build its exact JVM
@@ -178,6 +193,7 @@ jars_stdlib::java_stdlib!(runtime_stdlib);
 pub fn catches(error: &JavaError, class: &str) -> bool {
     match class {
         "java/lang/ArithmeticException" => error.is::<ArithmeticException>(),
+        "java/lang/IllegalArgumentException" => error.is::<IllegalArgumentException>(),
         "java/lang/NullPointerException" => error.is::<NullPointerException>(),
         "java/lang/ClassCastException" => error.is::<ClassCastException>(),
         "java/lang/ArrayIndexOutOfBoundsException" => error.is::<ArrayIndexOutOfBoundsException>(),
@@ -188,6 +204,7 @@ pub fn catches(error: &JavaError, class: &str) -> bool {
         "java/lang/ArrayStoreException" => error.is::<ArrayStoreException>(),
         "java/lang/Exception" | "java/lang/RuntimeException" | "java/lang/Throwable" => {
             error.is::<ArithmeticException>()
+                || error.is::<IllegalArgumentException>()
                 || error.is::<NullPointerException>()
                 || error.is::<ClassCastException>()
                 || error.is::<ArrayIndexOutOfBoundsException>()
@@ -665,6 +682,56 @@ mod tests {
         assert!(character::is_whitespace(u16::from(b'\t')));
         assert!(!character::is_whitespace(0x00a0));
         assert!(!character::is_whitespace(0x0085));
+    }
+
+    #[test]
+    fn producer_record_constructor_preserves_values_and_checks_invalid_metadata() {
+        let record = ProducerRecord::new(
+            Some(JavaString::new("events")),
+            Some(JavaInteger::new(3)),
+            Some(JavaLong::new(12)),
+            Some(JavaObject::from_string(JavaString::new("key"))),
+            Some(JavaObject::from_string(JavaString::new("value"))),
+        )
+        .unwrap();
+        assert_eq!(record.topic.as_str(), "events");
+        assert_eq!(record.partition.as_ref().unwrap().value(), 3);
+        assert_eq!(record.timestamp.as_ref().unwrap().value(), 12);
+        assert_eq!(
+            record.key.as_ref().unwrap().to_string_value().as_str(),
+            "key"
+        );
+        assert_eq!(
+            record.value.as_ref().unwrap().to_string_value().as_str(),
+            "value"
+        );
+
+        let null_topic = ProducerRecord::new(None, None, None, None, None).unwrap_err();
+        assert!(null_topic.is::<IllegalArgumentException>());
+        assert!(catches(&null_topic, "java/lang/IllegalArgumentException"));
+        assert!(catches(&null_topic, "java/lang/RuntimeException"));
+        assert!(
+            ProducerRecord::new(
+                Some(JavaString::new("events")),
+                Some(JavaInteger::new(-1)),
+                None,
+                None,
+                None,
+            )
+            .unwrap_err()
+            .is::<IllegalArgumentException>()
+        );
+        assert!(
+            ProducerRecord::new(
+                Some(JavaString::new("events")),
+                None,
+                Some(JavaLong::new(-1)),
+                None,
+                None,
+            )
+            .unwrap_err()
+            .is::<IllegalArgumentException>()
+        );
     }
 
     #[test]

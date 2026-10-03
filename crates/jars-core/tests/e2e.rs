@@ -118,6 +118,65 @@ fn compile_set_and_run(names: &[&str]) -> (String, String) {
 }
 
 #[test]
+fn kafka_producer_record_constructor_is_lowered_to_runtime_state() {
+    let temp = tempfile::tempdir().unwrap();
+    let classes = temp.path().join("classes");
+    fs::create_dir_all(&classes).unwrap();
+    let output = Command::new(homebrew_javac())
+        .arg("-d")
+        .arg(&classes)
+        .arg(fixture("org/apache/kafka/clients/producer/ProducerRecord"))
+        .arg(fixture("ProducerRecordGoal"))
+        .output()
+        .expect("runner-provided javac should compile the Kafka API fixture");
+    assert!(
+        output.status.success(),
+        "javac failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let class = fs::read(classes.join("ProducerRecordGoal.class")).unwrap();
+    let generated = compile_class(&class).unwrap();
+    assert!(generated.contains("jars_runtime::ProducerRecord::new"));
+
+    let package = temp.path().join("generated");
+    fs::create_dir_all(package.join("src")).unwrap();
+    let runtime = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("jars-runtime");
+    fs::write(
+        package.join("Cargo.toml"),
+        format!(
+            r#"[package]
+name = "generated-producer-record"
+version = "0.0.0"
+edition = "2024"
+
+[dependencies]
+jars-runtime = {{ path = {:?} }}
+"#,
+            runtime
+        ),
+    )
+    .unwrap();
+    fs::write(package.join("src/main.rs"), &generated).unwrap();
+    let output = Command::new("cargo")
+        .args(["run", "--quiet", "--offline", "--manifest-path"])
+        .arg(package.join("Cargo.toml"))
+        .output()
+        .expect("cargo should compile generated Rust");
+    assert!(
+        output.status.success(),
+        "generated Rust failed: {}\n--- source ---\n{generated}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        "record created\n"
+    );
+}
+
+#[test]
 fn hello_world_runs_after_java_to_rust_compilation() {
     assert_eq!(compile_and_run("Hello").0, "Hello, world!\n");
 }

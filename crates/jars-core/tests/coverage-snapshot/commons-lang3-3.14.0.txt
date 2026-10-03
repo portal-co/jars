@@ -2,4 +2,4 @@ classes 403
 ok_classes 2
 total_methods 403
 ok_methods 2
-unmodeled 189
+unmodeled 193
