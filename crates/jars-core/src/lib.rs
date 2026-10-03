@@ -4987,7 +4987,13 @@ fn select_jar_programs(
                 | Op::InvokeStatic(reference)
                 | Op::InvokeVirtual(reference)
                 | Op::InvokeInterface(reference)
-                    if !reference.class.starts_with("java/") =>
+                    if !reference.class.starts_with("java/")
+                        && stdlib::member(
+                            &reference.class,
+                            &reference.name,
+                            &reference.descriptor,
+                        )
+                        .is_none() =>
                 {
                     Some(reference)
                 }

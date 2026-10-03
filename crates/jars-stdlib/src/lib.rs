@@ -1606,6 +1606,188 @@ macro_rules! java_stdlib {
                 ],
             }
             class {
+                // JNA `Pointer` is represented as an opaque native address.
+                // Only methods explicitly modeled in this table are callable;
+                // the wrapper does not expose arbitrary process memory.
+                name: "com/sun/jna/Pointer",
+                rust_type: Some("jars_runtime::NativePointer"),
+                coercions: [],
+                runtime: {
+                    /// Opaque non-null native address returned by supported
+                    /// native shims. Java null remains `None` outside this type.
+                    #[derive(Clone, Copy, Debug)]
+                    pub struct NativePointer(*mut std::ffi::c_void);
+
+                    impl NativePointer {
+                        fn from_raw(pointer: *mut std::ffi::c_void) -> Option<Self> {
+                            (!pointer.is_null()).then_some(Self(pointer))
+                        }
+
+                        /// Returns this pointer's address for another explicitly
+                        /// modeled native operation.
+                        #[must_use]
+                        pub fn as_ptr(self) -> *mut std::ffi::c_void {
+                            self.0
+                        }
+
+                        /// Java reference identity for this opaque wrapper.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            self.0 == other.0
+                        }
+                    }
+                },
+                members: [],
+            }
+            class {
+                // The JNA proxy itself is an identity-only receiver. The native
+                // function is loaded directly by the AOT runtime shim rather
+                // than by retaining JNA's dynamic proxy machinery.
+                name: "com/mojang/text2speech/NarratorLinux$FliteLibrary$CmuUsKal16",
+                rust_type: Some("jars_runtime::CmuUsKal16"),
+                coercions: [],
+                runtime: {
+                    /// Identity for the generated narrator voice-library
+                    /// handle. It carries no Java or mutable native state.
+                    #[derive(Clone, Debug)]
+                    pub struct CmuUsKal16(std::rc::Rc<()>);
+
+                    impl CmuUsKal16 {
+                        #[must_use]
+                        pub fn new() -> Self {
+                            Self(std::rc::Rc::new(()))
+                        }
+
+                        /// Java reference identity for this native-library
+                        /// handle.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.0, &other.0)
+                        }
+                    }
+
+                    type CmuUsKal16Register = unsafe extern "C" fn(
+                        *const std::ffi::c_char,
+                    ) -> *mut std::ffi::c_void;
+
+                    struct CmuUsKal16Api {
+                        _library: usize,
+                        register: CmuUsKal16Register,
+                    }
+
+                    #[cfg(target_os = "linux")]
+                    #[link(name = "dl")]
+                    unsafe extern "C" {
+                        fn dlopen(filename: *const std::ffi::c_char, flags: i32) -> *mut std::ffi::c_void;
+                        fn dlsym(handle: *mut std::ffi::c_void, symbol: *const std::ffi::c_char) -> *mut std::ffi::c_void;
+                        fn dlerror() -> *const std::ffi::c_char;
+                    }
+
+                    #[cfg(target_os = "linux")]
+                    fn cmu_us_kal16_api() -> jars_runtime::JavaResult<&'static CmuUsKal16Api> {
+                        static API: std::sync::OnceLock<Result<CmuUsKal16Api, String>> =
+                            std::sync::OnceLock::new();
+                        match API.get_or_init(|| unsafe {
+                            let library_name = std::ffi::CString::new(
+                                "libflite_cmu_us_kal16.so",
+                            )
+                            .expect("static library name has no nul bytes");
+                            let handle = dlopen(library_name.as_ptr(), 2);
+                            if handle.is_null() {
+                                let error = dlerror();
+                                let message = if error.is_null() {
+                                    "dlopen failed without an error message".to_owned()
+                                } else {
+                                    std::ffi::CStr::from_ptr(error)
+                                        .to_string_lossy()
+                                        .into_owned()
+                                };
+                                return Err(format!(
+                                    "could not load libflite_cmu_us_kal16.so: {message}"
+                                ));
+                            }
+                            let symbol_name = std::ffi::CString::new(
+                                "register_cmu_us_kal16",
+                            )
+                            .expect("static symbol name has no nul bytes");
+                            let symbol = dlsym(handle, symbol_name.as_ptr());
+                            if symbol.is_null() {
+                                let error = dlerror();
+                                let message = if error.is_null() {
+                                    "dlsym failed without an error message".to_owned()
+                                } else {
+                                    std::ffi::CStr::from_ptr(error)
+                                        .to_string_lossy()
+                                        .into_owned()
+                                };
+                                return Err(format!(
+                                    "libflite_cmu_us_kal16.so has no register_cmu_us_kal16 symbol: {message}"
+                                ));
+                            }
+                            let register = std::mem::transmute::<
+                                *mut std::ffi::c_void,
+                                CmuUsKal16Register,
+                            >(symbol);
+                            Ok(CmuUsKal16Api {
+                                // Keep the shared library loaded for as long
+                                // as the process can call this function.
+                                _library: handle as usize,
+                                register,
+                            })
+                        }) {
+                            Ok(api) => Ok(api),
+                            Err(error) => Err(anyhow::anyhow!(error.clone())),
+                        }
+                    }
+
+                    fn register_cmu_us_kal16_with(
+                        name: Option<JavaString>,
+                        register: CmuUsKal16Register,
+                    ) -> JavaResult<Option<NativePointer>> {
+                        let name = name
+                            .as_ref()
+                            .map(|value| std::ffi::CString::new(value.as_str()))
+                            .transpose()?;
+                        let name_ptr = name
+                            .as_ref()
+                            .map_or(std::ptr::null(), |value| value.as_ptr());
+                        let pointer = unsafe { register(name_ptr) };
+                        Ok(NativePointer::from_raw(pointer))
+                    }
+
+                    /// Calls Flite's compiled-in Kal16 voice registrar through
+                    /// its Linux shared library. The library handle is retained
+                    /// for process lifetime, matching a loaded JNA library.
+                    pub fn register_cmu_us_kal16(
+                        name: Option<JavaString>,
+                    ) -> JavaResult<Option<NativePointer>> {
+                        #[cfg(target_os = "linux")]
+                        {
+                            register_cmu_us_kal16_with(
+                                name,
+                                cmu_us_kal16_api()?.register,
+                            )
+                        }
+                        #[cfg(not(target_os = "linux"))]
+                        {
+                            let _ = name;
+                            Err(anyhow::anyhow!(
+                                "register_cmu_us_kal16 is only available on Linux"
+                            ))
+                        }
+                    }
+                },
+                members: [
+                    instance "register_cmu_us_kal16"
+                    "(Ljava/lang/String;)Lcom/sun/jna/Pointer;" |_receiver, args| {
+                        format!(
+                            "jars_runtime::register_cmu_us_kal16({})?",
+                            args[0]
+                        )
+                    };
+                ],
+            }
+            class {
                 name: "java/lang/Throwable",
                 rust_type: None,
                 coercions: [],
