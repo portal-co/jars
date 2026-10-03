@@ -111,6 +111,29 @@ cargo run -p jars-core --bin jars-inventory -- \
   21 app/Entry main '([Ljava/lang/String;)V' app.jar
 ```
 
+Run independent goal files concurrently with one Pi session and git worktree
+per goal. Successful changes merge into the current branch; remaining
+committed work is pushed and opened as a PR by default. Use `--no-pr` to
+prevent publishing, and `--no-merge --no-pr --keep-worktrees` for isolated
+test runs:
+
+```sh
+PI_MODEL='openai-codex/gpt-6-luna:xhigh' \
+  scripts/jars-goals.sh --workers 3 --no-merge --no-pr --keep-worktrees \
+  goals/minecraft/java.io.Closeable.toml \
+  goals/minecraft/java.lang.AutoCloseable.toml
+```
+
+Both `scripts/jars-goals.sh` and `scripts/jars-ralph.sh` use the same Pi
+invoker and export a discovered JDK to each agent. Set `JAVA_HOME`, `JDK_HOME`,
+`OPENJDK_HOME`, or `JAVAC` to choose one explicitly; otherwise the scripts
+prefer Java 25 (then common Java 21 installs and `PATH`) and export `JAVA_HOME`,
+`JAVAC`, and `JARS_JAVAC`. Set `PI_MODEL` to a plain model name or
+`provider/model:thinking`;
+`PI_THINKING` (or `PI_THINKING_LEVEL`) can set `off`, `minimal`, `low`,
+`medium`, `high`, `xhigh`, or `max` separately. Run
+`scripts/test-jars-agent-common.sh` to check shared model argument handling.
+
 Generated Rust needs a `jars-runtime` dependency, for example:
 
 ```toml

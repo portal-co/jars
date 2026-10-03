@@ -16,7 +16,9 @@
 #
 # Environment:
 #   PI_PROVIDER       provider name passed to pi (default: surplus-intelligence)
-#   PI_MODEL          model pattern passed to pi (default: glm-5.3-flash)
+#   PI_MODEL          model pattern passed to pi (default: glm-5.3-flash; accepts provider/model:thinking)
+#   PI_THINKING       thinking level (off|minimal|low|medium|high|xhigh|max; or use PI_MODEL suffix)
+#   JAVA_HOME/JDK_HOME/OPENJDK_HOME/JAVAC select Java; otherwise Java 25 is autodiscovered first
 #   MAX_MISSES        consecutive non-improving iterations before stopping (default: 3)
 #   GOAL_OK_METHODS   stop when ok_methods reaches this count (default: 0 = no numeric goal)
 #   TIMEOUT_SECONDS   per-iteration pi timeout (default: 5400)
@@ -24,6 +26,8 @@
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+# shellcheck source=scripts/jars-agent-common.sh
+source "$REPO/scripts/jars-agent-common.sh"
 WORKTREE="${JARS_RALPH_WORKTREE:-$REPO/../jars-ralph-worktree}"
 BRANCH="jars-ralph"
 MAX_MISSES="${MAX_MISSES:-3}"
@@ -126,6 +130,7 @@ Begin. Be surgical: one slice, verified, committed. If you cannot find a
 slice that increases ok_methods this session, say so and stop without
 committing a snapshot regression.
 PROMPT
+    jars_agent_shared_instructions
 }
 
 run_iteration() {
@@ -136,31 +141,28 @@ run_iteration() {
         return 0
     fi
     echo "[ralph] iteration $ITERATIONS: launching pi in $WORKTREE"
-    local log
+    local log status
     log="$(mktemp -t jars-ralph.XXXXXX)"
-    if command -v timeout >/dev/null 2>&1; then
-        timeout "$TIMEOUT_SECONDS" \
-            git -C "$WORKTREE" rev-parse --verify HEAD >/dev/null 2>&1 && \
-            (cd "$WORKTREE" && timeout "$TIMEOUT_SECONDS" pi \
-                --provider "${PI_PROVIDER:-surplus-intelligence}" \
-                --model "${PI_MODEL:-glm-5.3-flash}" \
-                --mode text \
-                --no-session \
-                -p "$prompt") >"$log" 2>&1 || true
+    if git_in_worktree rev-parse --verify HEAD >/dev/null 2>&1; then
+        if (cd "$WORKTREE" && jars_run_pi "$log" "$TIMEOUT_SECONDS" "$prompt"); then
+            status=0
+        else
+            status=$?
+            echo "[ralph] Pi exited with status $status"
+        fi
     else
-        # macOS: no GNU timeout by default; fall back to perl alarm.
-        (cd "$WORKTREE" && perl -e 'alarm shift; exec @ARGV' "$TIMEOUT_SECONDS" \
-            pi --provider "${PI_PROVIDER:-surplus-intelligence}" \
-            --model "${PI_MODEL:-glm-5.3-flash}" \
-            --mode text \
-            --no-session \
-            -p "$prompt") >"$log" 2>&1 || true
+        echo "[ralph] worktree has no valid HEAD" >&2
     fi
     tail -40 "$log"
     echo "[ralph] iteration log: $log"
 }
 
 main() {
+    if [[ "$DRY_RUN" == "1" ]]; then
+        build_prompt
+        return 0
+    fi
+    jars_setup_java
     setup_worktree
     local misses=0
     local previous

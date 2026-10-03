@@ -7,6 +7,8 @@ use std::{
 use jars_core::{ObjectModel, compile_class, compile_class_with_model, compile_classes};
 use tempfile::TempDir;
 
+mod support;
+
 fn fixture(name: &str) -> PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("tests")
@@ -15,14 +17,7 @@ fn fixture(name: &str) -> PathBuf {
 }
 
 fn homebrew_javac() -> PathBuf {
-    let candidates = [
-        PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac"),
-        PathBuf::from("/usr/bin/javac"),
-    ];
-    candidates
-        .into_iter()
-        .find(|path| path.is_file())
-        .expect("JDK 21 javac is required for e2e fixtures")
+    support::javac()
 }
 
 fn compile_java(name: &str, temp: &TempDir) -> Vec<u8> {

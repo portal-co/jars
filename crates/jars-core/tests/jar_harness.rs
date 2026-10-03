@@ -16,6 +16,8 @@ use serde::Deserialize;
 use tempfile::TempDir;
 use zip::{CompressionMethod, ZipWriter, write::SimpleFileOptions};
 
+mod support;
+
 #[derive(Debug, Deserialize)]
 struct FixtureManifest {
     name: String,
@@ -75,13 +77,7 @@ fn create_jar(classes: &Path, output: &Path) {
 }
 
 fn homebrew_javac() -> PathBuf {
-    let path = PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac");
-    assert!(
-        path.is_file(),
-        "Homebrew OpenJDK 21 is required for JAR fixtures: expected {}",
-        path.display()
-    );
-    path
+    support::javac()
 }
 
 fn minimal_class(name: &str) -> Vec<u8> {

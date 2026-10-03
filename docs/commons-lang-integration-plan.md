@@ -17,7 +17,7 @@ from one shared declaration and `Type::String` values are nullable runtime
 - Vendored JAR: `crates/jars-core/tests/jar-fixtures/third-party/commons-lang3-3.14.0.jar`.
 - SHA-256: `7b96bf3ee68949abb5bc465559ac270e0551596fa34523fddf890ec418dde13c`.
 - The archive is Apache-2.0, retains its LICENSE/NOTICE, and declares `Multi-Release: true`.
-- Fixture apps compile with `/opt/homebrew/opt/openjdk@21/bin/javac --release 8`; JAR import selects Java 21 overlays deterministically.
+- Fixture apps compile with the runner-selected OpenJDK (`JAVA_HOME`/`JAVAC`; Java 25 is preferred on this host) using `--release 8`; JAR import selects Java 21 overlays deterministically.
 
 ## Completed foundation
 
@@ -81,12 +81,15 @@ from one shared declaration and `Type::String` values are nullable runtime
   snapshot of classes/methods compiling across the vendored commons-lang3
   JAR may only improve. Refresh with
   `UPDATE_COVERAGE_SNAPSHOT=1 cargo test -p jars-core --test coverage_ratchet`.
-- `scripts/jars-ralph.sh` runs an agentic expansion loop: each iteration
-  launches a fresh Pi session in a dedicated `jars-ralph` git worktree with a
-  prompt built from the current ratchet state; the agent picks a slice from
-  the coverage report, implements it, and commits. The loop merges advancing
-  commits back and stops when the numeric goal is met or after
-  `$MAX_MISSES` consecutive non-improving iterations.
+- `scripts/jars-agent-common.sh` shares Pi model/provider selection, thinking
+  level handling, timeouts, Java setup, and the agent execution contract between
+  both invokers. It honors `JAVA_HOME`, `JDK_HOME`, `OPENJDK_HOME`, and `JAVAC`,
+  otherwise preferring an autodiscovered Java 25 before common Java 21 installs.
+  `scripts/jars-ralph.sh` runs the ratchet-guided expansion loop in
+  its dedicated worktree; `scripts/jars-goals.sh` runs independent inventory
+  goal files concurrently in separate worktrees, merges successful branches,
+  and offers the remaining committed branches as pull requests. Use
+  `--no-merge --no-pr --keep-worktrees` for isolated test runs.
 
 ## Verified integration slice
 
