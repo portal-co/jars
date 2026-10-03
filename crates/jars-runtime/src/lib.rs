@@ -575,6 +575,20 @@ mod tests {
     use super::*;
 
     #[test]
+    fn commons_logging_factory_returns_named_logger_handles() {
+        let logger = commons_log_get_log(Some(JavaString::new("example")))
+            .unwrap()
+            .unwrap();
+        assert_eq!(logger.name().as_str(), "example");
+        assert!(logger.__same(&logger.clone()));
+        assert!(
+            commons_log_get_log(None)
+                .unwrap_err()
+                .is::<NullPointerException>()
+        );
+    }
+
+    #[test]
     fn mailbox_and_reply_preserve_request_order() {
         let runtime = Runtime::new();
         runtime.block_on(async {

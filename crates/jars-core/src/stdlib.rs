@@ -183,6 +183,33 @@ mod tests {
     }
 
     #[test]
+    fn commons_logging_factory_is_registered_with_its_exact_return_descriptor() {
+        assert_eq!(
+            class("org/apache/commons/logging/Log").and_then(|entry| entry.rust_type),
+            Some("jars_runtime::CommonsLog")
+        );
+        let Some(StdMember::StaticMethod { lower }) = member(
+            "org/apache/commons/logging/LogFactory",
+            "getLog",
+            "(Ljava/lang/String;)Lorg/apache/commons/logging/Log;",
+        ) else {
+            panic!("expected the Commons Logging factory builtin");
+        };
+        assert_eq!(
+            lower(&["logger_name".to_owned()]),
+            "jars_runtime::commons_log_get_log(logger_name)?"
+        );
+        assert!(
+            member(
+                "org/apache/commons/logging/LogFactory",
+                "getLog",
+                "(Ljava/lang/Class;)Lorg/apache/commons/logging/Log;",
+            )
+            .is_none()
+        );
+    }
+
+    #[test]
     fn object_init_remains_a_no_op_constructor() {
         let Some(StdMember::Constructor { lower }) = member("java/lang/Object", "<init>", "()V")
         else {

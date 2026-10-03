@@ -403,6 +403,31 @@ fn manifest_harness_imports_a_reachable_cross_jar_closure_and_runs_it() {
 }
 
 #[test]
+fn manifest_harness_runs_the_commons_logging_get_log_builtin() {
+    let manifest = manifest("commons-logging-get-log");
+    let temp = tempfile::tempdir().unwrap();
+    let jars = build_jars(&manifest, &temp);
+    let entry = JarEntrypoint::new(
+        &manifest.entry_class,
+        &manifest.entry_method,
+        &manifest.entry_descriptor,
+    );
+    let generated = compile_jars(&jars, &entry).unwrap();
+    assert!(generated.contains("jars_runtime::commons_log_get_log("));
+    assert!(!generated.contains("pub async fn getLog"));
+
+    let output = run_generated(&manifest.name, &generated, &temp);
+    assert_eq!(
+        output.status.code(),
+        Some(manifest.expected_exit.unwrap_or(0))
+    );
+    assert_eq!(
+        String::from_utf8(output.stdout).unwrap(),
+        manifest.expected_stdout.unwrap()
+    );
+}
+
+#[test]
 fn manifest_harness_imports_a_real_commons_lang_jar_and_runs_it() {
     run_fixture("commons-lang-empty");
 }

@@ -1,0 +1,14 @@
+name = "commons-logging-get-log"
+entry_class = "app/GetLog"
+entry_method = "run"
+entry_descriptor = "()V"
+expected_stdout = "logger\n"
+expected_exit = 0
+
+[[jars]]
+name = "fixture"
+sources = [
+    "commons-logging/org/apache/commons/logging/Log.java",
+    "commons-logging/org/apache/commons/logging/LogFactory.java",
+    "commons-logging/app/GetLog.java",
+]

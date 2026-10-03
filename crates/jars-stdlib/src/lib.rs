@@ -1606,6 +1606,64 @@ macro_rules! java_stdlib {
                 ],
             }
             class {
+                name: "org/apache/commons/logging/Log",
+                rust_type: Some("jars_runtime::CommonsLog"),
+                coercions: [],
+                runtime: {
+                    /// Immutable runtime handle for the supported Commons
+                    /// Logging facade. The logger name is retained for
+                    /// downstream logging operations; clones preserve Java
+                    /// reference identity.
+                    #[derive(Clone, Debug)]
+                    pub struct CommonsLog {
+                        name: JavaString,
+                        identity: std::rc::Rc<()>,
+                    }
+
+                    impl CommonsLog {
+                        /// The Java logger name passed to `LogFactory`.
+                        #[must_use]
+                        pub fn name(&self) -> &JavaString {
+                            &self.name
+                        }
+
+                        /// Java reference identity for this logger handle.
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.identity, &other.identity)
+                        }
+                    }
+                },
+                members: [],
+            }
+            class {
+                name: "org/apache/commons/logging/LogFactory",
+                rust_type: None,
+                coercions: [],
+                runtime: {
+                    /// Creates the runtime logger handle returned by the
+                    /// Commons Logging factory.
+                    pub fn commons_log_get_log(
+                        name: Option<JavaString>,
+                    ) -> JavaResult<Option<CommonsLog>> {
+                        let name = name.ok_or_else(null_pointer)?;
+                        Ok(Some(CommonsLog {
+                            name,
+                            identity: std::rc::Rc::new(()),
+                        }))
+                    }
+                },
+                members: [
+                    static_method "getLog"
+                    "(Ljava/lang/String;)Lorg/apache/commons/logging/Log;" |args| {
+                        format!(
+                            "jars_runtime::commons_log_get_log({})?",
+                            args[0]
+                        )
+                    };
+                ],
+            }
+            class {
                 name: "java/lang/Throwable",
                 rust_type: None,
                 coercions: [],
