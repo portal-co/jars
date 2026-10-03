@@ -1,0 +1,19 @@
+class = "java/lang/Boolean"
+
+[[member]]
+name = "parseBoolean"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "valueOf"
+descriptor = "(Z)Ljava/lang/Boolean;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "TYPE"
+descriptor = "Ljava/lang/Class;"
+kind = "builtin"
+references = 3

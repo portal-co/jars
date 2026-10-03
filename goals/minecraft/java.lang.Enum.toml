@@ -1,0 +1,19 @@
+class = "java/lang/Enum"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "name"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "builtin"
+references = 5

@@ -1,0 +1,15 @@
+class = "java/lang/reflect/Modifier"
+
+[[member]]
+name = "isPublic"
+descriptor = "(I)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "isStatic"
+descriptor = "(I)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1

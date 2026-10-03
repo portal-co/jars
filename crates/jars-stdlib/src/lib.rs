@@ -294,19 +294,27 @@ macro_rules! java_stdlib {
                             CharSequenceIdentity::JavaString(std::rc::Rc::clone(&self.0))
                         }
 
+                        fn length_value(&self) -> JavaResult<i32> {
+                            Ok(self.length())
+                        }
+
+                        fn char_at_value(&self, index: i32) -> JavaResult<u16> {
+                            self.char_at(index)
+                        }
+
                         fn length(
                             &self,
                         ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<i32>>>> {
-                            let value = std::rc::Rc::clone(&self.0);
-                            Box::pin(async move { Ok(char_sequence_length(&value)) })
+                            let value = self.length_value();
+                            Box::pin(async move { value })
                         }
 
                         fn char_at(
                             &self,
                             index: i32,
                         ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<u16>>>> {
-                            let value = std::rc::Rc::clone(&self.0);
-                            Box::pin(async move { char_sequence_char_at(&value, index) })
+                            let value = self.char_at_value(index);
+                            Box::pin(async move { value })
                         }
                     }
                 },
@@ -384,22 +392,28 @@ macro_rules! java_stdlib {
                         // Java's String(int[], int, int) validates the range
                         // and throws StringIndexOutOfBoundsException otherwise.
                         Some(format!(
-                            "Some(jars_runtime::java_string_from_code_points({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}).await?)",
-                            args[0], args[1], args[2]
+                            "Some(jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}){}?)",
+                            crate::model::runtime_method_name("java_string_from_code_points"),
+                            args[0], args[1], args[2],
+                            crate::model::await_token()
                         ))
                     };
                     constructor "<init>" "([C)V" |args| {
                         // Java's String(char[]) copies the array contents.
                         Some(format!(
-                            "Some(jars_runtime::java_string_from_chars({}.ok_or_else(jars_runtime::null_pointer)?).await?)",
-                            args[0]
+                            "Some(jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?){}?)",
+                            crate::model::runtime_method_name("java_string_from_chars"),
+                            args[0],
+                            crate::model::await_token()
                         ))
                     };
                     constructor "<init>" "([CII)V" |args| {
                         // Java's String(char[], int, int) validates the range.
                         Some(format!(
-                            "Some(jars_runtime::java_string_from_char_range({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}).await?)",
-                            args[0], args[1], args[2]
+                            "Some(jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}, {}){}?)",
+                            crate::model::runtime_method_name("java_string_from_char_range"),
+                            args[0], args[1], args[2],
+                            crate::model::await_token()
                         ))
                     };
                 ],
@@ -481,6 +495,10 @@ macro_rules! java_stdlib {
                     pub trait CharSequenceValue {
                         fn identity(&self) -> CharSequenceIdentity;
 
+                        fn length_value(&self) -> JavaResult<i32>;
+
+                        fn char_at_value(&self, index: i32) -> JavaResult<u16>;
+
                         fn length(
                             &self,
                         ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<i32>>>>;
@@ -499,19 +517,27 @@ macro_rules! java_stdlib {
                             CharSequenceIdentity::static_string(self.0)
                         }
 
+                        fn length_value(&self) -> JavaResult<i32> {
+                            Ok(char_sequence_length(self.0))
+                        }
+
+                        fn char_at_value(&self, index: i32) -> JavaResult<u16> {
+                            char_sequence_char_at(self.0, index)
+                        }
+
                         fn length(
                             &self,
                         ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<i32>>>> {
-                            let length = char_sequence_length(self.0);
-                            Box::pin(async move { Ok(length) })
+                            let length = self.length_value();
+                            Box::pin(async move { length })
                         }
 
                         fn char_at(
                             &self,
                             index: i32,
                         ) -> std::pin::Pin<Box<dyn Future<Output = JavaResult<u16>>>> {
-                            let value = self.0;
-                            Box::pin(async move { char_sequence_char_at(value, index) })
+                            let value = self.char_at_value(index);
+                            Box::pin(async move { value })
                         }
                     }
 
@@ -553,8 +579,16 @@ macro_rules! java_stdlib {
                             self.value.length().await
                         }
 
+                        pub fn length_sync(&self) -> JavaResult<i32> {
+                            self.value.length_value()
+                        }
+
                         pub async fn char_at(&self, index: i32) -> JavaResult<u16> {
                             self.value.char_at(index).await
+                        }
+
+                        pub fn char_at_sync(&self, index: i32) -> JavaResult<u16> {
+                            self.value.char_at_value(index)
                         }
 
                         /// Java reference identity without exposing a
@@ -625,6 +659,51 @@ macro_rules! java_stdlib {
                         Ok(JavaString::new(String::from_utf16_lossy(&units)))
                     }
 
+                    pub fn java_string_from_code_points_sync(
+                        array: JavaArray<i32>,
+                        offset: i32,
+                        count: i32,
+                    ) -> JavaResult<JavaString> {
+                        let length = array.length_sync()?;
+                        let end = i64::from(offset) + i64::from(count);
+                        if offset < 0 || count < 0 || end > i64::from(length) {
+                            return Err(string_index_out_of_bounds());
+                        }
+                        let mut result = String::new();
+                        for index in offset..offset + count {
+                            let point = array.get_sync(index)?;
+                            let ch = u32::try_from(point).ok().and_then(char::from_u32);
+                            result.push(ch.ok_or_else(string_index_out_of_bounds)?);
+                        }
+                        Ok(JavaString::new(result))
+                    }
+
+                    pub fn java_string_from_chars_sync(array: JavaArray<u16>) -> JavaResult<JavaString> {
+                        let length = array.length_sync()?;
+                        let mut units = Vec::with_capacity(length as usize);
+                        for index in 0..length {
+                            units.push(array.get_sync(index)?);
+                        }
+                        Ok(JavaString::new(String::from_utf16_lossy(&units)))
+                    }
+
+                    pub fn java_string_from_char_range_sync(
+                        array: JavaArray<u16>,
+                        offset: i32,
+                        count: i32,
+                    ) -> JavaResult<JavaString> {
+                        let length = array.length_sync()?;
+                        let end = i64::from(offset) + i64::from(count);
+                        if offset < 0 || count < 0 || end > i64::from(length) {
+                            return Err(string_index_out_of_bounds());
+                        }
+                        let mut units = Vec::with_capacity(count as usize);
+                        for index in offset..offset + count {
+                            units.push(array.get_sync(index)?);
+                        }
+                        Ok(JavaString::new(String::from_utf16_lossy(&units)))
+                    }
+
                     /// Java `CharSequence.charAt` for the supported immutable
                     /// String-backed representation. It indexes UTF-16 code
                     /// units, not Rust Unicode scalar values.
@@ -639,10 +718,19 @@ macro_rules! java_stdlib {
                 },
                 members: [
                     instance "length" "()I" |receiver, _args| {
-                        format!("{receiver}.length().await?")
+                        format!(
+                            "{receiver}.{}(){}?",
+                            crate::model::runtime_method_name("length"),
+                            crate::model::await_token()
+                        )
                     };
                     instance "charAt" "(I)C" |receiver, args| {
-                        format!("{receiver}.char_at({}).await?", args[0])
+                        format!(
+                            "{receiver}.{}({}){}?",
+                            crate::model::runtime_method_name("char_at"),
+                            args[0],
+                            crate::model::await_token()
+                        )
                     };
                 ],
             }
@@ -655,8 +743,14 @@ macro_rules! java_stdlib {
                 coercions: [],
                 runtime: {
                     #[derive(Clone)]
+                    enum StringBuilderStore {
+                        Actor(ActorRef<StringBuilderMessage>),
+                        Direct(std::rc::Rc<std::cell::RefCell<JavaString>>),
+                    }
+
+                    #[derive(Clone)]
                     pub struct JavaStringBuilder {
-                        actor: ActorRef<StringBuilderMessage>,
+                        store: StringBuilderStore,
                         identity: CharSequenceIdentity,
                     }
 
@@ -800,7 +894,7 @@ macro_rules! java_stdlib {
                                 }
                             });
                             Ok(Self {
-                                actor,
+                                store: StringBuilderStore::Actor(actor),
                                 identity: CharSequenceIdentity::object(),
                             })
                         }
@@ -810,64 +904,172 @@ macro_rules! java_stdlib {
                             Self::new(spawner, JavaString::new(""))
                         }
 
+                        /// Synchronous `StringBuilder` for the object and entity hosts.
+                        pub fn direct(source: JavaString) -> JavaResult<Self> {
+                            Ok(Self {
+                                store: StringBuilderStore::Direct(std::rc::Rc::new(
+                                    std::cell::RefCell::new(source),
+                                )),
+                                identity: CharSequenceIdentity::object(),
+                            })
+                        }
+
+                        pub fn empty_direct() -> JavaResult<Self> {
+                            Self::direct(JavaString::new(""))
+                        }
+
                         #[must_use]
                         pub fn __same(&self, other: &Self) -> bool {
-                            self.actor.same(&other.actor)
+                            match (&self.store, &other.store) {
+                                (
+                                    StringBuilderStore::Actor(left),
+                                    StringBuilderStore::Actor(right),
+                                ) => left.same(right),
+                                (
+                                    StringBuilderStore::Direct(left),
+                                    StringBuilderStore::Direct(right),
+                                ) => std::rc::Rc::ptr_eq(left, right),
+                                _ => false,
+                            }
                         }
 
                         pub async fn length(&self) -> JavaResult<i32> {
+                            if let StringBuilderStore::Direct(state) = &self.store {
+                                return Ok(char_sequence_length(state.borrow().as_str()));
+                            }
+                            let StringBuilderStore::Actor(actor) = &self.store else {
+                                return Err(direct_call_on_actor());
+                            };
                             let (reply, response) = reply();
-                            self.actor.send(StringBuilderMessage::Length { reply }).await?;
+                            actor.send(StringBuilderMessage::Length { reply }).await?;
                             response.recv().await?
                         }
 
+                        pub fn length_sync(&self) -> JavaResult<i32> {
+                            match &self.store {
+                                StringBuilderStore::Direct(state) => {
+                                    Ok(char_sequence_length(state.borrow().as_str()))
+                                }
+                                StringBuilderStore::Actor(_) => Err(direct_call_on_actor()),
+                            }
+                        }
+
+                        fn mailbox(&self) -> JavaResult<&ActorRef<StringBuilderMessage>> {
+                            match &self.store {
+                                StringBuilderStore::Actor(actor) => Ok(actor),
+                                StringBuilderStore::Direct(_) => Err(direct_call_on_actor()),
+                            }
+                        }
+
                         pub async fn char_at(&self, index: i32) -> JavaResult<u16> {
+                            if matches!(self.store, StringBuilderStore::Direct(_)) {
+                                return self.char_at_sync(index);
+                            }
                             let (reply, response) = reply();
-                            self.actor
+                            self.mailbox()?
                                 .send(StringBuilderMessage::CharAt { index, reply })
                                 .await?;
                             response.recv().await?
                         }
 
+                        pub fn char_at_sync(&self, index: i32) -> JavaResult<u16> {
+                            match &self.store {
+                                StringBuilderStore::Direct(state) => {
+                                    char_sequence_char_at(state.borrow().as_str(), index)
+                                }
+                                StringBuilderStore::Actor(_) => Err(direct_call_on_actor()),
+                            }
+                        }
+
                         /// Java `StringBuilder.reverse()`: mutates the actor's
                         /// state and returns this same handle.
                         pub async fn reverse(&self) -> JavaResult<Self> {
+                            if matches!(self.store, StringBuilderStore::Direct(_)) {
+                                return self.reverse_sync();
+                            }
                             let (reply, response) = reply();
-                            self.actor
+                            self.mailbox()?
                                 .send(StringBuilderMessage::Reverse { reply })
                                 .await?;
                             response.recv().await??;
                             Ok(self.clone())
                         }
 
+                        pub fn reverse_sync(&self) -> JavaResult<Self> {
+                            let StringBuilderStore::Direct(state) = &self.store else {
+                                return Err(direct_call_on_actor());
+                            };
+                            let reversed: String = state.borrow().as_str().chars().rev().collect();
+                            *state.borrow_mut() = JavaString::new(reversed);
+                            Ok(self.clone())
+                        }
+
                         /// Java `StringBuilder.toString()`: a Java string with
                         /// the builder's current characters.
                         pub async fn to_string_value(&self) -> JavaResult<JavaString> {
+                            if matches!(self.store, StringBuilderStore::Direct(_)) {
+                                return self.to_string_value_sync();
+                            }
                             let (reply, response) = reply();
-                            self.actor
+                            self.mailbox()?
                                 .send(StringBuilderMessage::ToStringValue { reply })
                                 .await?;
                             response.recv().await?
                         }
 
+                        pub fn to_string_value_sync(&self) -> JavaResult<JavaString> {
+                            match &self.store {
+                                StringBuilderStore::Direct(state) => Ok(state.borrow().clone()),
+                                StringBuilderStore::Actor(_) => Err(direct_call_on_actor()),
+                            }
+                        }
+
                         /// Java `StringBuilder.append(char)`.
                         pub async fn append_char(&self, unit: u16) -> JavaResult<Self> {
+                            if matches!(self.store, StringBuilderStore::Direct(_)) {
+                                return self.append_char_sync(unit);
+                            }
                             let (reply, response) = reply();
-                            self.actor
+                            self.mailbox()?
                                 .send(StringBuilderMessage::AppendChar { unit, reply })
                                 .await?;
                             response.recv().await??;
                             Ok(self.clone())
                         }
 
+                        pub fn append_char_sync(&self, unit: u16) -> JavaResult<Self> {
+                            let StringBuilderStore::Direct(state) = &self.store else {
+                                return Err(direct_call_on_actor());
+                            };
+                            let mut next = state.borrow().as_str().to_owned();
+                            next.push(
+                                char::from_u32(u32::from(unit)).expect("valid UTF-16 append unit"),
+                            );
+                            *state.borrow_mut() = JavaString::new(next);
+                            Ok(self.clone())
+                        }
+
                         /// Java `StringBuilder.append(String)`. Java throws
                         /// NPE for a null argument.
                         pub async fn append_string(&self, text: JavaString) -> JavaResult<Self> {
+                            if matches!(self.store, StringBuilderStore::Direct(_)) {
+                                return self.append_string_sync(text);
+                            }
                             let (reply, response) = reply();
-                            self.actor
+                            self.mailbox()?
                                 .send(StringBuilderMessage::AppendString { text, reply })
                                 .await?;
                             response.recv().await??;
+                            Ok(self.clone())
+                        }
+
+                        pub fn append_string_sync(&self, text: JavaString) -> JavaResult<Self> {
+                            let StringBuilderStore::Direct(state) = &self.store else {
+                                return Err(direct_call_on_actor());
+                            };
+                            let mut next = state.borrow().as_str().to_owned();
+                            next.push_str(text.as_str());
+                            *state.borrow_mut() = JavaString::new(next);
                             Ok(self.clone())
                         }
 
@@ -875,6 +1077,10 @@ macro_rules! java_stdlib {
                         pub async fn append_int(&self, value: i32) -> JavaResult<Self> {
                             self.append_string(JavaString::new(value.to_string()))
                                 .await
+                        }
+
+                        pub fn append_int_sync(&self, value: i32) -> JavaResult<Self> {
+                            self.append_string_sync(JavaString::new(value.to_string()))
                         }
 
                         /// Java `StringBuilder.substring(int, int)`: the
@@ -887,11 +1093,28 @@ macro_rules! java_stdlib {
                             let text = self.to_string_value().await?;
                             text.substring_range(start, end)
                         }
+
+                        pub fn substring_range_sync(
+                            &self,
+                            start: i32,
+                            end: i32,
+                        ) -> JavaResult<JavaString> {
+                            self.to_string_value_sync()?
+                                .substring_range(start, end)
+                        }
                     }
 
                     impl CharSequenceValue for JavaStringBuilder {
                         fn identity(&self) -> CharSequenceIdentity {
                             self.identity.clone()
+                        }
+
+                        fn length_value(&self) -> JavaResult<i32> {
+                            self.length_sync()
+                        }
+
+                        fn char_at_value(&self, index: i32) -> JavaResult<u16> {
+                            self.char_at_sync(index)
                         }
 
                         fn length(
@@ -913,40 +1136,77 @@ macro_rules! java_stdlib {
                 members: [
                     constructor "<init>" "(Ljava/lang/String;)V" |args| {
                         Some(format!(
-                            "Some(jars_runtime::JavaStringBuilder::new(program.spawner.clone(), {})?)",
-                            // Java's `new StringBuilder(null)` throws NPE.
-                            format!("{}.ok_or_else(jars_runtime::null_pointer)?", args[0])
+                            "Some({})",
+                            crate::model::string_builder_new(&format!(
+                                "{}.ok_or_else(jars_runtime::null_pointer)?",
+                                args[0]
+                            ))
                         ))
                     };
                     instance "length" "()I" |receiver, _args| {
-                        format!("{receiver}.length().await?")
+                        format!(
+                            "{receiver}.{}(){}?",
+                            crate::model::runtime_method_name("length"),
+                            crate::model::await_token()
+                        )
                     };
                     instance "charAt" "(I)C" |receiver, args| {
-                        format!("{receiver}.char_at({}).await?", args[0])
+                        format!(
+                            "{receiver}.{}({}){}?",
+                            crate::model::runtime_method_name("char_at"),
+                            args[0],
+                            crate::model::await_token()
+                        )
                     };
                     instance "reverse" "()Ljava/lang/StringBuilder;" |receiver, _args| {
-                        format!("Some({receiver}.reverse().await?)")
+                        format!(
+                            "Some({receiver}.{}(){}?)",
+                            crate::model::runtime_method_name("reverse"),
+                            crate::model::await_token()
+                        )
                     };
                     instance "toString" "()Ljava/lang/String;" |receiver, _args| {
-                        format!("Some({receiver}.to_string_value().await?)")
+                        format!(
+                            "Some({receiver}.{}(){}?)",
+                            crate::model::runtime_method_name("to_string_value"),
+                            crate::model::await_token()
+                        )
                     };
                     instance "append" "(C)Ljava/lang/StringBuilder;" |receiver, args| {
-                        format!("Some({receiver}.append_char({} as u16).await?)", args[0])
+                        format!(
+                            "Some({receiver}.{}({} as u16){}?)",
+                            crate::model::runtime_method_name("append_char"),
+                            args[0],
+                            crate::model::await_token()
+                        )
                     };
                     instance "append" "(Ljava/lang/String;)Ljava/lang/StringBuilder;" |receiver, args| {
                         format!(
-                            "Some({receiver}.append_string({}.ok_or_else(jars_runtime::null_pointer)?).await?)",
-                            args[0]
+                            "Some({receiver}.{}({}.ok_or_else(jars_runtime::null_pointer)?){}?)",
+                            crate::model::runtime_method_name("append_string"),
+                            args[0],
+                            crate::model::await_token()
                         )
                     };
                     instance "append" "(I)Ljava/lang/StringBuilder;" |receiver, args| {
-                        format!("Some({receiver}.append_int({}).await?)", args[0])
+                        format!(
+                            "Some({receiver}.{}({}){}?)",
+                            crate::model::runtime_method_name("append_int"),
+                            args[0],
+                            crate::model::await_token()
+                        )
                     };
                     instance "substring" "(II)Ljava/lang/String;" |receiver, args| {
-                        format!("Some({receiver}.substring_range({}, {}).await?)", args[0], args[1])
+                        format!(
+                            "Some({receiver}.{}({}, {}){}?)",
+                            crate::model::runtime_method_name("substring_range"),
+                            args[0],
+                            args[1],
+                            crate::model::await_token()
+                        )
                     };
                     constructor "<init>" "()V" |_args| {
-                        Some("Some(jars_runtime::JavaStringBuilder::empty(program.spawner.clone())?)".to_owned())
+                        Some(format!("Some({})", crate::model::string_builder_empty()))
                     };
                 ],
             }
@@ -1223,48 +1483,73 @@ macro_rules! java_stdlib {
                         }
                         Ok(())
                     }
+
+                    pub fn java_arrays_fill_sync<T: Clone + 'static>(
+                        array: JavaArray<T>,
+                        value: T,
+                    ) -> JavaResult<()> {
+                        let length = array.length_sync()?;
+                        for index in 0..length {
+                            array.set_sync(index, value.clone())?;
+                        }
+                        Ok(())
+                    }
                 },
                 members: [
                     static_method "fill" "([CC)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as u16).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {} as u16){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([BB)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as i8).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {} as i8){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([SS)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {} as i16).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {} as i16){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([II)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([JJ)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([FF)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     static_method "fill" "([DD)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                     // Java `Arrays.fill(T[], T)` accepts a null fill value, so
@@ -1272,8 +1557,10 @@ macro_rules! java_stdlib {
                     static_method "fill"
                     "([Ljava/lang/Object;Ljava/lang/Object;)V" |args| {
                         format!(
-                            "jars_runtime::java_arrays_fill({}.ok_or_else(jars_runtime::null_pointer)?, {}).await?",
-                            args[0], args[1]
+                            "jars_runtime::{}({}.ok_or_else(jars_runtime::null_pointer)?, {}){}?",
+                            crate::model::runtime_method_name("java_arrays_fill"),
+                            args[0], args[1],
+                            crate::model::await_token()
                         )
                     };
                 ],

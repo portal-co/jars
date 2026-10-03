@@ -1,0 +1,7 @@
+class = "java/lang/StackWalker$Option"
+
+[[member]]
+name = "RETAIN_CLASS_REFERENCE"
+descriptor = "Ljava/lang/StackWalker$Option;"
+kind = "builtin"
+references = 1

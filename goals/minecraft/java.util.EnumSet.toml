@@ -1,0 +1,7 @@
+class = "java/util/EnumSet"
+
+[[member]]
+name = "copyOf"
+descriptor = "(Ljava/util/Collection;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 2

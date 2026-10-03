@@ -1,0 +1,7 @@
+class = "java/nio/charset/StandardCharsets"
+
+[[member]]
+name = "UTF_8"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 3

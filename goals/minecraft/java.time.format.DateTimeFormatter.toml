@@ -1,0 +1,7 @@
+class = "java/time/format/DateTimeFormatter"
+
+[[member]]
+name = "ISO_INSTANT"
+descriptor = "Ljava/time/format/DateTimeFormatter;"
+kind = "builtin"
+references = 1

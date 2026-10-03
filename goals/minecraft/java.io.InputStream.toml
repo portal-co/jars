@@ -1,0 +1,7 @@
+class = "java/io/InputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 8

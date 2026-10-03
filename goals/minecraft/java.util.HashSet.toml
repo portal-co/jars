@@ -1,0 +1,13 @@
+class = "java/util/HashSet"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1

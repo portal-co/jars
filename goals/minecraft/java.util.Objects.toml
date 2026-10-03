@@ -1,0 +1,13 @@
+class = "java/util/Objects"
+
+[[member]]
+name = "requireNonNull"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "requireNonNull"
+descriptor = "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;"
+kind = "builtin"
+references = 4

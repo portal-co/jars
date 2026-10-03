@@ -1,0 +1,13 @@
+class = "java/util/Iterator"
+
+[[member]]
+name = "next"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 5

@@ -1,0 +1,8 @@
+class = "java/lang/reflect/Array"
+
+[[member]]
+name = "getLength"
+descriptor = "(Ljava/lang/Object;)I"
+kind = "native"
+reason = "closed-world"
+references = 1

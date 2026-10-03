@@ -1,0 +1,71 @@
+class = "java/lang/Class"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getSimpleName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "desiredAssertionStatus"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isPrimitive"
+descriptor = "()Z"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isAssignableFrom"
+descriptor = "(Ljava/lang/Class;)Z"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isInstance"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getResourceAsStream"
+descriptor = "(Ljava/lang/String;)Ljava/io/InputStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "forName"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getMethod"
+descriptor = "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getConstructor"
+descriptor = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getDeclaredConstructor"
+descriptor = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

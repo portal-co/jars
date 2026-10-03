@@ -1,0 +1,13 @@
+class = "java/lang/StackWalker"
+
+[[member]]
+name = "getCallerClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/StackWalker$Option;)Ljava/lang/StackWalker;"
+kind = "builtin"
+references = 1

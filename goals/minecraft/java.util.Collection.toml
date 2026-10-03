@@ -1,0 +1,19 @@
+class = "java/util/Collection"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

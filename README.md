@@ -9,10 +9,12 @@ valid Java 26 instructions or JDK APIs outside the modeled AOT subset receive
 compiler diagnostics rather than being interpreted at runtime.
 
 `jars-core::compile_class` accepts one default-package `.class` file and emits
-a complete Rust binary source file. Generated Java objects are mailbox-backed
-actors. Each generated binary creates a shared `Program<S: Spawner>` context;
-static methods take that context, and it owns static storage plus lazy
-`<clinit>` initialization. The emitted executable uses `jars_runtime::Runtime`,
+a complete Rust binary source file. The default object model is mailbox-backed
+actors (`ObjectModel::Task`). `ObjectModel::Object` emits synchronous
+`Rc<RefCell<_>>` calls, and `ObjectModel::Entity` uses the same calls with a
+Bevy entity id stored by `jars-bevy`. Each generated binary creates a shared
+`Program` context; static methods take that context, and it owns static storage
+plus lazy `<clinit>` initialization. The task host uses `jars_runtime::Runtime`,
 a deterministic single-thread executor.
 
 `jars-core::compile_jars` accepts an explicitly ordered JAR classpath and a
@@ -47,9 +49,10 @@ direct local access and is never held over that relay. The frame also preserves
 actor-address identity for supported object/array reference comparisons. It is
 reused by static methods, actor method handlers, and supported `<clinit>` bodies;
 its state remains local to one generated invocation and does not expose actor
-state. Every array descriptor is recursive; generated arrays are typed mailbox
-actors, so array aliases can cross object actors without exposing mutable
-elements.
+state. Every array descriptor is recursive. On the task host, generated arrays
+are typed mailbox actors, so array aliases can cross object actors without
+exposing mutable elements. The object and entity hosts use the synchronous
+`JavaArray` store instead.
 
 Generated Java entry points and public calls return
 `jars_runtime::JavaResult<T>` (an `anyhow::Result<T>`). The runtime exposes
@@ -95,6 +98,17 @@ class-wide JDK/non-JDK references using the same importer as compilation:
 ```sh
 cargo run -p jars-core --bin jars-triage -- \
   21 app/Entry run '()V' app.jar library.jar
+```
+
+`jars-inventory` writes the open native and builtin members of that same
+entrypoint closure. Finished `java_stdlib!` members drop out on regeneration.
+`goals/minecraft/README.md` is the command for a local client JAR.
+
+```sh
+cargo run -p jars-core --bin jars-inventory -- \
+  --name example --out goals/example \
+  --platform /path/to/java.base.jmod \
+  21 app/Entry main '([Ljava/lang/String;)V' app.jar
 ```
 
 Generated Rust needs a `jars-runtime` dependency, for example:

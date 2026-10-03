@@ -1,0 +1,19 @@
+class = "java/util/function/Function"
+
+[[member]]
+name = "identity"
+descriptor = "()Ljava/util/function/Function;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "andThen"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,7 @@
+class = "java/util/Arrays"
+
+[[member]]
+name = "asList"
+descriptor = "([Ljava/lang/Object;)Ljava/util/List;"
+kind = "builtin"
+references = 3

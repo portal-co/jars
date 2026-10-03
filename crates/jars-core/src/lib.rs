@@ -14,9 +14,15 @@ use std::{
 
 mod classfile;
 mod coverage;
+mod inventory;
+mod model;
 mod stdlib;
 
 pub use coverage::{ClassCoverage, JarCoverage, MethodCoverage, MethodStatus, coverage_jars};
+pub use inventory::{
+    InventoryClass, InventoryKind, InventoryMember, InventoryReport, inventory_jars, write_inventory,
+};
+pub use model::ObjectModel;
 
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum CompileError {
@@ -712,6 +718,7 @@ fn parse_custom_op(
         R::InvokeInterface { index } => Op::InvokeInterface(classfile_member(parser_error(
             pool.interface_method_ref(index),
         )?)),
+        R::InvokeDynamic { .. } => Op::Unsupported("invokedynamic".to_owned()),
         R::Ldc { index } => match parser_error(pool.constant(index))? {
             classfile::ConstantValue::String(v) => Op::LdcString(v.to_owned()),
             classfile::ConstantValue::Integer(v) => Op::IConst(v),
@@ -1261,8 +1268,8 @@ impl<'a> Body<'a> {
             Self::array_default(element)?
         };
         let mut code = format!(
-            "let {name} = Some(jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), {}, {default})?);",
-            lengths[depth]
+            "let {name} = Some({}?);",
+            crate::model::array_new(&element_rust, &lengths[depth], &default)
         );
         if depth + 1 < active_dimensions {
             let (child, child_code) =
@@ -1270,8 +1277,10 @@ impl<'a> Body<'a> {
             let index = format!("index{}", self.next_temp);
             self.next_temp += 1;
             code.push_str(&format!(
-                "for {index} in 0..{} {{ {child_code} {name}.as_ref().expect(\"new Java array\").set({index}, {child}).await?; }}",
-                lengths[depth]
+                "for {index} in 0..{} {{ {child_code} {name}.as_ref().expect(\"new Java array\").{}({index}, {child}){}?; }}",
+                lengths[depth],
+                crate::model::runtime_method_name("set"),
+                crate::model::await_token()
             ));
         }
         Ok((name, code))
@@ -1294,7 +1303,8 @@ impl<'a> Body<'a> {
                     let rust = element.array_element_rust(&self.program.name)?;
                     let default = Self::array_default(element)?;
                     let expression = format!(
-                        "Some(jars_runtime::JavaArray::<{rust}>::new(program.spawner.clone(), {length}, {default})?)"
+                        "Some({}?)",
+                        crate::model::array_new(&rust, &length, &default)
                     );
                     let value = self.temp(expression, |expression| Value::Array {
                         expression,
@@ -1322,7 +1332,11 @@ impl<'a> Body<'a> {
                 Op::ArrayLength => {
                     let (array, _) = self.pop_array(instruction)?;
                     let value = self.temp(
-                        format!("{array}.ok_or_else(jars_runtime::null_pointer)?.length().await?"),
+                        format!(
+                            "{array}.ok_or_else(jars_runtime::null_pointer)?.{}(){}?",
+                            crate::model::runtime_method_name("length"),
+                            crate::model::await_token()
+                        ),
                         Value::Int,
                     );
                     self.stack.push(value);
@@ -1337,7 +1351,9 @@ impl<'a> Body<'a> {
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
                     let get = format!(
-                        "{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?"
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.{}({index}){}?",
+                        crate::model::runtime_method_name("get"),
+                        crate::model::await_token()
                     );
                     let (expression, value): (String, Value) = match &instruction.op {
                         Op::IALoad => (get, Value::Int(String::new())),
@@ -1404,13 +1420,19 @@ impl<'a> Body<'a> {
                             ));
                         }
                     };
-                    self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {stored}).await?;"));
+                    self.statements.push(format!(
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.{}({index}, {stored}){}?;",
+                        crate::model::runtime_method_name("set"),
+                        crate::model::await_token()
+                    ));
                 }
                 Op::AALoad => {
                     let index = self.pop_expression(instruction)?;
                     let (array, element) = self.pop_array(instruction)?;
                     let expression = format!(
-                        "{array}.ok_or_else(jars_runtime::null_pointer)?.get({index}).await?"
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.{}({index}){}?",
+                        crate::model::runtime_method_name("get"),
+                        crate::model::await_token()
                     );
                     let value = match element {
                         Type::Class(class) => {
@@ -1444,7 +1466,11 @@ impl<'a> Body<'a> {
                             "aastore on primitive array",
                         ));
                     }
-                    self.statements.push(format!("{array}.ok_or_else(jars_runtime::null_pointer)?.set({index}, {value}).await?;"));
+                    self.statements.push(format!(
+                        "{array}.ok_or_else(jars_runtime::null_pointer)?.{}({index}, {value}){}?;",
+                        crate::model::runtime_method_name("set"),
+                        crate::model::await_token()
+                    ));
                 }
                 Op::AThrow => {
                     return Err(unsupported(
@@ -1738,10 +1764,11 @@ impl<'a> Body<'a> {
                     let expression = match receiver {
                         Value::This if reference.class == self.program.name => match ty {
                             Type::Int | Type::Long | Type::Float | Type::Double => {
-                                format!("state.lock().expect(\"actor state mutex\").{field}")
+                                format!("{}.{field}", crate::model::state_read("state"))
                             }
                             _ => format!(
-                                "state.lock().expect(\"actor state mutex\").{field}.clone()"
+                                "{}.{field}.clone()",
+                                crate::model::state_read("state")
                             ),
                         },
                         Value::Object { expression, class } if class == reference.class => format!(
@@ -1803,7 +1830,8 @@ impl<'a> Body<'a> {
                     match receiver {
                         Value::This if reference.class == self.program.name => {
                             self.statements.push(format!(
-                                "state.lock().expect(\"actor state mutex\").{field} = {value};"
+                                "{}.{field} = {value};",
+                                crate::model::state_write("state")
                             ));
                         }
                         Value::Object { expression, class } if class == reference.class => {
@@ -2762,8 +2790,9 @@ fn aot_typed_frame(
                 let element_rust = element.array_element_rust(&program.name)?;
                 let default = Body::array_default(element)?;
                 let dispatch = exception_dispatch(method);
+                let constructed = crate::model::array_new(&element_rust, "length", &default);
                 format!(
-                    "let length = pop_i32(&mut stack); match jars_runtime::JavaArray::<{element_rust}>::new(program.spawner.clone(), length, {default}) {{ Ok(array) => stack.push({}), Err(error) => {{ {dispatch} }} }} {}",
+                    "let length = pop_i32(&mut stack); match {constructed} {{ Ok(array) => stack.push({}), Err(error) => {{ {dispatch} }} }} {}",
                     frame_variant(&ty, "Some(array)", &layout)?,
                     continue_at(next)?
                 )
@@ -2777,7 +2806,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Char))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("get"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2803,7 +2834,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Char))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value as u16).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index, value as u16){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("set"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2829,7 +2862,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Int))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("get"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2855,7 +2890,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Int))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index, value){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("set"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2883,7 +2920,9 @@ fn aot_typed_frame(
                     })
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.get(index).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("get"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2909,7 +2948,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(element) if **element == Type::Byte))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.set(index, value as i8).await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(index, value as i8){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("set"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -2934,7 +2975,9 @@ fn aot_typed_frame(
                     .filter(|(_, ty)| matches!(ty, Type::Array(_)))
                     .map(|(index, _)| {
                         format!(
-                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.length().await, None => Err(jars_runtime::null_pointer()), }},"
+                            "FrameValue::R{index}(array) => match array {{ Some(array) => array.{}(){}, None => Err(jars_runtime::null_pointer()), }},",
+                            crate::model::runtime_method_name("length"),
+                            crate::model::await_token()
                         )
                     })
                     .collect::<String>();
@@ -3370,7 +3413,8 @@ fn aot_typed_frame(
                 let receiver = layout.reference_variant(&Type::Class(reference.class.clone()))?;
                 let direct_this = if first_local != 0 && reference.class == program.name {
                     format!(
-                        "FrameValue::This => Ok(state.lock().expect(\"actor state mutex\").{field}.clone()),"
+                        "FrameValue::This => Ok({}.{field}.clone()),",
+                        crate::model::state_read("state")
                     )
                 } else {
                     String::new()
@@ -3409,7 +3453,8 @@ fn aot_typed_frame(
                 let pop = frame_pop(&ty, &layout)?;
                 let direct_this = if first_local != 0 && reference.class == program.name {
                     format!(
-                        "FrameValue::This => {{ state.lock().expect(\"actor state mutex\").{field} = value; Ok(()) }},"
+                        "FrameValue::This => {{ {}.{field} = value; Ok(()) }},",
+                        crate::model::state_write("state")
                     )
                 } else {
                     String::new()
@@ -3753,10 +3798,16 @@ fn static_method(
     let parameters = parameters(program, method)?;
     let body = lower_method_body(program, known_classes, method, BodyKind::Static)?;
     let fallback = default_return(&method.signature.returns);
-    Ok(format!(
-        "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{}> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}",
-        method.signature.returns.rust(&program.name)?,
-    ))
+    let returns = method.signature.returns.rust(&program.name)?;
+    if crate::model::is_sync() {
+        Ok(format!(
+            "pub fn {name}(program: &super::Program, {parameters}) -> jars_runtime::JavaResult<{returns}> {{\n__ensure(program)?;\n{body}\nOk({fallback})\n}}"
+        ))
+    } else {
+        Ok(format!(
+            "pub async fn {name}<S: jars_runtime::Spawner>(program: &super::Program<S>, {parameters}) -> jars_runtime::JavaResult<{returns}> {{\n__ensure(program).await?;\n{body}\nOk({fallback})\n}}"
+        ))
+    }
 }
 
 fn instance_method(
@@ -3801,12 +3852,126 @@ fn instance_method(
     Ok((implementation, variant, proxy))
 }
 
+fn sync_actor_code(
+    program: &Program,
+    known_classes: &[String],
+    constructor: &Method,
+    methods: &[&Method],
+) -> Result<String, CompileError> {
+    let class = class_ident(&program.name)?;
+    let field_declarations = program
+        .fields
+        .iter()
+        .filter(|field| !field.is_static)
+        .map(|field| {
+            Ok(format!(
+                "{}: {}",
+                rust_ident(&field.name)?,
+                field.ty.rust(&program.name)?
+            ))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()
+        .map(|fields| fields.join(", "))?;
+    let field_initializers = program
+        .fields
+        .iter()
+        .filter(|field| !field.is_static)
+        .map(|field| {
+            Ok(format!(
+                "{}: {}",
+                rust_ident(&field.name)?,
+                default_return(&field.ty)
+            ))
+        })
+        .collect::<Result<Vec<_>, CompileError>>()
+        .map(|fields| fields.join(", "))?;
+    let constructor_parameters = parameters(program, constructor)?;
+    let constructor_body =
+        lower_method_body(program, known_classes, constructor, BodyKind::Instance)?;
+    let state_ty = format!("std::rc::Rc<std::cell::RefCell<{class}State>>");
+    let constructor_args = (0..constructor.signature.parameters.len())
+        .map(|index| format!("arg{index}"))
+        .collect::<Vec<_>>()
+        .join(", ");
+    let mut impls = vec![format!(
+        "fn init_impl(state: {state_ty}, program: &super::Program, {constructor_parameters}) -> jars_runtime::JavaResult<()> {{\n{constructor_body}\nOk(())\n}}"
+    )];
+    let mut proxies = vec![if crate::model::current().is_entity() {
+        "pub fn __same(&self, other: &Self) -> bool { self.entity == other.entity }".to_owned()
+    } else {
+        "pub fn __same(&self, other: &Self) -> bool { std::rc::Rc::ptr_eq(&self.state, &other.state) }".to_owned()
+    }];
+    for field in program.fields.iter().filter(|field| !field.is_static) {
+        let field_name = rust_ident(&field.name)?;
+        let getter = rust_ident(&format!("__get_{}", field.name))?;
+        let setter = rust_ident(&format!("__set_{}", field.name))?;
+        let ty = field.ty.rust(&program.name)?;
+        proxies.push(format!(
+            "pub fn {getter}(&self) -> jars_runtime::JavaResult<{ty}> {{ Ok(self.state.borrow().{field_name}.clone()) }}\npub fn {setter}(&self, value: {ty}) -> jars_runtime::JavaResult<()> {{ self.state.borrow_mut().{field_name} = value; Ok(()) }}"
+        ));
+    }
+    for method in methods {
+        let name = rust_ident(&method.name)?;
+        let method_parameters = parameters(program, method)?;
+        let body = lower_method_body(program, known_classes, method, BodyKind::Instance)?;
+        let fallback = default_return(&method.signature.returns);
+        let returns = method.signature.returns.rust(&program.name)?;
+        impls.push(format!(
+            "fn {name}_impl(state: {state_ty}, program: &super::Program, {method_parameters}) -> jars_runtime::JavaResult<{returns}> {{\n{body}\nOk({fallback})\n}}"
+        ));
+        let args = (0..method.signature.parameters.len())
+            .map(|index| format!("arg{index}"))
+            .collect::<Vec<_>>()
+            .join(", ");
+        let call_args = if args.is_empty() {
+            String::new()
+        } else {
+            format!(", {args}")
+        };
+        let param_list = if method_parameters.is_empty() {
+            String::new()
+        } else {
+            format!(", {method_parameters}")
+        };
+        proxies.push(format!(
+            "pub fn {name}(&self{param_list}) -> jars_runtime::JavaResult<{returns}> {{ Self::{name}_impl(self.state.clone(), &self.program{call_args}) }}"
+        ));
+    }
+    let constructor_list = if constructor_parameters.is_empty() {
+        String::new()
+    } else {
+        format!(", {constructor_parameters}")
+    };
+    let init_args = if constructor_args.is_empty() {
+        String::new()
+    } else {
+        format!(", {constructor_args}")
+    };
+    let (entity_field, spawn, entity_init) = if crate::model::current().is_entity() {
+        (
+            "entity: jars_bevy::ObjectId,",
+            "let entity = program.table.borrow_mut().insert(std::rc::Rc::clone(&state));",
+            "entity,",
+        )
+    } else {
+        ("", "", "")
+    };
+    Ok(format!(
+        "struct {class}State {{ {field_declarations} }}\n#[derive(Clone)]\npub struct {class} {{ state: {state_ty}, program: super::Program, {entity_field} }}\nimpl {class} {{\npub fn new(program: &super::Program{constructor_list}) -> jars_runtime::JavaResult<Self> {{\nlet state = std::rc::Rc::new(std::cell::RefCell::new({class}State {{ {field_initializers} }}));\n{spawn}\nSelf::init_impl(std::rc::Rc::clone(&state), program{init_args})?;\nOk(Self {{ state, program: program.clone(), {entity_init} }})\n}}\n{}\n{}\n}}",
+        proxies.join("\n"),
+        impls.join("\n"),
+    ))
+}
+
 fn actor_code(
     program: &Program,
     known_classes: &[String],
     constructor: &Method,
     methods: &[&Method],
 ) -> Result<String, CompileError> {
+    if crate::model::is_sync() {
+        return sync_actor_code(program, known_classes, constructor, methods);
+    }
     let class = class_ident(&program.name)?;
     let field_declarations = program
         .fields
@@ -3962,18 +4127,35 @@ fn static_state_code(program: &Program, known_classes: &[String]) -> Result<Stri
     let clinit = if let Some(method) = &program.clinit {
         // A class is marked `initializing` before entering its initializer.  Its
         // own static field operations must therefore access the prepared state
-        // directly; emitting another async `__ensure` call would make the
-        // generated future recursively sized.
+        // directly; emitting another `__ensure` call would recurse.
         let body = lower_method_body(program, known_classes, method, BodyKind::Static)?
-            .replace("__ensure(program).await?;\n", "");
-        format!(
-            "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
-        )
+            .replace("__ensure(program).await?;\n", "")
+            .replace("__ensure(program)?;\n", "");
+        if crate::model::is_sync() {
+            format!(
+                "pub(crate) fn __clinit(program: &super::Program) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
+            )
+        } else {
+            format!(
+                "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\n{body}\nOk(())\n}}"
+            )
+        }
+    } else if crate::model::is_sync() {
+        "pub(crate) fn __clinit(_program: &super::Program) -> jars_runtime::JavaResult<()> { Ok(()) }".to_owned()
     } else {
         "pub(crate) async fn __clinit<S: jars_runtime::Spawner>(_program: &super::Program<S>) -> jars_runtime::JavaResult<()> { Ok(()) }".to_owned()
     };
+    let ensure = if crate::model::is_sync() {
+        format!(
+            "pub(crate) fn __ensure(program: &super::Program) -> jars_runtime::JavaResult<()> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::class_initialization_failed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program);\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}"
+        )
+    } else {
+        format!(
+            "pub(crate) async fn __ensure<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::class_initialization_failed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program).await;\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}"
+        )
+    };
     Ok(format!(
-        "pub struct {class}Statics {{ pub initialized: bool, pub initializing: bool, pub failure: bool, {fields} }}\nimpl {class}Statics {{ pub fn new() -> Self {{ Self {{ initialized: false, initializing: false, failure: false, {initializers} }} }} }}\n\npub(crate) async fn __ensure<S: jars_runtime::Spawner>(program: &super::Program<S>) -> jars_runtime::JavaResult<()> {{\nlet begin = {{ let mut state = program.state.borrow_mut(); let class = &mut state.{class}; if class.failure {{ return Err(jars_runtime::class_initialization_failed(stringify!({class}))); }} if class.initialized || class.initializing {{ false }} else {{ class.initializing = true; true }} }};\nif !begin {{ return Ok(()); }}\nlet result = __clinit(program).await;\nlet mut state = program.state.borrow_mut(); let class = &mut state.{class}; class.initializing = false; match result {{ Ok(()) => {{ class.initialized = true; Ok(()) }}, Err(error) => {{ class.failure = true; Err(error) }} }}\n}}\n{clinit}"
+        "pub struct {class}Statics {{ pub initialized: bool, pub initializing: bool, pub failure: bool, {fields} }}\nimpl {class}Statics {{ pub fn new() -> Self {{ Self {{ initialized: false, initializing: false, failure: false, {initializers} }} }} }}\n\n{ensure}\n{clinit}"
     ))
 }
 
@@ -3994,9 +4176,19 @@ fn program_code(programs: &[Program]) -> Result<String, CompileError> {
         })
         .collect::<Result<Vec<_>, CompileError>>()?
         .join(", ");
-    Ok(format!(
-        "struct ProgramState {{ {declarations} }}\n#[derive(Clone)]\npub struct Program<S: jars_runtime::Spawner> {{ pub(crate) spawner: S, pub(crate) state: std::rc::Rc<std::cell::RefCell<ProgramState>> }}\nimpl<S: jars_runtime::Spawner> Program<S> {{ pub fn new(spawner: S) -> Self {{ Self {{ spawner, state: std::rc::Rc::new(std::cell::RefCell::new(ProgramState {{ {initializers} }})) }} }} }}"
-    ))
+    if crate::model::current().is_entity() {
+        Ok(format!(
+            "struct ProgramState {{ {declarations} }}\n#[derive(Clone)]\npub struct Program {{ pub(crate) table: std::rc::Rc<std::cell::RefCell<jars_bevy::ObjectTable>>, pub(crate) state: std::rc::Rc<std::cell::RefCell<ProgramState>> }}\nimpl Program {{ pub fn new(table: std::rc::Rc<std::cell::RefCell<jars_bevy::ObjectTable>>) -> Self {{ Self {{ table, state: std::rc::Rc::new(std::cell::RefCell::new(ProgramState {{ {initializers} }})) }} }} }}"
+        ))
+    } else if crate::model::is_sync() {
+        Ok(format!(
+            "struct ProgramState {{ {declarations} }}\n#[derive(Clone)]\npub struct Program {{ pub(crate) state: std::rc::Rc<std::cell::RefCell<ProgramState>> }}\nimpl Program {{ pub fn new() -> Self {{ Self {{ state: std::rc::Rc::new(std::cell::RefCell::new(ProgramState {{ {initializers} }})) }} }} }}"
+        ))
+    } else {
+        Ok(format!(
+            "struct ProgramState {{ {declarations} }}\n#[derive(Clone)]\npub struct Program<S: jars_runtime::Spawner> {{ pub(crate) spawner: S, pub(crate) state: std::rc::Rc<std::cell::RefCell<ProgramState>> }}\nimpl<S: jars_runtime::Spawner> Program<S> {{ pub fn new(spawner: S) -> Self {{ Self {{ spawner, state: std::rc::Rc::new(std::cell::RefCell::new(ProgramState {{ {initializers} }})) }} }} }}"
+        ))
+    }
 }
 
 fn render_module(program: &Program, known_classes: &[String]) -> Result<String, CompileError> {
@@ -4084,10 +4276,23 @@ fn render(programs: &[Program]) -> Result<String, CompileError> {
         .collect::<Result<Vec<_>, _>>()?;
     let program = program_code(programs)?;
     let class = class_ident(&entry.name)?;
-    let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, Some(jars_runtime::JavaString::new(value))).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
-        modules.join("\n"),
-    );
+    let source = if crate::model::current().is_entity() {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet table = std::rc::Rc::new(std::cell::RefCell::new(jars_bevy::ObjectTable::new()));\nlet mut app = jars_bevy::headless_app(std::rc::Rc::clone(&table));\nlet program = Program::new(table);\napp.insert_non_send(program.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nlet result: jars_runtime::JavaResult<()> = (|| {{\nlet args = jars_runtime::JavaArray::direct(values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set_sync(index as i32, Some(jars_runtime::JavaString::new(value)))?; }}\n{class}::main(&program, Some(args))?;\nOk(())\n}})();\nresult.expect(\"Java call failed\");\njars_bevy::update_once(&mut app);\n}}",
+            modules.join("\n"),
+        )
+    } else if crate::model::is_sync() {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet program = Program::new();\nlet values: Vec<String> = std::env::args().skip(1).collect();\nlet result: jars_runtime::JavaResult<()> = (|| {{\nlet args = jars_runtime::JavaArray::direct(values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set_sync(index as i32, Some(jars_runtime::JavaString::new(value)))?; }}\n{class}::main(&program, Some(args))?;\nOk(())\n}})();\nresult.expect(\"Java call failed\");\n}}",
+            modules.join("\n"),
+        )
+    } else {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet values: Vec<String> = std::env::args().skip(1).collect();\nruntime.block_on(async {{\nlet args = jars_runtime::JavaArray::new(runtime.clone(), values.len() as i32, None)?;\nfor (index, value) in values.into_iter().enumerate() {{ args.set(index as i32, Some(jars_runtime::JavaString::new(value))).await?; }}\n{class}::main(&program, Some(args)).await\n}}).expect(\"Java actor call failed\");\n}}",
+            modules.join("\n"),
+        )
+    };
+    let source = crate::model::finish_source(source);
     let file = syn::parse_file(&source)
         .map_err(|error| invalid(format!("internal generated Rust was invalid: {error}")))?;
     Ok(prettyplease::unparse(&file))
@@ -4324,7 +4529,8 @@ fn validate_hierarchy(programs: &[Program]) -> Result<(), CompileError> {
     Ok(())
 }
 
-fn compile_programs(programs: Vec<Program>) -> Result<String, CompileError> {
+fn compile_programs(programs: Vec<Program>, object_model: ObjectModel) -> Result<String, CompileError> {
+    let _guard = crate::model::enter(object_model);
     if programs.is_empty() {
         return Err(invalid("the compilation set is empty"));
     }
@@ -4943,7 +5149,11 @@ fn render_declared_entry(
     );
     // The entry result is discarded uniformly: `JavaUnit` wraps both `()`
     // and meaningful values so the generated `block_on` can always `.expect`.
-    let invocation = format!("let _entry = jars_runtime::JavaUnit({call}.await);");
+    let invocation = if crate::model::is_sync() {
+        format!("let _entry = jars_runtime::JavaUnit({call});")
+    } else {
+        format!("let _entry = jars_runtime::JavaUnit({call}.await);")
+    };
     let known_classes = programs
         .iter()
         .map(|program| program.name.clone())
@@ -4953,10 +5163,23 @@ fn render_declared_entry(
         .map(|program| render_module(program, &known_classes))
         .collect::<Result<Vec<_>, _>>()?;
     let program = program_code(programs)?;
-    let source = format!(
-        "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet _entry = jars_runtime::JavaUnit(runtime.block_on(async {{\n{invocation}\n}}));\n}}",
-        modules.join("\n"),
-    );
+    let source = if crate::model::current().is_entity() {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet table = std::rc::Rc::new(std::cell::RefCell::new(jars_bevy::ObjectTable::new()));\nlet mut app = jars_bevy::headless_app(std::rc::Rc::clone(&table));\nlet program = Program::new(table);\napp.insert_non_send(program.clone());\nlet result: jars_runtime::JavaResult<()> = (|| {{\n{invocation}\nOk(())\n}})();\nresult.expect(\"Java call failed\");\njars_bevy::update_once(&mut app);\n}}",
+            modules.join("\n"),
+        )
+    } else if crate::model::is_sync() {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet program = Program::new();\nlet result: jars_runtime::JavaResult<()> = (|| {{\n{invocation}\nOk(())\n}})();\nresult.expect(\"Java call failed\");\n}}",
+            modules.join("\n"),
+        )
+    } else {
+        format!(
+            "{}\n{program}\nfn main() {{\nlet runtime = jars_runtime::Runtime::new();\nlet program = Program::new(runtime.clone());\nlet _entry = jars_runtime::JavaUnit(runtime.block_on(async {{\n{invocation}\n}}));\n}}",
+            modules.join("\n"),
+        )
+    };
+    let source = crate::model::finish_source(source);
     let file = syn::parse_file(&source)
         .map_err(|error| invalid(format!("internal generated Rust was invalid: {error}")))?;
     Ok(prettyplease::unparse(&file))
@@ -4993,6 +5216,17 @@ pub fn compile_jars_with_options(
     entry: &JarEntrypoint,
     options: JarImportOptions,
 ) -> Result<String, CompileError> {
+    compile_jars_with_model(paths, entry, options, ObjectModel::Task)
+}
+
+/// Like [`compile_jars_with_options`], emitting the selected object model.
+pub fn compile_jars_with_model(
+    paths: &[impl AsRef<Path>],
+    entry: &JarEntrypoint,
+    options: JarImportOptions,
+    object_model: ObjectModel,
+) -> Result<String, CompileError> {
+    let _guard = crate::model::enter(object_model);
     let classes = read_jar_classpath(paths, options)?;
     let programs = select_jar_programs(&classes, entry)?;
     if programs.is_empty() {
@@ -5022,16 +5256,32 @@ pub fn compile_class(bytes: &[u8]) -> Result<String, CompileError> {
     compile_classes(&[bytes])
 }
 
+/// Compiles one class for an explicit object model.
+pub fn compile_class_with_model(
+    bytes: &[u8],
+    object_model: ObjectModel,
+) -> Result<String, CompileError> {
+    compile_classes_with_model(&[bytes], object_model)
+}
+
 /// Compiles a closed, default-package class set into one AOT Rust source file.
 ///
 /// References to classes outside `classes` are rejected during code generation;
 /// the generated modules call each other directly and retain no class-file data.
 pub fn compile_classes(classes: &[&[u8]]) -> Result<String, CompileError> {
+    compile_classes_with_model(classes, ObjectModel::Task)
+}
+
+/// Compiles a closed class set for an explicit object model.
+pub fn compile_classes_with_model(
+    classes: &[&[u8]],
+    object_model: ObjectModel,
+) -> Result<String, CompileError> {
     let programs = classes
         .iter()
         .map(|bytes| parse_program_custom(bytes))
         .collect::<Result<Vec<_>, _>>()?;
-    compile_programs(programs)
+    compile_programs(programs, object_model)
 }
 
 #[cfg(test)]

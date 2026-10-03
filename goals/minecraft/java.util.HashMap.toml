@@ -1,0 +1,25 @@
+class = "java/util/HashMap"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 1

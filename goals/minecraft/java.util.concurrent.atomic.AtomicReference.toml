@@ -1,0 +1,7 @@
+class = "java/util/concurrent/atomic/AtomicReference"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

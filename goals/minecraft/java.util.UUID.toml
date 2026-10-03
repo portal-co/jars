@@ -1,0 +1,13 @@
+class = "java/util/UUID"
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "randomUUID"
+descriptor = "()Ljava/util/UUID;"
+kind = "builtin"
+references = 1

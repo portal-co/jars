@@ -4,7 +4,7 @@ use std::{
     process::Command,
 };
 
-use jars_core::{compile_class, compile_classes};
+use jars_core::{ObjectModel, compile_class, compile_class_with_model, compile_classes};
 use tempfile::TempDir;
 
 fn fixture(name: &str) -> PathBuf {
@@ -15,13 +15,14 @@ fn fixture(name: &str) -> PathBuf {
 }
 
 fn homebrew_javac() -> PathBuf {
-    let path = PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac");
-    assert!(
-        path.is_file(),
-        "Homebrew OpenJDK 21 is required for e2e fixtures: expected {}",
-        path.display()
-    );
-    path
+    let candidates = [
+        PathBuf::from("/opt/homebrew/opt/openjdk@21/bin/javac"),
+        PathBuf::from("/usr/bin/javac"),
+    ];
+    candidates
+        .into_iter()
+        .find(|path| path.is_file())
+        .expect("JDK 21 javac is required for e2e fixtures")
 }
 
 fn compile_java(name: &str, temp: &TempDir) -> Vec<u8> {
@@ -42,8 +43,12 @@ fn compile_java(name: &str, temp: &TempDir) -> Vec<u8> {
 }
 
 fn compile_and_run(name: &str) -> (String, String) {
+    compile_and_run_with(name, ObjectModel::Task, "")
+}
+
+fn compile_and_run_with(name: &str, model: ObjectModel, extra_deps: &str) -> (String, String) {
     let temp = tempfile::tempdir().unwrap();
-    let generated = compile_class(&compile_java(name, &temp)).unwrap();
+    let generated = compile_class_with_model(&compile_java(name, &temp), model).unwrap();
     let package = temp.path().join("generated");
     fs::create_dir_all(package.join("src")).unwrap();
     let runtime = Path::new(env!("CARGO_MANIFEST_DIR"))
@@ -53,7 +58,7 @@ fn compile_and_run(name: &str) -> (String, String) {
     fs::write(
         package.join("Cargo.toml"),
         format!(
-            "[package]\nname = \"generated-{name}\"\nversion = \"0.0.0\"\nedition = \"2024\"\n\n[dependencies]\njars-runtime = {{ path = {:?} }}\n",
+            "[package]\nname = \"generated-{name}\"\nversion = \"0.0.0\"\nedition = \"2024\"\n\n[dependencies]\njars-runtime = {{ path = {:?} }}\n{extra_deps}",
             runtime
         ),
     )
@@ -146,6 +151,31 @@ fn add_factory_is_an_actor_backed_object() {
     assert!(generated.contains("pub struct AddFactory"));
     assert!(generated.contains("pub async fn new"));
     assert!(generated.contains("pub async fn add"));
+}
+
+#[test]
+fn add_factory_object_host_matches_the_task_host() {
+    let (stdout, generated) = compile_and_run_with("AddFactory", ObjectModel::Object, "");
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("RefCell"));
+    assert!(generated.contains("pub fn add"));
+    assert!(!generated.contains("async fn add"));
+}
+
+#[test]
+fn add_factory_entity_host_matches_the_task_host() {
+    let bevy = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("jars-bevy");
+    let deps = format!("jars-bevy = {{ path = {:?} }}\n", bevy);
+    let (stdout, generated) =
+        compile_and_run_with("AddFactory", ObjectModel::Entity, &deps);
+    assert_eq!(stdout, "42\n");
+    assert!(generated.contains("jars_bevy::ObjectTable"));
+    assert!(generated.contains("entity:"));
+    assert!(generated.contains("pub fn add"));
+    assert!(!generated.contains("async fn add"));
 }
 
 #[test]

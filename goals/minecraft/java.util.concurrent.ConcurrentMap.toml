@@ -1,0 +1,7 @@
+class = "java/util/concurrent/ConcurrentMap"
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

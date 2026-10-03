@@ -1,0 +1,7 @@
+class = "java/lang/StringBuilder"
+
+[[member]]
+name = "append"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 5

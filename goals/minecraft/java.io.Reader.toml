@@ -1,0 +1,7 @@
+class = "java/io/Reader"
+
+[[member]]
+name = "read"
+descriptor = "([CII)I"
+kind = "builtin"
+references = 1

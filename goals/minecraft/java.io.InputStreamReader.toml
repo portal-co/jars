@@ -1,0 +1,13 @@
+class = "java/io/InputStreamReader"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;Ljava/nio/charset/Charset;)V"
+kind = "builtin"
+references = 3

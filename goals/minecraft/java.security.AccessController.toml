@@ -1,0 +1,7 @@
+class = "java/security/AccessController"
+
+[[member]]
+name = "doPrivileged"
+descriptor = "(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

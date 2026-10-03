@@ -1,0 +1,134 @@
+class = "java/lang/invoke/Invokedynamic"
+
+[[member]]
+name = "apply"
+descriptor = "()Lcom/mojang/brigadier/exceptions/Dynamic2CommandExceptionType$Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 8
+
+[[member]]
+name = "apply"
+descriptor = "()Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 95
+
+[[member]]
+name = "accept"
+descriptor = "()Lnet/minecraft/util/FormattedCharSequence;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(FFLjava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "apply"
+descriptor = "(I)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "apply"
+descriptor = "(II)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(IILjava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "makeConcatWithConstants"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(JJLjava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(Lcom/mojang/serialization/Codec;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Lcom/mojang/serialization/Codec;Ljava/lang/String;)Ljava/util/function/Supplier;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(Lcom/mojang/serialization/DynamicOps;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/util/function/Supplier;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "makeConcatWithConstants"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 15
+
+[[member]]
+name = "makeConcatWithConstants"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 5
+
+[[member]]
+name = "apply"
+descriptor = "(Ljava/time/format/DateTimeFormatter;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "accept"
+descriptor = "(Ljava/util/Map;)Ljava/util/function/BiConsumer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "apply"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

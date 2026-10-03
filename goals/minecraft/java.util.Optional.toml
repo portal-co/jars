@@ -1,0 +1,7 @@
+class = "java/util/Optional"
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;)Ljava/util/Optional;"
+kind = "builtin"
+references = 1

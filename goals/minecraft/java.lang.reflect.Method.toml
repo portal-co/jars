@@ -1,0 +1,15 @@
+class = "java/lang/reflect/Method"
+
+[[member]]
+name = "getModifiers"
+descriptor = "()I"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getReturnType"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

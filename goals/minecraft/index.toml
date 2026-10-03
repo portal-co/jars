@@ -1,0 +1,540 @@
+name = "minecraft"
+entrypoint_class = "net/minecraft/client/main/Main"
+entrypoint_method = "main"
+entrypoint_descriptor = "([Ljava/lang/String;)V"
+target_release = 25
+open_classes = 71
+open_members = 148
+blocked_members = 29
+
+[[class]]
+name = "java/lang/invoke/Invokedynamic"
+file = "java.lang.invoke.Invokedynamic.toml"
+references = 142
+open_members = 0
+blocked_members = 19
+
+[[class]]
+name = "java/util/ArrayList"
+file = "java.util.ArrayList.toml"
+references = 60
+open_members = 5
+blocked_members = 0
+
+[[class]]
+name = "java/lang/String"
+file = "java.lang.String.toml"
+references = 25
+open_members = 8
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Class"
+file = "java.lang.Class.toml"
+references = 22
+open_members = 7
+blocked_members = 4
+
+[[class]]
+name = "java/util/List"
+file = "java.util.List.toml"
+references = 18
+open_members = 7
+blocked_members = 0
+
+[[class]]
+name = "java/util/Objects"
+file = "java.util.Objects.toml"
+references = 16
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/System"
+file = "java.lang.System.toml"
+references = 15
+open_members = 8
+blocked_members = 0
+
+[[class]]
+name = "java/util/Map"
+file = "java.util.Map.toml"
+references = 15
+open_members = 5
+blocked_members = 0
+
+[[class]]
+name = "java/util/HashMap"
+file = "java.util.HashMap.toml"
+references = 14
+open_members = 4
+blocked_members = 0
+
+[[class]]
+name = "java/util/Collections"
+file = "java.util.Collections.toml"
+references = 12
+open_members = 6
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Enum"
+file = "java.lang.Enum.toml"
+references = 11
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "[[Ljava/lang/String;"
+file = "[[Ljava.lang.String;.toml"
+references = 10
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/Iterator"
+file = "java.util.Iterator.toml"
+references = 10
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Integer"
+file = "java.lang.Integer.toml"
+references = 9
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Object"
+file = "java.lang.Object.toml"
+references = 9
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Record"
+file = "java.lang.Record.toml"
+references = 9
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/InputStream"
+file = "java.io.InputStream.toml"
+references = 8
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/AssertionError"
+file = "java.lang.AssertionError.toml"
+references = 7
+open_members = 4
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Character"
+file = "java.lang.Character.toml"
+references = 7
+open_members = 5
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Boolean"
+file = "java.lang.Boolean.toml"
+references = 6
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "java/io/InputStreamReader"
+file = "java.io.InputStreamReader.toml"
+references = 5
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/IllegalArgumentException"
+file = "java.lang.IllegalArgumentException.toml"
+references = 5
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/RuntimeException"
+file = "java.lang.RuntimeException.toml"
+references = 5
+open_members = 4
+blocked_members = 0
+
+[[class]]
+name = "java/lang/StringBuilder"
+file = "java.lang.StringBuilder.toml"
+references = 5
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Throwable"
+file = "java.lang.Throwable.toml"
+references = 5
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/util/function/Function"
+file = "java.util.function.Function.toml"
+references = 5
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "java/util/concurrent/ConcurrentHashMap"
+file = "java.util.concurrent.ConcurrentHashMap.toml"
+references = 4
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Byte"
+file = "java.lang.Byte.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Double"
+file = "java.lang.Double.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Float"
+file = "java.lang.Float.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Long"
+file = "java.lang.Long.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Short"
+file = "java.lang.Short.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/UnsupportedOperationException"
+file = "java.lang.UnsupportedOperationException.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/nio/charset/StandardCharsets"
+file = "java.nio.charset.StandardCharsets.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/Arrays"
+file = "java.util.Arrays.toml"
+references = 3
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/Collection"
+file = "java.util.Collection.toml"
+references = 3
+open_members = 3
+blocked_members = 0
+
+[[class]]
+name = "java/io/StringWriter"
+file = "java.io.StringWriter.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/io/Writer"
+file = "java.io.Writer.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/CharSequence"
+file = "java.lang.CharSequence.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/IllegalStateException"
+file = "java.lang.IllegalStateException.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/NullPointerException"
+file = "java.lang.NullPointerException.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/SecurityManager"
+file = "java.lang.SecurityManager.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/StackWalker"
+file = "java.lang.StackWalker.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/lang/ThreadLocal"
+file = "java.lang.ThreadLocal.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/Void"
+file = "java.lang.Void.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/reflect/Method"
+file = "java.lang.reflect.Method.toml"
+references = 2
+open_members = 0
+blocked_members = 2
+
+[[class]]
+name = "java/lang/reflect/Modifier"
+file = "java.lang.reflect.Modifier.toml"
+references = 2
+open_members = 0
+blocked_members = 2
+
+[[class]]
+name = "java/time/Duration"
+file = "java.time.Duration.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/time/ZonedDateTime"
+file = "java.time.ZonedDateTime.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/util/Date"
+file = "java.util.Date.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/util/EnumSet"
+file = "java.util.EnumSet.toml"
+references = 2
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/HashSet"
+file = "java.util.HashSet.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "java/util/UUID"
+file = "java.util.UUID.toml"
+references = 2
+open_members = 2
+blocked_members = 0
+
+[[class]]
+name = "[Lio/netty/util/ResourceLeakDetector$Level;"
+file = "[Lio.netty.util.ResourceLeakDetector$Level;.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "[Ljava/lang/Object;"
+file = "[Ljava.lang.Object;.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "[Ljava/lang/String;"
+file = "[Ljava.lang.String;.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/EOFException"
+file = "java.io.EOFException.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/File"
+file = "java.io.File.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/IOException"
+file = "java.io.IOException.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/Reader"
+file = "java.io.Reader.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/io/UncheckedIOException"
+file = "java.io.UncheckedIOException.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/ClassCastException"
+file = "java.lang.ClassCastException.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/InheritableThreadLocal"
+file = "java.lang.InheritableThreadLocal.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/StackWalker$Option"
+file = "java.lang.StackWalker$Option.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/lang/reflect/Array"
+file = "java.lang.reflect.Array.toml"
+references = 1
+open_members = 0
+blocked_members = 1
+
+[[class]]
+name = "java/lang/reflect/Constructor"
+file = "java.lang.reflect.Constructor.toml"
+references = 1
+open_members = 0
+blocked_members = 1
+
+[[class]]
+name = "java/security/AccessController"
+file = "java.security.AccessController.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/time/format/DateTimeFormatter"
+file = "java.time.format.DateTimeFormatter.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/ArrayDeque"
+file = "java.util.ArrayDeque.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/IdentityHashMap"
+file = "java.util.IdentityHashMap.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/Optional"
+file = "java.util.Optional.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/Set"
+file = "java.util.Set.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/TreeMap"
+file = "java.util.TreeMap.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/concurrent/ConcurrentMap"
+file = "java.util.concurrent.ConcurrentMap.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/concurrent/LinkedBlockingQueue"
+file = "java.util.concurrent.LinkedBlockingQueue.toml"
+references = 1
+open_members = 1
+blocked_members = 0
+
+[[class]]
+name = "java/util/concurrent/atomic/AtomicReference"
+file = "java.util.concurrent.atomic.AtomicReference.toml"
+references = 1
+open_members = 1
+blocked_members = 0

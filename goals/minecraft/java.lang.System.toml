@@ -1,0 +1,49 @@
+class = "java/lang/System"
+
+[[member]]
+name = "currentTimeMillis"
+descriptor = "()J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getSecurityManager"
+descriptor = "()Ljava/lang/SecurityManager;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "exit"
+descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "arraycopy"
+descriptor = "(Ljava/lang/Object;ILjava/lang/Object;II)V"
+kind = "native"
+references = 2
+
+[[member]]
+name = "getProperty"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getProperty"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setProperty"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "err"
+descriptor = "Ljava/io/PrintStream;"
+kind = "builtin"
+references = 1

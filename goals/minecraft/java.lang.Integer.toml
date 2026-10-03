@@ -1,0 +1,19 @@
+class = "java/lang/Integer"
+
+[[member]]
+name = "valueOf"
+descriptor = "(I)Ljava/lang/Integer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "parseInt"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "TYPE"
+descriptor = "Ljava/lang/Class;"
+kind = "builtin"
+references = 3

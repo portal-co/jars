@@ -1,0 +1,31 @@
+class = "java/util/Map"
+
+[[member]]
+name = "of"
+descriptor = "()Ljava/util/Map;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "entrySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "copyOf"
+descriptor = "(Ljava/util/Map;)Ljava/util/Map;"
+kind = "builtin"
+references = 1

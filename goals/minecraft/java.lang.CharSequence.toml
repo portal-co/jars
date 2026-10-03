@@ -1,0 +1,7 @@
+class = "java/lang/CharSequence"
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

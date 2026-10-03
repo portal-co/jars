@@ -1,0 +1,43 @@
+class = "java/util/List"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "of"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "get"
+descriptor = "(I)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 4

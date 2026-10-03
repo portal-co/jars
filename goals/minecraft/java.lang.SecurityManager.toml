@@ -1,0 +1,13 @@
+class = "java/lang/SecurityManager"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getClassContext"
+descriptor = "()[Ljava/lang/Class;"
+kind = "native"
+references = 1

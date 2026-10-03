@@ -1,0 +1,19 @@
+class = "java/lang/Object"
+
+[[member]]
+name = "getClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "native"
+references = 4
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1

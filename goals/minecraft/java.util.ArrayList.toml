@@ -1,0 +1,31 @@
+class = "java/util/ArrayList"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "trimToSize"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Collection;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 1

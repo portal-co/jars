@@ -302,17 +302,25 @@ impl<M> Mailbox<M> {
     }
 }
 
-/// A typed Java array address.  Arrays are actors just like generated object
-/// instances: aliases can cross object actors, but the mutable elements never
-/// leave this mailbox implementation.
+/// A typed Java array address.  The task host stores elements in a mailbox
+/// actor. The object and entity hosts store them in a `RefCell` and call the
+/// `_sync` methods directly. Aliases share one store; elements never escape it.
 pub struct JavaArray<T> {
-    actor: ActorRef<ArrayMessage<T>>,
+    store: ArrayStore<T>,
+}
+
+enum ArrayStore<T> {
+    Actor(ActorRef<ArrayMessage<T>>),
+    Direct(Rc<RefCell<Vec<T>>>),
 }
 
 impl<T> Clone for JavaArray<T> {
     fn clone(&self) -> Self {
         Self {
-            actor: self.actor.clone(),
+            store: match &self.store {
+                ArrayStore::Actor(actor) => ArrayStore::Actor(actor.clone()),
+                ArrayStore::Direct(state) => ArrayStore::Direct(Rc::clone(state)),
+            },
         }
     }
 }
@@ -336,7 +344,21 @@ impl<T: Clone + 'static> JavaArray<T> {
     /// Java reference identity for two typed array addresses.
     #[must_use]
     pub fn same(&self, other: &Self) -> bool {
-        self.actor.same(&other.actor)
+        match (&self.store, &other.store) {
+            (ArrayStore::Actor(left), ArrayStore::Actor(right)) => left.same(right),
+            (ArrayStore::Direct(left), ArrayStore::Direct(right)) => Rc::ptr_eq(left, right),
+            _ => false,
+        }
+    }
+
+    /// Creates a default-filled Java array on the synchronous hosts.
+    pub fn direct(length: i32, default: T) -> JavaResult<Self> {
+        if length < 0 {
+            return Err(negative_array_size());
+        }
+        Ok(Self {
+            store: ArrayStore::Direct(Rc::new(RefCell::new(vec![default; length as usize]))),
+        })
     }
 
     /// Creates a default-filled Java array.  Negative sizes use the Java
@@ -413,32 +435,99 @@ impl<T: Clone + 'static> JavaArray<T> {
                 }
             }
         });
-        Ok(Self { actor })
+        Ok(Self {
+            store: ArrayStore::Actor(actor),
+        })
     }
 
     pub async fn length(&self) -> JavaResult<i32> {
-        let (reply, response) = reply();
-        self.actor.send(ArrayMessage::Length { reply }).await?;
-        response.recv().await?
+        match &self.store {
+            ArrayStore::Direct(state) => Ok(state.borrow().len() as i32),
+            ArrayStore::Actor(actor) => {
+                let (reply, response) = reply();
+                actor.send(ArrayMessage::Length { reply }).await?;
+                response.recv().await?
+            }
+        }
+    }
+
+    pub fn length_sync(&self) -> JavaResult<i32> {
+        match &self.store {
+            ArrayStore::Direct(state) => Ok(state.borrow().len() as i32),
+            ArrayStore::Actor(_) => Err(crate::direct_call_on_actor()),
+        }
     }
 
     pub async fn get(&self, index: i32) -> JavaResult<T> {
-        let (reply, response) = reply();
-        self.actor.send(ArrayMessage::Get { index, reply }).await?;
-        response.recv().await?
+        match &self.store {
+            ArrayStore::Direct(state) => direct_array_get(state, index),
+            ArrayStore::Actor(actor) => {
+                let (reply, response) = reply();
+                actor.send(ArrayMessage::Get { index, reply }).await?;
+                response.recv().await?
+            }
+        }
+    }
+
+    pub fn get_sync(&self, index: i32) -> JavaResult<T> {
+        match &self.store {
+            ArrayStore::Direct(state) => direct_array_get(state, index),
+            ArrayStore::Actor(_) => Err(crate::direct_call_on_actor()),
+        }
     }
 
     pub async fn set(&self, index: i32, value: T) -> JavaResult<()> {
-        let (reply, response) = reply();
-        self.actor
-            .send(ArrayMessage::Set {
-                index,
-                value,
-                reply,
-            })
-            .await?;
-        response.recv().await?
+        match &self.store {
+            ArrayStore::Direct(state) => direct_array_set(state, index, value),
+            ArrayStore::Actor(actor) => {
+                let (reply, response) = reply();
+                actor
+                    .send(ArrayMessage::Set {
+                        index,
+                        value,
+                        reply,
+                    })
+                    .await?;
+                response.recv().await?
+            }
+        }
     }
+
+    pub fn set_sync(&self, index: i32, value: T) -> JavaResult<()> {
+        match &self.store {
+            ArrayStore::Direct(state) => direct_array_set(state, index, value),
+            ArrayStore::Actor(_) => Err(crate::direct_call_on_actor()),
+        }
+    }
+}
+
+fn direct_array_get<T: Clone>(state: &Rc<RefCell<Vec<T>>>, index: i32) -> JavaResult<T> {
+    if index < 0 {
+        return Err(array_index_out_of_bounds());
+    }
+    state
+        .borrow()
+        .get(index as usize)
+        .cloned()
+        .ok_or_else(array_index_out_of_bounds)
+}
+
+fn direct_array_set<T: Clone>(state: &Rc<RefCell<Vec<T>>>, index: i32, value: T) -> JavaResult<()> {
+    if index < 0 {
+        return Err(array_index_out_of_bounds());
+    }
+    let mut elements = state.borrow_mut();
+    match elements.get_mut(index as usize) {
+        Some(slot) => {
+            *slot = value;
+            Ok(())
+        }
+        None => Err(array_index_out_of_bounds()),
+    }
+}
+
+fn direct_call_on_actor() -> anyhow::Error {
+    anyhow::anyhow!("synchronous Java call used a mailbox actor")
 }
 
 /// The sending half of a typed actor-method reply.
@@ -597,6 +686,17 @@ mod tests {
             assert_eq!(sequence.char_at(1).await.unwrap(), 0xd83d);
             assert!(sequence.__same(&CharSequence::from_string_builder(builder)));
         });
+    }
+
+    #[test]
+    fn direct_array_and_string_builder_mutate_without_a_mailbox() {
+        let array = JavaArray::direct(2, 0_i32).unwrap();
+        array.set_sync(0, 20).unwrap();
+        array.set_sync(1, 22).unwrap();
+        assert_eq!(array.get_sync(0).unwrap() + array.get_sync(1).unwrap(), 42);
+        let builder = JavaStringBuilder::direct(JavaString::new("4")).unwrap();
+        let builder = builder.append_int_sync(2).unwrap();
+        assert_eq!(builder.to_string_value_sync().unwrap().as_str(), "42");
     }
 
     #[test]

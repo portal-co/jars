@@ -290,6 +290,9 @@ pub(crate) enum RawInstruction {
     InvokeInterface {
         index: u16,
     },
+    InvokeDynamic {
+        index: u16,
+    },
     Unsupported {
         opcode: u8,
     },
@@ -423,7 +426,11 @@ fn modified_utf8(bytes: &[u8]) -> Result<String, Error> {
         };
         units.push(unit);
     }
-    String::from_utf16(&units).map_err(|_| Error::new("invalid modified UTF-8 UTF-16 sequence"))
+    // Class files may store unpaired surrogates. Rust strings cannot, so those
+    // units become U+FFFD. Names and descriptors used by the compiler are
+    // well-formed; this only keeps constants such as Guava's invisible-character
+    // table from rejecting the class.
+    Ok(String::from_utf16_lossy(&units))
 }
 
 impl ConstantPool {
@@ -528,6 +535,22 @@ impl ConstantPool {
             name: name.to_owned(),
             descriptor: descriptor.to_owned(),
         })
+    }
+
+    /// Name and descriptor of an `invokedynamic` constant. The bootstrap
+    /// method is intentionally not resolved: jars records the call as a
+    /// closed-world gap and never links it.
+    pub(crate) fn invoke_dynamic(&self, index: u16) -> Result<(&str, &str), Error> {
+        let name_and_type = match self.entry(index)? {
+            CpEntry::InvokeDynamic { name_and_type, .. } => *name_and_type,
+            _ => {
+                return Err(Error::new(format!(
+                    "constant-pool index {index} is not an invokedynamic"
+                )));
+            }
+        };
+        let (name, descriptor) = self.name_and_type(name_and_type)?;
+        Ok((name, descriptor))
     }
 
     pub(crate) fn constant(&self, index: u16) -> Result<ConstantValue<'_>, Error> {
@@ -1148,6 +1171,15 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
             }
             InvokeInterface { index }
         }
+        0xba => {
+            let index = reader.u2()?;
+            let zero_a = reader.u1()?;
+            let zero_b = reader.u1()?;
+            if zero_a != 0 || zero_b != 0 {
+                return Err(Error::new("invalid invokedynamic operands"));
+            }
+            InvokeDynamic { index }
+        }
         0xbb => New {
             index: reader.u2()?,
         },
@@ -1254,6 +1286,7 @@ mod tests {
             modified_utf8(&[0xed, 0xa0, 0xbd, 0xed, 0xb8, 0x80]).unwrap(),
             "😀"
         );
+        assert_eq!(modified_utf8(&[0xed, 0xa0, 0x80]).unwrap(), "\u{FFFD}");
     }
 
     #[test]

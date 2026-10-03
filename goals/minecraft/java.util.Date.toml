@@ -1,0 +1,13 @@
+class = "java/util/Date"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "from"
+descriptor = "(Ljava/time/Instant;)Ljava/util/Date;"
+kind = "builtin"
+references = 1

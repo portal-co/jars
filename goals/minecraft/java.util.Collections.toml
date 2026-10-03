@@ -1,0 +1,37 @@
+class = "java/util/Collections"
+
+[[member]]
+name = "emptyList"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "emptyMap"
+descriptor = "()Ljava/util/Map;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "singletonList"
+descriptor = "(Ljava/lang/Object;)Ljava/util/List;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "singleton"
+descriptor = "(Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unmodifiableList"
+descriptor = "(Ljava/util/List;)Ljava/util/List;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reverse"
+descriptor = "(Ljava/util/List;)V"
+kind = "builtin"
+references = 2

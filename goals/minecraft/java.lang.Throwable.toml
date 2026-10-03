@@ -1,0 +1,13 @@
+class = "java/lang/Throwable"
+
+[[member]]
+name = "printStackTrace"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addSuppressed"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 4

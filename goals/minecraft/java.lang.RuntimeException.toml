@@ -1,0 +1,25 @@
+class = "java/lang/RuntimeException"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1

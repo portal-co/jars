@@ -1,0 +1,13 @@
+class = "java/io/StringWriter"
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1

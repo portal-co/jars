@@ -1,0 +1,13 @@
+class = "java/time/Duration"
+
+[[member]]
+name = "toNanos"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofMillis"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 1

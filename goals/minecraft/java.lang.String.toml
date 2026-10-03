@@ -1,0 +1,49 @@
+class = "java/lang/String"
+
+[[member]]
+name = "valueOf"
+descriptor = "(C)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "valueOf"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "equalsIgnoreCase"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "matches"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "replaceAll"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
