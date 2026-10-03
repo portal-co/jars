@@ -1,0 +1,19 @@
+class = "javax/crypto/KeyGenerator"
+
+[[member]]
+name = "generateKey"
+descriptor = "()Ljavax/crypto/SecretKey;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "init"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/crypto/KeyGenerator;"
+kind = "builtin"
+references = 1

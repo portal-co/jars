@@ -1,0 +1,103 @@
+class = "java/nio/channels/FileChannel"
+
+[[member]]
+name = "position"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "size"
+descriptor = "()J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "tryLock"
+descriptor = "()Ljava/nio/channels/FileLock;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "position"
+descriptor = "(J)Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "truncate"
+descriptor = "(J)Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "transferTo"
+descriptor = "(JJLjava/nio/channels/WritableByteChannel;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lock"
+descriptor = "(JJZ)Ljava/nio/channels/FileLock;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "tryLock"
+descriptor = "(JJZ)Ljava/nio/channels/FileLock;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "read"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "read"
+descriptor = "(Ljava/nio/ByteBuffer;J)I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "map"
+descriptor = "(Ljava/nio/channels/FileChannel$MapMode;JJ)Ljava/nio/MappedByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "open"
+descriptor = "(Ljava/nio/file/Path;[Ljava/nio/file/OpenOption;)Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "force"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 5

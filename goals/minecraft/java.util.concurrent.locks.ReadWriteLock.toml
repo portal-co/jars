@@ -1,0 +1,13 @@
+class = "java/util/concurrent/locks/ReadWriteLock"
+
+[[member]]
+name = "readLock"
+descriptor = "()Ljava/util/concurrent/locks/Lock;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "writeLock"
+descriptor = "()Ljava/util/concurrent/locks/Lock;"
+kind = "builtin"
+references = 11

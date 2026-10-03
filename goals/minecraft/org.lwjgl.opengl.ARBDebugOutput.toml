@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/ARBDebugOutput"
+
+[[member]]
+name = "glDebugMessageControlARB"
+descriptor = "(III[IZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDebugMessageCallbackARB"
+descriptor = "(Lorg/lwjgl/opengl/GLDebugMessageARBCallbackI;J)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/KHRSurface"
+
+[[member]]
+name = "vkDestroySurfaceKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetPhysicalDeviceSurfacePresentModesKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;JLjava/nio/IntBuffer;Ljava/nio/IntBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkGetPhysicalDeviceSurfaceFormatsKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;JLjava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkSurfaceFormatKHR$Buffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkGetPhysicalDeviceSurfaceCapabilitiesKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;JLorg/lwjgl/vulkan/VkSurfaceCapabilitiesKHR;)I"
+kind = "builtin"
+references = 1

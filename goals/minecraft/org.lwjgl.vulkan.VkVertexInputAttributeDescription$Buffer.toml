@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkVertexInputAttributeDescription$Buffer"
+
+[[member]]
+name = "flip"
+descriptor = "()Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Lorg/lwjgl/system/Struct;)Lorg/lwjgl/system/StructBuffer;"
+kind = "builtin"
+references = 1

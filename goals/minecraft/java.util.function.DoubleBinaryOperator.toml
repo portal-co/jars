@@ -1,0 +1,7 @@
+class = "java/util/function/DoubleBinaryOperator"
+
+[[member]]
+name = "applyAsDouble"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 4

@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/linux/Udev"
+
+[[member]]
+name = "udev_new"
+descriptor = "()Lcom/sun/jna/platform/linux/Udev$UdevContext;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/linux/Udev;"
+kind = "builtin"
+references = 4

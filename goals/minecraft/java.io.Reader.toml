@@ -1,7 +1,31 @@
 class = "java/io/Reader"
 
 [[member]]
+name = "readAllAsString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 38
+
+[[member]]
+name = "read"
+descriptor = "([C)I"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "read"
 descriptor = "([CII)I"
 kind = "builtin"
-references = 1
+references = 2

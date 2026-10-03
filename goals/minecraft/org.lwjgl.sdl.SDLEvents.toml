@@ -1,0 +1,25 @@
+class = "org/lwjgl/sdl/SDLEvents"
+
+[[member]]
+name = "SDL_PumpEvents"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_FlushEvents"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetWindowFromEvent"
+descriptor = "(Lorg/lwjgl/sdl/SDL_Event;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_PollEvent"
+descriptor = "(Lorg/lwjgl/sdl/SDL_Event;)Z"
+kind = "builtin"
+references = 1

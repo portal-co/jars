@@ -1,0 +1,19 @@
+class = "java/util/concurrent/CompletionException"
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 6

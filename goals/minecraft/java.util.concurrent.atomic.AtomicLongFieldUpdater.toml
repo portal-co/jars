@@ -1,0 +1,31 @@
+class = "java/util/concurrent/atomic/AtomicLongFieldUpdater"
+
+[[member]]
+name = "newUpdater"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;)Ljava/util/concurrent/atomic/AtomicLongFieldUpdater;"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "incrementAndGet"
+descriptor = "(Ljava/lang/Object;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addAndGet"
+descriptor = "(Ljava/lang/Object;J)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "lazySet"
+descriptor = "(Ljava/lang/Object;J)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Ljava/lang/Object;JJ)Z"
+kind = "builtin"
+references = 7

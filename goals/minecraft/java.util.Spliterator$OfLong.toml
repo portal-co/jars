@@ -1,0 +1,19 @@
+class = "java/util/Spliterator$OfLong"
+
+[[member]]
+name = "estimateSize"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/util/function/LongConsumer;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "tryAdvance"
+descriptor = "(Ljava/util/function/LongConsumer;)Z"
+kind = "builtin"
+references = 5

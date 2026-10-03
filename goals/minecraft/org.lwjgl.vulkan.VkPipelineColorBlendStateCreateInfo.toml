@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkPipelineColorBlendStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineColorBlendStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineColorBlendStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pAttachments"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;)Lorg/lwjgl/vulkan/VkPipelineColorBlendStateCreateInfo;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,61 @@
+class = "io/netty/channel/kqueue/Native"
+
+[[member]]
+name = "kqueueCreate"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKEventFFlags"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKEventFilter"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKEventFlags"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKEventIdent"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKeventData"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofKeventUdata"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sizeofKEvent"
+descriptor = "()I"
+kind = "native"
+references = 2
+
+[[member]]
+name = "keventAddUserEvent"
+descriptor = "(II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "keventTriggerUserEvent"
+descriptor = "(II)I"
+kind = "native"
+references = 1

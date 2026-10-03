@@ -1,0 +1,43 @@
+class = "java/lang/invoke/MethodHandles$Lookup"
+
+[[member]]
+name = "findStaticGetter"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "findVarHandle"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/invoke/VarHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 5
+
+[[member]]
+name = "findStatic"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 11
+
+[[member]]
+name = "findVirtual"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 15
+
+[[member]]
+name = "findConstructor"
+descriptor = "(Ljava/lang/Class;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "unreflect"
+descriptor = "(Ljava/lang/reflect/Method;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

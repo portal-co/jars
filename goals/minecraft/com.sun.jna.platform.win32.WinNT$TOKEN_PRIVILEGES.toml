@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$TOKEN_PRIVILEGES"
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "Privileges"
+descriptor = "[Lcom/sun/jna/platform/win32/WinNT$LUID_AND_ATTRIBUTES;"
+kind = "builtin"
+references = 1

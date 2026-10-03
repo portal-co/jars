@@ -1,0 +1,19 @@
+class = "com/aayushatharva/brotli4j/Brotli4jLoader"
+
+[[member]]
+name = "getUnavailabilityCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ensureAvailability"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isAvailable"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

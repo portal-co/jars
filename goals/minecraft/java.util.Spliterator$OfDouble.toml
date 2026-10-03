@@ -1,0 +1,13 @@
+class = "java/util/Spliterator$OfDouble"
+
+[[member]]
+name = "estimateSize"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "tryAdvance"
+descriptor = "(Ljava/util/function/DoubleConsumer;)Z"
+kind = "builtin"
+references = 6

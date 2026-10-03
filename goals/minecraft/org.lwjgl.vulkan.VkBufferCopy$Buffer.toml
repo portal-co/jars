@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkBufferCopy$Buffer"
+
+[[member]]
+name = "dstOffset"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferCopy$Buffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "size"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferCopy$Buffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "srcOffset"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferCopy$Buffer;"
+kind = "builtin"
+references = 4

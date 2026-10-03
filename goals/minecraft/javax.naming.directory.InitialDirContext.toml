@@ -1,0 +1,7 @@
+class = "javax/naming/directory/InitialDirContext"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Hashtable;)V"
+kind = "builtin"
+references = 1

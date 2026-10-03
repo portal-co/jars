@@ -1,0 +1,31 @@
+class = "java/util/zip/DeflaterOutputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "finish"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Ljava/util/zip/Deflater;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1

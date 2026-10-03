@@ -1,0 +1,7 @@
+class = "java/nio/channels/Channel"
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

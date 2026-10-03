@@ -1,0 +1,397 @@
+class = "java/nio/ByteBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()B"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "getChar"
+descriptor = "()C"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "getFloat"
+descriptor = "()F"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "arrayOffset"
+descriptor = "()I"
+kind = "builtin"
+references = 35
+
+[[member]]
+name = "capacity"
+descriptor = "()I"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "getInt"
+descriptor = "()I"
+kind = "builtin"
+references = 68
+
+[[member]]
+name = "limit"
+descriptor = "()I"
+kind = "builtin"
+references = 48
+
+[[member]]
+name = "position"
+descriptor = "()I"
+kind = "builtin"
+references = 122
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 160
+
+[[member]]
+name = "getLong"
+descriptor = "()J"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 40
+
+[[member]]
+name = "flip"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "rewind"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "asReadOnlyBuffer"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "compact"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "flip"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "mark"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reset"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rewind"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "slice"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "order"
+descriptor = "()Ljava/nio/ByteOrder;"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "asCharBuffer"
+descriptor = "()Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "asIntBuffer"
+descriptor = "()Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "asLongBuffer"
+descriptor = "()Ljava/nio/LongBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShort"
+descriptor = "()S"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "hasArray"
+descriptor = "()Z"
+kind = "builtin"
+references = 40
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "isDirect"
+descriptor = "()Z"
+kind = "builtin"
+references = 42
+
+[[member]]
+name = "isReadOnly"
+descriptor = "()Z"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "array"
+descriptor = "()[B"
+kind = "builtin"
+references = 58
+
+[[member]]
+name = "put"
+descriptor = "(B)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "putChar"
+descriptor = "(C)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "putFloat"
+descriptor = "(F)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "get"
+descriptor = "(I)B"
+kind = "builtin"
+references = 72
+
+[[member]]
+name = "getChar"
+descriptor = "(I)C"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getFloat"
+descriptor = "(I)F"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getInt"
+descriptor = "(I)I"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "getLong"
+descriptor = "(I)J"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "allocate"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 47
+
+[[member]]
+name = "allocateDirect"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 27
+
+[[member]]
+name = "putInt"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "getShort"
+descriptor = "(I)S"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "put"
+descriptor = "(IB)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "putFloat"
+descriptor = "(IF)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "putInt"
+descriptor = "(II)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "slice"
+descriptor = "(II)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putLong"
+descriptor = "(IJ)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "putShort"
+descriptor = "(IS)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "get"
+descriptor = "(I[BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "putLong"
+descriptor = "(J)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/nio/ByteBuffer;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "order"
+descriptor = "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "putShort"
+descriptor = "(S)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "get"
+descriptor = "([B)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "put"
+descriptor = "([B)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "wrap"
+descriptor = "([B)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 39
+
+[[member]]
+name = "get"
+descriptor = "([BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "put"
+descriptor = "([BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "wrap"
+descriptor = "([BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 8

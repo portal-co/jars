@@ -1,0 +1,55 @@
+class = "com/sun/jna/platform/win32/Advapi32"
+
+[[member]]
+name = "OpenProcessToken"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;ILcom/sun/jna/platform/win32/WinNT$HANDLEByReference;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "AdjustTokenPrivileges"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;ZLcom/sun/jna/platform/win32/WinNT$TOKEN_PRIVILEGES;ILcom/sun/jna/platform/win32/WinNT$TOKEN_PRIVILEGES;Lcom/sun/jna/ptr/IntByReference;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "RegCloseKey"
+descriptor = "(Lcom/sun/jna/platform/win32/WinReg$HKEY;)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "RegOpenKeyEx"
+descriptor = "(Lcom/sun/jna/platform/win32/WinReg$HKEY;Ljava/lang/String;IILcom/sun/jna/platform/win32/WinReg$HKEYByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "RegQueryValueEx"
+descriptor = "(Lcom/sun/jna/platform/win32/WinReg$HKEY;Ljava/lang/String;ILcom/sun/jna/ptr/IntByReference;Lcom/sun/jna/Pointer;Lcom/sun/jna/ptr/IntByReference;)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "RegQueryValueEx"
+descriptor = "(Lcom/sun/jna/platform/win32/WinReg$HKEY;Ljava/lang/String;ILcom/sun/jna/ptr/IntByReference;Lcom/sun/jna/ptr/IntByReference;Lcom/sun/jna/ptr/IntByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OpenEventLog"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Lcom/sun/jna/platform/win32/WinNT$HANDLE;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "LookupPrivilegeValue"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Lcom/sun/jna/platform/win32/WinNT$LUID;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Advapi32;"
+kind = "builtin"
+references = 9

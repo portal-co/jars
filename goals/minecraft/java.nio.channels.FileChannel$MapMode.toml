@@ -1,0 +1,13 @@
+class = "java/nio/channels/FileChannel$MapMode"
+
+[[member]]
+name = "READ_ONLY"
+descriptor = "Ljava/nio/channels/FileChannel$MapMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "READ_WRITE"
+descriptor = "Ljava/nio/channels/FileChannel$MapMode;"
+kind = "builtin"
+references = 1

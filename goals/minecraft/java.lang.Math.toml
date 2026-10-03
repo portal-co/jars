@@ -1,0 +1,367 @@
+class = "java/lang/Math"
+
+[[member]]
+name = "random"
+descriptor = "()D"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "abs"
+descriptor = "(D)D"
+kind = "builtin"
+references = 111
+
+[[member]]
+name = "acos"
+descriptor = "(D)D"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "asin"
+descriptor = "(D)D"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "atan"
+descriptor = "(D)D"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "cbrt"
+descriptor = "(D)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ceil"
+descriptor = "(D)D"
+kind = "builtin"
+references = 66
+
+[[member]]
+name = "cos"
+descriptor = "(D)D"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "exp"
+descriptor = "(D)D"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "floor"
+descriptor = "(D)D"
+kind = "builtin"
+references = 54
+
+[[member]]
+name = "log"
+descriptor = "(D)D"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "log10"
+descriptor = "(D)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "log1p"
+descriptor = "(D)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nextDown"
+descriptor = "(D)D"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "nextUp"
+descriptor = "(D)D"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "rint"
+descriptor = "(D)D"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "signum"
+descriptor = "(D)D"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "sin"
+descriptor = "(D)D"
+kind = "builtin"
+references = 68
+
+[[member]]
+name = "sqrt"
+descriptor = "(D)D"
+kind = "builtin"
+references = 118
+
+[[member]]
+name = "tan"
+descriptor = "(D)D"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "tanh"
+descriptor = "(D)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toRadians"
+descriptor = "(D)D"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "ulp"
+descriptor = "(D)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "round"
+descriptor = "(D)J"
+kind = "builtin"
+references = 47
+
+[[member]]
+name = "atan2"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "copySign"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hypot"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 88
+
+[[member]]
+name = "min"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 60
+
+[[member]]
+name = "pow"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 92
+
+[[member]]
+name = "clamp"
+descriptor = "(DDD)D"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "fma"
+descriptor = "(DDD)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "abs"
+descriptor = "(F)F"
+kind = "builtin"
+references = 61
+
+[[member]]
+name = "signum"
+descriptor = "(F)F"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "round"
+descriptor = "(F)I"
+kind = "builtin"
+references = 66
+
+[[member]]
+name = "copySign"
+descriptor = "(FF)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(FF)F"
+kind = "builtin"
+references = 152
+
+[[member]]
+name = "min"
+descriptor = "(FF)F"
+kind = "builtin"
+references = 132
+
+[[member]]
+name = "clamp"
+descriptor = "(FFF)F"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "fma"
+descriptor = "(FFF)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "abs"
+descriptor = "(I)I"
+kind = "builtin"
+references = 131
+
+[[member]]
+name = "absExact"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "negateExact"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addExact"
+descriptor = "(II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "floorDiv"
+descriptor = "(II)I"
+kind = "builtin"
+references = 23
+
+[[member]]
+name = "floorDivExact"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "floorMod"
+descriptor = "(II)I"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "max"
+descriptor = "(II)I"
+kind = "builtin"
+references = 545
+
+[[member]]
+name = "multiplyExact"
+descriptor = "(II)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "powExact"
+descriptor = "(II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "subtractExact"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toIntExact"
+descriptor = "(J)I"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "abs"
+descriptor = "(J)J"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "floorMod"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "clamp"
+descriptor = "(JII)I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "addExact"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "floorDiv"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "floorMod"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 82
+
+[[member]]
+name = "min"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 150
+
+[[member]]
+name = "multiplyExact"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1

@@ -1,7 +1,109 @@
 class = "java/lang/Double"
 
 [[member]]
+name = "doubleValue"
+descriptor = "()D"
+kind = "builtin"
+references = 418
+
+[[member]]
+name = "floatValue"
+descriptor = "()F"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isInfinite"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isNaN"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "doubleToLongBits"
+descriptor = "(D)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "doubleToRawLongBits"
+descriptor = "(D)J"
+kind = "native"
+references = 2225
+
+[[member]]
+name = "valueOf"
+descriptor = "(D)Ljava/lang/Double;"
+kind = "builtin"
+references = 262
+
+[[member]]
+name = "toString"
+descriptor = "(D)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isFinite"
+descriptor = "(D)Z"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "isInfinite"
+descriptor = "(D)Z"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "isNaN"
+descriptor = "(D)Z"
+kind = "builtin"
+references = 39
+
+[[member]]
+name = "sum"
+descriptor = "(DD)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compare"
+descriptor = "(DD)I"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "longBitsToDouble"
+descriptor = "(J)D"
+kind = "native"
+references = 23
+
+[[member]]
+name = "parseDouble"
+descriptor = "(Ljava/lang/String;)D"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Double;"
+kind = "builtin"
+references = 5
+
+[[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 12

@@ -1,0 +1,31 @@
+class = "java/io/BufferedReader"
+
+[[member]]
+name = "readLine"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "lines"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Reader;)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Reader;I)V"
+kind = "builtin"
+references = 1

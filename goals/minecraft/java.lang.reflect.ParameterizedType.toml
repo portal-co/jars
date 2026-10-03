@@ -1,0 +1,22 @@
+class = "java/lang/reflect/ParameterizedType"
+
+[[member]]
+name = "getOwnerType"
+descriptor = "()Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 17
+
+[[member]]
+name = "getRawType"
+descriptor = "()Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 20
+
+[[member]]
+name = "getActualTypeArguments"
+descriptor = "()[Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 25

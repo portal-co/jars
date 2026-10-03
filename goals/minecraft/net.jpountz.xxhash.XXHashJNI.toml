@@ -1,0 +1,55 @@
+class = "net/jpountz/xxhash/XXHashJNI"
+
+[[member]]
+name = "XXH32_init"
+descriptor = "(I)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH32_digest"
+descriptor = "(J)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH64_digest"
+descriptor = "(J)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH64_init"
+descriptor = "(J)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH32_update"
+descriptor = "(J[BII)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH64_update"
+descriptor = "(J[BII)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH32BB"
+descriptor = "(Ljava/nio/ByteBuffer;III)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH32"
+descriptor = "([BIII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "XXH64"
+descriptor = "([BIIJ)J"
+kind = "native"
+references = 1

@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/solaris/Kstat2StatusException"
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

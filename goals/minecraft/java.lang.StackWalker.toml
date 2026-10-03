@@ -8,6 +8,24 @@ references = 1
 
 [[member]]
 name = "getInstance"
-descriptor = "(Ljava/lang/StackWalker$Option;)Ljava/lang/StackWalker;"
+descriptor = "()Ljava/lang/StackWalker;"
 kind = "builtin"
 references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/StackWalker$Option;)Ljava/lang/StackWalker;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/util/Set;I)Ljava/lang/StackWalker;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "walk"
+descriptor = "(Ljava/util/function/Function;)Ljava/lang/Object;"
+kind = "builtin"
+references = 8

@@ -1,0 +1,7 @@
+class = "org/apache/kafka/clients/producer/KafkaProducer"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Properties;)V"
+kind = "builtin"
+references = 1

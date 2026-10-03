@@ -1,0 +1,19 @@
+class = "java/net/http/HttpClient$Builder"
+
+[[member]]
+name = "build"
+descriptor = "()Ljava/net/http/HttpClient;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "connectTimeout"
+descriptor = "(Ljava/time/Duration;)Ljava/net/http/HttpClient$Builder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "executor"
+descriptor = "(Ljava/util/concurrent/Executor;)Ljava/net/http/HttpClient$Builder;"
+kind = "builtin"
+references = 2

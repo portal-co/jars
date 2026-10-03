@@ -1,0 +1,49 @@
+class = "java/util/ResourceBundle"
+
+[[member]]
+name = "getKeys"
+descriptor = "()Ljava/util/Enumeration;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getString"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "getBundle"
+descriptor = "(Ljava/lang/String;)Ljava/util/ResourceBundle;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "containsKey"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getStringArray"
+descriptor = "(Ljava/lang/String;)[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getBundle"
+descriptor = "(Ljava/lang/String;Ljava/util/Locale;)Ljava/util/ResourceBundle;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setParent"
+descriptor = "(Ljava/util/ResourceBundle;)V"
+kind = "builtin"
+references = 2

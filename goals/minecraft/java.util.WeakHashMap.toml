@@ -1,0 +1,25 @@
+class = "java/util/WeakHashMap"
+
+[[member]]
+name = "keySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

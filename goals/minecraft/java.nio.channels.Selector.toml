@@ -1,0 +1,31 @@
+class = "java/nio/channels/Selector"
+
+[[member]]
+name = "selectNow"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "open"
+descriptor = "()Ljava/nio/channels/Selector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "wakeup"
+descriptor = "()Ljava/nio/channels/Selector;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3

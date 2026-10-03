@@ -1,0 +1,13 @@
+class = "java/lang/UnsatisfiedLinkError"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 5

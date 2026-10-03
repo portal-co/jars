@@ -1,0 +1,25 @@
+class = "com/sun/jna/ptr/IntByReference"
+
+[[member]]
+name = "getValue"
+descriptor = "()I"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setValue"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1

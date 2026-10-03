@@ -1,0 +1,7 @@
+class = "java/nio/file/attribute/GroupPrincipal"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

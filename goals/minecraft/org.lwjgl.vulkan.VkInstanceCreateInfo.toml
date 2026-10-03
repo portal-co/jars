@@ -1,0 +1,43 @@
+class = "org/lwjgl/vulkan/VkInstanceCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flags"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ppEnabledExtensionNames"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ppEnabledLayerNames"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pApplicationInfo"
+descriptor = "(Lorg/lwjgl/vulkan/VkApplicationInfo;)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pNext"
+descriptor = "(Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;)Lorg/lwjgl/vulkan/VkInstanceCreateInfo;"
+kind = "builtin"
+references = 1

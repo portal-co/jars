@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkClearRect"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkClearRect$Buffer;"
+kind = "builtin"
+references = 1

@@ -4,10 +4,70 @@ class = "java/time/ZonedDateTime"
 name = "toInstant"
 descriptor = "()Ljava/time/Instant;"
 kind = "builtin"
+references = 5
+
+[[member]]
+name = "toLocalDate"
+descriptor = "()Ljava/time/LocalDate;"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "toLocalDateTime"
+descriptor = "()Ljava/time/LocalDateTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getZone"
+descriptor = "()Ljava/time/ZoneId;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOffset"
+descriptor = "()Ljava/time/ZoneOffset;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "now"
+descriptor = "()Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "withEarlierOffsetAtOverlap"
+descriptor = "()Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 2
 
 [[member]]
 name = "parse"
 descriptor = "(Ljava/lang/CharSequence;)Ljava/time/ZonedDateTime;"
 kind = "builtin"
 references = 1
+
+[[member]]
+name = "ofInstant"
+descriptor = "(Ljava/time/Instant;Ljava/time/ZoneId;)Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/time/LocalDate;Ljava/time/LocalTime;Ljava/time/ZoneId;)Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "ofInstant"
+descriptor = "(Ljava/time/LocalDateTime;Ljava/time/ZoneOffset;Ljava/time/ZoneId;)Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(Ljava/time/format/DateTimeFormatter;)Ljava/lang/String;"
+kind = "builtin"
+references = 5

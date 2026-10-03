@@ -1,0 +1,37 @@
+class = "java/nio/file/attribute/PosixFileAttributes"
+
+[[member]]
+name = "creationTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lastAccessTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lastModifiedTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "group"
+descriptor = "()Ljava/nio/file/attribute/GroupPrincipal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "owner"
+descriptor = "()Ljava/nio/file/attribute/UserPrincipal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "permissions"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 4

@@ -1,0 +1,13 @@
+class = "javax/mail/internet/InternetAddress"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parse"
+descriptor = "(Ljava/lang/String;Z)[Ljavax/mail/internet/InternetAddress;"
+kind = "builtin"
+references = 1

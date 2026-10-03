@@ -1,0 +1,19 @@
+class = "ca/weblite/objc/RuntimeUtils"
+
+[[member]]
+name = "init"
+descriptor = "()V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getJavaPeer"
+descriptor = "(J)Lca/weblite/objc/Recipient;"
+kind = "native"
+references = 1
+
+[[member]]
+name = "createProxy"
+descriptor = "(Lca/weblite/objc/Recipient;)J"
+kind = "native"
+references = 1

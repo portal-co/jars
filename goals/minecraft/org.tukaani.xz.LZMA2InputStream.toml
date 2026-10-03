@@ -1,0 +1,13 @@
+class = "org/tukaani/xz/LZMA2InputStream"
+
+[[member]]
+name = "getMemoryUsage"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;I)V"
+kind = "builtin"
+references = 1

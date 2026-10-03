@@ -1,0 +1,43 @@
+class = "io/netty/internal/tcnative/SSLContext"
+
+[[member]]
+name = "make"
+descriptor = "(II)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "free"
+descriptor = "(J)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "disableOcsp"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setCertificateCallback"
+descriptor = "(JLio/netty/internal/tcnative/CertificateCallback;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setCipherSuite"
+descriptor = "(JLjava/lang/String;Z)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "enableOcsp"
+descriptor = "(JZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setCurvesList"
+descriptor = "(J[Ljava/lang/String;)Z"
+kind = "builtin"
+references = 2

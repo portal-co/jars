@@ -1,0 +1,31 @@
+class = "java/io/ObjectOutputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "flush"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "writeObject"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 3

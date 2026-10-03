@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceVulkan11Properties"
+
+[[member]]
+name = "maxMemoryAllocationSize"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceVulkan11Properties;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceVulkan11Properties;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1

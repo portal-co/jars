@@ -1,0 +1,7 @@
+class = "org/osgi/framework/wiring/BundleWiring"
+
+[[member]]
+name = "listResources"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;I)Ljava/util/Collection;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/scores/Team$CollisionRule;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

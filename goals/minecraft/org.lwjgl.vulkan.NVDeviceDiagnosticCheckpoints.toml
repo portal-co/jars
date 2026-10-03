@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/NVDeviceDiagnosticCheckpoints"
+
+[[member]]
+name = "vkCmdSetCheckpointNV"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetQueueCheckpointData2NV"
+descriptor = "(Lorg/lwjgl/vulkan/VkQueue;Ljava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkCheckpointData2NV$Buffer;)V"
+kind = "builtin"
+references = 2

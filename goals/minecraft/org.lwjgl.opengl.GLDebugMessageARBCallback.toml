@@ -1,0 +1,7 @@
+class = "org/lwjgl/opengl/GLDebugMessageARBCallback"
+
+[[member]]
+name = "create"
+descriptor = "(Lorg/lwjgl/opengl/GLDebugMessageARBCallbackI;)Lorg/lwjgl/opengl/GLDebugMessageARBCallback;"
+kind = "builtin"
+references = 1

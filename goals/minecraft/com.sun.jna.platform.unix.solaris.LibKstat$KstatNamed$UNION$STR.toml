@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/solaris/LibKstat$KstatNamed$UNION$STR"
+
+[[member]]
+name = "addr"
+descriptor = "Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 1

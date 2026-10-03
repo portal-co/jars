@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkWriteDescriptorSet$Buffer"
+
+[[member]]
+name = "flip"
+descriptor = "()Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "()Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "java/nio/file/WatchEvent"
+
+[[member]]
+name = "context"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "kind"
+descriptor = "()Ljava/nio/file/WatchEvent$Kind;"
+kind = "builtin"
+references = 1

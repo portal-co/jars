@@ -1,0 +1,73 @@
+class = "java/sql/ResultSetMetaData"
+
+[[member]]
+name = "getColumnCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnDisplaySize"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnType"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPrecision"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getScale"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getCatalogName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnClassName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnLabel"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getColumnTypeName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSchemaName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getTableName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1

@@ -1,13 +1,61 @@
 class = "java/util/HashSet"
 
 [[member]]
-name = "<init>"
-descriptor = "()V"
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
 kind = "builtin"
 references = 1
 
 [[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 117
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 22
+
+[[member]]
 name = "add"
 descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Collection;)V"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
 kind = "builtin"
 references = 1

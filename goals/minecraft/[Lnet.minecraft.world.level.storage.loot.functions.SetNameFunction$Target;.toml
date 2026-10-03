@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/level/storage/loot/functions/SetNameFunction$Target;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

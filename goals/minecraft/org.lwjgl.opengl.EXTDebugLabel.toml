@@ -1,0 +1,7 @@
+class = "org/lwjgl/opengl/EXTDebugLabel"
+
+[[member]]
+name = "glLabelObjectEXT"
+descriptor = "(IILjava/lang/CharSequence;)V"
+kind = "builtin"
+references = 4

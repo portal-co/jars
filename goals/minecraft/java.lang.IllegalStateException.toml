@@ -1,13 +1,37 @@
 class = "java/lang/IllegalStateException"
 
 [[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 881
+
+[[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 1
+references = 772
 
 [[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "addSuppressed"
+descriptor = "(Ljava/lang/Throwable;)V"
 kind = "builtin"
 references = 1

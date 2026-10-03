@@ -1,0 +1,19 @@
+class = "java/nio/file/WatchKey"
+
+[[member]]
+name = "watchable"
+descriptor = "()Ljava/nio/file/Watchable;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pollEvents"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reset"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

@@ -1,0 +1,25 @@
+class = "javax/net/ssl/KeyManagerFactory"
+
+[[member]]
+name = "getDefaultAlgorithm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getKeyManagers"
+descriptor = "()[Ljavax/net/ssl/KeyManager;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/net/ssl/KeyManagerFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "init"
+descriptor = "(Ljava/security/KeyStore;[C)V"
+kind = "builtin"
+references = 1

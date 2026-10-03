@@ -1,0 +1,7 @@
+class = "java/beans/PropertyChangeListener"
+
+[[member]]
+name = "propertyChange"
+descriptor = "(Ljava/beans/PropertyChangeEvent;)V"
+kind = "builtin"
+references = 1

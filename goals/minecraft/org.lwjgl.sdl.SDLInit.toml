@@ -1,0 +1,19 @@
+class = "org/lwjgl/sdl/SDLInit"
+
+[[member]]
+name = "SDL_Quit"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_Init"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetAppMetadataProperty"
+descriptor = "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 7

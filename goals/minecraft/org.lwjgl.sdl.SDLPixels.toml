@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLPixels"
+
+[[member]]
+name = "SDL_GetPixelFormatDetails"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_PixelFormatDetails;"
+kind = "builtin"
+references = 1

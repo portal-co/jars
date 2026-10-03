@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkOffset2D"
+
+[[member]]
+name = "set"
+descriptor = "(II)Lorg/lwjgl/vulkan/VkOffset2D;"
+kind = "builtin"
+references = 3

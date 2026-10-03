@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_LogOutputFunction"
+
+[[member]]
+name = "create"
+descriptor = "(Lorg/lwjgl/sdl/SDL_LogOutputFunctionI;)Lorg/lwjgl/sdl/SDL_LogOutputFunction;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "java/util/PropertyResourceBundle"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1

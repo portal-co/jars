@@ -1,0 +1,31 @@
+class = "javax/net/ssl/SSLEngineResult"
+
+[[member]]
+name = "bytesConsumed"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "bytesProduced"
+descriptor = "()I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getHandshakeStatus"
+descriptor = "()Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getStatus"
+descriptor = "()Ljavax/net/ssl/SSLEngineResult$Status;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljavax/net/ssl/SSLEngineResult$Status;Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;II)V"
+kind = "builtin"
+references = 9

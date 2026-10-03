@@ -1,0 +1,25 @@
+class = "java/util/concurrent/locks/LockSupport"
+
+[[member]]
+name = "parkNanos"
+descriptor = "(J)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "park"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "parkNanos"
+descriptor = "(Ljava/lang/Object;J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "unpark"
+descriptor = "(Ljava/lang/Thread;)V"
+kind = "builtin"
+references = 5

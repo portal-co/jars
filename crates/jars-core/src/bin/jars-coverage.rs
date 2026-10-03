@@ -27,9 +27,7 @@ fn main() -> ExitCode {
     let mut values = positional.into_iter();
     let target_release = values.next().unwrap_or_else(|| usage());
     let target_release = target_release.parse::<u16>().unwrap_or_else(|_| usage());
-    let jars = values
-        .map(PathBuf::from)
-        .collect::<Vec<_>>();
+    let jars = values.map(PathBuf::from).collect::<Vec<_>>();
     if jars.is_empty() {
         usage();
     }

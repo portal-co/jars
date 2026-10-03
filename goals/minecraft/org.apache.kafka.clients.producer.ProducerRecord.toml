@@ -1,0 +1,7 @@
+class = "org/apache/kafka/clients/producer/ProducerRecord"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

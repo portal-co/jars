@@ -1,0 +1,55 @@
+class = "com/sun/jna/platform/win32/Pdh"
+
+[[member]]
+name = "PdhCloseQuery"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhCollectQueryData"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "PdhRemoveCounter"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhGetRawCounterValue"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Lcom/sun/jna/platform/win32/WinDef$DWORDByReference;Lcom/sun/jna/platform/win32/Pdh$PDH_RAW_COUNTER;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "PdhCollectQueryDataWithTime"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Lcom/sun/jna/platform/win32/WinDef$LONGLONGByReference;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "PdhAddCounter"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Ljava/lang/String;Lcom/sun/jna/platform/win32/BaseTSD$DWORD_PTR;Lcom/sun/jna/platform/win32/WinNT$HANDLEByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhAddEnglishCounter"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Ljava/lang/String;Lcom/sun/jna/platform/win32/BaseTSD$DWORD_PTR;Lcom/sun/jna/platform/win32/WinNT$HANDLEByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhOpenQuery"
+descriptor = "(Ljava/lang/String;Lcom/sun/jna/platform/win32/BaseTSD$DWORD_PTR;Lcom/sun/jna/platform/win32/WinNT$HANDLEByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Pdh;"
+kind = "builtin"
+references = 1

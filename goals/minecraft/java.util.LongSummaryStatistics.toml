@@ -1,0 +1,13 @@
+class = "java/util/LongSummaryStatistics"
+
+[[member]]
+name = "getMax"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMin"
+descriptor = "()J"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "[Ljava/nio/file/LinkOption;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2

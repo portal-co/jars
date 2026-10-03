@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/KHRSwapchain"
+
+[[member]]
+name = "vkAcquireNextImageKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JJJJLjava/nio/IntBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetSwapchainImagesKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLjava/nio/IntBuffer;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkDestroySwapchainKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateSwapchainKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkQueuePresentKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkQueue;Lorg/lwjgl/vulkan/VkPresentInfoKHR;)I"
+kind = "builtin"
+references = 1

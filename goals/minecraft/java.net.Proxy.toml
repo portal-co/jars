@@ -1,0 +1,19 @@
+class = "java/net/Proxy"
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/net/Proxy$Type;Ljava/net/SocketAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NO_PROXY"
+descriptor = "Ljava/net/Proxy;"
+kind = "builtin"
+references = 2

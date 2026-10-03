@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$NUMA_NODE_RELATIONSHIP"
+
+[[member]]
+name = "nodeNumber"
+descriptor = "I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "groupMask"
+descriptor = "Lcom/sun/jna/platform/win32/WinNT$GROUP_AFFINITY;"
+kind = "builtin"
+references = 2

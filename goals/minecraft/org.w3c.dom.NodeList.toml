@@ -1,0 +1,13 @@
+class = "org/w3c/dom/NodeList"
+
+[[member]]
+name = "getLength"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "item"
+descriptor = "(I)Lorg/w3c/dom/Node;"
+kind = "builtin"
+references = 1

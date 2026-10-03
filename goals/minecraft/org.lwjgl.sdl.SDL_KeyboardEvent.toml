@@ -1,0 +1,25 @@
+class = "org/lwjgl/sdl/SDL_KeyboardEvent"
+
+[[member]]
+name = "key"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "scancode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mod"
+descriptor = "()S"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "repeat"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

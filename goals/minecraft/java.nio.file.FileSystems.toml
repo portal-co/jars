@@ -1,0 +1,13 @@
+class = "java/nio/file/FileSystems"
+
+[[member]]
+name = "getDefault"
+descriptor = "()Ljava/nio/file/FileSystem;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "newFileSystem"
+descriptor = "(Ljava/net/URI;Ljava/util/Map;)Ljava/nio/file/FileSystem;"
+kind = "builtin"
+references = 1

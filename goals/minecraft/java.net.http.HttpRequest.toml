@@ -1,0 +1,7 @@
+class = "java/net/http/HttpRequest"
+
+[[member]]
+name = "newBuilder"
+descriptor = "(Ljava/net/URI;)Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 2

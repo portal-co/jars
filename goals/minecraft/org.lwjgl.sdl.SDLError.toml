@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLError"
+
+[[member]]
+name = "SDL_GetError"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 31

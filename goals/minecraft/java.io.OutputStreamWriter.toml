@@ -1,0 +1,37 @@
+class = "java/io/OutputStreamWriter"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "flush"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Ljava/nio/charset/Charset;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Ljava/nio/charset/CharsetEncoder;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2

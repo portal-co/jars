@@ -1,8 +1,36 @@
 class = "java/lang/reflect/Constructor"
 
 [[member]]
+name = "getModifiers"
+descriptor = "()I"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 7
+
+[[member]]
+name = "getParameterTypes"
+descriptor = "()[Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "setAccessible"
+descriptor = "(Z)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
 name = "newInstance"
 descriptor = "([Ljava/lang/Object;)Ljava/lang/Object;"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 25

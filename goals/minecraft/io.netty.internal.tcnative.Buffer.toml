@@ -1,0 +1,7 @@
+class = "io/netty/internal/tcnative/Buffer"
+
+[[member]]
+name = "address"
+descriptor = "(Ljava/nio/ByteBuffer;)J"
+kind = "builtin"
+references = 2

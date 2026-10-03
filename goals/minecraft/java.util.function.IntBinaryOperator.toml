@@ -1,0 +1,7 @@
+class = "java/util/function/IntBinaryOperator"
+
+[[member]]
+name = "applyAsInt"
+descriptor = "(II)I"
+kind = "builtin"
+references = 6

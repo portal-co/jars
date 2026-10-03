@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_DisplayEvent"
+
+[[member]]
+name = "displayID"
+descriptor = "()I"
+kind = "builtin"
+references = 3

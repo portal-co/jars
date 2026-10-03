@@ -5,11 +5,67 @@ name = "getModifiers"
 descriptor = "()I"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 4
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 3
 
 [[member]]
 name = "getReturnType"
 descriptor = "()Ljava/lang/Class;"
 kind = "builtin"
 reason = "closed-world"
+references = 5
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 6
+
+[[member]]
+name = "getParameterTypes"
+descriptor = "()[Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 4
+
+[[member]]
+name = "getParameterAnnotations"
+descriptor = "()[[Ljava/lang/annotation/Annotation;"
+kind = "builtin"
+reason = "closed-world"
 references = 1
+
+[[member]]
+name = "getAnnotation"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "isAnnotationPresent"
+descriptor = "(Ljava/lang/Class;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "invoke"
+descriptor = "(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 62
+
+[[member]]
+name = "setAccessible"
+descriptor = "(Z)V"
+kind = "builtin"
+reason = "closed-world"
+references = 5

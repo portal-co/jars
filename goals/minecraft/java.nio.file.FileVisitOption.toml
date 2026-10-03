@@ -1,0 +1,7 @@
+class = "java/nio/file/FileVisitOption"
+
+[[member]]
+name = "FOLLOW_LINKS"
+descriptor = "Ljava/nio/file/FileVisitOption;"
+kind = "builtin"
+references = 1

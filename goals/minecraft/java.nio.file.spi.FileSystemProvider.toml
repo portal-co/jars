@@ -1,0 +1,31 @@
+class = "java/nio/file/spi/FileSystemProvider"
+
+[[member]]
+name = "getScheme"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "installedProviders"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getPath"
+descriptor = "(Ljava/net/URI;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newFileSystem"
+descriptor = "(Ljava/nio/file/Path;Ljava/util/Map;)Ljava/nio/file/FileSystem;"
+kind = "builtin"
+references = 1

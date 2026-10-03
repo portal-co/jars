@@ -1,0 +1,67 @@
+class = "com/sun/jna/Native"
+
+[[member]]
+name = "getLastError"
+descriptor = "()I"
+kind = "builtin"
+references = 32
+
+[[member]]
+name = "register"
+descriptor = "(Ljava/lang/Class;Lcom/sun/jna/NativeLibrary;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "load"
+descriptor = "(Ljava/lang/String;Ljava/lang/Class;)Lcom/sun/jna/Library;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "loadLibrary"
+descriptor = "(Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "load"
+descriptor = "(Ljava/lang/String;Ljava/lang/Class;Ljava/util/Map;)Lcom/sun/jna/Library;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "([B)Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toString"
+descriptor = "([BLjava/nio/charset/Charset;)Ljava/lang/String;"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "LONG_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "POINTER_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "SIZE_T_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "WCHAR_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 1

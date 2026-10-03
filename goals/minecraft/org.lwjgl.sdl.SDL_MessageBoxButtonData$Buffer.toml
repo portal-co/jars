@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_MessageBoxButtonData$Buffer"
+
+[[member]]
+name = "get"
+descriptor = "(I)Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 2

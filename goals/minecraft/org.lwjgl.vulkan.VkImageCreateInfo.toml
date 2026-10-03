@@ -1,0 +1,79 @@
+class = "org/lwjgl/vulkan/VkImageCreateInfo"
+
+[[member]]
+name = "extent"
+descriptor = "()Lorg/lwjgl/vulkan/VkExtent3D;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "arrayLayers"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flags"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageType"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initialLayout"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mipLevels"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "samples"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sharingMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "tiling"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "usage"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkImageCreateInfo;"
+kind = "builtin"
+references = 1

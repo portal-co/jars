@@ -1,0 +1,13 @@
+class = "java/security/cert/CertificateFactory"
+
+[[member]]
+name = "generateCertificate"
+descriptor = "(Ljava/io/InputStream;)Ljava/security/cert/Certificate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/security/cert/CertificateFactory;"
+kind = "builtin"
+references = 2

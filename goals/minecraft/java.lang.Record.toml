@@ -4,4 +4,4 @@ class = "java/lang/Record"
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
-references = 9
+references = 2011

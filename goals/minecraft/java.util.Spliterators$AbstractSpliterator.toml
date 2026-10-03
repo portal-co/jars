@@ -1,0 +1,7 @@
+class = "java/util/Spliterators$AbstractSpliterator"
+
+[[member]]
+name = "<init>"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 5

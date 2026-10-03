@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/WinNT$EVENTLOGRECORD"
+
+[[member]]
+name = "TimeGenerated"
+descriptor = "Lcom/sun/jna/platform/win32/WinDef$DWORD;"
+kind = "builtin"
+references = 2

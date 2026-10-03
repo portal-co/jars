@@ -1,0 +1,31 @@
+class = "org/lwjgl/util/spvc/SpvcReflectedResource"
+
+[[member]]
+name = "base_type_id"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "id"
+descriptor = "()I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "type_id"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "nameString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "create"
+descriptor = "(JI)Lorg/lwjgl/util/spvc/SpvcReflectedResource$Buffer;"
+kind = "builtin"
+references = 5

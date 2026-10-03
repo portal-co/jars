@@ -1,0 +1,19 @@
+class = "java/security/KeyPairGenerator"
+
+[[member]]
+name = "generateKeyPair"
+descriptor = "()Ljava/security/KeyPair;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initialize"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/security/KeyPairGenerator;"
+kind = "builtin"
+references = 1

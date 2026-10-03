@@ -1,0 +1,91 @@
+class = "java/net/URL"
+
+[[member]]
+name = "getPort"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "openStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "getFile"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getHost"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getProtocol"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "getQuery"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toExternalForm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "toURI"
+descriptor = "()Ljava/net/URI;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "openConnection"
+descriptor = "()Ljava/net/URLConnection;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "openConnection"
+descriptor = "(Ljava/net/Proxy;)Ljava/net/URLConnection;"
+kind = "builtin"
+references = 3

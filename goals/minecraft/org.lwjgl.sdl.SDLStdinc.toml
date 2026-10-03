@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDLStdinc"
+
+[[member]]
+name = "SDL_free"
+descriptor = "(Ljava/nio/IntBuffer;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_free"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)V"
+kind = "builtin"
+references = 2

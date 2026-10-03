@@ -1,0 +1,190 @@
+class = "java/lang/invoke/VarHandle"
+
+[[member]]
+name = "storeStoreFence"
+descriptor = "()V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "setRelease"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "setRelease"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;Ljava/lang/Thread;)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getAndSet"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState;Lcom/google/common/util/concurrent/AbstractFuture$Listener;)Lcom/google/common/util/concurrent/AbstractFuture$Listener;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState;Lcom/google/common/util/concurrent/AbstractFuture$Listener;Lcom/google/common/util/concurrent/AbstractFuture$Listener;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getAndSet"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState;Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;)Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState;Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;Lcom/google/common/util/concurrent/AbstractFutureState$Waiter;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Lcom/google/common/util/concurrent/AbstractFutureState;Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Lio/netty/util/internal/RefCnt;)I"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "getAcquire"
+descriptor = "(Lio/netty/util/internal/RefCnt;)I"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getAndAdd"
+descriptor = "(Lio/netty/util/internal/RefCnt;I)I"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getAndAdd"
+descriptor = "(Lio/netty/util/internal/RefCnt;I)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(Lio/netty/util/internal/RefCnt;I)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "setRelease"
+descriptor = "(Lio/netty/util/internal/RefCnt;I)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Lio/netty/util/internal/RefCnt;II)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/nio/ByteBuffer;I)I"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/nio/ByteBuffer;I)J"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/nio/ByteBuffer;I)S"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/nio/ByteBuffer;II)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/nio/ByteBuffer;IJ)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/nio/ByteBuffer;IS)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "([BI)I"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "([BI)J"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "get"
+descriptor = "([BI)S"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "([BII)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "([BIJ)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "([BIS)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2

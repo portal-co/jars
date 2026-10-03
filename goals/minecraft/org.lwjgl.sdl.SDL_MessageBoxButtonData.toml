@@ -1,0 +1,19 @@
+class = "org/lwjgl/sdl/SDL_MessageBoxButtonData"
+
+[[member]]
+name = "buttonID"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_MessageBoxButtonData;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/sdl/SDL_MessageBoxButtonData$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "text"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/sdl/SDL_MessageBoxButtonData;"
+kind = "builtin"
+references = 2

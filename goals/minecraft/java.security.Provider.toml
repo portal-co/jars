@@ -1,0 +1,7 @@
+class = "java/security/Provider"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;DLjava/lang/String;)V"
+kind = "builtin"
+references = 2

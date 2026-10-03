@@ -1,0 +1,19 @@
+class = "java/lang/ref/WeakReference"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;Ljava/lang/ref/ReferenceQueue;)V"
+kind = "builtin"
+references = 6

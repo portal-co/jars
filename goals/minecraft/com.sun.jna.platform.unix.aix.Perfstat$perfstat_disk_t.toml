@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/unix/aix/Perfstat$perfstat_disk_t"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toArray"
+descriptor = "(I)[Lcom/sun/jna/Structure;"
+kind = "builtin"
+references = 1

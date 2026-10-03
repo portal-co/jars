@@ -1,0 +1,31 @@
+class = "java/io/BufferedInputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mark"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;I)V"
+kind = "builtin"
+references = 2

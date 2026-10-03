@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$SYSTEM_LOGICAL_PROCESSOR_INFORMATION"
+
+[[member]]
+name = "relationship"
+descriptor = "I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "processorMask"
+descriptor = "Lcom/sun/jna/platform/win32/BaseTSD$ULONG_PTR;"
+kind = "builtin"
+references = 2

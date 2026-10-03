@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkSurfaceFormatKHR$Buffer"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 1

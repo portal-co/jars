@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/VersionHelpers"
+
+[[member]]
+name = "IsWindows10OrGreater"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "IsWindows7OrGreater"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "IsWindows8OrGreater"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "IsWindowsVistaOrGreater"
+descriptor = "()Z"
+kind = "builtin"
+references = 5

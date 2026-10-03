@@ -1,0 +1,7 @@
+class = "java/net/Proxy$Type"
+
+[[member]]
+name = "SOCKS"
+descriptor = "Ljava/net/Proxy$Type;"
+kind = "builtin"
+references = 1

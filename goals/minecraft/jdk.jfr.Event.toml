@@ -1,0 +1,31 @@
+class = "jdk/jfr/Event"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "begin"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "commit"
+descriptor = "()V"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "isEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "shouldCommit"
+descriptor = "()Z"
+kind = "builtin"
+references = 10

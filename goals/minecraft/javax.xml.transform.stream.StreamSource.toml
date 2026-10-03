@@ -1,0 +1,13 @@
+class = "javax/xml/transform/stream/StreamSource"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,37 @@
+class = "java/util/Random"
+
+[[member]]
+name = "nextInt"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nextLong"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nextInt"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nextBytes"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2

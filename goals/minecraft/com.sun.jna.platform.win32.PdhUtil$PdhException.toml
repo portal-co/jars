@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/PdhUtil$PdhException"
+
+[[member]]
+name = "getErrorCode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

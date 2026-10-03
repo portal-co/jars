@@ -1,0 +1,7 @@
+class = "java/lang/management/MonitorInfo"
+
+[[member]]
+name = "getLockedStackDepth"
+descriptor = "()I"
+kind = "builtin"
+references = 1

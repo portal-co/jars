@@ -1,0 +1,79 @@
+class = "org/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flags"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "layout"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pColorBlendState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineColorBlendStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pDepthStencilState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pDynamicState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineDynamicStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pInputAssemblyState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineInputAssemblyStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pMultisampleState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pRasterizationState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pNext"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pStages"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo$Buffer;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pVertexInputState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineVertexInputStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pViewportState"
+descriptor = "(Lorg/lwjgl/vulkan/VkPipelineViewportStateCreateInfo;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/ARBMultiDrawIndirect"
+
+[[member]]
+name = "glMultiDrawElementsIndirect"
+descriptor = "(IIJII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glMultiDrawArraysIndirect"
+descriptor = "(IJII)V"
+kind = "builtin"
+references = 1

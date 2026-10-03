@@ -1,0 +1,7 @@
+class = "java/io/Closeable"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 10

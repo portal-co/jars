@@ -1,0 +1,13 @@
+class = "javax/xml/validation/SchemaFactory"
+
+[[member]]
+name = "newInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/xml/validation/SchemaFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newSchema"
+descriptor = "(Ljavax/xml/transform/Source;)Ljavax/xml/validation/Schema;"
+kind = "builtin"
+references = 1

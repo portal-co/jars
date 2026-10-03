@@ -1,0 +1,7 @@
+class = "java/lang/NoSuchFieldException"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/GLDebugMessageCallback"
+
+[[member]]
+name = "getMessage"
+descriptor = "(IJ)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "create"
+descriptor = "(Lorg/lwjgl/opengl/GLDebugMessageCallbackI;)Lorg/lwjgl/opengl/GLDebugMessageCallback;"
+kind = "builtin"
+references = 1

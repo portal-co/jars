@@ -1,0 +1,25 @@
+class = "java/nio/Buffer"
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "flip"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 27
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 22

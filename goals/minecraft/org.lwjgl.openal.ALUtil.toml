@@ -1,0 +1,7 @@
+class = "org/lwjgl/openal/ALUtil"
+
+[[member]]
+name = "getStringList"
+descriptor = "(JI)Ljava/util/List;"
+kind = "builtin"
+references = 1

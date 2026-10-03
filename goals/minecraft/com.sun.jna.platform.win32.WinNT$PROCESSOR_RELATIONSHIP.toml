@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$PROCESSOR_RELATIONSHIP"
+
+[[member]]
+name = "efficiencyClass"
+descriptor = "B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "groupMask"
+descriptor = "[Lcom/sun/jna/platform/win32/WinNT$GROUP_AFFINITY;"
+kind = "builtin"
+references = 3

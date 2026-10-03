@@ -1,0 +1,19 @@
+class = "java/lang/Iterable"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 252
+
+[[member]]
+name = "spliterator"
+descriptor = "()Ljava/util/Spliterator;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 49

@@ -1,0 +1,19 @@
+class = "java/text/StringCharacterIterator"
+
+[[member]]
+name = "first"
+descriptor = "()C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "next"
+descriptor = "()C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 5

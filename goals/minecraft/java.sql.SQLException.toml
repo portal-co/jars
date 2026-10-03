@@ -1,0 +1,13 @@
+class = "java/sql/SQLException"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1

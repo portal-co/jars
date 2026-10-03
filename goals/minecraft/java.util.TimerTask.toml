@@ -1,0 +1,13 @@
+class = "java/util/TimerTask"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cancel"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

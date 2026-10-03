@@ -1,19 +1,55 @@
 class = "java/lang/Object"
 
 [[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "native"
+references = 295
+
+[[member]]
 name = "getClass"
 descriptor = "()Ljava/lang/Class;"
 kind = "native"
-references = 4
+references = 309
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "native"
+references = 25
 
 [[member]]
 name = "toString"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 4
+references = 95
+
+[[member]]
+name = "notify"
+descriptor = "()V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "notifyAll"
+descriptor = "()V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "wait"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "wait"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "equals"
 descriptor = "(Ljava/lang/Object;)Z"
 kind = "builtin"
-references = 1
+references = 496

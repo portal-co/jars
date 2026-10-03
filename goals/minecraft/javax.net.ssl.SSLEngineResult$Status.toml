@@ -1,0 +1,25 @@
+class = "javax/net/ssl/SSLEngineResult$Status"
+
+[[member]]
+name = "BUFFER_OVERFLOW"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$Status;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "BUFFER_UNDERFLOW"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$Status;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "CLOSED"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$Status;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "OK"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$Status;"
+kind = "builtin"
+references = 8

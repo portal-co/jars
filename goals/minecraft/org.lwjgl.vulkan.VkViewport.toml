@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkViewport"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkViewport$Buffer;"
+kind = "builtin"
+references = 1

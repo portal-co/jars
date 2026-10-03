@@ -1,0 +1,7 @@
+class = "[Lcom/mojang/renderpearl/api/textures/FilterMode;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

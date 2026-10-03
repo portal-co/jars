@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPipelineViewportStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineViewportStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "scissorCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineViewportStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "viewportCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineViewportStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineViewportStateCreateInfo;"
+kind = "builtin"
+references = 1

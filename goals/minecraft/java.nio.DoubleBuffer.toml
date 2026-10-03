@@ -1,0 +1,37 @@
+class = "java/nio/DoubleBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/DoubleBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1

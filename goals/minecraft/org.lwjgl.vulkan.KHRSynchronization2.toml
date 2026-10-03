@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/KHRSynchronization2"
+
+[[member]]
+name = "vkCmdWriteTimestamp2KHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJI)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkCmdPipelineBarrier2KHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;Lorg/lwjgl/vulkan/VkDependencyInfo;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vkQueueSubmit2KHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkQueue;Lorg/lwjgl/vulkan/VkSubmitInfo2$Buffer;J)I"
+kind = "builtin"
+references = 1

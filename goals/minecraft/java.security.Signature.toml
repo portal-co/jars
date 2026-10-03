@@ -1,0 +1,37 @@
+class = "java/security/Signature"
+
+[[member]]
+name = "sign"
+descriptor = "()[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/security/Signature;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "initSign"
+descriptor = "(Ljava/security/PrivateKey;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initVerify"
+descriptor = "(Ljava/security/PublicKey;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "update"
+descriptor = "([B)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "verify"
+descriptor = "([B)Z"
+kind = "builtin"
+references = 2

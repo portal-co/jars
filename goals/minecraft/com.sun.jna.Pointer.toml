@@ -1,0 +1,37 @@
+class = "com/sun/jna/Pointer"
+
+[[member]]
+name = "getString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "getByteArray"
+descriptor = "(JI)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getIntArray"
+descriptor = "(JI)[I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "nativeValue"
+descriptor = "(Lcom/sun/jna/Pointer;)J"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "NULL"
+descriptor = "Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 7

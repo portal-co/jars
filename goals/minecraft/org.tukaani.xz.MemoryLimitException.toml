@@ -1,0 +1,13 @@
+class = "org/tukaani/xz/MemoryLimitException"
+
+[[member]]
+name = "getMemoryLimit"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMemoryNeeded"
+descriptor = "()I"
+kind = "builtin"
+references = 1

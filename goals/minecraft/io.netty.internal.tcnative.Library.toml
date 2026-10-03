@@ -1,0 +1,7 @@
+class = "io/netty/internal/tcnative/Library"
+
+[[member]]
+name = "initialize"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Z"
+kind = "builtin"
+references = 1

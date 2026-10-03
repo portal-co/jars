@@ -1,0 +1,43 @@
+class = "java/util/concurrent/locks/ReentrantLock"
+
+[[member]]
+name = "newCondition"
+descriptor = "()Ljava/util/concurrent/locks/Condition;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "lock"
+descriptor = "()V"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "unlock"
+descriptor = "()V"
+kind = "builtin"
+references = 84
+
+[[member]]
+name = "isHeldByCurrentThread"
+descriptor = "()Z"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "tryLock"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "tryLock"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Z"
+kind = "builtin"
+references = 1

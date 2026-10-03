@@ -1,0 +1,19 @@
+class = "javax/net/ssl/SSLParameters"
+
+[[member]]
+name = "getProtocols"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setEndpointIdentificationAlgorithm"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setServerNames"
+descriptor = "(Ljava/util/List;)V"
+kind = "builtin"
+references = 2

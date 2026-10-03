@@ -1,0 +1,7 @@
+class = "java/util/concurrent/TimeoutException"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

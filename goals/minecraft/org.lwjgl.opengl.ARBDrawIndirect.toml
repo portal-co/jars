@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/ARBDrawIndirect"
+
+[[member]]
+name = "glDrawElementsIndirect"
+descriptor = "(IIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawArraysIndirect"
+descriptor = "(IJ)V"
+kind = "builtin"
+references = 1

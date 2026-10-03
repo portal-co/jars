@@ -1,0 +1,7 @@
+class = "javax/xml/transform/Transformer"
+
+[[member]]
+name = "transform"
+descriptor = "(Ljavax/xml/transform/Source;Ljavax/xml/transform/Result;)V"
+kind = "builtin"
+references = 1

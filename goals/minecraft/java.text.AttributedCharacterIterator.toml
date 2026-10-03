@@ -1,0 +1,37 @@
+class = "java/text/AttributedCharacterIterator"
+
+[[member]]
+name = "first"
+descriptor = "()C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEndIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getRunLimit"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAttributes"
+descriptor = "()Ljava/util/Map;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setIndex"
+descriptor = "(I)C"
+kind = "builtin"
+references = 1

@@ -1,0 +1,175 @@
+class = "java/math/BigInteger"
+
+[[member]]
+name = "byteValue"
+descriptor = "()B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bitLength"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "signum"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "longValueExact"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "negate"
+descriptor = "()Ljava/math/BigInteger;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "not"
+descriptor = "()Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toByteArray"
+descriptor = "()[B"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toString"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shiftLeft"
+descriptor = "(I)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(I[B)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "valueOf"
+descriptor = "(J)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "and"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "divide"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "min"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mod"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "multiply"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "subtract"
+descriptor = "(Ljava/math/BigInteger;)Ljava/math/BigInteger;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "divideAndRemainder"
+descriptor = "(Ljava/math/BigInteger;)[Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "([B)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "ONE"
+descriptor = "Ljava/math/BigInteger;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "TEN"
+descriptor = "Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1

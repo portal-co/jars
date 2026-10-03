@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/COM/COMUtils"
+
+[[member]]
+name = "FAILED"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HRESULT;)Z"
+kind = "builtin"
+references = 2

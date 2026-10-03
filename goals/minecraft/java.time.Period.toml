@@ -1,0 +1,25 @@
+class = "java/time/Period"
+
+[[member]]
+name = "getDays"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMonths"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getYears"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(III)Ljava/time/Period;"
+kind = "builtin"
+references = 1

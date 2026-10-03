@@ -1,0 +1,25 @@
+class = "java/time/ZoneId"
+
+[[member]]
+name = "getId"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "systemDefault"
+descriptor = "()Ljava/time/ZoneId;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/String;)Ljava/time/ZoneId;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "from"
+descriptor = "(Ljava/time/temporal/TemporalAccessor;)Ljava/time/ZoneId;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "java/nio/file/attribute/UserPrincipalLookupService"
+
+[[member]]
+name = "lookupPrincipalByGroupName"
+descriptor = "(Ljava/lang/String;)Ljava/nio/file/attribute/GroupPrincipal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lookupPrincipalByName"
+descriptor = "(Ljava/lang/String;)Ljava/nio/file/attribute/UserPrincipal;"
+kind = "builtin"
+references = 1

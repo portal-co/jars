@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/mac/IOKit"
+
+[[member]]
+name = "IOServiceClose"
+descriptor = "(Lcom/sun/jna/platform/mac/IOKit$IOConnect;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "IOServiceOpen"
+descriptor = "(Lcom/sun/jna/platform/mac/IOKit$IOService;IILcom/sun/jna/ptr/PointerByReference;)I"
+kind = "builtin"
+references = 1

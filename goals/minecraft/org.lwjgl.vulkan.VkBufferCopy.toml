@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkBufferCopy"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkBufferCopy$Buffer;"
+kind = "builtin"
+references = 4

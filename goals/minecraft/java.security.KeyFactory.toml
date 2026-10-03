@@ -1,0 +1,19 @@
+class = "java/security/KeyFactory"
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/security/KeyFactory;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "generatePrivate"
+descriptor = "(Ljava/security/spec/KeySpec;)Ljava/security/PrivateKey;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "generatePublic"
+descriptor = "(Ljava/security/spec/KeySpec;)Ljava/security/PublicKey;"
+kind = "builtin"
+references = 2

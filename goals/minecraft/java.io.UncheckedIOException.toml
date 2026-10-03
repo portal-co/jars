@@ -1,7 +1,19 @@
 class = "java/io/UncheckedIOException"
 
 [[member]]
+name = "getCause"
+descriptor = "()Ljava/io/IOException;"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "<init>"
 descriptor = "(Ljava/io/IOException;)V"
 kind = "builtin"
-references = 1
+references = 21
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/io/IOException;)V"
+kind = "builtin"
+references = 2

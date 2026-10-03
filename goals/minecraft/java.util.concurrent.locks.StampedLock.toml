@@ -1,0 +1,25 @@
+class = "java/util/concurrent/locks/StampedLock"
+
+[[member]]
+name = "tryWriteLock"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "writeLock"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "unlockWrite"
+descriptor = "(J)V"
+kind = "builtin"
+references = 9

@@ -1,0 +1,7 @@
+class = "java/security/PrivilegedAction"
+
+[[member]]
+name = "run"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

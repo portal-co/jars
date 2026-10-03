@@ -1,0 +1,13 @@
+class = "java/io/LineNumberReader"
+
+[[member]]
+name = "readLine"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Reader;)V"
+kind = "builtin"
+references = 2

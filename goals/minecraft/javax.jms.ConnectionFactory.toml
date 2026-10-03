@@ -1,0 +1,13 @@
+class = "javax/jms/ConnectionFactory"
+
+[[member]]
+name = "createConnection"
+descriptor = "()Ljavax/jms/Connection;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createConnection"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljavax/jms/Connection;"
+kind = "builtin"
+references = 1

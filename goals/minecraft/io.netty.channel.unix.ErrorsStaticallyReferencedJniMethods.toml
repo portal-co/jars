@@ -1,0 +1,85 @@
+class = "io/netty/channel/unix/ErrorsStaticallyReferencedJniMethods"
+
+[[member]]
+name = "errnoEAGAIN"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoEBADF"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoECONNRESET"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoEINPROGRESS"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoENOENT"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoENOTCONN"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoEPIPE"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errnoEWOULDBLOCK"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errorEALREADY"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errorECONNREFUSED"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errorEHOSTUNREACH"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errorEISCONN"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "errorENETUNREACH"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "strError"
+descriptor = "(I)Ljava/lang/String;"
+kind = "native"
+references = 2

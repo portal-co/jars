@@ -1,8 +1,36 @@
 class = "java/lang/reflect/Array"
 
 [[member]]
+name = "newInstance"
+descriptor = "(Ljava/lang/Class;I)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 21
+
+[[member]]
+name = "newInstance"
+descriptor = "(Ljava/lang/Class;[I)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
 name = "getLength"
 descriptor = "(Ljava/lang/Object;)I"
 kind = "native"
 reason = "closed-world"
+references = 7
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;I)Ljava/lang/Object;"
+kind = "native"
+reason = "closed-world"
 references = 1
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;ILjava/lang/Object;)V"
+kind = "native"
+reason = "closed-world"
+references = 4

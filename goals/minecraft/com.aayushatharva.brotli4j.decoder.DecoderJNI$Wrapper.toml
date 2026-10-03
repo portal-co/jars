@@ -1,0 +1,43 @@
+class = "com/aayushatharva/brotli4j/decoder/DecoderJNI$Wrapper"
+
+[[member]]
+name = "getStatus"
+descriptor = "()Lcom/aayushatharva/brotli4j/decoder/DecoderJNI$Status;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInputBuffer"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "destroy"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasOutput"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pull"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "push"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2

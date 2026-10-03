@@ -1,0 +1,7 @@
+class = "javax/management/ObjectName"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 9

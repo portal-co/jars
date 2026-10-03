@@ -1,0 +1,25 @@
+class = "java/security/cert/X509Certificate"
+
+[[member]]
+name = "getSerialNumber"
+descriptor = "()Ljava/math/BigInteger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getIssuerX500Principal"
+descriptor = "()Ljavax/security/auth/x500/X500Principal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEncoded"
+descriptor = "()[B"
+kind = "builtin"
+references = 1

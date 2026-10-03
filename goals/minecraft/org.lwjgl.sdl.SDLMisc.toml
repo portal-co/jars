@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLMisc"
+
+[[member]]
+name = "SDL_OpenURL"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1

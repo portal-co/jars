@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/core/Version"
+
+[[member]]
+name = "<init>"
+descriptor = "(IIILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2

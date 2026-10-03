@@ -1,0 +1,7 @@
+class = "java/security/cert/CertificateException"
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

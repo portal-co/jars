@@ -1,0 +1,25 @@
+class = "java/io/FilterOutputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "write"
+descriptor = "([B)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "write"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkCheckpointData2NV$Buffer"
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "()Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(I)Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 1

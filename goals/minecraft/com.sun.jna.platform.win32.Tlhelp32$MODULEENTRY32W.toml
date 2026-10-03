@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/Tlhelp32$MODULEENTRY32W"
+
+[[member]]
+name = "szExePath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "szModule"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

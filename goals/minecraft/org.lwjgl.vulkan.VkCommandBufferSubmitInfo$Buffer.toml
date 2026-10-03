@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkCommandBufferSubmitInfo$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkCommandBufferSubmitInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "commandBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;)Lorg/lwjgl/vulkan/VkCommandBufferSubmitInfo$Buffer;"
+kind = "builtin"
+references = 1

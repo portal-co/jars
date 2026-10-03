@@ -1,0 +1,19 @@
+class = "java/util/zip/ZipInputStream"
+
+[[member]]
+name = "getNextEntry"
+descriptor = "()Ljava/util/zip/ZipEntry;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1

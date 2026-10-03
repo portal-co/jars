@@ -1,0 +1,7 @@
+class = "org/lwjgl/stb/STBImageResize"
+
+[[member]]
+name = "nstbir_resize_uint8_linear"
+descriptor = "(JIIIJIIII)J"
+kind = "builtin"
+references = 1

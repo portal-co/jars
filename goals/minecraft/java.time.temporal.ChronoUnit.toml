@@ -1,0 +1,91 @@
+class = "java/time/temporal/ChronoUnit"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDuration"
+descriptor = "()Ljava/time/Duration;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Enum;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "DAYS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ERAS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FOREVER"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "HOURS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "MICROS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "MILLIS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "MINUTES"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "MONTHS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NANOS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "SECONDS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "WEEKS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "YEARS"
+descriptor = "Ljava/time/temporal/ChronoUnit;"
+kind = "builtin"
+references = 1

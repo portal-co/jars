@@ -20,7 +20,8 @@ mod stdlib;
 
 pub use coverage::{ClassCoverage, JarCoverage, MethodCoverage, MethodStatus, coverage_jars};
 pub use inventory::{
-    InventoryClass, InventoryKind, InventoryMember, InventoryReport, inventory_jars, write_inventory,
+    InventoryClass, InventoryKind, InventoryMember, InventoryReport, inventory_jars,
+    write_inventory,
 };
 pub use model::ObjectModel;
 
@@ -719,6 +720,11 @@ fn parse_custom_op(
             pool.interface_method_ref(index),
         )?)),
         R::InvokeDynamic { .. } => Op::Unsupported("invokedynamic".to_owned()),
+        R::Skipped { opcode } => {
+            return Err(invalid(format!(
+                "unsupported bytecode opcode 0x{opcode:02x}"
+            )));
+        }
         R::Ldc { index } => match parser_error(pool.constant(index))? {
             classfile::ConstantValue::String(v) => Op::LdcString(v.to_owned()),
             classfile::ConstantValue::Integer(v) => Op::IConst(v),
@@ -1484,11 +1490,9 @@ impl<'a> Body<'a> {
                 Op::LConst(value) => self.stack.push(Value::Long(format!("{value}_i64"))),
                 Op::FConst(value) => self.stack.push(Value::Float(format!("{value:?}_f32"))),
                 Op::DConst(value) => self.stack.push(Value::Double(format!("{value:?}_f64"))),
-                Op::LdcString(value) => self
-                    .stack
-                    .push(Value::String(format!(
-                        "Some(jars_runtime::JavaString::new({value:?}))"
-                    ))),
+                Op::LdcString(value) => self.stack.push(Value::String(format!(
+                    "Some(jars_runtime::JavaString::new({value:?}))"
+                ))),
                 Op::ILoad(index) => self.stack.push(self.local(*index, instruction)?),
                 Op::LLoad(index) | Op::FLoad(index) | Op::DLoad(index) => {
                     self.stack.push(self.local(*index, instruction)?)
@@ -1766,10 +1770,7 @@ impl<'a> Body<'a> {
                             Type::Int | Type::Long | Type::Float | Type::Double => {
                                 format!("{}.{field}", crate::model::state_read("state"))
                             }
-                            _ => format!(
-                                "{}.{field}.clone()",
-                                crate::model::state_read("state")
-                            ),
+                            _ => format!("{}.{field}.clone()", crate::model::state_read("state")),
                         },
                         Value::Object { expression, class } if class == reference.class => format!(
                             "{expression}.ok_or_else(jars_runtime::null_pointer)?.__get_{field}().await?"
@@ -2119,13 +2120,11 @@ impl<'a> Body<'a> {
                         // platform values; both unwrap through the same null
                         // check below.
                         let receiver_expr = match receiver {
-                            Value::String(expression) => format!(
-                                "{expression}.ok_or_else(jars_runtime::null_pointer)?"
-                            ),
+                            Value::String(expression) => {
+                                format!("{expression}.ok_or_else(jars_runtime::null_pointer)?")
+                            }
                             Value::Platform { expression, class } if class == reference.class => {
-                                format!(
-                                    "{expression}.ok_or_else(jars_runtime::null_pointer)?"
-                                )
+                                format!("{expression}.ok_or_else(jars_runtime::null_pointer)?")
                             }
                             _ => {
                                 return Err(stack_error(
@@ -3230,7 +3229,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                        let argument_names = (0..signature.parameters.len())
+                    let argument_names = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>();
                     let call = lower(&argument_names);
@@ -3256,7 +3255,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                        let method_path = if reference.class == program.name {
+                    let method_path = if reference.class == program.name {
                         rust_ident(&reference.name)?
                     } else {
                         format!(
@@ -3487,7 +3486,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                        let argument_declarations = arguments.join(" ");
+                    let argument_declarations = arguments.join(" ");
                     let argument_names = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>();
@@ -3521,7 +3520,7 @@ fn aot_typed_frame(
                         let pop = frame_pop(ty, &layout)?;
                         arguments.push(format!("let argument{index} = {pop}(&mut stack);"));
                     }
-                        let argument_declarations = arguments.join(" ");
+                    let argument_declarations = arguments.join(" ");
                     let arguments = (0..signature.parameters.len())
                         .map(|index| format!("argument{index}"))
                         .collect::<Vec<_>>()
@@ -4529,7 +4528,10 @@ fn validate_hierarchy(programs: &[Program]) -> Result<(), CompileError> {
     Ok(())
 }
 
-fn compile_programs(programs: Vec<Program>, object_model: ObjectModel) -> Result<String, CompileError> {
+fn compile_programs(
+    programs: Vec<Program>,
+    object_model: ObjectModel,
+) -> Result<String, CompileError> {
     let _guard = crate::model::enter(object_model);
     if programs.is_empty() {
         return Err(invalid("the compilation set is empty"));

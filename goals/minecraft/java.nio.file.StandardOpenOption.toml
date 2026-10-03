@@ -1,0 +1,49 @@
+class = "java/nio/file/StandardOpenOption"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "APPEND"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CREATE"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "DSYNC"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "READ"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "SYNC"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "TRUNCATE_EXISTING"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "WRITE"
+descriptor = "Ljava/nio/file/StandardOpenOption;"
+kind = "builtin"
+references = 12

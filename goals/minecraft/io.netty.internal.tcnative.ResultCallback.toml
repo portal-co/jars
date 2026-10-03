@@ -1,0 +1,13 @@
+class = "io/netty/internal/tcnative/ResultCallback"
+
+[[member]]
+name = "onSuccess"
+descriptor = "(JLjava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "onError"
+descriptor = "(JLjava/lang/Throwable;)V"
+kind = "builtin"
+references = 1

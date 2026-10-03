@@ -1,0 +1,25 @@
+class = "java/time/temporal/ChronoField"
+
+[[member]]
+name = "HOUR_OF_DAY"
+descriptor = "Ljava/time/temporal/ChronoField;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "MILLI_OF_SECOND"
+descriptor = "Ljava/time/temporal/ChronoField;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "MINUTE_OF_HOUR"
+descriptor = "Ljava/time/temporal/ChronoField;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SECOND_OF_MINUTE"
+descriptor = "Ljava/time/temporal/ChronoField;"
+kind = "builtin"
+references = 1

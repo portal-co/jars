@@ -1,0 +1,13 @@
+class = "org/lwjgl/system/Struct"
+
+[[member]]
+name = "sizeof"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "address"
+descriptor = "()J"
+kind = "builtin"
+references = 1

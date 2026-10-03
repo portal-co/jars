@@ -1,0 +1,31 @@
+class = "java/util/logging/Level"
+
+[[member]]
+name = "FINE"
+descriptor = "Ljava/util/logging/Level;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "FINEST"
+descriptor = "Ljava/util/logging/Level;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "INFO"
+descriptor = "Ljava/util/logging/Level;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "SEVERE"
+descriptor = "Ljava/util/logging/Level;"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "WARNING"
+descriptor = "Ljava/util/logging/Level;"
+kind = "builtin"
+references = 16

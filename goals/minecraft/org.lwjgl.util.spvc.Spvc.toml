@@ -1,0 +1,145 @@
+class = "org/lwjgl/util/spvc/Spvc"
+
+[[member]]
+name = "getLibrary"
+descriptor = "()Lorg/lwjgl/system/SharedLibrary;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_type_get_basetype"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_type_get_image_dimension"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_type_get_num_array_dimensions"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_type_get_vector_size"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_context_destroy"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "spvc_type_get_array_dimension"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_get_type_handle"
+descriptor = "(JI)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "spvc_compiler_get_name"
+descriptor = "(JI)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "spvc_compiler_get_decoration"
+descriptor = "(JII)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "spvc_compiler_options_set_uint"
+descriptor = "(JII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_get_binary_offset_for_decoration"
+descriptor = "(JIILjava/nio/IntBuffer;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "spvc_context_create_compiler"
+descriptor = "(JIJILorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "spvc_compiler_set_name"
+descriptor = "(JILjava/lang/CharSequence;)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "spvc_resources_get_resource_list_for_type"
+descriptor = "(JILorg/lwjgl/PointerBuffer;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "spvc_compiler_options_set_bool"
+descriptor = "(JIZ)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "spvc_compiler_install_compiler_options"
+descriptor = "(JJ)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_get_declared_struct_size"
+descriptor = "(JJLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_set_entry_point"
+descriptor = "(JLjava/lang/CharSequence;I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_context_parse_spirv"
+descriptor = "(JLjava/nio/IntBuffer;JLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "spvc_compiler_compile"
+descriptor = "(JLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_create_compiler_options"
+descriptor = "(JLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spvc_compiler_create_shader_resources"
+descriptor = "(JLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "spvc_context_create"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2

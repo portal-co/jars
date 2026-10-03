@@ -1,0 +1,13 @@
+class = "com/sun/jna/ptr/PointerByReference"
+
+[[member]]
+name = "getValue"
+descriptor = "()Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 3

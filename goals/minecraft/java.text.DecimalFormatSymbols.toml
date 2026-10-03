@@ -1,0 +1,7 @@
+class = "java/text/DecimalFormatSymbols"
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/util/Locale;)Ljava/text/DecimalFormatSymbols;"
+kind = "builtin"
+references = 6

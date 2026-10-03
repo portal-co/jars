@@ -1,0 +1,277 @@
+class = "sun/misc/Unsafe"
+
+[[member]]
+name = "addressSize"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getUnsafe"
+descriptor = "()Lsun/misc/Unsafe;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "storeFence"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getByte"
+descriptor = "(J)B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInt"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "allocateMemory"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLong"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShort"
+descriptor = "(J)S"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "freeMemory"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putByte"
+descriptor = "(JB)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "putInt"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reallocateMemory"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "putLong"
+descriptor = "(JJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setMemory"
+descriptor = "(JJB)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyMemory"
+descriptor = "(JJJ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "putShort"
+descriptor = "(JS)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "arrayBaseOffset"
+descriptor = "(Ljava/lang/Class;)I"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "arrayIndexScale"
+descriptor = "(Ljava/lang/Class;)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getByte"
+descriptor = "(Ljava/lang/Object;J)B"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getChar"
+descriptor = "(Ljava/lang/Object;J)C"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getFloat"
+descriptor = "(Ljava/lang/Object;J)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInt"
+descriptor = "(Ljava/lang/Object;J)I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getIntVolatile"
+descriptor = "(Ljava/lang/Object;J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLong"
+descriptor = "(Ljava/lang/Object;J)J"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "getLongVolatile"
+descriptor = "(Ljava/lang/Object;J)J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getObject"
+descriptor = "(Ljava/lang/Object;J)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getObjectVolatile"
+descriptor = "(Ljava/lang/Object;J)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShort"
+descriptor = "(Ljava/lang/Object;J)S"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "putByte"
+descriptor = "(Ljava/lang/Object;JB)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putFloat"
+descriptor = "(Ljava/lang/Object;JF)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getAndAddInt"
+descriptor = "(Ljava/lang/Object;JI)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "putInt"
+descriptor = "(Ljava/lang/Object;JI)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "putOrderedInt"
+descriptor = "(Ljava/lang/Object;JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compareAndSwapInt"
+descriptor = "(Ljava/lang/Object;JII)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "putLong"
+descriptor = "(Ljava/lang/Object;JJ)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "putOrderedLong"
+descriptor = "(Ljava/lang/Object;JJ)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "setMemory"
+descriptor = "(Ljava/lang/Object;JJB)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compareAndSwapLong"
+descriptor = "(Ljava/lang/Object;JJJ)Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getAndSetObject"
+descriptor = "(Ljava/lang/Object;JLjava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "putObject"
+descriptor = "(Ljava/lang/Object;JLjava/lang/Object;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putOrderedObject"
+descriptor = "(Ljava/lang/Object;JLjava/lang/Object;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "copyMemory"
+descriptor = "(Ljava/lang/Object;JLjava/lang/Object;JJ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "compareAndSwapObject"
+descriptor = "(Ljava/lang/Object;JLjava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putShort"
+descriptor = "(Ljava/lang/Object;JS)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "objectFieldOffset"
+descriptor = "(Ljava/lang/reflect/Field;)J"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "invokeCleaner"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1

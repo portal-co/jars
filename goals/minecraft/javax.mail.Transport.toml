@@ -1,0 +1,7 @@
+class = "javax/mail/Transport"
+
+[[member]]
+name = "send"
+descriptor = "(Ljavax/mail/Message;)V"
+kind = "builtin"
+references = 1

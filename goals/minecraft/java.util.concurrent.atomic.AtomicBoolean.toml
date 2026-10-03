@@ -1,0 +1,43 @@
+class = "java/util/concurrent/atomic/AtomicBoolean"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "get"
+descriptor = "()Z"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "<init>"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "lazySet"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "getAndSet"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(ZZ)Z"
+kind = "builtin"
+references = 20

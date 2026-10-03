@@ -1,0 +1,13 @@
+class = "com/ning/compress/BufferRecycler"
+
+[[member]]
+name = "allocInputBuffer"
+descriptor = "(I)[B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "releaseInputBuffer"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2

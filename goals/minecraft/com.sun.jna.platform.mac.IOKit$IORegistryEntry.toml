@@ -1,0 +1,31 @@
+class = "com/sun/jna/platform/mac/IOKit$IORegistryEntry"
+
+[[member]]
+name = "release"
+descriptor = "()I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getChildIterator"
+descriptor = "(Ljava/lang/String;)Lcom/sun/jna/platform/mac/IOKit$IOIterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getStringProperty"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getByteArrayProperty"
+descriptor = "(Ljava/lang/String;)[B"
+kind = "builtin"
+references = 20

@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkDebugUtilsMessengerCallbackDataEXT"
+
+[[member]]
+name = "pMessageString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "create"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCallbackDataEXT;"
+kind = "builtin"
+references = 1

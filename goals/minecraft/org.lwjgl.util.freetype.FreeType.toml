@@ -1,0 +1,79 @@
+class = "org/lwjgl/util/freetype/FreeType"
+
+[[member]]
+name = "getLibrary"
+descriptor = "()Lorg/lwjgl/system/SharedLibrary;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Error_String"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Done_Library"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_New_Memory_Face"
+descriptor = "(JLjava/nio/ByteBuffer;JLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Init_FreeType"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Done_Face"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "FT_Get_Font_Format"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Select_Charmap"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Load_Glyph"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "FT_Set_Pixel_Sizes"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Get_Next_Char"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;JLjava/nio/IntBuffer;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Get_First_Char"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;Ljava/nio/IntBuffer;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FT_Set_Transform"
+descriptor = "(Lorg/lwjgl/util/freetype/FT_Face;Lorg/lwjgl/util/freetype/FT_Matrix;Lorg/lwjgl/util/freetype/FT_Vector;)V"
+kind = "builtin"
+references = 1

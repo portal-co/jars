@@ -1,0 +1,13 @@
+class = "javax/naming/InitialContext"
+
+[[member]]
+name = "lookup"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Hashtable;)V"
+kind = "builtin"
+references = 1

@@ -1,7 +1,37 @@
 class = "java/lang/IllegalArgumentException"
 
 [[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 79
+
+[[member]]
+name = "printStackTrace"
+descriptor = "(Ljava/io/PrintStream;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 5
+references = 1279
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 45
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 8

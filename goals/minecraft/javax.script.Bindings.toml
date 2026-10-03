@@ -1,0 +1,13 @@
+class = "javax/script/Bindings"
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/String;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 3

@@ -1,0 +1,13 @@
+class = "java/net/http/HttpRequest$BodyPublishers"
+
+[[member]]
+name = "fromPublisher"
+descriptor = "(Ljava/util/concurrent/Flow$Publisher;J)Ljava/net/http/HttpRequest$BodyPublisher;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofInputStream"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/net/http/HttpRequest$BodyPublisher;"
+kind = "builtin"
+references = 1

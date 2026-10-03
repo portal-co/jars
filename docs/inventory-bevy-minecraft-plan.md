@@ -3,8 +3,10 @@
 Status: `jars-inventory`, the task/object/entity host seam, and the headless
 `jars-bevy` host are in the tree. `goals/minecraft/` is the worklist for
 Prism Launcher's Minecraft 26.3 client (`net/minecraft/client/main/Main`),
-generated with the local library JARs and Temurin 21 jmods. The client JAR and
-jmods are inputs and are not vendored.
+generated with the local library JARs and Temurin 21 jmods. The walker follows
+callees, concrete overrides, and `invokedynamic` method handles, so the
+worklist includes the LWJGL OpenGL and Vulkan members reached from Blaze3D
+and RenderPearl. The client JAR and jmods are inputs and are not vendored.
 
 The inventory walker parses class files directly. It does not call
 `select_jar_programs`, because that importer rejects unmodeled platform classes

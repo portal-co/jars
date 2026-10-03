@@ -1,0 +1,91 @@
+class = "com/sun/jna/Memory"
+
+[[member]]
+name = "size"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 83
+
+[[member]]
+name = "getByte"
+descriptor = "(J)B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInt"
+descriptor = "(J)I"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "getLong"
+descriptor = "(J)J"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "getNativeLong"
+descriptor = "(J)Lcom/sun/jna/NativeLong;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPointer"
+descriptor = "(J)Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "share"
+descriptor = "(J)Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "getWideString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "getByteArray"
+descriptor = "(JI)[B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getCharArray"
+descriptor = "(JI)[C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLongArray"
+descriptor = "(JI)[J"
+kind = "builtin"
+references = 1

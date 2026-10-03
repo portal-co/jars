@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/entity/monster/warden/AngerLevel;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

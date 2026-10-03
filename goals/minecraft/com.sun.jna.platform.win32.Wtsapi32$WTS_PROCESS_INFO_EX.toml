@@ -1,0 +1,55 @@
+class = "com/sun/jna/platform/win32/Wtsapi32$WTS_PROCESS_INFO_EX"
+
+[[member]]
+name = "toArray"
+descriptor = "(I)[Lcom/sun/jna/Structure;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HandleCount"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NumberOfThreads"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PagefileUsage"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ProcessId"
+descriptor = "I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "KernelTime"
+descriptor = "Lcom/sun/jna/platform/win32/WinNT$LARGE_INTEGER;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "UserTime"
+descriptor = "Lcom/sun/jna/platform/win32/WinNT$LARGE_INTEGER;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pProcessName"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 1

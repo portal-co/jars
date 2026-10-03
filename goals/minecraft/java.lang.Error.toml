@@ -1,0 +1,37 @@
+class = "java/lang/Error"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "addSuppressed"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setStackTrace"
+descriptor = "([Ljava/lang/StackTraceElement;)V"
+kind = "builtin"
+references = 1

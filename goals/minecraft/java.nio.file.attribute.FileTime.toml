@@ -1,0 +1,43 @@
+class = "java/nio/file/attribute/FileTime"
+
+[[member]]
+name = "toMillis"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toInstant"
+descriptor = "()Ljava/time/Instant;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "fromMillis"
+descriptor = "(J)Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "from"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/nio/file/attribute/FileTime;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "from"
+descriptor = "(Ljava/time/Instant;)Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "to"
+descriptor = "(Ljava/util/concurrent/TimeUnit;)J"
+kind = "builtin"
+references = 1

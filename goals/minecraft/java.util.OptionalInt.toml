@@ -1,0 +1,61 @@
+class = "java/util/OptionalInt"
+
+[[member]]
+name = "getAsInt"
+descriptor = "()I"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "orElseThrow"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "empty"
+descriptor = "()Ljava/util/OptionalInt;"
+kind = "builtin"
+references = 60
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "isPresent"
+descriptor = "()Z"
+kind = "builtin"
+references = 37
+
+[[member]]
+name = "orElse"
+descriptor = "(I)I"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "of"
+descriptor = "(I)Ljava/util/OptionalInt;"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "ifPresent"
+descriptor = "(Ljava/util/function/IntConsumer;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "orElseThrow"
+descriptor = "(Ljava/util/function/Supplier;)I"
+kind = "builtin"
+references = 1

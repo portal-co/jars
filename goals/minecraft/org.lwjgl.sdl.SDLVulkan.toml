@@ -1,0 +1,37 @@
+class = "org/lwjgl/sdl/SDLVulkan"
+
+[[member]]
+name = "SDL_Vulkan_GetVkGetInstanceProcAddr"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_Vulkan_GetInstanceExtensions"
+descriptor = "()Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_Vulkan_UnloadLibrary"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_Vulkan_CreateSurface"
+descriptor = "(JLorg/lwjgl/vulkan/VkInstance;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_Vulkan_LoadLibrary"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_Vulkan_GetPresentationSupport"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;Lorg/lwjgl/vulkan/VkPhysicalDevice;I)Z"
+kind = "builtin"
+references = 1

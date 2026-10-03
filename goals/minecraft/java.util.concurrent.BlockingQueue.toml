@@ -1,0 +1,49 @@
+class = "java/util/concurrent/BlockingQueue"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "poll"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "poll"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "offer"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3

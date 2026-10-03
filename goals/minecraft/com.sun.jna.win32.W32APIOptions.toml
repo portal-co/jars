@@ -1,0 +1,7 @@
+class = "com/sun/jna/win32/W32APIOptions"
+
+[[member]]
+name = "DEFAULT_OPTIONS"
+descriptor = "Ljava/util/Map;"
+kind = "builtin"
+references = 1

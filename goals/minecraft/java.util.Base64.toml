@@ -1,0 +1,25 @@
+class = "java/util/Base64"
+
+[[member]]
+name = "getDecoder"
+descriptor = "()Ljava/util/Base64$Decoder;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getMimeDecoder"
+descriptor = "()Ljava/util/Base64$Decoder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEncoder"
+descriptor = "()Ljava/util/Base64$Encoder;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getMimeEncoder"
+descriptor = "(I[B)Ljava/util/Base64$Encoder;"
+kind = "builtin"
+references = 1

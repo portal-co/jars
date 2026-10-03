@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/level/levelgen/structure/structures/MineshaftStructure$Type;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

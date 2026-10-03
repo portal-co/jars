@@ -1,0 +1,15 @@
+class = "java/lang/reflect/WildcardType"
+
+[[member]]
+name = "getLowerBounds"
+descriptor = "()[Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 15
+
+[[member]]
+name = "getUpperBounds"
+descriptor = "()[Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 20

@@ -1,7 +1,55 @@
 class = "java/lang/Byte"
 
 [[member]]
+name = "byteValue"
+descriptor = "()B"
+kind = "builtin"
+references = 418
+
+[[member]]
+name = "toUnsignedInt"
+descriptor = "(B)I"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "valueOf"
+descriptor = "(B)Ljava/lang/Byte;"
+kind = "builtin"
+references = 170
+
+[[member]]
+name = "toString"
+descriptor = "(B)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compare"
+descriptor = "(BB)I"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "parseByte"
+descriptor = "(Ljava/lang/String;)B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Byte;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parseByte"
+descriptor = "(Ljava/lang/String;I)B"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 17

@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLPlatform"
+
+[[member]]
+name = "SDL_GetPlatform"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

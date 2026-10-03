@@ -1,0 +1,7 @@
+class = "java/lang/runtime/ObjectMethods"
+
+[[member]]
+name = "bootstrap"
+descriptor = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/TypeDescriptor;Ljava/lang/Class;Ljava/lang/String;[Ljava/lang/invoke/MethodHandle;)Ljava/lang/Object;"
+kind = "builtin"
+references = 93

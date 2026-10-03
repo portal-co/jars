@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/BaseTSD$DWORD_PTR"
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1

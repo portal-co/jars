@@ -1,7 +1,223 @@
 class = "java/io/File"
 
 [[member]]
+name = "lastModified"
+descriptor = "()J"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "length"
+descriptor = "()J"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "getAbsoluteFile"
+descriptor = "()Ljava/io/File;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getCanonicalFile"
+descriptor = "()Ljava/io/File;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getParentFile"
+descriptor = "()Ljava/io/File;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "getAbsolutePath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 47
+
+[[member]]
+name = "getCanonicalPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "getPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "toURI"
+descriptor = "()Ljava/net/URI;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toPath"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "deleteOnExit"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "canExecute"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "canRead"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "canWrite"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createNewFile"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "delete"
+descriptor = "()Z"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "exists"
+descriptor = "()Z"
+kind = "builtin"
+references = 57
+
+[[member]]
+name = "isDirectory"
+descriptor = "()Z"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "isFile"
+descriptor = "()Z"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "mkdir"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mkdirs"
+descriptor = "()Z"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "listFiles"
+descriptor = "()[Ljava/io/File;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "setLastModified"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "renameTo"
+descriptor = "(Ljava/io/File;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;Ljava/lang/String;)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "listFiles"
+descriptor = "(Ljava/io/FileFilter;)[Ljava/io/File;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "listFiles"
+descriptor = "(Ljava/io/FilenameFilter;)[Ljava/io/File;"
+kind = "builtin"
+references = 2
+
+[[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
+references = 64
+
+[[member]]
+name = "createTempFile"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/io/File;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/net/URI;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pathSeparatorChar"
+descriptor = "C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "separatorChar"
+descriptor = "C"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "pathSeparator"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "separator"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 3

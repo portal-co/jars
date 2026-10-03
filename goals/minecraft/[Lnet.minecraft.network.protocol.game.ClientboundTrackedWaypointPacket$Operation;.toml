@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/network/protocol/game/ClientboundTrackedWaypointPacket$Operation;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

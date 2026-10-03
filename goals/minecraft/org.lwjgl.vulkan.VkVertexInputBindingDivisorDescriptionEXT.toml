@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkVertexInputBindingDivisorDescriptionEXT"
+
+[[member]]
+name = "binding"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputBindingDivisorDescriptionEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "divisor"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputBindingDivisorDescriptionEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkVertexInputBindingDivisorDescriptionEXT$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkVertexInputBindingDivisorDescriptionEXT;"
+kind = "builtin"
+references = 1

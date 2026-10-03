@@ -1,0 +1,19 @@
+class = "java/nio/channels/FileLock"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "release"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isValid"
+descriptor = "()Z"
+kind = "builtin"
+references = 2

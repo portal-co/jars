@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/COM/COMInvoker"
+
+[[member]]
+name = "_invokeNativeInt"
+descriptor = "(I[Ljava/lang/Object;)I"
+kind = "builtin"
+references = 3

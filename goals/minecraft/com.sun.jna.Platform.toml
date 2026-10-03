@@ -1,0 +1,49 @@
+class = "com/sun/jna/Platform"
+
+[[member]]
+name = "getOSType"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "is64Bit"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isAIX"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isARM"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isIntel"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isLinux"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isSolaris"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isWindows"
+descriptor = "()Z"
+kind = "builtin"
+references = 6

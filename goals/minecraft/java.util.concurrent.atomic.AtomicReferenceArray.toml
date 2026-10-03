@@ -1,0 +1,49 @@
+class = "java/util/concurrent/atomic/AtomicReferenceArray"
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "get"
+descriptor = "(I)Ljava/lang/Object;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getAndSet"
+descriptor = "(ILjava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "lazySet"
+descriptor = "(ILjava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "set"
+descriptor = "(ILjava/lang/Object;)V"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "compareAndExchange"
+descriptor = "(ILjava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(ILjava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 4

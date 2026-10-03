@@ -1,0 +1,25 @@
+class = "java/time/format/DateTimeFormatterBuilder"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "appendPattern"
+descriptor = "(Ljava/lang/String;)Ljava/time/format/DateTimeFormatterBuilder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "parseDefaulting"
+descriptor = "(Ljava/time/temporal/TemporalField;J)Ljava/time/format/DateTimeFormatterBuilder;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "toFormatter"
+descriptor = "(Ljava/util/Locale;)Ljava/time/format/DateTimeFormatter;"
+kind = "builtin"
+references = 2

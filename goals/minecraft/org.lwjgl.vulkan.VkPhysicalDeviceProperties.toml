@@ -1,0 +1,43 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceProperties"
+
+[[member]]
+name = "apiVersion"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "deviceID"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "deviceType"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vendorID"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "deviceNameString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "limits"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceLimits;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties;"
+kind = "builtin"
+references = 1

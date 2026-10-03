@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL"
+
+[[member]]
+name = "getLibrary"
+descriptor = "()Lorg/lwjgl/system/SharedLibrary;"
+kind = "builtin"
+references = 1

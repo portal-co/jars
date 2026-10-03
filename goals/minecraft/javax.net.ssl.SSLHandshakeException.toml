@@ -1,0 +1,13 @@
+class = "javax/net/ssl/SSLHandshakeException"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,19 @@
+class = "java/util/AbstractCollection"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 2

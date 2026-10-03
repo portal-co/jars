@@ -1,0 +1,13 @@
+class = "javax/xml/transform/TransformerFactory"
+
+[[member]]
+name = "newTransformer"
+descriptor = "()Ljavax/xml/transform/Transformer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newInstance"
+descriptor = "()Ljavax/xml/transform/TransformerFactory;"
+kind = "builtin"
+references = 1

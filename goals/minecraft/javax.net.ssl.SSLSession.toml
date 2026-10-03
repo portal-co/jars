@@ -1,0 +1,49 @@
+class = "javax/net/ssl/SSLSession"
+
+[[member]]
+name = "getApplicationBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getPacketBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getCipherSuite"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getProtocol"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "invalidate"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isValid"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getId"
+descriptor = "()[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPeerCertificates"
+descriptor = "()[Ljava/security/cert/Certificate;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$HANDLEByReference"
+
+[[member]]
+name = "getValue"
+descriptor = "()Lcom/sun/jna/platform/win32/WinNT$HANDLE;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkClearAttachment$Buffer"
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "aspectMask"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkClearAttachment$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clearValue"
+descriptor = "(Lorg/lwjgl/vulkan/VkClearValue;)Lorg/lwjgl/vulkan/VkClearAttachment$Buffer;"
+kind = "builtin"
+references = 2

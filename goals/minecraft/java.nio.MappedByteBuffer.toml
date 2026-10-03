@@ -1,0 +1,31 @@
+class = "java/nio/MappedByteBuffer"
+
+[[member]]
+name = "position"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "force"
+descriptor = "()Ljava/nio/MappedByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "order"
+descriptor = "(Ljava/nio/ByteOrder;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "([BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2

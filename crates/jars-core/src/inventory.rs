@@ -1,20 +1,20 @@
 //! Member-level inventory of the natives and builtins a goal binary needs.
 //!
-//! The walker follows the same entrypoint closure as JAR compilation, but it
-//! records platform and native-binding members instead of failing when they
-//! are unmodeled. Platform archives (JARs or `jmod` files) are consulted only
-//! to see `ACC_NATIVE`; they are never lowered.
+//! The walker follows the entrypoint closure through every callee it can name:
+//! direct calls, concrete overrides of virtual and interface calls, and the
+//! method handles an `invokedynamic` bootstrap points at. Platform archives
+//! (JARs or `jmod` files) are consulted only to see `ACC_NATIVE`; they are
+//! never lowered.
 
 use std::{
     collections::{BTreeMap, HashMap, HashSet, VecDeque},
     fs,
     io::Read,
     path::Path,
+    rc::Rc,
 };
 
-use crate::{
-    CompileError, JarEntrypoint, JarImportOptions, classfile, read_jar_classpath, stdlib,
-};
+use crate::{CompileError, JarEntrypoint, JarImportOptions, classfile, read_jar_classpath, stdlib};
 
 const ACC_NATIVE: u16 = 0x0100;
 const ACC_ABSTRACT: u16 = 0x0400;
@@ -71,7 +71,10 @@ impl InventoryClass {
 
     #[must_use]
     pub fn open_members(&self) -> usize {
-        self.members.iter().filter(|member| member.is_open()).count()
+        self.members
+            .iter()
+            .filter(|member| member.is_open())
+            .count()
     }
 
     #[must_use]
@@ -160,8 +163,8 @@ pub fn write_inventory(
         fs::write(&path, class_toml(class))
             .map_err(|error| CompileError::InvalidClass(error.to_string()))?;
     }
-    for entry in fs::read_dir(directory)
-        .map_err(|error| CompileError::InvalidClass(error.to_string()))?
+    for entry in
+        fs::read_dir(directory).map_err(|error| CompileError::InvalidClass(error.to_string()))?
     {
         let entry = entry.map_err(|error| CompileError::InvalidClass(error.to_string()))?;
         let name = entry.file_name();
@@ -173,8 +176,11 @@ pub fn write_inventory(
                 .map_err(|error| CompileError::InvalidClass(error.to_string()))?;
         }
     }
-    fs::write(directory.join("index.toml"), index_toml(goal_name, entry, target_release, report))
-        .map_err(|error| CompileError::InvalidClass(error.to_string()))?;
+    fs::write(
+        directory.join("index.toml"),
+        index_toml(goal_name, entry, target_release, report),
+    )
+    .map_err(|error| CompileError::InvalidClass(error.to_string()))?;
     Ok(())
 }
 
@@ -225,36 +231,74 @@ fn note(
     slot.2 += 1;
 }
 
+struct WorkQueue {
+    queue: VecDeque<(String, String, String)>,
+    queued: HashSet<(String, String, String)>,
+}
+
+impl WorkQueue {
+    fn new(entry: (String, String, String)) -> Self {
+        let mut queued = HashSet::new();
+        queued.insert(entry.clone());
+        Self {
+            queue: VecDeque::from([entry]),
+            queued,
+        }
+    }
+
+    fn push(&mut self, class_name: String, method_name: String, descriptor: String) {
+        if self
+            .queued
+            .insert((class_name.clone(), method_name.clone(), descriptor.clone()))
+        {
+            self.queue.push_back((class_name, method_name, descriptor));
+        }
+    }
+
+    fn pop(&mut self) -> Option<(String, String, String)> {
+        self.queue.pop_front()
+    }
+}
+
+fn cached_parse(
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
+    name: &str,
+    bytes: &[u8],
+) -> Result<Rc<classfile::ClassFile>, classfile::Error> {
+    if let Some(class) = cache.get(name) {
+        return Ok(Rc::clone(class));
+    }
+    let class = Rc::new(classfile::parse(bytes)?);
+    cache.insert(name.to_owned(), Rc::clone(&class));
+    Ok(class)
+}
+
 fn walk_closure(
     goal: &BTreeMap<String, crate::JarClass>,
     platforms: &BTreeMap<String, Vec<u8>>,
     entry: &JarEntrypoint,
     counts: &mut HashMap<(String, String, String), (InventoryKind, Option<&'static str>, u32)>,
 ) -> Result<(), CompileError> {
-    let mut queue = VecDeque::from([(
+    let overrides = OverrideIndex::from_goal(goal);
+    let mut queue = WorkQueue::new((
         entry.class.clone(),
         entry.method.clone(),
         entry.descriptor.clone(),
-    )]);
-    let mut seen = HashSet::<(String, String, String)>::new();
+    ));
+    let mut cache = HashMap::new();
+    let mut expanded = HashSet::new();
     let mut activated = HashSet::<String>::new();
-    while let Some((class_name, method_name, descriptor)) = queue.pop_front() {
-        if !seen.insert((
-            class_name.clone(),
-            method_name.clone(),
-            descriptor.clone(),
-        )) {
-            continue;
-        }
+    while let Some((class_name, method_name, descriptor)) = queue.pop() {
         let Some(bytes) = goal.get(&class_name).map(|class| class.bytes.as_slice()) else {
             return Err(CompileError::MissingClass {
                 class: class_name,
                 referenced_by: "the inventory closure".to_owned(),
             });
         };
-        let class = classfile::parse(bytes).map_err(|error| CompileError::Parse(error.to_string()))?;
+        let class = cached_parse(&mut cache, &class_name, bytes)
+            .map_err(|error| CompileError::Parse(error.to_string()))?;
         if activated.insert(class_name.clone()) {
-            activate_class(&class, goal, &mut queue);
+            activate_class(&class, goal, &mut cache, &mut queue);
         }
         let Some(member) = find_member(&class, &method_name, &descriptor) else {
             if class_name == entry.class
@@ -267,10 +311,16 @@ fn walk_closure(
                     descriptor,
                 });
             }
-            if let Some(owner) = resolve_method(goal, platforms, &class_name, &method_name, &descriptor)
-                && owner != class_name
+            if let Some(owner) = resolve_method(
+                goal,
+                platforms,
+                &mut cache,
+                &class_name,
+                &method_name,
+                &descriptor,
+            ) && owner != class_name
             {
-                queue.push_back((owner, method_name, descriptor));
+                queue.push(owner, method_name, descriptor);
             }
             continue;
         };
@@ -309,18 +359,53 @@ fn walk_closure(
                     classify_field(&reference, platforms, counts);
                 }
                 classfile::RawInstruction::InvokeSpecial { index }
-                | classfile::RawInstruction::InvokeStatic { index }
-                | classfile::RawInstruction::InvokeVirtual { index } => {
+                | classfile::RawInstruction::InvokeStatic { index } => {
                     let reference = pool
                         .method_ref(index)
                         .map_err(|error| CompileError::Parse(error.to_string()))?;
-                    consider_method(&reference, goal, platforms, counts, &mut queue);
+                    consider_method(
+                        &reference,
+                        goal,
+                        platforms,
+                        &mut cache,
+                        counts,
+                        &mut queue,
+                        &mut expanded,
+                        false,
+                        &overrides,
+                    );
+                }
+                classfile::RawInstruction::InvokeVirtual { index } => {
+                    let reference = pool
+                        .method_ref(index)
+                        .map_err(|error| CompileError::Parse(error.to_string()))?;
+                    consider_method(
+                        &reference,
+                        goal,
+                        platforms,
+                        &mut cache,
+                        counts,
+                        &mut queue,
+                        &mut expanded,
+                        true,
+                        &overrides,
+                    );
                 }
                 classfile::RawInstruction::InvokeInterface { index } => {
                     let reference = pool
                         .interface_method_ref(index)
                         .map_err(|error| CompileError::Parse(error.to_string()))?;
-                    consider_method(&reference, goal, platforms, counts, &mut queue);
+                    consider_method(
+                        &reference,
+                        goal,
+                        platforms,
+                        &mut cache,
+                        counts,
+                        &mut queue,
+                        &mut expanded,
+                        true,
+                        &overrides,
+                    );
                 }
                 classfile::RawInstruction::InvokeDynamic { index } => {
                     let (name, descriptor) = class
@@ -335,13 +420,33 @@ fn walk_closure(
                         InventoryKind::Builtin,
                         Some("closed-world"),
                     );
+                    let bootstrap = class
+                        .constant_pool
+                        .invoke_dynamic_bootstrap(index)
+                        .map_err(|error| CompileError::Parse(error.to_string()))?;
+                    for (virtual_call, reference) in
+                        classfile::bootstrap_method_refs(&class, bootstrap)
+                            .map_err(|error| CompileError::Parse(error.to_string()))?
+                    {
+                        consider_method(
+                            &reference,
+                            goal,
+                            platforms,
+                            &mut cache,
+                            counts,
+                            &mut queue,
+                            &mut expanded,
+                            virtual_call,
+                            &overrides,
+                        );
+                    }
                 }
                 classfile::RawInstruction::New { index } => {
                     let owner = class
                         .constant_pool
                         .class_name(index)
                         .map_err(|error| CompileError::Parse(error.to_string()))?;
-                    enqueue_goal_clinit(&owner, goal, &mut queue);
+                    enqueue_goal_clinit(&owner, goal, &mut cache, &mut queue);
                 }
                 _ => {}
             }
@@ -353,33 +458,34 @@ fn walk_closure(
 fn activate_class(
     class: &classfile::ClassFile,
     goal: &BTreeMap<String, crate::JarClass>,
-    queue: &mut VecDeque<(String, String, String)>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
+    queue: &mut WorkQueue,
 ) {
     let pool = &class.constant_pool;
     if class.super_class != 0
         && let Ok(parent) = pool.class_name(class.super_class)
     {
-        enqueue_goal_clinit(&parent, goal, queue);
+        enqueue_goal_clinit(&parent, goal, cache, queue);
     }
     for interface in &class.interfaces {
         if let Ok(name) = pool.class_name(*interface) {
-            enqueue_goal_clinit(&name, goal, queue);
+            enqueue_goal_clinit(&name, goal, cache, queue);
         }
     }
     for field in &class.fields {
         if let Ok(descriptor) = pool.utf8(field.descriptor_index) {
-            enqueue_descriptor_classes(descriptor, goal, queue);
+            enqueue_descriptor_classes(descriptor, goal, cache, queue);
         }
     }
-    if let Some(clinit) = class.methods.iter().find(|method| {
-        pool.utf8(method.name_index).ok() == Some("<clinit>")
-    }) && let Ok(descriptor) = pool.utf8(clinit.descriptor_index)
+    if let Some(clinit) = class
+        .methods
+        .iter()
+        .find(|method| pool.utf8(method.name_index).ok() == Some("<clinit>"))
+        && let Ok(descriptor) = pool.utf8(clinit.descriptor_index)
     {
-        let name = pool
-            .class_name(class.this_class)
-            .unwrap_or_default();
+        let name = pool.class_name(class.this_class).unwrap_or_default();
         if goal.contains_key(&name) {
-            queue.push_back((name, "<clinit>".to_owned(), descriptor.to_owned()));
+            queue.push(name, "<clinit>".to_owned(), descriptor.to_owned());
         }
     }
 }
@@ -387,7 +493,8 @@ fn activate_class(
 fn enqueue_descriptor_classes(
     descriptor: &str,
     goal: &BTreeMap<String, crate::JarClass>,
-    queue: &mut VecDeque<(String, String, String)>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
+    queue: &mut WorkQueue,
 ) {
     let bytes = descriptor.as_bytes();
     let mut index = 0;
@@ -395,7 +502,7 @@ fn enqueue_descriptor_classes(
         if bytes[index] == b'L' {
             if let Some(end) = descriptor[index + 1..].find(';') {
                 let name = &descriptor[index + 1..index + 1 + end];
-                enqueue_goal_clinit(name, goal, queue);
+                enqueue_goal_clinit(name, goal, cache, queue);
                 index += end + 2;
                 continue;
             }
@@ -407,7 +514,8 @@ fn enqueue_descriptor_classes(
 fn enqueue_goal_clinit(
     class_name: &str,
     goal: &BTreeMap<String, crate::JarClass>,
-    queue: &mut VecDeque<(String, String, String)>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
+    queue: &mut WorkQueue,
 ) {
     if is_platform(class_name) || !goal.contains_key(class_name) {
         return;
@@ -415,21 +523,128 @@ fn enqueue_goal_clinit(
     let Some(bytes) = goal.get(class_name).map(|class| class.bytes.as_slice()) else {
         return;
     };
-    let Ok(class) = classfile::parse(bytes) else {
+    let Ok(class) = cached_parse(cache, class_name, bytes) else {
         return;
     };
-    if class.methods.iter().any(|method| {
-        class.constant_pool.utf8(method.name_index).ok() == Some("<clinit>")
-    }) {
-        queue.push_back((
+    if class
+        .methods
+        .iter()
+        .any(|method| class.constant_pool.utf8(method.name_index).ok() == Some("<clinit>"))
+    {
+        queue.push(
             class_name.to_owned(),
             "<clinit>".to_owned(),
             "()V".to_owned(),
-        ));
+        );
     } else if class.super_class != 0
         && let Ok(parent) = class.constant_pool.class_name(class.super_class)
     {
-        enqueue_goal_clinit(&parent, goal, queue);
+        enqueue_goal_clinit(&parent, goal, cache, queue);
+    }
+}
+
+struct OverrideIndex {
+    /// Superclasses and interfaces of each goal class, including itself.
+    ancestors: HashMap<String, HashSet<String>>,
+    /// Goal classes that declare this `name + descriptor`.
+    declarers: HashMap<String, Vec<String>>,
+}
+
+impl OverrideIndex {
+    fn from_goal(goal: &BTreeMap<String, crate::JarClass>) -> Self {
+        let mut parents: HashMap<String, Vec<String>> = HashMap::new();
+        let mut declarers: HashMap<String, Vec<String>> = HashMap::new();
+        for (name, class) in goal {
+            let Ok(parsed) = classfile::parse(&class.bytes) else {
+                continue;
+            };
+            let mut supers = Vec::new();
+            if parsed.super_class != 0
+                && let Ok(parent) = parsed.constant_pool.class_name(parsed.super_class)
+            {
+                supers.push(parent);
+            }
+            for interface in &parsed.interfaces {
+                if let Ok(parent) = parsed.constant_pool.class_name(*interface) {
+                    supers.push(parent);
+                }
+            }
+            parents.insert(name.clone(), supers);
+            for method in &parsed.methods {
+                let Ok(method_name) = parsed.constant_pool.utf8(method.name_index) else {
+                    continue;
+                };
+                let Ok(descriptor) = parsed.constant_pool.utf8(method.descriptor_index) else {
+                    continue;
+                };
+                declarers
+                    .entry(format!("{method_name}{descriptor}"))
+                    .or_default()
+                    .push(name.clone());
+            }
+        }
+        let mut ancestors = HashMap::new();
+        let mut stack = HashSet::new();
+        for name in parents.keys() {
+            collect_ancestors(name, &parents, &mut ancestors, &mut stack);
+        }
+        Self {
+            ancestors,
+            declarers,
+        }
+    }
+}
+
+fn collect_ancestors(
+    name: &str,
+    parents: &HashMap<String, Vec<String>>,
+    ancestors: &mut HashMap<String, HashSet<String>>,
+    stack: &mut HashSet<String>,
+) -> HashSet<String> {
+    if let Some(known) = ancestors.get(name) {
+        return known.clone();
+    }
+    if !stack.insert(name.to_owned()) {
+        return HashSet::new();
+    }
+    let mut set = HashSet::from([name.to_owned()]);
+    if let Some(supers) = parents.get(name) {
+        for parent in supers {
+            set.extend(collect_ancestors(parent, parents, ancestors, stack));
+        }
+    }
+    stack.remove(name);
+    ancestors.insert(name.to_owned(), set.clone());
+    set
+}
+
+fn enqueue_overrides(
+    overrides: &OverrideIndex,
+    owner: &str,
+    name: &str,
+    descriptor: &str,
+    queue: &mut WorkQueue,
+    expanded: &mut HashSet<(String, String)>,
+) {
+    if is_platform(owner) {
+        return;
+    }
+    let key = format!("{name}{descriptor}");
+    if !expanded.insert((owner.to_owned(), key.clone())) {
+        return;
+    }
+    let Some(declarers) = overrides.declarers.get(&key) else {
+        return;
+    };
+    for class_name in declarers {
+        let matches_owner = class_name == owner
+            || overrides
+                .ancestors
+                .get(class_name)
+                .is_some_and(|ancestors| ancestors.contains(owner));
+        if matches_owner {
+            queue.push(class_name.clone(), name.to_owned(), descriptor.to_owned());
+        }
     }
 }
 
@@ -437,15 +652,30 @@ fn consider_method(
     reference: &classfile::MemberRef,
     goal: &BTreeMap<String, crate::JarClass>,
     platforms: &BTreeMap<String, Vec<u8>>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
     counts: &mut HashMap<(String, String, String), (InventoryKind, Option<&'static str>, u32)>,
-    queue: &mut VecDeque<(String, String, String)>,
+    queue: &mut WorkQueue,
+    expanded: &mut HashSet<(String, String)>,
+    virtual_call: bool,
+    overrides: &OverrideIndex,
 ) {
+    if virtual_call {
+        enqueue_overrides(
+            overrides,
+            &reference.class,
+            &reference.name,
+            &reference.descriptor,
+            queue,
+            expanded,
+        );
+    }
     if stdlib::member(&reference.class, &reference.name, &reference.descriptor).is_some() {
         return;
     }
     if is_platform(&reference.class) || !goal.contains_key(&reference.class) {
         let kind = platform_kind(
             platforms,
+            cache,
             &reference.class,
             &reference.name,
             &reference.descriptor,
@@ -460,21 +690,25 @@ fn consider_method(
         );
         return;
     }
-    let Some(bytes) = goal.get(&reference.class).map(|class| class.bytes.as_slice()) else {
+    let Some(bytes) = goal
+        .get(&reference.class)
+        .map(|class| class.bytes.as_slice())
+    else {
         return;
     };
-    let Ok(class) = classfile::parse(bytes) else {
-        queue.push_back((
+    let Ok(class) = cached_parse(cache, &reference.class, bytes) else {
+        queue.push(
             reference.class.clone(),
             reference.name.clone(),
             reference.descriptor.clone(),
-        ));
+        );
         return;
     };
     let Some(member) = find_member(&class, &reference.name, &reference.descriptor) else {
         let Some(owner) = resolve_method(
             goal,
             platforms,
+            cache,
             &reference.class,
             &reference.name,
             &reference.descriptor,
@@ -482,7 +716,13 @@ fn consider_method(
             return;
         };
         if is_platform(&owner) || !goal.contains_key(&owner) {
-            let kind = platform_kind(platforms, &owner, &reference.name, &reference.descriptor);
+            let kind = platform_kind(
+                platforms,
+                cache,
+                &owner,
+                &reference.name,
+                &reference.descriptor,
+            );
             note(
                 counts,
                 owner.clone(),
@@ -493,7 +733,7 @@ fn consider_method(
             );
             return;
         }
-        queue.push_back((owner, reference.name.clone(), reference.descriptor.clone()));
+        queue.push(owner, reference.name.clone(), reference.descriptor.clone());
         return;
     };
     if member.access_flags & ACC_NATIVE != 0 {
@@ -510,11 +750,11 @@ fn consider_method(
     if member.access_flags & ACC_ABSTRACT != 0 {
         return;
     }
-    queue.push_back((
+    queue.push(
         reference.class.clone(),
         reference.name.clone(),
         reference.descriptor.clone(),
-    ));
+    );
 }
 
 fn classify_field(
@@ -541,6 +781,7 @@ fn classify_field(
 
 fn platform_kind(
     platforms: &BTreeMap<String, Vec<u8>>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
     class: &str,
     name: &str,
     descriptor: &str,
@@ -548,7 +789,7 @@ fn platform_kind(
     let Some(bytes) = platforms.get(class) else {
         return InventoryKind::Builtin;
     };
-    let Ok(parsed) = classfile::parse(bytes) else {
+    let Ok(parsed) = cached_parse(cache, class, bytes) else {
         return InventoryKind::Builtin;
     };
     let Some(member) = find_member(&parsed, name, descriptor) else {
@@ -564,7 +805,10 @@ fn platform_kind(
 }
 
 fn method_has_code(member: &classfile::MemberInfo) -> bool {
-    member.attributes.iter().any(|attribute| attribute.name == "Code")
+    member
+        .attributes
+        .iter()
+        .any(|attribute| attribute.name == "Code")
 }
 
 /// Call sites name the compile-time owner. The method body may live on a
@@ -572,6 +816,7 @@ fn method_has_code(member: &classfile::MemberInfo) -> bool {
 fn resolve_method(
     goal: &BTreeMap<String, crate::JarClass>,
     platforms: &BTreeMap<String, Vec<u8>>,
+    cache: &mut HashMap<String, Rc<classfile::ClassFile>>,
     class_name: &str,
     name: &str,
     descriptor: &str,
@@ -589,7 +834,7 @@ fn resolve_method(
         else {
             continue;
         };
-        let Ok(class) = classfile::parse(bytes) else {
+        let Ok(class) = cached_parse(cache, &current, bytes) else {
             continue;
         };
         if find_member(&class, name, descriptor).is_some() {
@@ -673,12 +918,10 @@ fn read_platform_archive(
     })?;
     let mut selected: BTreeMap<String, (String, u16)> = BTreeMap::new();
     for index in 0..archive.len() {
-        let entry = archive
-            .by_index(index)
-            .map_err(|error| CompileError::Jar {
-                jar: path.to_owned(),
-                detail: error.to_string(),
-            })?;
+        let entry = archive.by_index(index).map_err(|error| CompileError::Jar {
+            jar: path.to_owned(),
+            detail: error.to_string(),
+        })?;
         let raw_name = entry.name().to_owned();
         if !raw_name.ends_with(".class") || raw_name.ends_with('/') {
             continue;
@@ -687,21 +930,21 @@ fn read_platform_archive(
             .strip_prefix("classes/")
             .unwrap_or(raw_name.as_str())
             .to_owned();
-        let (logical_name, release) = if let Some(rest) = entry_name.strip_prefix("META-INF/versions/")
-        {
-            let Some((release, logical_name)) = rest.split_once('/') else {
-                continue;
+        let (logical_name, release) =
+            if let Some(rest) = entry_name.strip_prefix("META-INF/versions/") {
+                let Some((release, logical_name)) = rest.split_once('/') else {
+                    continue;
+                };
+                let Ok(release) = release.parse::<u16>() else {
+                    continue;
+                };
+                if release > options.target_release || logical_name.is_empty() {
+                    continue;
+                }
+                (logical_name.to_owned(), release)
+            } else {
+                (entry_name.clone(), 0)
             };
-            let Ok(release) = release.parse::<u16>() else {
-                continue;
-            };
-            if release > options.target_release || logical_name.is_empty() {
-                continue;
-            }
-            (logical_name.to_owned(), release)
-        } else {
-            (entry_name.clone(), 0)
-        };
         if logical_name == "module-info.class" {
             continue;
         }
@@ -713,9 +956,7 @@ fn read_platform_archive(
         }
     }
     for (logical_name, (entry_name, _)) in selected {
-        let class_name = logical_name
-            .trim_end_matches(".class")
-            .to_owned();
+        let class_name = logical_name.trim_end_matches(".class").to_owned();
         let mut entry = archive
             .by_name(&entry_name)
             .map_err(|error| CompileError::Jar {
@@ -757,10 +998,7 @@ fn index_toml(
     out.push_str(&format!("target_release = {target_release}\n"));
     out.push_str(&format!("open_classes = {}\n", report.open_classes()));
     out.push_str(&format!("open_members = {}\n", report.open_members()));
-    out.push_str(&format!(
-        "blocked_members = {}\n",
-        report.blocked_members()
-    ));
+    out.push_str(&format!("blocked_members = {}\n", report.blocked_members()));
     for class in &report.classes {
         out.push_str("\n[[class]]\n");
         out.push_str(&format!("name = {}\n", toml_string(&class.name)));
@@ -830,10 +1068,7 @@ mod tests {
                     "classes/java/lang/InventoryNative.class",
                     &native_class("java/lang/InventoryNative", "meaning", "()I"),
                 ),
-                (
-                    "classes/java/lang/InventoryBuiltin.class",
-                    &builtin_class(),
-                ),
+                ("classes/java/lang/InventoryBuiltin.class", &builtin_class()),
                 (
                     "classes/java/lang/Class.class",
                     &native_class(
@@ -881,9 +1116,12 @@ mod tests {
         assert!(builtin.members.iter().any(|member| {
             member.name == "pure" && member.kind == InventoryKind::Builtin && member.is_open()
         }));
-        assert!(builtin.members.iter().any(|member| {
-            member.name == "FLAG" && member.kind == InventoryKind::Builtin
-        }));
+        assert!(
+            builtin
+                .members
+                .iter()
+                .any(|member| { member.name == "FLAG" && member.kind == InventoryKind::Builtin })
+        );
 
         let blocked = report
             .classes
@@ -1033,7 +1271,13 @@ mod tests {
         bytes
     }
 
-    fn method_bytes(name: &str, descriptor: &str, flags: u16, max_locals: u16, code: &[u8]) -> MethodSpec {
+    fn method_bytes(
+        name: &str,
+        descriptor: &str,
+        flags: u16,
+        max_locals: u16,
+        code: &[u8],
+    ) -> MethodSpec {
         MethodSpec {
             name: name.to_owned(),
             descriptor: descriptor.to_owned(),
@@ -1066,13 +1310,17 @@ mod tests {
 
     impl Pool {
         fn new() -> Self {
-            Self { entries: Vec::new() }
+            Self {
+                entries: Vec::new(),
+            }
         }
 
         fn utf8(&mut self, value: &str) -> u16 {
-            if let Some(index) = self.entries.iter().position(|entry| {
-                matches!(entry, Cp::Utf8(existing) if existing == value)
-            }) {
+            if let Some(index) = self
+                .entries
+                .iter()
+                .position(|entry| matches!(entry, Cp::Utf8(existing) if existing == value))
+            {
                 return (index + 1) as u16;
             }
             self.entries.push(Cp::Utf8(value.to_owned()));

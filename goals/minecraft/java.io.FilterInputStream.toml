@@ -1,0 +1,13 @@
+class = "java/io/FilterInputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "read"
+descriptor = "([B)I"
+kind = "builtin"
+references = 1

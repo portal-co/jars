@@ -1,0 +1,49 @@
+class = "org/lwjgl/util/vma/VmaAllocationCreateInfo"
+
+[[member]]
+name = "flags"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "preferredFlags"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "requiredFlags"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "flags"
+descriptor = "(I)Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "preferredFlags"
+descriptor = "(I)Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "requiredFlags"
+descriptor = "(I)Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "usage"
+descriptor = "(I)Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;"
+kind = "builtin"
+references = 3

@@ -1,0 +1,79 @@
+class = "java/util/SortedSet"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "first"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "last"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "comparator"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 167
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removeAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "retainAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 1

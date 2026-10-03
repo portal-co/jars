@@ -1,0 +1,19 @@
+class = "com/sun/jna/NativeLong"
+
+[[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 6

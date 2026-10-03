@@ -1,0 +1,43 @@
+class = "java/nio/channels/SeekableByteChannel"
+
+[[member]]
+name = "position"
+descriptor = "()J"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "size"
+descriptor = "()J"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "getClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "position"
+descriptor = "(J)Ljava/nio/channels/SeekableByteChannel;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "read"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 1

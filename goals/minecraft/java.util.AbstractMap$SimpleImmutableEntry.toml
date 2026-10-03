@@ -1,0 +1,19 @@
+class = "java/util/AbstractMap$SimpleImmutableEntry"
+
+[[member]]
+name = "getKey"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getValue"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 5

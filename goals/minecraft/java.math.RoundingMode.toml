@@ -1,0 +1,67 @@
+class = "java/math/RoundingMode"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "values"
+descriptor = "()[Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "valueOf"
+descriptor = "(I)Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CEILING"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "DOWN"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "FLOOR"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "HALF_DOWN"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HALF_EVEN"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "HALF_UP"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "UNNECESSARY"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "UP"
+descriptor = "Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 1

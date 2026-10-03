@@ -1,0 +1,7 @@
+class = "org/zeromq/ZMQ"
+
+[[member]]
+name = "getVersionString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

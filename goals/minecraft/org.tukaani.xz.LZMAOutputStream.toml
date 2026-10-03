@@ -1,0 +1,7 @@
+class = "org/tukaani/xz/LZMAOutputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Lorg/tukaani/xz/LZMA2Options;J)V"
+kind = "builtin"
+references = 1

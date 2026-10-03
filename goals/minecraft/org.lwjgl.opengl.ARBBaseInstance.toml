@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/ARBBaseInstance"
+
+[[member]]
+name = "glDrawArraysInstancedBaseInstance"
+descriptor = "(IIIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawElementsInstancedBaseVertexBaseInstance"
+descriptor = "(IIIJIII)V"
+kind = "builtin"
+references = 1

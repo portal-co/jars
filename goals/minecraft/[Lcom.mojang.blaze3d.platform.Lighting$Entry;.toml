@@ -1,0 +1,7 @@
+class = "[Lcom/mojang/blaze3d/platform/Lighting$Entry;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

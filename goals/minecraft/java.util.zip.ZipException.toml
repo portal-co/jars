@@ -1,0 +1,19 @@
+class = "java/util/zip/ZipException"
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkDependencyInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkDependencyInfo;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkDependencyInfo;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "pImageMemoryBarriers"
+descriptor = "(Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;)Lorg/lwjgl/vulkan/VkDependencyInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pMemoryBarriers"
+descriptor = "(Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;)Lorg/lwjgl/vulkan/VkDependencyInfo;"
+kind = "builtin"
+references = 2

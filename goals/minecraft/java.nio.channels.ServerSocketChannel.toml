@@ -1,0 +1,19 @@
+class = "java/nio/channels/ServerSocketChannel"
+
+[[member]]
+name = "socket"
+descriptor = "()Ljava/net/ServerSocket;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLocalAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3

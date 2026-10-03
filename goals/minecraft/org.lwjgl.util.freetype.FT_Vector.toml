@@ -1,0 +1,19 @@
+class = "org/lwjgl/util/freetype/FT_Vector"
+
+[[member]]
+name = "x"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(JJ)Lorg/lwjgl/util/freetype/FT_Vector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "malloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/util/freetype/FT_Vector;"
+kind = "builtin"
+references = 1

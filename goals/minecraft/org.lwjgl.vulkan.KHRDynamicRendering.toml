@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/KHRDynamicRendering"
+
+[[member]]
+name = "vkCmdEndRenderingKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBeginRenderingKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;Lorg/lwjgl/vulkan/VkRenderingInfo;)V"
+kind = "builtin"
+references = 1

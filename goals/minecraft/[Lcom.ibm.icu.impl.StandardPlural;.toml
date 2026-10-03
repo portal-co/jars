@@ -1,0 +1,7 @@
+class = "[Lcom/ibm/icu/impl/StandardPlural;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,31 @@
+class = "java/lang/Process"
+
+[[member]]
+name = "waitFor"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getErrorStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getInputStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getOutputStream"
+descriptor = "()Ljava/io/OutputStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "destroy"
+descriptor = "()V"
+kind = "builtin"
+references = 3

@@ -1,0 +1,8 @@
+class = "java/lang/reflect/Proxy"
+
+[[member]]
+name = "newProxyInstance"
+descriptor = "(Ljava/lang/ClassLoader;[Ljava/lang/Class;Ljava/lang/reflect/InvocationHandler;)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

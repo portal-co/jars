@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/CoreFoundation$CFStringRef"
+
+[[member]]
+name = "stringValue"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

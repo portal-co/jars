@@ -1,0 +1,37 @@
+class = "java/time/MonthDay"
+
+[[member]]
+name = "getDayOfMonth"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMonthValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(II)Ljava/time/MonthDay;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/time/Month;I)Ljava/time/MonthDay;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "from"
+descriptor = "(Ljava/time/temporal/TemporalAccessor;)Ljava/time/MonthDay;"
+kind = "builtin"
+references = 1

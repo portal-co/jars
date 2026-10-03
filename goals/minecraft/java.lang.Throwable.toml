@@ -1,8 +1,80 @@
 class = "java/lang/Throwable"
 
 [[member]]
+name = "getLocalizedMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 64
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 50
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 30
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
 name = "printStackTrace"
 descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getStackTrace"
+descriptor = "()[Ljava/lang/StackTraceElement;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "getSuppressed"
+descriptor = "()[Ljava/lang/Throwable;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "printStackTrace"
+descriptor = "(Ljava/io/PrintStream;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "printStackTrace"
+descriptor = "(Ljava/io/PrintWriter;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
 kind = "builtin"
 references = 1
 
@@ -10,4 +82,10 @@ references = 1
 name = "addSuppressed"
 descriptor = "(Ljava/lang/Throwable;)V"
 kind = "builtin"
-references = 4
+references = 639
+
+[[member]]
+name = "setStackTrace"
+descriptor = "([Ljava/lang/StackTraceElement;)V"
+kind = "builtin"
+references = 2

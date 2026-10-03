@@ -1,0 +1,25 @@
+class = "org/tukaani/xz/LZMAInputStream"
+
+[[member]]
+name = "enableRelaxedEndCondition"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMemoryUsage"
+descriptor = "(IB)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;JBI)V"
+kind = "builtin"
+references = 1

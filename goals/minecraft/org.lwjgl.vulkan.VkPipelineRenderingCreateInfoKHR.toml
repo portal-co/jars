@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthAttachmentFormat"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pColorAttachmentFormats"
+descriptor = "(Ljava/nio/IntBuffer;)Lorg/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineRenderingCreateInfoKHR;"
+kind = "builtin"
+references = 1

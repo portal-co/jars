@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/dataformat/xml/JacksonXmlModule"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

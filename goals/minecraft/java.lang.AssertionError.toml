@@ -4,11 +4,17 @@ class = "java/lang/AssertionError"
 name = "getMessage"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 1
+references = 3
 
 [[member]]
 name = "<init>"
 descriptor = "()V"
+kind = "builtin"
+references = 1829
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
 kind = "builtin"
 references = 4
 
@@ -16,10 +22,10 @@ references = 4
 name = "<init>"
 descriptor = "(Ljava/lang/Object;)V"
 kind = "builtin"
-references = 1
+references = 134
 
 [[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
 kind = "builtin"
-references = 1
+references = 4

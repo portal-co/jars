@@ -1,0 +1,7 @@
+class = "com/ning/compress/lzf/ChunkEncoder"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1

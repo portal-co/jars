@@ -1,0 +1,19 @@
+class = "java/nio/file/StandardCopyOption"
+
+[[member]]
+name = "ATOMIC_MOVE"
+descriptor = "Ljava/nio/file/StandardCopyOption;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "COPY_ATTRIBUTES"
+descriptor = "Ljava/nio/file/StandardCopyOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "REPLACE_EXISTING"
+descriptor = "Ljava/nio/file/StandardCopyOption;"
+kind = "builtin"
+references = 6

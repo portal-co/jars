@@ -1,0 +1,25 @@
+class = "org/lwjgl/util/shaderc/ShadercIncludeResult"
+
+[[member]]
+name = "address"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "()Lorg/lwjgl/util/shaderc/ShadercIncludeResult;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "content"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/util/shaderc/ShadercIncludeResult;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "source_name"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/util/shaderc/ShadercIncludeResult;"
+kind = "builtin"
+references = 2

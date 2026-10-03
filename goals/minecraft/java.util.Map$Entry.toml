@@ -1,0 +1,55 @@
+class = "java/util/Map$Entry"
+
+[[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getKey"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4834
+
+[[member]]
+name = "getValue"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3839
+
+[[member]]
+name = "comparingByKey"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "comparingByValue"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setValue"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 321
+
+[[member]]
+name = "comparingByKey"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "comparingByValue"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 2

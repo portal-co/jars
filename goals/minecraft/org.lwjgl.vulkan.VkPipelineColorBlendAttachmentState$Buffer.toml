@@ -1,0 +1,61 @@
+class = "org/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer"
+
+[[member]]
+name = "position"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alphaBlendOp"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "colorBlendOp"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "colorWriteMask"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "dstAlphaBlendFactor"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "dstColorBlendFactor"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "srcAlphaBlendFactor"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "srcColorBlendFactor"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "blendEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkPipelineColorBlendAttachmentState$Buffer;"
+kind = "builtin"
+references = 1

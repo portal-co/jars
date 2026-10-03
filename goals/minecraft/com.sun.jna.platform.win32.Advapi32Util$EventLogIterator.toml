@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/Advapi32Util$EventLogIterator"
+
+[[member]]
+name = "next"
+descriptor = "()Lcom/sun/jna/platform/win32/Advapi32Util$EventLogRecord;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;I)V"
+kind = "builtin"
+references = 1

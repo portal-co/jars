@@ -1,0 +1,13 @@
+class = "org/w3c/dom/Attr"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getValue"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

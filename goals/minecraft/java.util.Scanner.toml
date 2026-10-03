@@ -1,0 +1,43 @@
+class = "java/util/Scanner"
+
+[[member]]
+name = "nextFloat"
+descriptor = "()F"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "next"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "hasNextInt"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Readable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "useLocale"
+descriptor = "(Ljava/util/Locale;)Ljava/util/Scanner;"
+kind = "builtin"
+references = 1

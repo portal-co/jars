@@ -1,0 +1,13 @@
+class = "org/lwjgl/util/freetype/FT_Face"
+
+[[member]]
+name = "glyph"
+descriptor = "()Lorg/lwjgl/util/freetype/FT_GlyphSlot;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "create"
+descriptor = "(J)Lorg/lwjgl/util/freetype/FT_Face;"
+kind = "builtin"
+references = 1

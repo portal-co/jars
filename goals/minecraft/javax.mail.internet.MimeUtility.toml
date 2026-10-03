@@ -1,0 +1,13 @@
+class = "javax/mail/internet/MimeUtility"
+
+[[member]]
+name = "encode"
+descriptor = "(Ljava/io/OutputStream;Ljava/lang/String;)Ljava/io/OutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEncoding"
+descriptor = "(Ljavax/activation/DataSource;)Ljava/lang/String;"
+kind = "builtin"
+references = 1

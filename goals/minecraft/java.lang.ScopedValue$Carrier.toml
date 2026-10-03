@@ -1,0 +1,7 @@
+class = "java/lang/ScopedValue$Carrier"
+
+[[member]]
+name = "run"
+descriptor = "(Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 1

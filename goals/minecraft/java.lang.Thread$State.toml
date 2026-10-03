@@ -1,0 +1,31 @@
+class = "java/lang/Thread$State"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "name"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NEW"
+descriptor = "Ljava/lang/Thread$State;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "TERMINATED"
+descriptor = "Ljava/lang/Thread$State;"
+kind = "builtin"
+references = 1

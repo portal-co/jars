@@ -1,0 +1,25 @@
+class = "net/jpountz/lz4/LZ4JNI"
+
+[[member]]
+name = "LZ4_compress_limitedOutput"
+descriptor = "([BLjava/nio/ByteBuffer;II[BLjava/nio/ByteBuffer;II)I"
+kind = "native"
+references = 2
+
+[[member]]
+name = "LZ4_decompress_safe"
+descriptor = "([BLjava/nio/ByteBuffer;II[BLjava/nio/ByteBuffer;II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "LZ4_compressHC"
+descriptor = "([BLjava/nio/ByteBuffer;II[BLjava/nio/ByteBuffer;III)I"
+kind = "native"
+references = 2
+
+[[member]]
+name = "LZ4_decompress_fast"
+descriptor = "([BLjava/nio/ByteBuffer;I[BLjava/nio/ByteBuffer;II)I"
+kind = "native"
+references = 2

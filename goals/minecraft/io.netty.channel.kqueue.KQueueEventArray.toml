@@ -1,0 +1,7 @@
+class = "io/netty/channel/kqueue/KQueueEventArray"
+
+[[member]]
+name = "evSet"
+descriptor = "(JISSIJJ)V"
+kind = "native"
+references = 1

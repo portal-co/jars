@@ -1,0 +1,199 @@
+class = "java/util/concurrent/CompletableFuture"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "join"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 83
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "isCompletedExceptionally"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isDone"
+descriptor = "()Z"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "getNow"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "completedFuture"
+descriptor = "(Ljava/lang/Object;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 66
+
+[[member]]
+name = "complete"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "thenRun"
+descriptor = "(Ljava/lang/Runnable;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "runAsync"
+descriptor = "(Ljava/lang/Runnable;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "thenRunAsync"
+descriptor = "(Ljava/lang/Runnable;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "failedFuture"
+descriptor = "(Ljava/lang/Throwable;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "completeExceptionally"
+descriptor = "(Ljava/lang/Throwable;)Z"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "thenCombine"
+descriptor = "(Ljava/util/concurrent/CompletionStage;Ljava/util/function/BiFunction;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "applyToEither"
+descriptor = "(Ljava/util/concurrent/CompletionStage;Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "whenComplete"
+descriptor = "(Ljava/util/function/BiConsumer;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "whenCompleteAsync"
+descriptor = "(Ljava/util/function/BiConsumer;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "handle"
+descriptor = "(Ljava/util/function/BiFunction;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "handleAsync"
+descriptor = "(Ljava/util/function/BiFunction;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "thenAccept"
+descriptor = "(Ljava/util/function/Consumer;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "thenAcceptAsync"
+descriptor = "(Ljava/util/function/Consumer;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "exceptionally"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "thenApply"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 37
+
+[[member]]
+name = "thenCompose"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 38
+
+[[member]]
+name = "exceptionallyAsync"
+descriptor = "(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "exceptionallyComposeAsync"
+descriptor = "(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "thenApplyAsync"
+descriptor = "(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "thenComposeAsync"
+descriptor = "(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "supplyAsync"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "supplyAsync"
+descriptor = "(Ljava/util/function/Supplier;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 74
+
+[[member]]
+name = "cancel"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "allOf"
+descriptor = "([Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "anyOf"
+descriptor = "([Ljava/util/concurrent/CompletableFuture;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 3

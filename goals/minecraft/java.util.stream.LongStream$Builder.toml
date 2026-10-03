@@ -1,0 +1,13 @@
+class = "java/util/stream/LongStream$Builder"
+
+[[member]]
+name = "build"
+descriptor = "()Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(J)Ljava/util/stream/LongStream$Builder;"
+kind = "builtin"
+references = 1

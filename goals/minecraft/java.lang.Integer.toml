@@ -1,8 +1,158 @@
 class = "java/lang/Integer"
 
 [[member]]
+name = "byteValue"
+descriptor = "()B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1218
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "shortValue"
+descriptor = "()S"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bitCount"
+descriptor = "(I)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "highestOneBit"
+descriptor = "(I)I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "lowestOneBit"
+descriptor = "(I)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "numberOfLeadingZeros"
+descriptor = "(I)I"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "numberOfTrailingZeros"
+descriptor = "(I)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "reverseBytes"
+descriptor = "(I)I"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "toUnsignedLong"
+descriptor = "(I)J"
+kind = "builtin"
+references = 6
+
+[[member]]
 name = "valueOf"
 descriptor = "(I)Ljava/lang/Integer;"
+kind = "builtin"
+references = 4206
+
+[[member]]
+name = "toHexString"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "toString"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 71
+
+[[member]]
+name = "compare"
+descriptor = "(II)I"
+kind = "builtin"
+references = 59
+
+[[member]]
+name = "compareUnsigned"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "min"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "remainderUnsigned"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rotateLeft"
+descriptor = "(II)I"
+kind = "builtin"
+references = 82
+
+[[member]]
+name = "sum"
+descriptor = "(II)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toString"
+descriptor = "(II)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parseInt"
+descriptor = "(Ljava/lang/CharSequence;III)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Integer;)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
 kind = "builtin"
 references = 4
 
@@ -10,10 +160,46 @@ references = 4
 name = "parseInt"
 descriptor = "(Ljava/lang/String;)I"
 kind = "builtin"
+references = 86
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Integer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Integer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "parseInt"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "parseUnsignedInt"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInteger"
+descriptor = "(Ljava/lang/String;I)Ljava/lang/Integer;"
+kind = "builtin"
 references = 2
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;I)Ljava/lang/Integer;"
+kind = "builtin"
+references = 3
 
 [[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 29

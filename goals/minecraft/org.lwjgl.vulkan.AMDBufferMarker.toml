@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/AMDBufferMarker"
+
+[[member]]
+name = "vkCmdWriteBufferMarker2AMD"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJJI)V"
+kind = "builtin"
+references = 1

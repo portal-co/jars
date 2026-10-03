@@ -1,0 +1,19 @@
+class = "java/lang/management/RuntimeMXBean"
+
+[[member]]
+name = "getStartTime"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getUptime"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInputArguments"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,79 @@
+class = "java/net/ServerSocket"
+
+[[member]]
+name = "getLocalPort"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getReceiveBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSoTimeout"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "accept"
+descriptor = "()Ljava/net/Socket;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getReuseAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isBound"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isClosed"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setReceiveBufferSize"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSoTimeout"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(IILjava/net/InetAddress;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setReuseAddress"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

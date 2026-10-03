@@ -1,0 +1,7 @@
+class = "javax/net/ssl/SSLSessionContext"
+
+[[member]]
+name = "getSessionTimeout"
+descriptor = "()I"
+kind = "builtin"
+references = 1

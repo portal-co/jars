@@ -1,0 +1,13 @@
+class = "java/util/concurrent/ForkJoinWorkerThread"
+
+[[member]]
+name = "setName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/concurrent/ForkJoinPool;)V"
+kind = "builtin"
+references = 1

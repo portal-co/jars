@@ -1,0 +1,31 @@
+class = "jdk/jfr/FlightRecorder"
+
+[[member]]
+name = "isAvailable"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "register"
+descriptor = "(Ljava/lang/Class;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addPeriodicEvent"
+descriptor = "(Ljava/lang/Class;Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removePeriodicEvent"
+descriptor = "(Ljava/lang/Runnable;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addListener"
+descriptor = "(Ljdk/jfr/FlightRecorderListener;)V"
+kind = "builtin"
+references = 2

@@ -1,0 +1,19 @@
+class = "org/lwjgl/sdl/SDL_TextEditingEvent"
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "start"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "textString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

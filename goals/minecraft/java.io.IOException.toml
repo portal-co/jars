@@ -1,7 +1,49 @@
 class = "java/io/IOException"
 
 [[member]]
+name = "getLocalizedMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "printStackTrace"
+descriptor = "(Ljava/io/PrintStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 1
+references = 234
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "addSuppressed"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 2

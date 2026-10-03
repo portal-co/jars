@@ -1,0 +1,229 @@
+class = "java/math/BigDecimal"
+
+[[member]]
+name = "doubleValue"
+descriptor = "()D"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "precision"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "scale"
+descriptor = "()I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "signum"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "longValueExact"
+descriptor = "()J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toPlainString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "abs"
+descriptor = "()Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "negate"
+descriptor = "()Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "stripTrailingZeros"
+descriptor = "()Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toBigInteger"
+descriptor = "()Ljava/math/BigInteger;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "unscaledValue"
+descriptor = "()Ljava/math/BigInteger;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "valueOf"
+descriptor = "(D)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "movePointLeft"
+descriptor = "(I)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "movePointRight"
+descriptor = "(I)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pow"
+descriptor = "(I)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "scaleByPowerOfTen"
+descriptor = "(I)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setScale"
+descriptor = "(I)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pow"
+descriptor = "(ILjava/math/MathContext;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setScale"
+descriptor = "(ILjava/math/RoundingMode;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "valueOf"
+descriptor = "(J)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 32
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/math/BigDecimal;)I"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "min"
+descriptor = "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "multiply"
+descriptor = "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "remainder"
+descriptor = "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "subtract"
+descriptor = "(Ljava/math/BigDecimal;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "divide"
+descriptor = "(Ljava/math/BigDecimal;ILjava/math/RoundingMode;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "divide"
+descriptor = "(Ljava/math/BigDecimal;Ljava/math/MathContext;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "divideAndRemainder"
+descriptor = "(Ljava/math/BigDecimal;Ljava/math/MathContext;)[Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/math/BigInteger;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "round"
+descriptor = "(Ljava/math/MathContext;)Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ONE"
+descriptor = "Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "ZERO"
+descriptor = "Ljava/math/BigDecimal;"
+kind = "builtin"
+references = 19

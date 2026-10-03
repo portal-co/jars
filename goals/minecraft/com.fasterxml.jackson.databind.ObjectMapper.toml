@@ -1,0 +1,43 @@
+class = "com/fasterxml/jackson/databind/ObjectMapper"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/fasterxml/jackson/core/JsonFactory;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "configure"
+descriptor = "(Lcom/fasterxml/jackson/core/JsonParser$Feature;Z)Lcom/fasterxml/jackson/databind/ObjectMapper;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "writer"
+descriptor = "(Lcom/fasterxml/jackson/core/PrettyPrinter;)Lcom/fasterxml/jackson/databind/ObjectWriter;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "configure"
+descriptor = "(Lcom/fasterxml/jackson/databind/DeserializationFeature;Z)Lcom/fasterxml/jackson/databind/ObjectMapper;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readTree"
+descriptor = "(Ljava/io/InputStream;)Lcom/fasterxml/jackson/databind/JsonNode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readValue"
+descriptor = "(Ljava/io/InputStream;Ljava/lang/Class;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

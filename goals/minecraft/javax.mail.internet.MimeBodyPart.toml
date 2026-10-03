@@ -1,0 +1,7 @@
+class = "javax/mail/internet/MimeBodyPart"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljavax/mail/internet/InternetHeaders;[B)V"
+kind = "builtin"
+references = 1

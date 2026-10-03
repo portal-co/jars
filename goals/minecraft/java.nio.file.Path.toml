@@ -1,0 +1,139 @@
+class = "java/nio/file/Path"
+
+[[member]]
+name = "getNameCount"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toFile"
+descriptor = "()Ljava/io/File;"
+kind = "builtin"
+references = 43
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "toUri"
+descriptor = "()Ljava/net/URI;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getFileSystem"
+descriptor = "()Ljava/nio/file/FileSystem;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getFileName"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "getParent"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 33
+
+[[member]]
+name = "normalize"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "toAbsolutePath"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isAbsolute"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "resolve"
+descriptor = "(Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 146
+
+[[member]]
+name = "resolveSibling"
+descriptor = "(Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "startsWith"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "resolve"
+descriptor = "(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "relativize"
+descriptor = "(Ljava/nio/file/Path;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "resolve"
+descriptor = "(Ljava/nio/file/Path;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "endsWith"
+descriptor = "(Ljava/nio/file/Path;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "startsWith"
+descriptor = "(Ljava/nio/file/Path;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "register"
+descriptor = "(Ljava/nio/file/WatchService;[Ljava/nio/file/WatchEvent$Kind;)Ljava/nio/file/WatchKey;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toRealPath"
+descriptor = "([Ljava/nio/file/LinkOption;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,115 @@
+class = "java/net/MulticastSocket"
+
+[[member]]
+name = "getTimeToLive"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInterface"
+descriptor = "()Ljava/net/InetAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getNetworkInterface"
+descriptor = "()Ljava/net/NetworkInterface;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLocalSocketAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getRemoteSocketAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "disconnect"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLoopbackMode"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isBound"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isClosed"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isConnected"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSoTimeout"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTimeToLive"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(Ljava/net/DatagramPacket;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "joinGroup"
+descriptor = "(Ljava/net/InetAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setInterface"
+descriptor = "(Ljava/net/InetAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setNetworkInterface"
+descriptor = "(Ljava/net/NetworkInterface;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setLoopbackMode"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

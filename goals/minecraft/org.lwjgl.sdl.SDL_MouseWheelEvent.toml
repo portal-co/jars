@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDL_MouseWheelEvent"
+
+[[member]]
+name = "x"
+descriptor = "()F"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "y"
+descriptor = "()F"
+kind = "builtin"
+references = 2

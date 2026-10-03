@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/Pdh$PDH_RAW_COUNTER"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

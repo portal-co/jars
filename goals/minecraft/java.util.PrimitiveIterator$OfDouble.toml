@@ -1,0 +1,13 @@
+class = "java/util/PrimitiveIterator$OfDouble"
+
+[[member]]
+name = "nextDouble"
+descriptor = "()D"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 2

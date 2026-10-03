@@ -1,0 +1,43 @@
+class = "java/text/DateFormatSymbols"
+
+[[member]]
+name = "getAmPmStrings"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEras"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMonths"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShortMonths"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShortWeekdays"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getWeekdays"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Locale;)V"
+kind = "builtin"
+references = 1

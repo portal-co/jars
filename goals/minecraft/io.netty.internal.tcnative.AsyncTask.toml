@@ -1,0 +1,7 @@
+class = "io/netty/internal/tcnative/AsyncTask"
+
+[[member]]
+name = "runAsync"
+descriptor = "(Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 1

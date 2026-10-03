@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/COM/WbemcliUtil"
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/COM/WbemcliUtil;"
+kind = "builtin"
+references = 1

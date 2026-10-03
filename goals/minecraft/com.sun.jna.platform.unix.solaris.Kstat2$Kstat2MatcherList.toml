@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/unix/solaris/Kstat2$Kstat2MatcherList"
+
+[[member]]
+name = "free"
+descriptor = "()I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "addMatcher"
+descriptor = "(ILjava/lang/String;)I"
+kind = "builtin"
+references = 2

@@ -1,0 +1,7 @@
+class = "org/lwjgl/stb/STBIWriteCallback"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,73 @@
+class = "org/lwjgl/opengl/ARBDirectStateAccess"
+
+[[member]]
+name = "glCreateBuffers"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glCreateFramebuffers"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glUnmapNamedBuffer"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedFramebufferTexture"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glBlitNamedFramebuffer"
+descriptor = "(IIIIIIIIIIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glCopyNamedBufferSubData"
+descriptor = "(IIJJJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedBufferData"
+descriptor = "(IJI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedBufferStorage"
+descriptor = "(IJI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glMapNamedBufferRange"
+descriptor = "(IJJI)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedBufferSubData"
+descriptor = "(IJLjava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedBufferData"
+descriptor = "(ILjava/nio/ByteBuffer;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glNamedBufferStorage"
+descriptor = "(ILjava/nio/ByteBuffer;I)V"
+kind = "builtin"
+references = 1

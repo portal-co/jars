@@ -1,0 +1,7 @@
+class = "com/lmax/disruptor/YieldingWaitStrategy"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

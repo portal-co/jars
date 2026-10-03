@@ -1,0 +1,13 @@
+class = "javax/net/ssl/SSLSocketFactory"
+
+[[member]]
+name = "createSocket"
+descriptor = "()Ljava/net/Socket;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDefault"
+descriptor = "()Ljavax/net/SocketFactory;"
+kind = "builtin"
+references = 1

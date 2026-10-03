@@ -1,0 +1,103 @@
+class = "org/lwjgl/util/shaderc/Shaderc"
+
+[[member]]
+name = "shaderc_compile_options_initialize"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compiler_initialize"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLibrary"
+descriptor = "()Lorg/lwjgl/system/SharedLibrary;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_result_get_compilation_status"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_result_get_error_message"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_result_get_bytes"
+descriptor = "(J)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_release"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shaderc_compile_options_set_generate_debug_info"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compiler_release"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_result_release"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shaderc_compile_options_set_optimization_level"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_set_target_env"
+descriptor = "(JII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_add_macro_definition"
+descriptor = "(JLjava/lang/CharSequence;Ljava/lang/CharSequence;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "shaderc_compile_into_spv"
+descriptor = "(JLjava/nio/ByteBuffer;ILjava/nio/ByteBuffer;Ljava/nio/ByteBuffer;J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_set_include_callbacks"
+descriptor = "(JLorg/lwjgl/util/shaderc/ShadercIncludeResolveI;Lorg/lwjgl/util/shaderc/ShadercIncludeResultReleaseI;J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_set_auto_bind_uniforms"
+descriptor = "(JZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shaderc_compile_options_set_preserve_bindings"
+descriptor = "(JZ)V"
+kind = "builtin"
+references = 1

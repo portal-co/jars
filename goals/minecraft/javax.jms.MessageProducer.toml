@@ -1,0 +1,13 @@
+class = "javax/jms/MessageProducer"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(Ljavax/jms/Message;)V"
+kind = "builtin"
+references = 1

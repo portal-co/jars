@@ -1,0 +1,7 @@
+class = "javax/naming/directory/Attributes"
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/String;)Ljavax/naming/directory/Attribute;"
+kind = "builtin"
+references = 1

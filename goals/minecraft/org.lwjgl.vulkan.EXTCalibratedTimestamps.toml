@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/EXTCalibratedTimestamps"
+
+[[member]]
+name = "vkGetCalibratedTimestampsEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkCalibratedTimestampInfoKHR$Buffer;Ljava/nio/LongBuffer;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1

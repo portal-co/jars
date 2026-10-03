@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/CoreFoundation$CFIndex"
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1

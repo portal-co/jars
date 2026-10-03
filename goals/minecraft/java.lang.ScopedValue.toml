@@ -1,0 +1,19 @@
+class = "java/lang/ScopedValue"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newInstance"
+descriptor = "()Ljava/lang/ScopedValue;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "where"
+descriptor = "(Ljava/lang/ScopedValue;Ljava/lang/Object;)Ljava/lang/ScopedValue$Carrier;"
+kind = "builtin"
+references = 1

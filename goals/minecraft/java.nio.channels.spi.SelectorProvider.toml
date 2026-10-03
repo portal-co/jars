@@ -1,0 +1,13 @@
+class = "java/nio/channels/spi/SelectorProvider"
+
+[[member]]
+name = "openSelector"
+descriptor = "()Ljava/nio/channels/spi/AbstractSelector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "provider"
+descriptor = "()Ljava/nio/channels/spi/SelectorProvider;"
+kind = "builtin"
+references = 6

@@ -1,0 +1,31 @@
+class = "com/sun/jna/platform/win32/COM/WbemcliUtil$WmiResult"
+
+[[member]]
+name = "getResultCount"
+descriptor = "()I"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/platform/win32/COM/WbemcliUtil;Ljava/lang/Class;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getCIMType"
+descriptor = "(Ljava/lang/Enum;)I"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "getVtType"
+descriptor = "(Ljava/lang/Enum;)I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "getValue"
+descriptor = "(Ljava/lang/Enum;I)Ljava/lang/Object;"
+kind = "builtin"
+references = 4

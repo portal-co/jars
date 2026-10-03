@@ -1,0 +1,19 @@
+class = "javax/mail/Message$RecipientType"
+
+[[member]]
+name = "BCC"
+descriptor = "Ljavax/mail/Message$RecipientType;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CC"
+descriptor = "Ljavax/mail/Message$RecipientType;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "TO"
+descriptor = "Ljavax/mail/Message$RecipientType;"
+kind = "builtin"
+references = 1

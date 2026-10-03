@@ -1,0 +1,7 @@
+class = "org/lwjgl/openal/ALC11"
+
+[[member]]
+name = "alcGetInteger"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 1

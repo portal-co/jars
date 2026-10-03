@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkSubmitInfo2$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkSubmitInfo2$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pCommandBufferInfos"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBufferSubmitInfo$Buffer;)Lorg/lwjgl/vulkan/VkSubmitInfo2$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pSignalSemaphoreInfos"
+descriptor = "(Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;)Lorg/lwjgl/vulkan/VkSubmitInfo2$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pWaitSemaphoreInfos"
+descriptor = "(Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;)Lorg/lwjgl/vulkan/VkSubmitInfo2$Buffer;"
+kind = "builtin"
+references = 1

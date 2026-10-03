@@ -1,0 +1,61 @@
+class = "java/io/RandomAccessFile"
+
+[[member]]
+name = "length"
+descriptor = "()J"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "getChannel"
+descriptor = "()Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "seek"
+descriptor = "(J)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setLength"
+descriptor = "(J)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;Ljava/lang/String;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "read"
+descriptor = "([BII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readFully"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 3

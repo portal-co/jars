@@ -1,0 +1,7 @@
+class = "com/sun/jna/NativeLibrary"
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Lcom/sun/jna/NativeLibrary;"
+kind = "builtin"
+references = 2

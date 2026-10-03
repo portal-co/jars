@@ -1,0 +1,91 @@
+class = "java/time/Instant"
+
+[[member]]
+name = "getNano"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getEpochSecond"
+descriptor = "()J"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toEpochMilli"
+descriptor = "()J"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "now"
+descriptor = "()Ljava/time/Instant;"
+kind = "builtin"
+references = 53
+
+[[member]]
+name = "ofEpochMilli"
+descriptor = "(J)Ljava/time/Instant;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "ofEpochSecond"
+descriptor = "(J)Ljava/time/Instant;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "plusSeconds"
+descriptor = "(J)Ljava/time/Instant;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "ofEpochSecond"
+descriptor = "(JJ)Ljava/time/Instant;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "parse"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/time/Instant;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isAfter"
+descriptor = "(Ljava/time/Instant;)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isBefore"
+descriptor = "(Ljava/time/Instant;)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "atZone"
+descriptor = "(Ljava/time/ZoneId;)Ljava/time/ZonedDateTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "from"
+descriptor = "(Ljava/time/temporal/TemporalAccessor;)Ljava/time/Instant;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "plus"
+descriptor = "(Ljava/time/temporal/TemporalAmount;)Ljava/time/Instant;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "EPOCH"
+descriptor = "Ljava/time/Instant;"
+kind = "builtin"
+references = 6

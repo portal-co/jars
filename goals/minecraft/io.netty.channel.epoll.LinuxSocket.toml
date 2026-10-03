@@ -1,0 +1,223 @@
+class = "io/netty/channel/epoll/LinuxSocket"
+
+[[member]]
+name = "getSoBusyPoll"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpDeferAccept"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpKeepCnt"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpKeepIdle"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpKeepIntvl"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpNotSentLowAt"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpUserTimeout"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTimeToLive"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIpBindAddressNoPort"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIpFreeBind"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIpRecvOrigDestAddr"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIpTransparent"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isTcpCork"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isTcpQuickAck"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpBindAddressNoPort"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpFreeBind"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpRecvOrigDestAddr"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpTransparent"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setSoBusyPoll"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpCork"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpDeferAccept"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpKeepCnt"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpKeepIdle"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpKeepIntvl"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpNotSentLowAt"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpQuickAck"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpUserTimeout"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTimeToLive"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setUdpGro"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendFile"
+descriptor = "(ILio/netty/channel/DefaultFileRegion;JJJ)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getInterface"
+descriptor = "(IZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getIpMulticastLoop"
+descriptor = "(IZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIpMulticastAll"
+descriptor = "(IZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpMulticastAll"
+descriptor = "(IZI)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIpMulticastLoop"
+descriptor = "(IZI)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setInterface"
+descriptor = "(IZ[BII)V"
+kind = "native"
+references = 2
+
+[[member]]
+name = "setTcpMd5Sig"
+descriptor = "(IZ[BI[B)V"
+kind = "native"
+references = 1

@@ -4,4 +4,4 @@ class = "java/lang/InheritableThreadLocal"
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
-references = 1
+references = 2

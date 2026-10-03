@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkPipelineDynamicStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineDynamicStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pDynamicStates"
+descriptor = "(Ljava/nio/IntBuffer;)Lorg/lwjgl/vulkan/VkPipelineDynamicStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineDynamicStateCreateInfo;"
+kind = "builtin"
+references = 1

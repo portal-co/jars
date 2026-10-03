@@ -1,0 +1,13 @@
+class = "java/time/format/FormatStyle"
+
+[[member]]
+name = "MEDIUM"
+descriptor = "Ljava/time/format/FormatStyle;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SHORT"
+descriptor = "Ljava/time/format/FormatStyle;"
+kind = "builtin"
+references = 4

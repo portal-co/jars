@@ -1,0 +1,7 @@
+class = "java/util/PriorityQueue"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Comparator;)V"
+kind = "builtin"
+references = 4

@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/LibCAPI$ssize_t"
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 4

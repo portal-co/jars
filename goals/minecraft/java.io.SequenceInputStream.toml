@@ -1,0 +1,7 @@
+class = "java/io/SequenceInputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1

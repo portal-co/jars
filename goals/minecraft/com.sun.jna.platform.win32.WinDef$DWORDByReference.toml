@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/WinDef$DWORDByReference"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/platform/win32/WinDef$DWORD;)V"
+kind = "builtin"
+references = 1

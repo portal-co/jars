@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceLimits"
+
+[[member]]
+name = "maxSamplerAnisotropy"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "timestampPeriod"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxColorAttachments"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxDrawIndirectCount"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "maxImageDimension2D"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "minUniformBufferOffsetAlignment"
+descriptor = "()J"
+kind = "builtin"
+references = 1

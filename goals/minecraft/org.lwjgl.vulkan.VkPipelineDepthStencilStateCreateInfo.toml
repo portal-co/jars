@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthCompareOp"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthTestEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthWriteEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkPipelineDepthStencilStateCreateInfo;"
+kind = "builtin"
+references = 1

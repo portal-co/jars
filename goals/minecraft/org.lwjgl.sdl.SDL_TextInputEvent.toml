@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_TextInputEvent"
+
+[[member]]
+name = "textString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "org/jctools/queues/MpscArrayQueue"
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1

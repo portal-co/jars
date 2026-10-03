@@ -1,0 +1,13 @@
+class = "java/util/function/Consumer"
+
+[[member]]
+name = "accept"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2460
+
+[[member]]
+name = "andThen"
+descriptor = "(Ljava/util/function/Consumer;)Ljava/util/function/Consumer;"
+kind = "builtin"
+references = 2

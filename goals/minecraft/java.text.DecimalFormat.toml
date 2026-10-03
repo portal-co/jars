@@ -1,0 +1,31 @@
+class = "java/text/DecimalFormat"
+
+[[member]]
+name = "format"
+descriptor = "(D)Ljava/lang/String;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "setMaximumFractionDigits"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/text/DecimalFormatSymbols;)V"
+kind = "builtin"
+references = 6

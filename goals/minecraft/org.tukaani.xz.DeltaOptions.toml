@@ -1,0 +1,13 @@
+class = "org/tukaani/xz/DeltaOptions"
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInputStream"
+descriptor = "(Ljava/io/InputStream;)Ljava/io/InputStream;"
+kind = "builtin"
+references = 1

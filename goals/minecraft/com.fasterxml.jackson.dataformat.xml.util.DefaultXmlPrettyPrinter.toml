@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/dataformat/xml/util/DefaultXmlPrettyPrinter"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

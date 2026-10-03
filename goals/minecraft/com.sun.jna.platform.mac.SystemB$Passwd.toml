@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/SystemB$Passwd"
+
+[[member]]
+name = "pw_name"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 1

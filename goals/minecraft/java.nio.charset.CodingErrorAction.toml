@@ -1,0 +1,13 @@
+class = "java/nio/charset/CodingErrorAction"
+
+[[member]]
+name = "REPLACE"
+descriptor = "Ljava/nio/charset/CodingErrorAction;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "REPORT"
+descriptor = "Ljava/nio/charset/CodingErrorAction;"
+kind = "builtin"
+references = 4

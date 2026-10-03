@@ -1,0 +1,19 @@
+class = "java/net/http/HttpResponse"
+
+[[member]]
+name = "statusCode"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "body"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "headers"
+descriptor = "()Ljava/net/http/HttpHeaders;"
+kind = "builtin"
+references = 4

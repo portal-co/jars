@@ -1,0 +1,183 @@
+class = "java/lang/invoke/MethodHandle"
+
+[[member]]
+name = "invokeExact"
+descriptor = "()J"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invoke"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "invokeExact"
+descriptor = "()V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(I)Lio/netty/util/internal/CleanerJava25$CleanableDirectBufferImpl;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(J)J"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invoke"
+descriptor = "(J)Ljava/util/Date;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invoke"
+descriptor = "(J)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(J)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(JI)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "invokeExact"
+descriptor = "(JJ)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/Class;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/Class;I)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/Class;Ljava/lang/invoke/MethodHandles$Lookup;)Ljava/lang/invoke/MethodHandles$Lookup;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/Class;Ljava/nio/ByteOrder;)Ljava/lang/invoke/VarHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 12
+
+[[member]]
+name = "bindTo"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invoke"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "invoke"
+descriptor = "(Ljava/lang/Object;)Ljava/util/List;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/Thread;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/Class;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/invoke/VarHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/Buffer;)J"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/ByteBuffer;II)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/ByteBuffer;ILjava/nio/ByteBuffer;II)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/nio/ByteBuffer;I[BII)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "invokeExact"
+descriptor = "(Ljava/util/zip/Checksum;Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+reason = "closed-world"
+references = 1

@@ -1,0 +1,55 @@
+class = "java/text/CharacterIterator"
+
+[[member]]
+name = "current"
+descriptor = "()C"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "first"
+descriptor = "()C"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "next"
+descriptor = "()C"
+kind = "builtin"
+references = 30
+
+[[member]]
+name = "previous"
+descriptor = "()C"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "getBeginIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getEndIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setIndex"
+descriptor = "(I)C"
+kind = "builtin"
+references = 44

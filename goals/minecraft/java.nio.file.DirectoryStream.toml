@@ -1,0 +1,13 @@
+class = "java/nio/file/DirectoryStream"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 10

@@ -1,0 +1,559 @@
+class = "org/lwjgl/opengl/GL33C"
+
+[[member]]
+name = "glCreateProgram"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenBuffers"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenFramebuffers"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenSamplers"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenTextures"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenVertexArrays"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetError"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glFinish"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glClearDepth"
+descriptor = "(D)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "glPolygonOffset"
+descriptor = "(FF)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glClearColor"
+descriptor = "(FFFF)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "glGetFloat"
+descriptor = "(I)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glCreateShader"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetInteger"
+descriptor = "(I)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "glGetInteger64"
+descriptor = "(I)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetString"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "glActiveTexture"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindVertexArray"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glClear"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glCompileShader"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteBuffers"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteFramebuffers"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteProgram"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteSamplers"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteShader"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteTextures"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteVertexArrays"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDepthFunc"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDisable"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawBuffer"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glEnable"
+descriptor = "(I)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "glEnableVertexAttribArray"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glLinkProgram"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glReadBuffer"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glUseProgram"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glUnmapBuffer"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "glGetProgrami"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetQueryObjecti"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetShaderi"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glFenceSync"
+descriptor = "(II)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetQueryObjectui64"
+descriptor = "(II)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetProgramInfoLog"
+descriptor = "(II)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetShaderInfoLog"
+descriptor = "(II)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glAttachShader"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindBuffer"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindFramebuffer"
+descriptor = "(II)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glBindSampler"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindTexture"
+descriptor = "(II)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "glBlendEquationSeparate"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDisablei"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glEnablei"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glPixelStorei"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glPolygonMode"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glQueryCounter"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glUniform1i"
+descriptor = "(II)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glVertexAttribDivisor"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glSamplerParameterf"
+descriptor = "(IIF)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glGetTexLevelParameteri"
+descriptor = "(III)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glSamplerParameteri"
+descriptor = "(III)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "glTexBuffer"
+descriptor = "(III)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glTexParameteri"
+descriptor = "(III)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glUniformBlockBinding"
+descriptor = "(III)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glBlendFuncSeparate"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawArraysInstanced"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glScissor"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glViewport"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glFramebufferTexture2D"
+descriptor = "(IIIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBlitFramebuffer"
+descriptor = "(IIIIIIIIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glTexSubImage2D"
+descriptor = "(IIIIIIIIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glTexImage2D"
+descriptor = "(IIIIIIIILjava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glTexSubImage2D"
+descriptor = "(IIIIIIIILjava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glReadPixels"
+descriptor = "(IIIIIIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glVertexAttribIPointer"
+descriptor = "(IIIIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawElementsInstancedBaseVertex"
+descriptor = "(IIIJII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindBufferRange"
+descriptor = "(IIIJJ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glVertexAttribPointer"
+descriptor = "(IIIZIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nglShaderSource"
+descriptor = "(IIJJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glCopyBufferSubData"
+descriptor = "(IIJJJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glClearBufferfv"
+descriptor = "(II[F)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glBufferData"
+descriptor = "(IJI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nglMapBufferRange"
+descriptor = "(IJJI)J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "glMapBufferRange"
+descriptor = "(IJJI)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBufferSubData"
+descriptor = "(IJLjava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGetUniformBlockIndex"
+descriptor = "(ILjava/lang/CharSequence;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glGetUniformLocation"
+descriptor = "(ILjava/lang/CharSequence;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBufferData"
+descriptor = "(ILjava/nio/ByteBuffer;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glColorMaski"
+descriptor = "(IZZZZ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glDeleteSync"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glClientWaitSync"
+descriptor = "(JIJ)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDepthMask"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDeleteQueries"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDrawBuffers"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glGenQueries"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1

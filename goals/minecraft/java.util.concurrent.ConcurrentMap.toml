@@ -1,7 +1,91 @@
 class = "java/util/concurrent/ConcurrentMap"
 
 [[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "values"
+descriptor = "()Ljava/util/Collection;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "entrySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "keySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
 name = "get"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 50
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "containsKey"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "putIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 23
+
+[[member]]
+name = "replace"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "computeIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "putAll"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/BiConsumer;)V"
 kind = "builtin"
 references = 1

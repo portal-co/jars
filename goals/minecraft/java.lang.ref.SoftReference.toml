@@ -1,0 +1,19 @@
+class = "java/lang/ref/SoftReference"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;Ljava/lang/ref/ReferenceQueue;)V"
+kind = "builtin"
+references = 3

@@ -1,0 +1,19 @@
+class = "java/net/http/HttpResponse$BodyHandlers"
+
+[[member]]
+name = "discarding"
+descriptor = "()Ljava/net/http/HttpResponse$BodyHandler;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofInputStream"
+descriptor = "()Ljava/net/http/HttpResponse$BodyHandler;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofString"
+descriptor = "(Ljava/nio/charset/Charset;)Ljava/net/http/HttpResponse$BodyHandler;"
+kind = "builtin"
+references = 1

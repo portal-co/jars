@@ -1,0 +1,37 @@
+class = "java/math/MathContext"
+
+[[member]]
+name = "getPrecision"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getRoundingMode"
+descriptor = "()Ljava/math/RoundingMode;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(ILjava/math/RoundingMode;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "DECIMAL128"
+descriptor = "Ljava/math/MathContext;"
+kind = "builtin"
+references = 12

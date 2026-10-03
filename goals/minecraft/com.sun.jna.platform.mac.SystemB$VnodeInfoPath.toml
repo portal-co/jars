@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/SystemB$VnodeInfoPath"
+
+[[member]]
+name = "vip_path"
+descriptor = "[B"
+kind = "builtin"
+references = 1

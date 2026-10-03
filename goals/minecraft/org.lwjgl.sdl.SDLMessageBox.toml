@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDLMessageBox"
+
+[[member]]
+name = "SDL_ShowSimpleMessageBox"
+descriptor = "(ILjava/lang/CharSequence;Ljava/lang/CharSequence;J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_ShowMessageBox"
+descriptor = "(Lorg/lwjgl/sdl/SDL_MessageBoxData;Ljava/nio/IntBuffer;)Z"
+kind = "builtin"
+references = 1

@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkDeviceQueueCreateInfo$Buffer"
+
+[[member]]
+name = "position"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkDeviceQueueCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "queueFamilyIndex"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkDeviceQueueCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pQueuePriorities"
+descriptor = "(Ljava/nio/FloatBuffer;)Lorg/lwjgl/vulkan/VkDeviceQueueCreateInfo$Buffer;"
+kind = "builtin"
+references = 1

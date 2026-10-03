@@ -1,0 +1,13 @@
+class = "java/util/Enumeration"
+
+[[member]]
+name = "nextElement"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "hasMoreElements"
+descriptor = "()Z"
+kind = "builtin"
+references = 22

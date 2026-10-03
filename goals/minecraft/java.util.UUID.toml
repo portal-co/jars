@@ -1,13 +1,61 @@
 class = "java/util/UUID"
 
 [[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "version"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLeastSignificantBits"
+descriptor = "()J"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "getMostSignificantBits"
+descriptor = "()J"
+kind = "builtin"
+references = 6
+
+[[member]]
 name = "toString"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 1
+references = 25
 
 [[member]]
 name = "randomUUID"
 descriptor = "()Ljava/util/UUID;"
 kind = "builtin"
-references = 1
+references = 16
+
+[[member]]
+name = "<init>"
+descriptor = "(JJ)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 48
+
+[[member]]
+name = "fromString"
+descriptor = "(Ljava/lang/String;)Ljava/util/UUID;"
+kind = "builtin"
+references = 54
+
+[[member]]
+name = "nameUUIDFromBytes"
+descriptor = "([B)Ljava/util/UUID;"
+kind = "builtin"
+references = 5

@@ -1,0 +1,43 @@
+class = "org/lwjgl/vulkan/VkRenderingInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "layerCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "viewMask"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "renderArea"
+descriptor = "(Lorg/lwjgl/vulkan/VkRect2D;)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pColorAttachments"
+descriptor = "(Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo$Buffer;)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pDepthAttachment"
+descriptor = "(Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;)Lorg/lwjgl/vulkan/VkRenderingInfo;"
+kind = "builtin"
+references = 1

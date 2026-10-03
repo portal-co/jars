@@ -1,0 +1,55 @@
+class = "java/time/LocalDate"
+
+[[member]]
+name = "getDayOfMonth"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMonthValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getYear"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(III)Ljava/time/LocalDate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "plusDays"
+descriptor = "(J)Ljava/time/LocalDate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parse"
+descriptor = "(Ljava/lang/CharSequence;Ljava/time/format/DateTimeFormatter;)Ljava/time/LocalDate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "now"
+descriptor = "(Ljava/time/Clock;)Ljava/time/LocalDate;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isBefore"
+descriptor = "(Ljava/time/chrono/ChronoLocalDate;)Z"
+kind = "builtin"
+references = 1

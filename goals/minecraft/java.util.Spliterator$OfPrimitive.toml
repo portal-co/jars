@@ -1,0 +1,13 @@
+class = "java/util/Spliterator$OfPrimitive"
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "tryAdvance"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 34

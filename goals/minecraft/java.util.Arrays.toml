@@ -1,7 +1,403 @@
 class = "java/util/Arrays"
 
 [[member]]
+name = "hashCode"
+descriptor = "([B)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "toString"
+descriptor = "([B)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "([BI)[B"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([BII)[B"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "fill"
+descriptor = "([BIIB)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "equals"
+descriptor = "([B[B)Z"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "hashCode"
+descriptor = "([C)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sort"
+descriptor = "([C)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "binarySearch"
+descriptor = "([CC)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "copyOf"
+descriptor = "([CI)[C"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([CII)[C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "([C[C)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "hashCode"
+descriptor = "([D)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "([DI)[D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "([D[D)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hashCode"
+descriptor = "([F)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "binarySearch"
+descriptor = "([FF)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "([FI)[F"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([FII)[F"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "fill"
+descriptor = "([FIIF)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "equals"
+descriptor = "([F[F)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hashCode"
+descriptor = "([I)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toString"
+descriptor = "([I)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "stream"
+descriptor = "([I)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "sort"
+descriptor = "([I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "binarySearch"
+descriptor = "([II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "([II)[I"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([III)[I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "binarySearch"
+descriptor = "([IIII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fill"
+descriptor = "([IIII)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "setAll"
+descriptor = "([ILjava/util/function/IntUnaryOperator;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "([I[I)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "hashCode"
+descriptor = "([J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "([J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stream"
+descriptor = "([J)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "sort"
+descriptor = "([J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "copyOf"
+descriptor = "([JI)[J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([JII)[J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "([J[J)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "deepHashCode"
+descriptor = "([Ljava/lang/Object;)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "hashCode"
+descriptor = "([Ljava/lang/Object;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "deepToString"
+descriptor = "([Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "([Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 22
+
+[[member]]
 name = "asList"
 descriptor = "([Ljava/lang/Object;)Ljava/util/List;"
 kind = "builtin"
+references = 154
+
+[[member]]
+name = "stream"
+descriptor = "([Ljava/lang/Object;)Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "sort"
+descriptor = "([Ljava/lang/Object;)V"
+kind = "builtin"
 references = 3
+
+[[member]]
+name = "copyOf"
+descriptor = "([Ljava/lang/Object;I)[Ljava/lang/Object;"
+kind = "builtin"
+references = 57
+
+[[member]]
+name = "sort"
+descriptor = "([Ljava/lang/Object;II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([Ljava/lang/Object;II)[Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "copyOfRange"
+descriptor = "([Ljava/lang/Object;IILjava/lang/Class;)[Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "binarySearch"
+descriptor = "([Ljava/lang/Object;IILjava/lang/Object;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fill"
+descriptor = "([Ljava/lang/Object;IILjava/lang/Object;)V"
+kind = "builtin"
+references = 23
+
+[[member]]
+name = "sort"
+descriptor = "([Ljava/lang/Object;IILjava/util/Comparator;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "copyOf"
+descriptor = "([Ljava/lang/Object;ILjava/lang/Class;)[Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "binarySearch"
+descriptor = "([Ljava/lang/Object;Ljava/lang/Object;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "binarySearch"
+descriptor = "([Ljava/lang/Object;Ljava/lang/Object;Ljava/util/Comparator;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sort"
+descriptor = "([Ljava/lang/Object;Ljava/util/Comparator;)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "setAll"
+descriptor = "([Ljava/lang/Object;Ljava/util/function/IntFunction;)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "equals"
+descriptor = "([Ljava/lang/Object;[Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "hashCode"
+descriptor = "([S)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "([SI)[S"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fill"
+descriptor = "([SIIS)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "([S[S)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hashCode"
+descriptor = "([Z)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fill"
+descriptor = "([ZIIZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fill"
+descriptor = "([ZZ)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "equals"
+descriptor = "([Z[Z)Z"
+kind = "builtin"
+references = 2

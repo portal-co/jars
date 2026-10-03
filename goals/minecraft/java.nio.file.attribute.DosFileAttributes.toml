@@ -1,0 +1,19 @@
+class = "java/nio/file/attribute/DosFileAttributes"
+
+[[member]]
+name = "creationTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lastAccessTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lastModifiedTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1

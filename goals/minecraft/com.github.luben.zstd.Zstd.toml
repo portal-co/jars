@@ -1,0 +1,25 @@
+class = "com/github/luben/zstd/Zstd"
+
+[[member]]
+name = "compressBound"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getFrameContentSize"
+descriptor = "(Ljava/nio/ByteBuffer;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compress"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getFrameContentSize"
+descriptor = "([BII)J"
+kind = "builtin"
+references = 1

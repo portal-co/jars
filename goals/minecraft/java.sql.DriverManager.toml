@@ -1,0 +1,13 @@
+class = "java/sql/DriverManager"
+
+[[member]]
+name = "getConnection"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Ljava/sql/Connection;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getConnection"
+descriptor = "(Ljava/lang/String;Ljava/util/Properties;)Ljava/sql/Connection;"
+kind = "builtin"
+references = 1

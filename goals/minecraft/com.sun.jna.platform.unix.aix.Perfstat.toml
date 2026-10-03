@@ -1,0 +1,43 @@
+class = "com/sun/jna/platform/unix/aix/Perfstat"
+
+[[member]]
+name = "perfstat_cpu_total"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_cpu_total_t;II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "perfstat_memory_total"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_memory_total_t;II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "perfstat_partition_config"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_partition_config_t;II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "perfstat_cpu"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;[Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_cpu_t;II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "perfstat_disk"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;[Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_disk_t;II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "perfstat_process"
+descriptor = "(Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t;[Lcom/sun/jna/platform/unix/aix/Perfstat$perfstat_process_t;II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/unix/aix/Perfstat;"
+kind = "builtin"
+references = 5

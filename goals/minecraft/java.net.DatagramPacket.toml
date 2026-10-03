@@ -1,0 +1,25 @@
+class = "java/net/DatagramPacket"
+
+[[member]]
+name = "setAddress"
+descriptor = "(Ljava/net/InetAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSocketAddress"
+descriptor = "(Ljava/net/SocketAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setData"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setData"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

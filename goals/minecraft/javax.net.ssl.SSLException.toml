@@ -1,0 +1,25 @@
+class = "javax/net/ssl/SSLException"
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1

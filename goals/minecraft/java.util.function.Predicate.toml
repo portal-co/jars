@@ -1,0 +1,31 @@
+class = "java/util/function/Predicate"
+
+[[member]]
+name = "negate"
+descriptor = "()Ljava/util/function/Predicate;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "test"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 287
+
+[[member]]
+name = "and"
+descriptor = "(Ljava/util/function/Predicate;)Ljava/util/function/Predicate;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "not"
+descriptor = "(Ljava/util/function/Predicate;)Ljava/util/function/Predicate;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "or"
+descriptor = "(Ljava/util/function/Predicate;)Ljava/util/function/Predicate;"
+kind = "builtin"
+references = 2

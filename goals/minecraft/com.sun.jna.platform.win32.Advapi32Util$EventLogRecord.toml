@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/Advapi32Util$EventLogRecord"
+
+[[member]]
+name = "getStatusCode"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getRecord"
+descriptor = "()Lcom/sun/jna/platform/win32/WinNT$EVENTLOGRECORD;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,43 @@
+class = "java/util/concurrent/ExecutorService"
+
+[[member]]
+name = "shutdownNow"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "shutdown"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isShutdown"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isTerminated"
+descriptor = "()Z"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "awaitTermination"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Z"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "submit"
+descriptor = "(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "execute"
+descriptor = "(Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 4

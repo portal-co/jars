@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkVertexInputAttributeDescription"
+
+[[member]]
+name = "binding"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "location"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "offset"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkVertexInputAttributeDescription;"
+kind = "builtin"
+references = 1

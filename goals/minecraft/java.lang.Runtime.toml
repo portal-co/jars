@@ -1,0 +1,55 @@
+class = "java/lang/Runtime"
+
+[[member]]
+name = "availableProcessors"
+descriptor = "()I"
+kind = "native"
+references = 7
+
+[[member]]
+name = "freeMemory"
+descriptor = "()J"
+kind = "native"
+references = 4
+
+[[member]]
+name = "maxMemory"
+descriptor = "()J"
+kind = "native"
+references = 9
+
+[[member]]
+name = "totalMemory"
+descriptor = "()J"
+kind = "native"
+references = 4
+
+[[member]]
+name = "getRuntime"
+descriptor = "()Ljava/lang/Runtime;"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "exec"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Process;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addShutdownHook"
+descriptor = "(Ljava/lang/Thread;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "removeShutdownHook"
+descriptor = "(Ljava/lang/Thread;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "exec"
+descriptor = "([Ljava/lang/String;[Ljava/lang/String;)Ljava/lang/Process;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/BaseTSD$SIZE_T"
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 7

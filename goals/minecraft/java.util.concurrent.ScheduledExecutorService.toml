@@ -1,0 +1,49 @@
+class = "java/util/concurrent/ScheduledExecutorService"
+
+[[member]]
+name = "shutdownNow"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shutdown"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isShutdown"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "awaitTermination"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "execute"
+descriptor = "(Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "scheduleAtFixedRate"
+descriptor = "(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "scheduleWithFixedDelay"
+descriptor = "(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "schedule"
+descriptor = "(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;"
+kind = "builtin"
+references = 1

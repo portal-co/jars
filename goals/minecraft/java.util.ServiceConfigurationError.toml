@@ -1,0 +1,7 @@
+class = "java/util/ServiceConfigurationError"
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "com/ning/compress/lzf/LZFChunk"
+
+[[member]]
+name = "appendNonCompressed"
+descriptor = "([BII[BI)I"
+kind = "builtin"
+references = 2

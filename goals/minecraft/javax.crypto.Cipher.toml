@@ -1,0 +1,43 @@
+class = "javax/crypto/Cipher"
+
+[[member]]
+name = "getOutputSize"
+descriptor = "(I)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "init"
+descriptor = "(ILjava/security/Key;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "init"
+descriptor = "(ILjava/security/Key;Ljava/security/spec/AlgorithmParameterSpec;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/crypto/Cipher;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "doFinal"
+descriptor = "([B)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([BII[B)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([BII[BI)I"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkShaderModuleCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkShaderModuleCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pCode"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/vulkan/VkShaderModuleCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkShaderModuleCreateInfo;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/CoreFoundation"
+
+[[member]]
+name = "CFRelease"
+descriptor = "(Lcom/sun/jna/platform/mac/CoreFoundation$CFTypeRef;)V"
+kind = "builtin"
+references = 5

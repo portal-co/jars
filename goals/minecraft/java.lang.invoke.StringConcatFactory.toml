@@ -1,0 +1,8 @@
+class = "java/lang/invoke/StringConcatFactory"
+
+[[member]]
+name = "makeConcatWithConstants"
+descriptor = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;"
+kind = "builtin"
+reason = "closed-world"
+references = 2178

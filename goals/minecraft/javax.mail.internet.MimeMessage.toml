@@ -1,0 +1,55 @@
+class = "javax/mail/internet/MimeMessage"
+
+[[member]]
+name = "setFrom"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSubject"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSubject"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSentDate"
+descriptor = "(Ljava/util/Date;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setFrom"
+descriptor = "(Ljavax/mail/Address;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setRecipients"
+descriptor = "(Ljavax/mail/Message$RecipientType;[Ljavax/mail/Address;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setContent"
+descriptor = "(Ljavax/mail/Multipart;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljavax/mail/Session;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReplyTo"
+descriptor = "([Ljavax/mail/Address;)V"
+kind = "builtin"
+references = 1

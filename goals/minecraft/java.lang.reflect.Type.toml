@@ -1,0 +1,15 @@
+class = "java/lang/reflect/Type"
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+reason = "closed-world"
+references = 5

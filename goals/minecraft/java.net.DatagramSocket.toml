@@ -1,0 +1,109 @@
+class = "java/net/DatagramSocket"
+
+[[member]]
+name = "getReceiveBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSendBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSoTimeout"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getTrafficClass"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLocalAddress"
+descriptor = "()Ljava/net/InetAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLocalSocketAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getRemoteSocketAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getBroadcast"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getReuseAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isBound"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReceiveBufferSize"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSendBufferSize"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSoTimeout"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setTrafficClass"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(ILjava/net/InetAddress;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setBroadcast"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReuseAddress"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

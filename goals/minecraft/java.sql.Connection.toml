@@ -1,0 +1,31 @@
+class = "java/sql/Connection"
+
+[[member]]
+name = "getMetaData"
+descriptor = "()Ljava/sql/DatabaseMetaData;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "commit"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isClosed"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "prepareStatement"
+descriptor = "(Ljava/lang/String;)Ljava/sql/PreparedStatement;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setAutoCommit"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

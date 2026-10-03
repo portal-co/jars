@@ -1,0 +1,13 @@
+class = "org/lwjgl/util/vma/VmaVulkanFunctions"
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/util/vma/VmaVulkanFunctions;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;Lorg/lwjgl/vulkan/VkDevice;)Lorg/lwjgl/util/vma/VmaVulkanFunctions;"
+kind = "builtin"
+references = 1

@@ -4,4 +4,4 @@ class = "java/lang/StackWalker$Option"
 name = "RETAIN_CLASS_REFERENCE"
 descriptor = "Ljava/lang/StackWalker$Option;"
 kind = "builtin"
-references = 1
+references = 5

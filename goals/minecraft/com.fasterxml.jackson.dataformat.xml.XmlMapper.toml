@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/dataformat/xml/XmlMapper"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/fasterxml/jackson/dataformat/xml/XmlFactory;Lcom/fasterxml/jackson/dataformat/xml/JacksonXmlModule;)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "org/lwjgl/sdl/SDL_PixelFormatDetails"
+
+[[member]]
+name = "Bbits"
+descriptor = "()B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "Gbits"
+descriptor = "()B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "Rbits"
+descriptor = "()B"
+kind = "builtin"
+references = 1

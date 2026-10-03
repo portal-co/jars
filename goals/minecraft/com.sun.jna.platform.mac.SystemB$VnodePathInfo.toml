@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/SystemB$VnodePathInfo"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

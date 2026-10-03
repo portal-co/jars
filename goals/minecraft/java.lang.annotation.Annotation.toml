@@ -1,0 +1,7 @@
+class = "java/lang/annotation/Annotation"
+
+[[member]]
+name = "annotationType"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 3

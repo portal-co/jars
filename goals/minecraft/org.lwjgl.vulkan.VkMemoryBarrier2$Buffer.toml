@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkMemoryBarrier2$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dstAccessMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dstStageMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "srcAccessMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "srcStageMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2

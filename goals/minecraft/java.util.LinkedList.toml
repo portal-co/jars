@@ -1,0 +1,85 @@
+class = "java/util/LinkedList"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removeFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "get"
+descriptor = "(I)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "addFirst"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "addLast"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 1

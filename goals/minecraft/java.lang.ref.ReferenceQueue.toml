@@ -1,0 +1,13 @@
+class = "java/lang/ref/ReferenceQueue"
+
+[[member]]
+name = "poll"
+descriptor = "()Ljava/lang/ref/Reference;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 10

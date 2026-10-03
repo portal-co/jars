@@ -1,0 +1,25 @@
+class = "java/nio/channels/SelectionKey"
+
+[[member]]
+name = "interestOps"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "cancel"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isValid"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "interestOps"
+descriptor = "(I)Ljava/nio/channels/SelectionKey;"
+kind = "builtin"
+references = 1

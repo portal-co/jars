@@ -1,0 +1,13 @@
+class = "com/ning/compress/lzf/LZFEncoder"
+
+[[member]]
+name = "estimateMaxWorkspaceSize"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "appendEncoded"
+descriptor = "(Lcom/ning/compress/lzf/ChunkEncoder;[BII[BI)I"
+kind = "builtin"
+references = 1

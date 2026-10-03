@@ -9,9 +9,8 @@
 use std::path::Path;
 
 use crate::{
-    CompileError, JarClass, JarEntrypoint, JarImportOptions, Method, Type,
-    parse_program_custom, parse_signature, program_dependencies, read_jar_classpath,
-    render_jar_program,
+    CompileError, JarClass, JarEntrypoint, JarImportOptions, Method, Type, parse_program_custom,
+    parse_signature, program_dependencies, read_jar_classpath, render_jar_program,
 };
 use CompileError::UnsupportedPlatformClass;
 
@@ -31,10 +30,14 @@ pub struct MethodCoverage {
 pub enum MethodStatus {
     Ok,
     /// A `java/…` class the compiler does not model.
-    UnsupportedPlatformClass { class: String },
+    UnsupportedPlatformClass {
+        class: String,
+    },
     /// Any other compile failure (unsupported opcode, invalid stack, …).
     /// The string is the `Display` of the underlying [`CompileError`].
-    Error { detail: String },
+    Error {
+        detail: String,
+    },
 }
 
 impl MethodStatus {

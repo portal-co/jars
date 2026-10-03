@@ -1,0 +1,73 @@
+class = "java/nio/channels/SocketChannel"
+
+[[member]]
+name = "socket"
+descriptor = "()Ljava/net/Socket;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLocalAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getRemoteAddress"
+descriptor = "()Ljava/net/SocketAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shutdownInput"
+descriptor = "()Ljava/nio/channels/SocketChannel;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shutdownOutput"
+descriptor = "()Ljava/nio/channels/SocketChannel;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isConnected"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getOption"
+descriptor = "(Ljava/net/SocketOption;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setOption"
+descriptor = "(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/SocketChannel;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "write"
+descriptor = "([Ljava/nio/ByteBuffer;II)J"
+kind = "builtin"
+references = 2

@@ -1,13 +1,55 @@
 class = "java/lang/Character"
 
 [[member]]
-name = "valueOf"
-descriptor = "(C)Ljava/lang/Character;"
+name = "charValue"
+descriptor = "()C"
+kind = "builtin"
+references = 350
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
 kind = "builtin"
 references = 1
 
 [[member]]
+name = "toLowerCase"
+descriptor = "(C)C"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toUpperCase"
+descriptor = "(C)C"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "valueOf"
+descriptor = "(C)Ljava/lang/Character;"
+kind = "builtin"
+references = 498
+
+[[member]]
+name = "toString"
+descriptor = "(C)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
 name = "isHighSurrogate"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "isISOControl"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isJavaIdentifierPart"
 descriptor = "(C)Z"
 kind = "builtin"
 references = 1
@@ -16,16 +58,136 @@ references = 1
 name = "isLowSurrogate"
 descriptor = "(C)Z"
 kind = "builtin"
+references = 26
+
+[[member]]
+name = "isSpaceChar"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isSurrogate"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isUnicodeIdentifierPart"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isUnicodeIdentifierStart"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compare"
+descriptor = "(CC)I"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "toCodePoint"
+descriptor = "(CC)I"
+kind = "builtin"
+references = 30
+
+[[member]]
+name = "digit"
+descriptor = "(CI)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toString"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "isISOControl"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isSpaceChar"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isValidCodePoint"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isWhitespace"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toChars"
+descriptor = "(I)[C"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "toChars"
+descriptor = "(I[CI)I"
+kind = "builtin"
 references = 1
 
 [[member]]
 name = "codePointAt"
 descriptor = "(Ljava/lang/CharSequence;I)I"
 kind = "builtin"
+references = 32
+
+[[member]]
+name = "codePointBefore"
+descriptor = "(Ljava/lang/CharSequence;I)I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "codePointCount"
+descriptor = "(Ljava/lang/CharSequence;II)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "codePointOf"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "codePointAt"
+descriptor = "([CII)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "codePointBefore"
+descriptor = "([CII)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "codePointCount"
+descriptor = "([CII)I"
+kind = "builtin"
+references = 2
 
 [[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 12

@@ -1,0 +1,19 @@
+class = "java/util/zip/CheckedInputStream"
+
+[[member]]
+name = "getChecksum"
+descriptor = "()Ljava/util/zip/Checksum;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "skip"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;Ljava/util/zip/Checksum;)V"
+kind = "builtin"
+references = 2

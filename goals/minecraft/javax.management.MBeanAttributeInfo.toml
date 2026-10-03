@@ -1,0 +1,7 @@
+class = "javax/management/MBeanAttributeInfo"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZZ)V"
+kind = "builtin"
+references = 1

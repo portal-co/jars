@@ -1,0 +1,7 @@
+class = "java/nio/file/attribute/PosixFilePermissions"
+
+[[member]]
+name = "fromString"
+descriptor = "(Ljava/lang/String;)Ljava/util/Set;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,31 @@
+class = "org/lwjgl/opengl/ARBVertexAttribBinding"
+
+[[member]]
+name = "glVertexAttribBinding"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glVertexBindingDivisor"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glVertexAttribIFormat"
+descriptor = "(IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glVertexAttribFormat"
+descriptor = "(IIIZI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glBindVertexBuffer"
+descriptor = "(IIJI)V"
+kind = "builtin"
+references = 2

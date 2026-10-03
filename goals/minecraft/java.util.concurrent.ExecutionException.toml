@@ -1,0 +1,13 @@
+class = "java/util/concurrent/ExecutionException"
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 3

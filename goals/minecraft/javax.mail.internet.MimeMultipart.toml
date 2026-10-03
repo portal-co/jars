@@ -1,0 +1,13 @@
+class = "javax/mail/internet/MimeMultipart"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addBodyPart"
+descriptor = "(Ljavax/mail/BodyPart;)V"
+kind = "builtin"
+references = 1

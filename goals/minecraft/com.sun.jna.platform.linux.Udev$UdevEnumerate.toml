@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/linux/Udev$UdevEnumerate"
+
+[[member]]
+name = "scanDevices"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getListEntry"
+descriptor = "()Lcom/sun/jna/platform/linux/Udev$UdevListEntry;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "unref"
+descriptor = "()V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "addMatchSubsystem"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
+references = 3

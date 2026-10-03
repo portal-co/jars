@@ -1,13 +1,55 @@
 class = "java/util/Date"
 
 [[member]]
+name = "getTime"
+descriptor = "()J"
+kind = "builtin"
+references = 49
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toInstant"
+descriptor = "()Ljava/time/Instant;"
+kind = "builtin"
+references = 3
+
+[[member]]
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
-references = 1
+references = 18
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 18
 
 [[member]]
 name = "from"
 descriptor = "(Ljava/time/Instant;)Ljava/util/Date;"
 kind = "builtin"
+references = 3
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/util/Date;)I"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "after"
+descriptor = "(Ljava/util/Date;)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "before"
+descriptor = "(Ljava/util/Date;)Z"
+kind = "builtin"
+references = 8

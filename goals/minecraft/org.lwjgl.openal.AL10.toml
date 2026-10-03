@@ -1,0 +1,109 @@
+class = "org/lwjgl/openal/AL10"
+
+[[member]]
+name = "alGetError"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alEnable"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alSourcePause"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alSourcePlay"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alSourceStop"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alListener3f"
+descriptor = "(IFFF)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alGetSourcei"
+descriptor = "(II)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alSourcef"
+descriptor = "(IIF)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "alSourcei"
+descriptor = "(III)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "alBufferData"
+descriptor = "(IILjava/nio/ByteBuffer;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alSourcefv"
+descriptor = "(II[F)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alListenerfv"
+descriptor = "(I[F)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alSourceQueueBuffers"
+descriptor = "(I[I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alSourceUnqueueBuffers"
+descriptor = "(I[I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alDeleteBuffers"
+descriptor = "([I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alDeleteSources"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alGenBuffers"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alGenSources"
+descriptor = "([I)V"
+kind = "builtin"
+references = 1

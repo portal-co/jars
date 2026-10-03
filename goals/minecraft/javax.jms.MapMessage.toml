@@ -1,0 +1,7 @@
+class = "javax/jms/MapMessage"
+
+[[member]]
+name = "setObject"
+descriptor = "(Ljava/lang/String;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

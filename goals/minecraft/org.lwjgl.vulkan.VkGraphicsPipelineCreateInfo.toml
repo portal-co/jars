@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkGraphicsPipelineCreateInfo"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;"
+kind = "builtin"
+references = 1

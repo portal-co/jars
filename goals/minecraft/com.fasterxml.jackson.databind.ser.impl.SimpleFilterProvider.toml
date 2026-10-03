@@ -1,0 +1,13 @@
+class = "com/fasterxml/jackson/databind/ser/impl/SimpleFilterProvider"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addFilter"
+descriptor = "(Ljava/lang/String;Lcom/fasterxml/jackson/databind/ser/impl/SimpleBeanPropertyFilter;)Lcom/fasterxml/jackson/databind/ser/impl/SimpleFilterProvider;"
+kind = "builtin"
+references = 1

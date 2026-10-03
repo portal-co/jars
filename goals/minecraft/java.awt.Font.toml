@@ -1,0 +1,7 @@
+class = "java/awt/Font"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;II)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "org/osgi/framework/BundleReference"
+
+[[member]]
+name = "getBundle"
+descriptor = "()Lorg/osgi/framework/Bundle;"
+kind = "builtin"
+references = 1

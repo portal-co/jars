@@ -1,0 +1,31 @@
+class = "java/text/SimpleDateFormat"
+
+[[member]]
+name = "toPattern"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "parse"
+descriptor = "(Ljava/lang/String;)Ljava/util/Date;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/util/Locale;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "format"
+descriptor = "(Ljava/util/Date;)Ljava/lang/String;"
+kind = "builtin"
+references = 6

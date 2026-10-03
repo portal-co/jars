@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "messageSeverity"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "messageType"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pfnUserCallback"
+descriptor = "(Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCallbackEXTI;)Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,49 @@
+class = "java/nio/charset/CoderResult"
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "throwException"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isError"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isMalformed"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isOverflow"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isUnderflow"
+descriptor = "()Z"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "isUnmappable"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "UNDERFLOW"
+descriptor = "Ljava/nio/charset/CoderResult;"
+kind = "builtin"
+references = 2

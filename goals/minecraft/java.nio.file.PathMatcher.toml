@@ -1,0 +1,7 @@
+class = "java/nio/file/PathMatcher"
+
+[[member]]
+name = "matches"
+descriptor = "(Ljava/nio/file/Path;)Z"
+kind = "builtin"
+references = 1

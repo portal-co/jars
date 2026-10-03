@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkImageViewCreateInfo"
+
+[[member]]
+name = "subresourceRange"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "viewType"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "image"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkImageViewCreateInfo;"
+kind = "builtin"
+references = 1

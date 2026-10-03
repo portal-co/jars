@@ -1,0 +1,7 @@
+class = "java/nio/file/LinkOption"
+
+[[member]]
+name = "NOFOLLOW_LINKS"
+descriptor = "Ljava/nio/file/LinkOption;"
+kind = "builtin"
+references = 11

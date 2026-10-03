@@ -4,4 +4,16 @@ class = "java/lang/CharSequence"
 name = "toString"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 2
+references = 76
+
+[[member]]
+name = "subSequence"
+descriptor = "(II)Ljava/lang/CharSequence;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1

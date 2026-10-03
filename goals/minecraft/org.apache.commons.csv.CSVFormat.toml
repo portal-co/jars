@@ -1,0 +1,25 @@
+class = "org/apache/commons/csv/CSVFormat"
+
+[[member]]
+name = "getCommentMarker"
+descriptor = "()Ljava/lang/Character;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "println"
+descriptor = "(Ljava/lang/Appendable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "printRecord"
+descriptor = "(Ljava/lang/Appendable;[Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "print"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Appendable;Z)V"
+kind = "builtin"
+references = 14

@@ -1,0 +1,115 @@
+class = "java/util/stream/LongStream"
+
+[[member]]
+name = "count"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sum"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "summaryStatistics"
+descriptor = "()Ljava/util/LongSummaryStatistics;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "()Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "min"
+descriptor = "()Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "builder"
+descriptor = "()Ljava/util/stream/LongStream$Builder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "empty"
+descriptor = "()Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "sorted"
+descriptor = "()Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toArray"
+descriptor = "()[J"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "limit"
+descriptor = "(J)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "range"
+descriptor = "(JJ)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reduce"
+descriptor = "(Ljava/util/function/LongBinaryOperator;)Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/LongConsumer;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "mapToObj"
+descriptor = "(Ljava/util/function/LongFunction;)Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "filter"
+descriptor = "(Ljava/util/function/LongPredicate;)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "map"
+descriptor = "(Ljava/util/function/LongUnaryOperator;)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "collect"
+descriptor = "(Ljava/util/function/Supplier;Ljava/util/function/ObjLongConsumer;Ljava/util/function/BiConsumer;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "concat"
+descriptor = "(Ljava/util/stream/LongStream;Ljava/util/stream/LongStream;)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "of"
+descriptor = "([J)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 8

@@ -1,0 +1,85 @@
+class = "java/lang/reflect/Field"
+
+[[member]]
+name = "getModifiers"
+descriptor = "()I"
+kind = "builtin"
+reason = "closed-world"
+references = 4
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getType"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 12
+
+[[member]]
+name = "getGenericType"
+descriptor = "()Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "isEnumConstant"
+descriptor = "()Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "isSynthetic"
+descriptor = "()Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getDeclaredAnnotations"
+descriptor = "()[Ljava/lang/annotation/Annotation;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "getAnnotation"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"
+kind = "builtin"
+reason = "closed-world"
+references = 8
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 17
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "setAccessible"
+descriptor = "(Z)V"
+kind = "builtin"
+reason = "closed-world"
+references = 7

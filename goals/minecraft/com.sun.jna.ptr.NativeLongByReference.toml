@@ -1,0 +1,7 @@
+class = "com/sun/jna/ptr/NativeLongByReference"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/NativeLong;)V"
+kind = "builtin"
+references = 1

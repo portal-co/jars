@@ -1,0 +1,91 @@
+class = "com/github/luben/zstd/ZstdOutputStream"
+
+[[member]]
+name = "setChainLog"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setHashLog"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setJobSize"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setLevel"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setMinMatch"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setOverlapLog"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSearchLog"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setStrategy"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTargetLength"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setWindowLog"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setWorkers"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setChecksum"
+descriptor = "(Z)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setCloseFrameOnFlush"
+descriptor = "(Z)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDict"
+descriptor = "([B)Lcom/github/luben/zstd/ZstdOutputStream;"
+kind = "builtin"
+references = 1

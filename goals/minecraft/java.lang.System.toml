@@ -4,41 +4,119 @@ class = "java/lang/System"
 name = "currentTimeMillis"
 descriptor = "()J"
 kind = "native"
-references = 1
+references = 78
+
+[[member]]
+name = "nanoTime"
+descriptor = "()J"
+kind = "native"
+references = 59
 
 [[member]]
 name = "getSecurityManager"
 descriptor = "()Ljava/lang/SecurityManager;"
 kind = "builtin"
-references = 1
+references = 14
+
+[[member]]
+name = "lineSeparator"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getenv"
+descriptor = "()Ljava/util/Map;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getProperties"
+descriptor = "()Ljava/util/Properties;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "gc"
+descriptor = "()V"
+kind = "builtin"
+references = 5
 
 [[member]]
 name = "exit"
 descriptor = "(I)V"
 kind = "builtin"
-references = 3
+references = 9
+
+[[member]]
+name = "setErr"
+descriptor = "(Ljava/io/PrintStream;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setOut"
+descriptor = "(Ljava/io/PrintStream;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "identityHashCode"
+descriptor = "(Ljava/lang/Object;)I"
+kind = "native"
+references = 241
 
 [[member]]
 name = "arraycopy"
 descriptor = "(Ljava/lang/Object;ILjava/lang/Object;II)V"
 kind = "native"
-references = 2
+references = 1477
 
 [[member]]
 name = "getProperty"
 descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
 kind = "builtin"
-references = 5
+references = 64
+
+[[member]]
+name = "getenv"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "mapLibraryName"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "native"
+references = 2
+
+[[member]]
+name = "load"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "loadLibrary"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "getProperty"
 descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
 kind = "builtin"
-references = 1
+references = 9
 
 [[member]]
 name = "setProperty"
 descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "in"
+descriptor = "Ljava/io/InputStream;"
 kind = "builtin"
 references = 1
 
@@ -46,4 +124,4 @@ references = 1
 name = "err"
 descriptor = "Ljava/io/PrintStream;"
 kind = "builtin"
-references = 1
+references = 19

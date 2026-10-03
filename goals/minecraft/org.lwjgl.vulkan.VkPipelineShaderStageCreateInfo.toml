@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkPipelineShaderStageCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stage"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "module"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pName"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineShaderStageCreateInfo;"
+kind = "builtin"
+references = 1

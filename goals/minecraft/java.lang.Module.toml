@@ -1,0 +1,7 @@
+class = "java/lang/Module"
+
+[[member]]
+name = "getLayer"
+descriptor = "()Ljava/lang/ModuleLayer;"
+kind = "builtin"
+references = 1

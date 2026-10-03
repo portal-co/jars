@@ -1,0 +1,25 @@
+class = "java/lang/management/MemoryUsage"
+
+[[member]]
+name = "getCommitted"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getInit"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getMax"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getUsed"
+descriptor = "()J"
+kind = "builtin"
+references = 2

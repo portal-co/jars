@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/COM/COMException"
+
+[[member]]
+name = "getHresult"
+descriptor = "()Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Lcom/sun/jna/platform/win32/WinNT$HRESULT;)V"
+kind = "builtin"
+references = 2

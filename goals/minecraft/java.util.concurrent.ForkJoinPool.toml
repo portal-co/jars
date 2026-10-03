@@ -1,0 +1,7 @@
+class = "java/util/concurrent/ForkJoinPool"
+
+[[member]]
+name = "<init>"
+descriptor = "(ILjava/util/concurrent/ForkJoinPool$ForkJoinWorkerThreadFactory;Ljava/lang/Thread$UncaughtExceptionHandler;Z)V"
+kind = "builtin"
+references = 1

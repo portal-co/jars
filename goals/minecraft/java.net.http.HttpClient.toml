@@ -1,0 +1,25 @@
+class = "java/net/http/HttpClient"
+
+[[member]]
+name = "newBuilder"
+descriptor = "()Ljava/net/http/HttpClient$Builder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "send"
+descriptor = "(Ljava/net/http/HttpRequest;Ljava/net/http/HttpResponse$BodyHandler;)Ljava/net/http/HttpResponse;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sendAsync"
+descriptor = "(Ljava/net/http/HttpRequest;Ljava/net/http/HttpResponse$BodyHandler;)Ljava/util/concurrent/CompletableFuture;"
+kind = "builtin"
+references = 2

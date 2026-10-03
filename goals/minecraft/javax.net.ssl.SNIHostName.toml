@@ -1,0 +1,13 @@
+class = "javax/net/ssl/SNIHostName"
+
+[[member]]
+name = "getAsciiName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 3

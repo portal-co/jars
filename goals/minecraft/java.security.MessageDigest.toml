@@ -1,0 +1,73 @@
+class = "java/security/MessageDigest"
+
+[[member]]
+name = "getDigestLength"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAlgorithm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "digest"
+descriptor = "()[B"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "update"
+descriptor = "(B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/security/MessageDigest;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "update"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([B)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "digest"
+descriptor = "([B)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isEqual"
+descriptor = "([B[B)Z"
+kind = "builtin"
+references = 1

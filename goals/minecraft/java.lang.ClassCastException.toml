@@ -4,4 +4,4 @@ class = "java/lang/ClassCastException"
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 1
+references = 14

@@ -1,0 +1,13 @@
+class = "java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock"
+
+[[member]]
+name = "lock"
+descriptor = "()V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "unlock"
+descriptor = "()V"
+kind = "builtin"
+references = 10

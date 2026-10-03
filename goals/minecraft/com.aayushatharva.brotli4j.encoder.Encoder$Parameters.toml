@@ -1,0 +1,19 @@
+class = "com/aayushatharva/brotli4j/encoder/Encoder$Parameters"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setQuality"
+descriptor = "(I)Lcom/aayushatharva/brotli4j/encoder/Encoder$Parameters;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setMode"
+descriptor = "(Lcom/aayushatharva/brotli4j/encoder/Encoder$Mode;)Lcom/aayushatharva/brotli4j/encoder/Encoder$Parameters;"
+kind = "builtin"
+references = 1

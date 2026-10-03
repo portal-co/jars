@@ -4,10 +4,28 @@ class = "java/io/StringWriter"
 name = "toString"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
+references = 7
+
+[[member]]
+name = "getBuffer"
+descriptor = "()Ljava/lang/StringBuffer;"
+kind = "builtin"
 references = 1
 
 [[member]]
 name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "<init>"
 descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
 references = 1

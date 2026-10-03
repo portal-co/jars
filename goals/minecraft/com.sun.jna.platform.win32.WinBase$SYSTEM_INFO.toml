@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/WinBase$SYSTEM_INFO"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

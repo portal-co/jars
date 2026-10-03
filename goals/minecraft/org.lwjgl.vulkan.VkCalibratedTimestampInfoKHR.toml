@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkCalibratedTimestampInfoKHR"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkCalibratedTimestampInfoKHR;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "timeDomain"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkCalibratedTimestampInfoKHR;"
+kind = "builtin"
+references = 2

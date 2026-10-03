@@ -1,8 +1,98 @@
 class = "java/lang/String"
 
 [[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 78
+
+[[member]]
+name = "intern"
+descriptor = "()Ljava/lang/String;"
+kind = "native"
+references = 21
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "chars"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "codePoints"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "lines"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isBlank"
+descriptor = "()Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "getBytes"
+descriptor = "()[B"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toCharArray"
+descriptor = "()[C"
+kind = "builtin"
+references = 37
+
+[[member]]
 name = "valueOf"
 descriptor = "(C)Ljava/lang/String;"
+kind = "builtin"
+references = 68
+
+[[member]]
+name = "replace"
+descriptor = "(CC)Ljava/lang/String;"
+kind = "builtin"
+references = 42
+
+[[member]]
+name = "valueOf"
+descriptor = "(D)Ljava/lang/String;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "valueOf"
+descriptor = "(F)Ljava/lang/String;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "codePointBefore"
+descriptor = "(I)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "lastIndexOf"
+descriptor = "(I)I"
+kind = "builtin"
+references = 42
+
+[[member]]
+name = "repeat"
+descriptor = "(I)Ljava/lang/String;"
 kind = "builtin"
 references = 4
 
@@ -10,40 +100,256 @@ references = 4
 name = "valueOf"
 descriptor = "(I)Ljava/lang/String;"
 kind = "builtin"
+references = 113
+
+[[member]]
+name = "codePointCount"
+descriptor = "(II)I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "indexOf"
+descriptor = "(II)I"
+kind = "builtin"
+references = 48
+
+[[member]]
+name = "lastIndexOf"
+descriptor = "(II)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "offsetByCodePoints"
+descriptor = "(II)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "subSequence"
+descriptor = "(II)Ljava/lang/CharSequence;"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "getChars"
+descriptor = "(II[CI)V"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "regionMatches"
+descriptor = "(ILjava/lang/String;II)Z"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "valueOf"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 70
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 220
+
+[[member]]
+name = "contentEquals"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 42
+
+[[member]]
+name = "replace"
+descriptor = "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/lang/String;"
+kind = "builtin"
+references = 97
+
+[[member]]
+name = "join"
+descriptor = "(Ljava/lang/CharSequence;Ljava/lang/Iterable;)Ljava/lang/String;"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "join"
+descriptor = "(Ljava/lang/CharSequence;[Ljava/lang/CharSequence;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
 
 [[member]]
 name = "valueOf"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/String;"
 kind = "builtin"
-references = 1
+references = 729
 
 [[member]]
 name = "equals"
 descriptor = "(Ljava/lang/Object;)Z"
 kind = "builtin"
-references = 9
+references = 1258
+
+[[member]]
+name = "compareToIgnoreCase"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "equalsIgnoreCase"
 descriptor = "(Ljava/lang/String;)Z"
 kind = "builtin"
-references = 6
+references = 169
 
 [[member]]
 name = "matches"
 descriptor = "(Ljava/lang/String;)Z"
 kind = "builtin"
-references = 2
+references = 27
+
+[[member]]
+name = "getBytes"
+descriptor = "(Ljava/lang/String;)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "split"
+descriptor = "(Ljava/lang/String;)[Ljava/lang/String;"
+kind = "builtin"
+references = 123
+
+[[member]]
+name = "indexOf"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "lastIndexOf"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "startsWith"
+descriptor = "(Ljava/lang/String;I)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "split"
+descriptor = "(Ljava/lang/String;I)[Ljava/lang/String;"
+kind = "builtin"
+references = 16
 
 [[member]]
 name = "replaceAll"
 descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
 kind = "builtin"
-references = 1
+references = 30
+
+[[member]]
+name = "replaceFirst"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 2
 
 [[member]]
 name = "format"
 descriptor = "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
 kind = "builtin"
+references = 133
+
+[[member]]
+name = "getBytes"
+descriptor = "(Ljava/nio/charset/Charset;)[B"
+kind = "builtin"
+references = 80
+
+[[member]]
+name = "toLowerCase"
+descriptor = "(Ljava/util/Locale;)Ljava/lang/String;"
+kind = "builtin"
+references = 138
+
+[[member]]
+name = "toUpperCase"
+descriptor = "(Ljava/util/Locale;)Ljava/lang/String;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "format"
+descriptor = "(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 300
+
+[[member]]
+name = "valueOf"
+descriptor = "(Z)Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "regionMatches"
+descriptor = "(ZILjava/lang/String;II)Z"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "<init>"
+descriptor = "([B)V"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "([BIII)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "([BIILjava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "([BIILjava/nio/charset/Charset;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "([BLjava/nio/charset/Charset;)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "valueOf"
+descriptor = "([C)Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "valueOf"
+descriptor = "([CII)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CASE_INSENSITIVE_ORDER"
+descriptor = "Ljava/util/Comparator;"
+kind = "builtin"
+references = 3

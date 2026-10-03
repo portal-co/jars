@@ -1,0 +1,31 @@
+class = "java/util/concurrent/atomic/LongAdder"
+
+[[member]]
+name = "sum"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "decrement"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "increment"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "add"
+descriptor = "(J)V"
+kind = "builtin"
+references = 11

@@ -1,0 +1,13 @@
+class = "org/lwjgl/util/shaderc/ShadercIncludeResolve"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "create"
+descriptor = "(Lorg/lwjgl/util/shaderc/ShadercIncludeResolveI;)Lorg/lwjgl/util/shaderc/ShadercIncludeResolve;"
+kind = "builtin"
+references = 1

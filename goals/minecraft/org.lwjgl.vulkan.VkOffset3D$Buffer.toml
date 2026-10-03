@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkOffset3D$Buffer"
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "x"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkOffset3D$Buffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "y"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkOffset3D$Buffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "z"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkOffset3D$Buffer;"
+kind = "builtin"
+references = 4

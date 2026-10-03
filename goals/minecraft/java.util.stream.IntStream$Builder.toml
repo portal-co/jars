@@ -1,0 +1,13 @@
+class = "java/util/stream/IntStream$Builder"
+
+[[member]]
+name = "build"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(I)Ljava/util/stream/IntStream$Builder;"
+kind = "builtin"
+references = 1

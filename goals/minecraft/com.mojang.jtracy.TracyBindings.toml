@@ -1,0 +1,127 @@
+class = "com/mojang/jtracy/TracyBindings"
+
+[[member]]
+name = "endZone"
+descriptor = "(I)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sectionLeave"
+descriptor = "(I)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "endGpuZone"
+descriptor = "(II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "submitQueryTimestamp"
+descriptor = "(IIJ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "beginGpuZone"
+descriptor = "(IILjava/lang/String;Ljava/lang/String;Ljava/lang/String;I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "newGpuContext"
+descriptor = "(IJFII)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sectionEnter"
+descriptor = "(ILjava/lang/String;)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "addZoneText"
+descriptor = "(ILjava/lang/String;)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sectionSetup"
+descriptor = "(ILjava/lang/String;)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "markFrame"
+descriptor = "(J)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "markFrameEnd"
+descriptor = "(J)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "markFrameStart"
+descriptor = "(J)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "plotValue"
+descriptor = "(JD)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "freeNamed"
+descriptor = "(JJ)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "mallocNamed"
+descriptor = "(JJI)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "leakName"
+descriptor = "(Ljava/lang/String;)J"
+kind = "native"
+references = 3
+
+[[member]]
+name = "appInfo"
+descriptor = "(Ljava/lang/String;)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "messageColored"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setThreadName"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "beginZone"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)I"
+kind = "native"
+references = 2
+
+[[member]]
+name = "frameImage"
+descriptor = "(Ljava/nio/ByteBuffer;IIIZ)I"
+kind = "native"
+references = 1

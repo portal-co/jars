@@ -1,0 +1,67 @@
+class = "org/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "subresourceRange"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dstQueueFamilyIndex"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "newLayout"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "oldLayout"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "srcQueueFamilyIndex"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dstAccessMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dstStageMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "image"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "srcAccessMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "srcStageMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkImageMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2

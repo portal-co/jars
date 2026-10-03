@@ -1,0 +1,7 @@
+class = "[Lio/netty/util/concurrent/Promise;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

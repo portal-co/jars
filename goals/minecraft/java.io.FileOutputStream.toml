@@ -1,0 +1,37 @@
+class = "java/io/FileOutputStream"
+
+[[member]]
+name = "getChannel"
+descriptor = "()Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;Z)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/FileDescriptor;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Z)V"
+kind = "builtin"
+references = 2

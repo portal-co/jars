@@ -1,0 +1,91 @@
+class = "java/util/stream/Collectors"
+
+[[member]]
+name = "joining"
+descriptor = "()Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "toList"
+descriptor = "()Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 82
+
+[[member]]
+name = "toSet"
+descriptor = "()Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 43
+
+[[member]]
+name = "toUnmodifiableList"
+descriptor = "()Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toUnmodifiableSet"
+descriptor = "()Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "joining"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 58
+
+[[member]]
+name = "joining"
+descriptor = "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "groupingBy"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toMap"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "toUnmodifiableMap"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Function;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "toMap"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Function;Ljava/util/function/BinaryOperator;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toMap"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Function;Ljava/util/function/BinaryOperator;Ljava/util/function/Supplier;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "groupingBy"
+descriptor = "(Ljava/util/function/Function;Ljava/util/function/Supplier;Ljava/util/stream/Collector;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "groupingBy"
+descriptor = "(Ljava/util/function/Function;Ljava/util/stream/Collector;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "toCollection"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/util/stream/Collector;"
+kind = "builtin"
+references = 17

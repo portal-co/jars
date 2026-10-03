@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/gametest/framework/TestEnvironmentDefinition$Weather$Type;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

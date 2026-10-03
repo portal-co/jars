@@ -1,0 +1,78 @@
+class = "java/lang/invoke/MethodHandles"
+
+[[member]]
+name = "lookup"
+descriptor = "()Ljava/lang/invoke/MethodHandles$Lookup;"
+kind = "builtin"
+reason = "closed-world"
+references = 9
+
+[[member]]
+name = "publicLookup"
+descriptor = "()Ljava/lang/invoke/MethodHandles$Lookup;"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "constant"
+descriptor = "(Ljava/lang/Class;Ljava/lang/Object;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "byteArrayViewVarHandle"
+descriptor = "(Ljava/lang/Class;Ljava/nio/ByteOrder;)Ljava/lang/invoke/VarHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "collectArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;ILjava/lang/invoke/MethodHandle;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "insertArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;I[Ljava/lang/Object;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 4
+
+[[member]]
+name = "filterArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;I[Ljava/lang/invoke/MethodHandle;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "filterReturnValue"
+descriptor = "(Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodHandle;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "foldArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodHandle;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 11
+
+[[member]]
+name = "explicitCastArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "permuteArguments"
+descriptor = "(Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;[I)Ljava/lang/invoke/MethodHandle;"
+kind = "builtin"
+reason = "closed-world"
+references = 2

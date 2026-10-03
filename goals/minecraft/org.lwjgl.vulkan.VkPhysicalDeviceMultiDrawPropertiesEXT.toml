@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceMultiDrawPropertiesEXT"
+
+[[member]]
+name = "maxMultiDrawCount"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceMultiDrawPropertiesEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceMultiDrawPropertiesEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1

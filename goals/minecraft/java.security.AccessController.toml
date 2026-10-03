@@ -1,7 +1,19 @@
 class = "java/security/AccessController"
 
 [[member]]
+name = "checkPermission"
+descriptor = "(Ljava/security/Permission;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
 name = "doPrivileged"
 descriptor = "(Ljava/security/PrivilegedAction;)Ljava/lang/Object;"
 kind = "builtin"
-references = 1
+references = 45
+
+[[member]]
+name = "doPrivileged"
+descriptor = "(Ljava/security/PrivilegedExceptionAction;)Ljava/lang/Object;"
+kind = "builtin"
+references = 16

@@ -1,0 +1,7 @@
+class = "com/github/luben/zstd/util/Native"
+
+[[member]]
+name = "load"
+descriptor = "()V"
+kind = "builtin"
+references = 1

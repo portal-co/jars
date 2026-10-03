@@ -1,0 +1,49 @@
+class = "org/lwjgl/sdl/SDLKeyboard"
+
+[[member]]
+name = "SDL_GetKeyboardState"
+descriptor = "()Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetModState"
+descriptor = "()S"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "SDL_GetKeyName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetKeyFromScancode"
+descriptor = "(ISZ)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_ClearComposition"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_StartTextInput"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_StopTextInput"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetTextInputArea"
+descriptor = "(JLorg/lwjgl/sdl/SDL_Rect$Buffer;I)Z"
+kind = "builtin"
+references = 1

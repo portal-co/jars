@@ -1,0 +1,61 @@
+class = "java/util/ListIterator"
+
+[[member]]
+name = "nextIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 52
+
+[[member]]
+name = "previousIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 54
+
+[[member]]
+name = "next"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "previous"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "remove"
+descriptor = "()V"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 57
+
+[[member]]
+name = "hasPrevious"
+descriptor = "()Z"
+kind = "builtin"
+references = 30
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 15

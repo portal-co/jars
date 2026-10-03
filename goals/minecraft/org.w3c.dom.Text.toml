@@ -1,0 +1,7 @@
+class = "org/w3c/dom/Text"
+
+[[member]]
+name = "getData"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

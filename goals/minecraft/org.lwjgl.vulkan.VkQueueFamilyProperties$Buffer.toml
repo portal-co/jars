@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkQueueFamilyProperties$Buffer"
+
+[[member]]
+name = "capacity"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(I)Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 1

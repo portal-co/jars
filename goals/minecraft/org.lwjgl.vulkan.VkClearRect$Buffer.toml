@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkClearRect$Buffer"
+
+[[member]]
+name = "rect"
+descriptor = "()Lorg/lwjgl/vulkan/VkRect2D;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "baseArrayLayer"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkClearRect$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "layerCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkClearRect$Buffer;"
+kind = "builtin"
+references = 1

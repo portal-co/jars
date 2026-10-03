@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/databind/ser/std/StdScalarSerializer"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Class;)V"
+kind = "builtin"
+references = 2

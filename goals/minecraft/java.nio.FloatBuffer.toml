@@ -1,0 +1,37 @@
+class = "java/nio/FloatBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/FloatBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)F"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1

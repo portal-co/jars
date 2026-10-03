@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkMemoryBarrier2"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkMemoryBarrier2$Buffer;"
+kind = "builtin"
+references = 2

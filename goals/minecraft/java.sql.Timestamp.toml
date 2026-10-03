@@ -1,0 +1,7 @@
+class = "java/sql/Timestamp"
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3

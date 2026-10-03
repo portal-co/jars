@@ -1,0 +1,13 @@
+class = "java/util/Base64$Decoder"
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/lang/String;)[B"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "decode"
+descriptor = "([B)[B"
+kind = "builtin"
+references = 1

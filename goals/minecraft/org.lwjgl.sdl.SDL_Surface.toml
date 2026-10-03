@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDL_Surface"
+
+[[member]]
+name = "h"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "w"
+descriptor = "()I"
+kind = "builtin"
+references = 1

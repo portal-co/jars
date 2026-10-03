@@ -1,0 +1,13 @@
+class = "com/sun/jna/win32/W32APITypeMapper"
+
+[[member]]
+name = "DEFAULT"
+descriptor = "Lcom/sun/jna/TypeMapper;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "UNICODE"
+descriptor = "Lcom/sun/jna/TypeMapper;"
+kind = "builtin"
+references = 1

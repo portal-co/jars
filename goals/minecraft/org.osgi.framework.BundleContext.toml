@@ -1,0 +1,13 @@
+class = "org/osgi/framework/BundleContext"
+
+[[member]]
+name = "getServiceReferences"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;)Ljava/util/Collection;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getService"
+descriptor = "(Lorg/osgi/framework/ServiceReference;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

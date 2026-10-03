@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/PdhUtil$PdhEnumObjectItems"
+
+[[member]]
+name = "getInstances"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 1

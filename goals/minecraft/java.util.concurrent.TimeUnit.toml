@@ -1,0 +1,79 @@
+class = "java/util/concurrent/TimeUnit"
+
+[[member]]
+name = "toMicros"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toMillis"
+descriptor = "(J)J"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "toNanos"
+descriptor = "(J)J"
+kind = "builtin"
+references = 39
+
+[[member]]
+name = "toSeconds"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sleep"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "convert"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "convert"
+descriptor = "(Ljava/time/Duration;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HOURS"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "MICROSECONDS"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "MILLISECONDS"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "MINUTES"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "NANOSECONDS"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "SECONDS"
+descriptor = "Ljava/util/concurrent/TimeUnit;"
+kind = "builtin"
+references = 35

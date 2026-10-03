@@ -1,0 +1,19 @@
+class = "org/apache/kafka/clients/producer/Producer"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(Lorg/apache/kafka/clients/producer/ProducerRecord;)Ljava/util/concurrent/Future;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(Lorg/apache/kafka/clients/producer/ProducerRecord;Lorg/apache/kafka/clients/producer/Callback;)Ljava/util/concurrent/Future;"
+kind = "builtin"
+references = 1

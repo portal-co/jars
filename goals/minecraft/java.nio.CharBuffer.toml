@@ -1,0 +1,163 @@
+class = "java/nio/CharBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()C"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "arrayOffset"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "capacity"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "position"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "flip"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "rewind"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "array"
+descriptor = "()[C"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "put"
+descriptor = "(C)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "charAt"
+descriptor = "(I)C"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "get"
+descriptor = "(I)C"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "allocate"
+descriptor = "(I)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "wrap"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "get"
+descriptor = "([C)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "put"
+descriptor = "([C)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "([CII)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "wrap"
+descriptor = "([CII)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1

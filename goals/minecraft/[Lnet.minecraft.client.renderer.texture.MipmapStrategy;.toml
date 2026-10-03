@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/client/renderer/texture/MipmapStrategy;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

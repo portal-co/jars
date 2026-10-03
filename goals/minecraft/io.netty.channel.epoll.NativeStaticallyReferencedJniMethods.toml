@@ -1,0 +1,61 @@
+class = "io/netty/channel/epoll/NativeStaticallyReferencedJniMethods"
+
+[[member]]
+name = "epollerr"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollet"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollin"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollout"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollrdhup"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "tcpFastopenMode"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "tcpMd5SigMaxKeyLen"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "kernelVersion"
+descriptor = "()Ljava/lang/String;"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isSupportingRecvmmsg"
+descriptor = "()Z"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isSupportingSendmmsg"
+descriptor = "()Z"
+kind = "native"
+references = 1

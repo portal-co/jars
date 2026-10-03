@@ -1,0 +1,7 @@
+class = "javax/script/Compilable"
+
+[[member]]
+name = "compile"
+descriptor = "(Ljava/lang/String;)Ljavax/script/CompiledScript;"
+kind = "builtin"
+references = 1

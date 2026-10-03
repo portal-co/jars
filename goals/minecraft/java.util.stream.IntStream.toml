@@ -1,0 +1,145 @@
+class = "java/util/stream/IntStream"
+
+[[member]]
+name = "sum"
+descriptor = "()I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "summaryStatistics"
+descriptor = "()Ljava/util/IntSummaryStatistics;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "findAny"
+descriptor = "()Ljava/util/OptionalInt;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "max"
+descriptor = "()Ljava/util/OptionalInt;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "min"
+descriptor = "()Ljava/util/OptionalInt;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "spliterator"
+descriptor = "()Ljava/util/Spliterator$OfInt;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "builder"
+descriptor = "()Ljava/util/stream/IntStream$Builder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "distinct"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "empty"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "boxed"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isParallel"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toArray"
+descriptor = "()[I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "range"
+descriptor = "(II)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "rangeClosed"
+descriptor = "(II)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "reduce"
+descriptor = "(ILjava/util/function/IntBinaryOperator;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "iterate"
+descriptor = "(ILjava/util/function/IntPredicate;Ljava/util/function/IntUnaryOperator;)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "(J)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/IntConsumer;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "mapToObj"
+descriptor = "(Ljava/util/function/IntFunction;)Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 27
+
+[[member]]
+name = "filter"
+descriptor = "(Ljava/util/function/IntPredicate;)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "allMatch"
+descriptor = "(Ljava/util/function/IntPredicate;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "map"
+descriptor = "(Ljava/util/function/IntUnaryOperator;)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "collect"
+descriptor = "(Ljava/util/function/Supplier;Ljava/util/function/ObjIntConsumer;Ljava/util/function/BiConsumer;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "([I)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 9

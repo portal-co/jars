@@ -1,0 +1,7 @@
+class = "[Lcom/mojang/text2speech/OperatingSystem;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

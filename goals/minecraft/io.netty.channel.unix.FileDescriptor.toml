@@ -1,0 +1,31 @@
+class = "io/netty/channel/unix/FileDescriptor"
+
+[[member]]
+name = "close"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "writevAddresses"
+descriptor = "(IJI)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "writeAddress"
+descriptor = "(IJII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "(ILjava/nio/ByteBuffer;II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "writev"
+descriptor = "(I[Ljava/nio/ByteBuffer;IIJ)J"
+kind = "native"
+references = 1

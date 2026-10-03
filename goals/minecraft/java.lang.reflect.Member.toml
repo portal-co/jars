@@ -1,0 +1,22 @@
+class = "java/lang/reflect/Member"
+
+[[member]]
+name = "getModifiers"
+descriptor = "()I"
+kind = "builtin"
+reason = "closed-world"
+references = 2
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

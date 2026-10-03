@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/IOKit$IOService"
+
+[[member]]
+name = "release"
+descriptor = "()I"
+kind = "builtin"
+references = 3

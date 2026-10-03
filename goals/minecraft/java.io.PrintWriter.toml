@@ -1,0 +1,91 @@
+class = "java/io/PrintWriter"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "flush"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "println"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "print"
+descriptor = "(C)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "print"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "println"
+descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Writer;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "print"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "println"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "print"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "println"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "printf"
+descriptor = "(Ljava/util/Locale;Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintWriter;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "println"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

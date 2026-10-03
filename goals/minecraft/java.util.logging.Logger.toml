@@ -1,0 +1,43 @@
+class = "java/util/logging/Logger"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLogger"
+descriptor = "(Ljava/lang/String;)Ljava/util/logging/Logger;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "fine"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isLoggable"
+descriptor = "(Ljava/util/logging/Level;)Z"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "log"
+descriptor = "(Ljava/util/logging/Level;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "log"
+descriptor = "(Ljava/util/logging/Level;Ljava/lang/String;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "log"
+descriptor = "(Ljava/util/logging/LogRecord;)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "java/io/ByteArrayInputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "([B)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "<init>"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 3

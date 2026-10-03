@@ -1,0 +1,73 @@
+class = "org/lwjgl/sdl/SDL_Event"
+
+[[member]]
+name = "type"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "display"
+descriptor = "()Lorg/lwjgl/sdl/SDL_DisplayEvent;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "drop"
+descriptor = "()Lorg/lwjgl/sdl/SDL_DropEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "malloc"
+descriptor = "()Lorg/lwjgl/sdl/SDL_Event;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "key"
+descriptor = "()Lorg/lwjgl/sdl/SDL_KeyboardEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "button"
+descriptor = "()Lorg/lwjgl/sdl/SDL_MouseButtonEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "motion"
+descriptor = "()Lorg/lwjgl/sdl/SDL_MouseMotionEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "wheel"
+descriptor = "()Lorg/lwjgl/sdl/SDL_MouseWheelEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "edit"
+descriptor = "()Lorg/lwjgl/sdl/SDL_TextEditingEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "text"
+descriptor = "()Lorg/lwjgl/sdl/SDL_TextInputEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "window"
+descriptor = "()Lorg/lwjgl/sdl/SDL_WindowEvent;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2

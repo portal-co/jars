@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/Win32Exception"
+
+[[member]]
+name = "getErrorCode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getHR"
+descriptor = "()Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 10

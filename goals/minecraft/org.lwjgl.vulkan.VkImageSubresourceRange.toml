@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkImageSubresourceRange"
+
+[[member]]
+name = "aspectMask"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "baseArrayLayer"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "baseMipLevel"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "layerCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "levelCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkImageSubresourceRange;"
+kind = "builtin"
+references = 2

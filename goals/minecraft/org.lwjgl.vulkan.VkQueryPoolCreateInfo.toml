@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkQueryPoolCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkQueryPoolCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "queryCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkQueryPoolCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "queryType"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkQueryPoolCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkQueryPoolCreateInfo;"
+kind = "builtin"
+references = 1

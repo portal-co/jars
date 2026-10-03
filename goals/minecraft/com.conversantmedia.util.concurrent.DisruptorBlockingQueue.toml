@@ -1,0 +1,7 @@
+class = "com/conversantmedia/util/concurrent/DisruptorBlockingQueue"
+
+[[member]]
+name = "<init>"
+descriptor = "(ILcom/conversantmedia/util/concurrent/SpinPolicy;)V"
+kind = "builtin"
+references = 1

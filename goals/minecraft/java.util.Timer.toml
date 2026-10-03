@@ -1,0 +1,19 @@
+class = "java/util/Timer"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cancel"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "scheduleAtFixedRate"
+descriptor = "(Ljava/util/TimerTask;JJ)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "javax/crypto/spec/IvParameterSpec"
+
+[[member]]
+name = "<init>"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1

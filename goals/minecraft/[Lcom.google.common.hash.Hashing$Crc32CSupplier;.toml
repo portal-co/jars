@@ -1,0 +1,7 @@
+class = "[Lcom/google/common/hash/Hashing$Crc32CSupplier;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

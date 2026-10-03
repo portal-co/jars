@@ -1,0 +1,31 @@
+class = "java/nio/file/attribute/PosixFilePermission"
+
+[[member]]
+name = "GROUP_EXECUTE"
+descriptor = "Ljava/nio/file/attribute/PosixFilePermission;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OTHERS_EXECUTE"
+descriptor = "Ljava/nio/file/attribute/PosixFilePermission;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OWNER_EXECUTE"
+descriptor = "Ljava/nio/file/attribute/PosixFilePermission;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "OWNER_READ"
+descriptor = "Ljava/nio/file/attribute/PosixFilePermission;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OWNER_WRITE"
+descriptor = "Ljava/nio/file/attribute/PosixFilePermission;"
+kind = "builtin"
+references = 2

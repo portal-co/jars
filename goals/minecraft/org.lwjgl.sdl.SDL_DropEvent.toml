@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_DropEvent"
+
+[[member]]
+name = "dataString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

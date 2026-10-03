@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkExtent3D"
+
+[[member]]
+name = "set"
+descriptor = "(III)Lorg/lwjgl/vulkan/VkExtent3D;"
+kind = "builtin"
+references = 4

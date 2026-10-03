@@ -1,0 +1,43 @@
+class = "java/util/concurrent/Executors"
+
+[[member]]
+name = "defaultThreadFactory"
+descriptor = "()Ljava/util/concurrent/ThreadFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newFixedThreadPool"
+descriptor = "(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newScheduledThreadPool"
+descriptor = "(ILjava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "callable"
+descriptor = "(Ljava/lang/Runnable;Ljava/lang/Object;)Ljava/util/concurrent/Callable;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newCachedThreadPool"
+descriptor = "(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "newSingleThreadExecutor"
+descriptor = "(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ExecutorService;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "newSingleThreadScheduledExecutor"
+descriptor = "(Ljava/util/concurrent/ThreadFactory;)Ljava/util/concurrent/ScheduledExecutorService;"
+kind = "builtin"
+references = 1

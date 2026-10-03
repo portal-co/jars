@@ -1,0 +1,13 @@
+class = "java/lang/management/MemoryMXBean"
+
+[[member]]
+name = "getHeapMemoryUsage"
+descriptor = "()Ljava/lang/management/MemoryUsage;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getNonHeapMemoryUsage"
+descriptor = "()Ljava/lang/management/MemoryUsage;"
+kind = "builtin"
+references = 2

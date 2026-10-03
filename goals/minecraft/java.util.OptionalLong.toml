@@ -1,0 +1,49 @@
+class = "java/util/OptionalLong"
+
+[[member]]
+name = "getAsLong"
+descriptor = "()J"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "empty"
+descriptor = "()Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isPresent"
+descriptor = "()Z"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "orElse"
+descriptor = "(J)J"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "of"
+descriptor = "(J)Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "ifPresent"
+descriptor = "(Ljava/util/function/LongConsumer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "orElseThrow"
+descriptor = "(Ljava/util/function/Supplier;)J"
+kind = "builtin"
+references = 1

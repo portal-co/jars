@@ -1,0 +1,7 @@
+class = "java/util/concurrent/Callable"
+
+[[member]]
+name = "call"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 5

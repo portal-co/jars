@@ -1,71 +1,310 @@
 class = "java/lang/Class"
 
 [[member]]
+name = "getModifiers"
+descriptor = "()I"
+kind = "native"
+references = 6
+
+[[member]]
+name = "getComponentType"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEnclosingClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getSuperclass"
+descriptor = "()Ljava/lang/Class;"
+kind = "native"
+references = 10
+
+[[member]]
+name = "getClassLoader"
+descriptor = "()Ljava/lang/ClassLoader;"
+kind = "builtin"
+references = 40
+
+[[member]]
+name = "getModule"
+descriptor = "()Ljava/lang/Module;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newInstance"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+reason = "closed-world"
+references = 8
+
+[[member]]
+name = "getPackage"
+descriptor = "()Ljava/lang/Package;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getCanonicalName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 14
+
+[[member]]
 name = "getName"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 6
+references = 225
+
+[[member]]
+name = "getPackageName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "getSimpleName"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 3
+references = 88
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getGenericSuperclass"
+descriptor = "()Ljava/lang/reflect/Type;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getProtectionDomain"
+descriptor = "()Ljava/security/ProtectionDomain;"
+kind = "builtin"
+references = 2
 
 [[member]]
 name = "desiredAssertionStatus"
 descriptor = "()Z"
 kind = "builtin"
-references = 3
+references = 512
+
+[[member]]
+name = "isAnonymousClass"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isArray"
+descriptor = "()Z"
+kind = "native"
+references = 19
+
+[[member]]
+name = "isEnum"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isInterface"
+descriptor = "()Z"
+kind = "native"
+references = 5
+
+[[member]]
+name = "isLocalClass"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isMemberClass"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "isPrimitive"
 descriptor = "()Z"
 kind = "native"
+references = 6
+
+[[member]]
+name = "getDeclaredClasses"
+descriptor = "()[Ljava/lang/Class;"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "getInterfaces"
+descriptor = "()[Ljava/lang/Class;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEnumConstants"
+descriptor = "()[Ljava/lang/Object;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "getSigners"
+descriptor = "()[Ljava/lang/Object;"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getDeclaredConstructors"
+descriptor = "()[Ljava/lang/reflect/Constructor;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDeclaredFields"
+descriptor = "()[Ljava/lang/reflect/Field;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getDeclaredMethods"
+descriptor = "()[Ljava/lang/reflect/Method;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getMethods"
+descriptor = "()[Ljava/lang/reflect/Method;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getGenericInterfaces"
+descriptor = "()[Ljava/lang/reflect/Type;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getTypeParameters"
+descriptor = "()[Ljava/lang/reflect/TypeVariable;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "asSubclass"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/Class;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "getAnnotation"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/annotation/Annotation;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "isAnnotationPresent"
+descriptor = "(Ljava/lang/Class;)Z"
+kind = "builtin"
+references = 5
 
 [[member]]
 name = "isAssignableFrom"
 descriptor = "(Ljava/lang/Class;)Z"
 kind = "native"
-references = 1
+references = 93
+
+[[member]]
+name = "cast"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 13
 
 [[member]]
 name = "isInstance"
 descriptor = "(Ljava/lang/Object;)Z"
 kind = "native"
-references = 1
+references = 20
 
 [[member]]
 name = "getResourceAsStream"
 descriptor = "(Ljava/lang/String;)Ljava/io/InputStream;"
 kind = "builtin"
-references = 3
+references = 5
 
 [[member]]
 name = "forName"
 descriptor = "(Ljava/lang/String;)Ljava/lang/Class;"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 51
+
+[[member]]
+name = "getDeclaredField"
+descriptor = "(Ljava/lang/String;)Ljava/lang/reflect/Field;"
+kind = "builtin"
+reason = "closed-world"
+references = 65
+
+[[member]]
+name = "getField"
+descriptor = "(Ljava/lang/String;)Ljava/lang/reflect/Field;"
+kind = "builtin"
+reason = "closed-world"
+references = 6
+
+[[member]]
+name = "getResource"
+descriptor = "(Ljava/lang/String;)Ljava/net/URL;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "forName"
+descriptor = "(Ljava/lang/String;ZLjava/lang/ClassLoader;)Ljava/lang/Class;"
+kind = "builtin"
+reason = "closed-world"
+references = 26
+
+[[member]]
+name = "getDeclaredMethod"
+descriptor = "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;"
+kind = "builtin"
+reason = "closed-world"
+references = 9
 
 [[member]]
 name = "getMethod"
 descriptor = "(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 51
 
 [[member]]
 name = "getConstructor"
 descriptor = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 19
 
 [[member]]
 name = "getDeclaredConstructor"
 descriptor = "([Ljava/lang/Class;)Ljava/lang/reflect/Constructor;"
 kind = "builtin"
 reason = "closed-world"
-references = 1
+references = 7

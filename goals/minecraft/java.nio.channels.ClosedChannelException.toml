@@ -1,0 +1,13 @@
+class = "java/nio/channels/ClosedChannelException"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1

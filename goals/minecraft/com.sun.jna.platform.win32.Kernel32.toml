@@ -1,0 +1,79 @@
+class = "com/sun/jna/platform/win32/Kernel32"
+
+[[member]]
+name = "GetCurrentProcessId"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "GetLastError"
+descriptor = "()I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "GetTickCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GetTickCount64"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GetCurrentProcess"
+descriptor = "()Lcom/sun/jna/platform/win32/WinNT$HANDLE;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "IsProcessorFeaturePresent"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OpenProcess"
+descriptor = "(IZI)Lcom/sun/jna/platform/win32/WinNT$HANDLE;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "GetSystemTimes"
+descriptor = "(Lcom/sun/jna/platform/win32/WinBase$FILETIME;Lcom/sun/jna/platform/win32/WinBase$FILETIME;Lcom/sun/jna/platform/win32/WinBase$FILETIME;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GetNativeSystemInfo"
+descriptor = "(Lcom/sun/jna/platform/win32/WinBase$SYSTEM_INFO;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "CloseHandle"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;)Z"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "ReadProcessMemory"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Lcom/sun/jna/Pointer;Lcom/sun/jna/Pointer;ILcom/sun/jna/ptr/IntByReference;)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "IsWow64Process"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Lcom/sun/jna/ptr/IntByReference;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Kernel32;"
+kind = "builtin"
+references = 47

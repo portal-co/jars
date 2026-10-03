@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkQueue"
+
+[[member]]
+name = "address"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(JLorg/lwjgl/vulkan/VkDevice;)V"
+kind = "builtin"
+references = 1

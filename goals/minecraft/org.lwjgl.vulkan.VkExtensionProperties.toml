@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkExtensionProperties"
+
+[[member]]
+name = "extensionNameString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkExtensionProperties$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkExtensionProperties$Buffer;"
+kind = "builtin"
+references = 1

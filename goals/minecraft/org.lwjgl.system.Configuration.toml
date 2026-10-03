@@ -1,0 +1,19 @@
+class = "org/lwjgl/system/Configuration"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 6

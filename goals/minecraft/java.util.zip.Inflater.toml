@@ -1,0 +1,91 @@
+class = "java/util/zip/Inflater"
+
+[[member]]
+name = "getRemaining"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getTotalOut"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "end"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "finished"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "needsDictionary"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "needsInput"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "inflate"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setInput"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "setDictionary"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setInput"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "inflate"
+descriptor = "([BII)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setInput"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 3

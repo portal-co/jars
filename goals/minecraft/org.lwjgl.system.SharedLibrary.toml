@@ -1,0 +1,7 @@
+class = "org/lwjgl/system/SharedLibrary"
+
+[[member]]
+name = "getPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

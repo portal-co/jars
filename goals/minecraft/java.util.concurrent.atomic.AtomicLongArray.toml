@@ -1,0 +1,31 @@
+class = "java/util/concurrent/atomic/AtomicLongArray"
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "lazySet"
+descriptor = "(IJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(IJ)V"
+kind = "builtin"
+references = 1

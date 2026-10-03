@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkClearColorValue"
+
+[[member]]
+name = "float32"
+descriptor = "(IF)Lorg/lwjgl/vulkan/VkClearColorValue;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkClearColorValue;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,43 @@
+class = "org/lwjgl/util/vma/Vma"
+
+[[member]]
+name = "vmaDestroyAllocator"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vmaDestroyBuffer"
+descriptor = "(JJJ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vmaDestroyImage"
+descriptor = "(JJJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vmaMapMemory"
+descriptor = "(JJLorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vmaCreateBuffer"
+descriptor = "(JLorg/lwjgl/vulkan/VkBufferCreateInfo;Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;Ljava/nio/LongBuffer;Lorg/lwjgl/PointerBuffer;Lorg/lwjgl/util/vma/VmaAllocationInfo;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vmaCreateImage"
+descriptor = "(JLorg/lwjgl/vulkan/VkImageCreateInfo;Lorg/lwjgl/util/vma/VmaAllocationCreateInfo;Ljava/nio/LongBuffer;Lorg/lwjgl/PointerBuffer;Lorg/lwjgl/util/vma/VmaAllocationInfo;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vmaCreateAllocator"
+descriptor = "(Lorg/lwjgl/util/vma/VmaAllocatorCreateInfo;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1

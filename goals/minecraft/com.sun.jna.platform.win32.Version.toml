@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/Version"
+
+[[member]]
+name = "VerQueryValue"
+descriptor = "(Lcom/sun/jna/Pointer;Ljava/lang/String;Lcom/sun/jna/ptr/PointerByReference;Lcom/sun/jna/ptr/IntByReference;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GetFileVersionInfo"
+descriptor = "(Ljava/lang/String;IILcom/sun/jna/Pointer;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GetFileVersionInfoSize"
+descriptor = "(Ljava/lang/String;Lcom/sun/jna/ptr/IntByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Version;"
+kind = "builtin"
+references = 3

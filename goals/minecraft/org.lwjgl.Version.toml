@@ -1,0 +1,7 @@
+class = "org/lwjgl/Version"
+
+[[member]]
+name = "getVersion"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

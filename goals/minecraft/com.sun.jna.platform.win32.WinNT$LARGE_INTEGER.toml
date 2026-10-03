@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/WinNT$LARGE_INTEGER"
+
+[[member]]
+name = "getValue"
+descriptor = "()J"
+kind = "builtin"
+references = 3

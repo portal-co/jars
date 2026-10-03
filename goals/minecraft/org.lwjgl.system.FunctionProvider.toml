@@ -1,0 +1,7 @@
+class = "org/lwjgl/system/FunctionProvider"
+
+[[member]]
+name = "getFunctionAddress"
+descriptor = "(Ljava/lang/CharSequence;)J"
+kind = "builtin"
+references = 2

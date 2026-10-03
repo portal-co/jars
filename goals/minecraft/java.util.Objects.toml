@@ -1,13 +1,79 @@
 class = "java/util/Objects"
 
 [[member]]
+name = "checkIndex"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hashCode"
+descriptor = "(Ljava/lang/Object;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "requireNonNull"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
 kind = "builtin"
-references = 12
+references = 1989
+
+[[member]]
+name = "toString"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isNull"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nonNull"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "requireNonNullElse"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 70
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 654
+
+[[member]]
+name = "compare"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/util/Comparator;)I"
+kind = "builtin"
+references = 1
 
 [[member]]
 name = "requireNonNull"
 descriptor = "(Ljava/lang/Object;Ljava/lang/String;)Ljava/lang/Object;"
 kind = "builtin"
-references = 4
+references = 231
+
+[[member]]
+name = "requireNonNull"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Supplier;)Ljava/lang/Object;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "requireNonNullElseGet"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Supplier;)Ljava/lang/Object;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "hash"
+descriptor = "([Ljava/lang/Object;)I"
+kind = "builtin"
+references = 5

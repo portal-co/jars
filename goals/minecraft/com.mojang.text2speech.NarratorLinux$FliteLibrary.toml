@@ -1,0 +1,37 @@
+class = "com/mojang/text2speech/NarratorLinux$FliteLibrary"
+
+[[member]]
+name = "flite_init"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "utt_wave"
+descriptor = "(Lcom/sun/jna/Pointer;)Lcom/sun/jna/Pointer;"
+kind = "native"
+references = 1
+
+[[member]]
+name = "delete_utterance"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "native"
+references = 2
+
+[[member]]
+name = "play_wave"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "cst_wave_rescale"
+descriptor = "(Lcom/sun/jna/Pointer;I)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "flite_synth_text"
+descriptor = "(Ljava/lang/String;Lcom/sun/jna/Pointer;)Lcom/sun/jna/Pointer;"
+kind = "native"
+references = 1

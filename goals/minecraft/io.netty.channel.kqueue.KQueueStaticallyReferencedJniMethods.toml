@@ -1,0 +1,109 @@
+class = "io/netty/channel/kqueue/KQueueStaticallyReferencedJniMethods"
+
+[[member]]
+name = "connectDataIdempotent"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "connectResumeOnReadWrite"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "fastOpenClient"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "fastOpenServer"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evAdd"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evClear"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evDelete"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evDisable"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evEOF"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evEnable"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evError"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evfiltRead"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evfiltSock"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evfiltUser"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "evfiltWrite"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "noteConnReset"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "noteDisconnected"
+descriptor = "()S"
+kind = "native"
+references = 1
+
+[[member]]
+name = "noteReadClosed"
+descriptor = "()S"
+kind = "native"
+references = 1

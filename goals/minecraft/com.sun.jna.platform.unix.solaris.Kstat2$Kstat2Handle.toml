@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/unix/solaris/Kstat2$Kstat2Handle"
+
+[[member]]
+name = "close"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "lookupMap"
+descriptor = "(Ljava/lang/String;)Lcom/sun/jna/platform/unix/solaris/Kstat2$Kstat2Map;"
+kind = "builtin"
+references = 2

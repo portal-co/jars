@@ -1,0 +1,91 @@
+class = "com/sun/jna/platform/mac/SystemB"
+
+[[member]]
+name = "getpid"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mach_host_self"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "mach_task_self"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getgrgid"
+descriptor = "(I)Lcom/sun/jna/platform/mac/SystemB$Group;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getpwuid"
+descriptor = "(I)Lcom/sun/jna/platform/mac/SystemB$Passwd;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "proc_pidinfo"
+descriptor = "(IIJLcom/sun/jna/Structure;I)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "host_statistics"
+descriptor = "(IILcom/sun/jna/Structure;Lcom/sun/jna/ptr/IntByReference;)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "proc_pid_rusage"
+descriptor = "(IILcom/sun/jna/platform/mac/SystemB$RUsageInfoV2;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "host_processor_info"
+descriptor = "(IILcom/sun/jna/ptr/IntByReference;Lcom/sun/jna/ptr/PointerByReference;Lcom/sun/jna/ptr/IntByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "proc_pidpath"
+descriptor = "(ILcom/sun/jna/Pointer;I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "host_page_size"
+descriptor = "(ILcom/sun/jna/ptr/LongByReference;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sysctl"
+descriptor = "([IILcom/sun/jna/Pointer;Lcom/sun/jna/platform/unix/LibCAPI$size_t$ByReference;Lcom/sun/jna/Pointer;Lcom/sun/jna/platform/unix/LibCAPI$size_t;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INT_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "UINT64_SIZE"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/mac/SystemB;"
+kind = "builtin"
+references = 18

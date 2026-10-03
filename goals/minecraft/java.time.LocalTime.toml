@@ -1,0 +1,55 @@
+class = "java/time/LocalTime"
+
+[[member]]
+name = "getHour"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMinute"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getNano"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSecond"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(IIII)Ljava/time/LocalTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "plusMinutes"
+descriptor = "(J)Ljava/time/LocalTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isBefore"
+descriptor = "(Ljava/time/LocalTime;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(Ljava/time/format/DateTimeFormatter;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "MIDNIGHT"
+descriptor = "Ljava/time/LocalTime;"
+kind = "builtin"
+references = 1

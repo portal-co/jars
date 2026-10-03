@@ -1,7 +1,121 @@
 class = "java/util/EnumSet"
 
 [[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/util/EnumSet;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "allOf"
+descriptor = "(Ljava/lang/Class;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "noneOf"
+descriptor = "(Ljava/lang/Class;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 56
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Enum;[Ljava/lang/Enum;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
 name = "copyOf"
 descriptor = "(Ljava/util/Collection;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "complementOf"
+descriptor = "(Ljava/util/EnumSet;)Ljava/util/EnumSet;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "copyOf"
+descriptor = "(Ljava/util/EnumSet;)Ljava/util/EnumSet;"
 kind = "builtin"
 references = 2

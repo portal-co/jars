@@ -1,0 +1,19 @@
+class = "java/nio/file/attribute/PosixFileAttributeView"
+
+[[member]]
+name = "setGroup"
+descriptor = "(Ljava/nio/file/attribute/GroupPrincipal;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setOwner"
+descriptor = "(Ljava/nio/file/attribute/UserPrincipal;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setPermissions"
+descriptor = "(Ljava/util/Set;)V"
+kind = "builtin"
+references = 1

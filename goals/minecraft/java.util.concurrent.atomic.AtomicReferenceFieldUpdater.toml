@@ -1,0 +1,37 @@
+class = "java/util/concurrent/atomic/AtomicReferenceFieldUpdater"
+
+[[member]]
+name = "newUpdater"
+descriptor = "(Ljava/lang/Class;Ljava/lang/Class;Ljava/lang/String;)Ljava/util/concurrent/atomic/AtomicReferenceFieldUpdater;"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getAndSet"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "lazySet"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 30

@@ -1,0 +1,13 @@
+class = "org/lwjgl/opengl/ARBBufferStorage"
+
+[[member]]
+name = "glBufferStorage"
+descriptor = "(IJI)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "glBufferStorage"
+descriptor = "(ILjava/nio/ByteBuffer;I)V"
+kind = "builtin"
+references = 1

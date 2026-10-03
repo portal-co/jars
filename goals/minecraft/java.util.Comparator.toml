@@ -1,0 +1,109 @@
+class = "java/util/Comparator"
+
+[[member]]
+name = "naturalOrder"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "reverseOrder"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reversed"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "compare"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)I"
+kind = "builtin"
+references = 104
+
+[[member]]
+name = "nullsFirst"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "nullsLast"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "thenComparing"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "comparing"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 35
+
+[[member]]
+name = "thenComparing"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "comparing"
+descriptor = "(Ljava/util/function/Function;Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "thenComparing"
+descriptor = "(Ljava/util/function/Function;Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "comparingDouble"
+descriptor = "(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "thenComparingDouble"
+descriptor = "(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "comparingInt"
+descriptor = "(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "thenComparingInt"
+descriptor = "(Ljava/util/function/ToIntFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "comparingLong"
+descriptor = "(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "thenComparingLong"
+descriptor = "(Ljava/util/function/ToLongFunction;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 1

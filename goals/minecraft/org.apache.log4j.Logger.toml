@@ -1,0 +1,43 @@
+class = "org/apache/log4j/Logger"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isDebugEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isInfoEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isTraceEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLogger"
+descriptor = "(Ljava/lang/String;)Lorg/apache/log4j/Logger;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "log"
+descriptor = "(Ljava/lang/String;Lorg/apache/log4j/Priority;Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "isEnabledFor"
+descriptor = "(Lorg/apache/log4j/Priority;)Z"
+kind = "builtin"
+references = 8

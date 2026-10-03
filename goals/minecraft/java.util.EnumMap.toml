@@ -1,0 +1,109 @@
+class = "java/util/EnumMap"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "values"
+descriptor = "()Ljava/util/Collection;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/util/EnumMap;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "entrySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "keySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Class;)V"
+kind = "builtin"
+references = 54
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Enum;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "containsKey"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getOrDefault"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "computeIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/EnumMap;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "putAll"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/BiConsumer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "replaceAll"
+descriptor = "(Ljava/util/function/BiFunction;)V"
+kind = "builtin"
+references = 1

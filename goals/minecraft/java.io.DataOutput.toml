@@ -1,0 +1,55 @@
+class = "java/io/DataOutput"
+
+[[member]]
+name = "writeDouble"
+descriptor = "(D)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "writeFloat"
+descriptor = "(F)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "writeByte"
+descriptor = "(I)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "writeInt"
+descriptor = "(I)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "writeShort"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "writeLong"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "writeUTF"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "write"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "com/fasterxml/jackson/databind/module/SimpleModule"
+
+[[member]]
+name = "addDeserializer"
+descriptor = "(Ljava/lang/Class;Lcom/fasterxml/jackson/databind/JsonDeserializer;)Lcom/fasterxml/jackson/databind/module/SimpleModule;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "addSerializer"
+descriptor = "(Ljava/lang/Class;Lcom/fasterxml/jackson/databind/JsonSerializer;)Lcom/fasterxml/jackson/databind/module/SimpleModule;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Lcom/fasterxml/jackson/core/Version;)V"
+kind = "builtin"
+references = 2

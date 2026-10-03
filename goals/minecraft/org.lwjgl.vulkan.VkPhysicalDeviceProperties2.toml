@@ -1,0 +1,73 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceProperties2"
+
+[[member]]
+name = "calloc"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "properties"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nsType"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "npNext"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nsType"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "npNext"
+descriptor = "(JJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pNext"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDeviceDriverProperties;)Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pNext"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDeviceMultiDrawPropertiesEXT;)Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pNext"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDeviceVulkan11Properties;)Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;"
+kind = "builtin"
+references = 1

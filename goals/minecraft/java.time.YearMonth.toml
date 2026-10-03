@@ -1,0 +1,19 @@
+class = "java/time/YearMonth"
+
+[[member]]
+name = "getMonthValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getYear"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(II)Ljava/time/YearMonth;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "java/time/ZoneOffset"
+
+[[member]]
+name = "getTotalSeconds"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofTotalSeconds"
+descriptor = "(I)Ljava/time/ZoneOffset;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "UTC"
+descriptor = "Ljava/time/ZoneOffset;"
+kind = "builtin"
+references = 1

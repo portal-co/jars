@@ -1,0 +1,67 @@
+class = "java/nio/charset/CharsetEncoder"
+
+[[member]]
+name = "averageBytesPerChar"
+descriptor = "()F"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "maxBytesPerChar"
+descriptor = "()F"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "charset"
+descriptor = "()Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "reset"
+descriptor = "()Ljava/nio/charset/CharsetEncoder;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "canEncode"
+descriptor = "(C)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "canEncode"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flush"
+descriptor = "(Ljava/nio/ByteBuffer;)Ljava/nio/charset/CoderResult;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "encode"
+descriptor = "(Ljava/nio/CharBuffer;Ljava/nio/ByteBuffer;Z)Ljava/nio/charset/CoderResult;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "onMalformedInput"
+descriptor = "(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetEncoder;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "onUnmappableCharacter"
+descriptor = "(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetEncoder;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "replaceWith"
+descriptor = "([B)Ljava/nio/charset/CharsetEncoder;"
+kind = "builtin"
+references = 1

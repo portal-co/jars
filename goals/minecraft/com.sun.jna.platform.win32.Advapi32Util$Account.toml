@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/Advapi32Util$Account"
+
+[[member]]
+name = "name"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sidString"
+descriptor = "Ljava/lang/String;"
+kind = "builtin"
+references = 2

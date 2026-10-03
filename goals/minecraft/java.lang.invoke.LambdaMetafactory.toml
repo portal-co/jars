@@ -1,0 +1,15 @@
+class = "java/lang/invoke/LambdaMetafactory"
+
+[[member]]
+name = "metafactory"
+descriptor = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodType;Ljava/lang/invoke/MethodHandle;Ljava/lang/invoke/MethodType;)Ljava/lang/invoke/CallSite;"
+kind = "builtin"
+reason = "closed-world"
+references = 23555
+
+[[member]]
+name = "altMetafactory"
+descriptor = "(Ljava/lang/invoke/MethodHandles$Lookup;Ljava/lang/String;Ljava/lang/invoke/MethodType;[Ljava/lang/Object;)Ljava/lang/invoke/CallSite;"
+kind = "builtin"
+reason = "closed-world"
+references = 1

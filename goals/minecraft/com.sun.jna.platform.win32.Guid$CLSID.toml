@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/Guid$CLSID"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

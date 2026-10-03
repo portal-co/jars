@@ -1,0 +1,19 @@
+class = "org/lwjgl/sdl/SDLSurface"
+
+[[member]]
+name = "SDL_CreateSurfaceFrom"
+descriptor = "(IIILjava/nio/ByteBuffer;I)Lorg/lwjgl/sdl/SDL_Surface;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_DestroySurface"
+descriptor = "(Lorg/lwjgl/sdl/SDL_Surface;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_AddSurfaceAlternateImage"
+descriptor = "(Lorg/lwjgl/sdl/SDL_Surface;Lorg/lwjgl/sdl/SDL_Surface;)Z"
+kind = "builtin"
+references = 1

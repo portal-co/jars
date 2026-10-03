@@ -1,0 +1,13 @@
+class = "java/util/function/BiPredicate"
+
+[[member]]
+name = "negate"
+descriptor = "()Ljava/util/function/BiPredicate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "test"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 53

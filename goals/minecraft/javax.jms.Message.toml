@@ -1,0 +1,7 @@
+class = "javax/jms/Message"
+
+[[member]]
+name = "setJMSTimestamp"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1

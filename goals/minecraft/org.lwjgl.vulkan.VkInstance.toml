@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkInstance"
+
+[[member]]
+name = "<init>"
+descriptor = "(JLorg/lwjgl/vulkan/VkInstanceCreateInfo;)V"
+kind = "builtin"
+references = 1

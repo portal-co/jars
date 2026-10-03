@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "semaphore"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "stageMask"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "value"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkSemaphoreSubmitInfo$Buffer;"
+kind = "builtin"
+references = 2

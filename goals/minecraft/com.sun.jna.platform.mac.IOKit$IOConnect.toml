@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/mac/IOKit$IOConnect"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "builtin"
+references = 1

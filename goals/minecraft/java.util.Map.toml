@@ -1,31 +1,199 @@
 class = "java/util/Map"
 
 [[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 322
+
+[[member]]
+name = "values"
+descriptor = "()Ljava/util/Collection;"
+kind = "builtin"
+references = 231
+
+[[member]]
 name = "of"
 descriptor = "()Ljava/util/Map;"
 kind = "builtin"
-references = 1
+references = 81
 
 [[member]]
 name = "entrySet"
 descriptor = "()Ljava/util/Set;"
 kind = "builtin"
-references = 1
+references = 283
+
+[[member]]
+name = "keySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 124
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 203
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 165
 
 [[member]]
 name = "get"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
 kind = "builtin"
-references = 2
+references = 1043
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 126
+
+[[member]]
+name = "containsKey"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 159
+
+[[member]]
+name = "containsValue"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getOrDefault"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 126
 
 [[member]]
 name = "put"
 descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
 kind = "builtin"
-references = 10
+references = 1031
+
+[[member]]
+name = "putIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "entry"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map$Entry;"
+kind = "builtin"
+references = 64
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 313
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 764
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 350
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 100
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 1691
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 662
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 136
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "compute"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "computeIfPresent"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/BiFunction;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "computeIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+kind = "builtin"
+references = 122
 
 [[member]]
 name = "copyOf"
 descriptor = "(Ljava/util/Map;)Ljava/util/Map;"
 kind = "builtin"
-references = 1
+references = 20
+
+[[member]]
+name = "putAll"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 64
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/BiConsumer;)V"
+kind = "builtin"
+references = 155
+
+[[member]]
+name = "ofEntries"
+descriptor = "([Ljava/util/Map$Entry;)Ljava/util/Map;"
+kind = "builtin"
+references = 3

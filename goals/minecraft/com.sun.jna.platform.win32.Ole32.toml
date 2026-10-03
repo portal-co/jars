@@ -1,0 +1,37 @@
+class = "com/sun/jna/platform/win32/Ole32"
+
+[[member]]
+name = "CoUninitialize"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "CoInitializeEx"
+descriptor = "(Lcom/sun/jna/Pointer;I)Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CoCreateInstance"
+descriptor = "(Lcom/sun/jna/platform/win32/Guid$GUID;Lcom/sun/jna/Pointer;ILcom/sun/jna/platform/win32/Guid$GUID;Lcom/sun/jna/ptr/PointerByReference;)Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CoInitialize"
+descriptor = "(Lcom/sun/jna/platform/win32/WinDef$LPVOID;)Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CoInitializeSecurity"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$SECURITY_DESCRIPTOR;ILcom/sun/jna/Pointer;Lcom/sun/jna/Pointer;IILcom/sun/jna/Pointer;ILcom/sun/jna/Pointer;)Lcom/sun/jna/platform/win32/WinNT$HRESULT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Ole32;"
+kind = "builtin"
+references = 7

@@ -1,0 +1,13 @@
+class = "org/lwjgl/openal/ALC"
+
+[[member]]
+name = "getFunctionProvider"
+descriptor = "()Lorg/lwjgl/system/FunctionProviderLocal;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createCapabilities"
+descriptor = "(J)Lorg/lwjgl/openal/ALCCapabilities;"
+kind = "builtin"
+references = 1

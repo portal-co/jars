@@ -1,0 +1,19 @@
+class = "javax/jms/Connection"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "start"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "createSession"
+descriptor = "(ZI)Ljavax/jms/Session;"
+kind = "builtin"
+references = 1

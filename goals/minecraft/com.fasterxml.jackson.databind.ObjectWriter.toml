@@ -1,0 +1,13 @@
+class = "com/fasterxml/jackson/databind/ObjectWriter"
+
+[[member]]
+name = "with"
+descriptor = "(Lcom/fasterxml/jackson/databind/ser/FilterProvider;)Lcom/fasterxml/jackson/databind/ObjectWriter;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "writeValue"
+descriptor = "(Ljava/io/Writer;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

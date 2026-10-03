@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLHints"
+
+[[member]]
+name = "SDL_SetHint"
+descriptor = "(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 9

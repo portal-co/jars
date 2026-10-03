@@ -1,0 +1,49 @@
+class = "java/nio/file/FileSystem"
+
+[[member]]
+name = "newWatchService"
+descriptor = "()Ljava/nio/file/WatchService;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getUserPrincipalLookupService"
+descriptor = "()Ljava/nio/file/attribute/UserPrincipalLookupService;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "provider"
+descriptor = "()Ljava/nio/file/spi/FileSystemProvider;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "supportedFileAttributeViews"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPathMatcher"
+descriptor = "(Ljava/lang/String;)Ljava/nio/file/PathMatcher;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPath"
+descriptor = "(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 6

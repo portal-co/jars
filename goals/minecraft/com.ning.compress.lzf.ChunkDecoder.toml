@@ -1,0 +1,7 @@
+class = "com/ning/compress/lzf/ChunkDecoder"
+
+[[member]]
+name = "decodeChunk"
+descriptor = "([BII[BII)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,31 @@
+class = "java/lang/management/ManagementFactory"
+
+[[member]]
+name = "getMemoryMXBean"
+descriptor = "()Ljava/lang/management/MemoryMXBean;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getRuntimeMXBean"
+descriptor = "()Ljava/lang/management/RuntimeMXBean;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getThreadMXBean"
+descriptor = "()Ljava/lang/management/ThreadMXBean;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getGarbageCollectorMXBeans"
+descriptor = "()Ljava/util/List;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPlatformMBeanServer"
+descriptor = "()Ljavax/management/MBeanServer;"
+kind = "builtin"
+references = 3

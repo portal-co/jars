@@ -1,0 +1,7 @@
+class = "org/lwjgl/opengl/ARBClipControl"
+
+[[member]]
+name = "glClipControl"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1

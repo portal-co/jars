@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkBufferCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sharingMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "usage"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "size"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pQueueFamilyIndices"
+descriptor = "(Ljava/nio/IntBuffer;)Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkBufferCreateInfo;"
+kind = "builtin"
+references = 2

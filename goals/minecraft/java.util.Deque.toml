@@ -1,0 +1,175 @@
+class = "java/util/Deque"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "element"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getLast"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "peek"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "peekFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "peekLast"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "poll"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "pollFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pollLast"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "pop"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "remove"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removeFirst"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "removeLast"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "descendingIterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "addFirst"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "addLast"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "push"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "offer"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toArray"
+descriptor = "(Ljava/util/function/IntFunction;)[Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removeIf"
+descriptor = "(Ljava/util/function/Predicate;)Z"
+kind = "builtin"
+references = 2

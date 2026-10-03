@@ -1,0 +1,25 @@
+class = "java/util/zip/ZipFile"
+
+[[member]]
+name = "entries"
+descriptor = "()Ljava/util/Enumeration;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEntry"
+descriptor = "(Ljava/lang/String;)Ljava/util/zip/ZipEntry;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInputStream"
+descriptor = "(Ljava/util/zip/ZipEntry;)Ljava/io/InputStream;"
+kind = "builtin"
+references = 1

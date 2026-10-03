@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDLClipboard"
+
+[[member]]
+name = "SDL_GetClipboardText"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetClipboardText"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1

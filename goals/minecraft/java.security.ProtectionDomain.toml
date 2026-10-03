@@ -1,0 +1,7 @@
+class = "java/security/ProtectionDomain"
+
+[[member]]
+name = "getCodeSource"
+descriptor = "()Ljava/security/CodeSource;"
+kind = "builtin"
+references = 2

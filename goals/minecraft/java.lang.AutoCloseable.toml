@@ -1,0 +1,7 @@
+class = "java/lang/AutoCloseable"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4

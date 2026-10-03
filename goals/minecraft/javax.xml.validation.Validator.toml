@@ -1,0 +1,7 @@
+class = "javax/xml/validation/Validator"
+
+[[member]]
+name = "validate"
+descriptor = "(Ljavax/xml/transform/Source;)V"
+kind = "builtin"
+references = 1

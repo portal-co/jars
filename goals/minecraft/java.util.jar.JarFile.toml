@@ -1,0 +1,13 @@
+class = "java/util/jar/JarFile"
+
+[[member]]
+name = "entries"
+descriptor = "()Ljava/util/Enumeration;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2

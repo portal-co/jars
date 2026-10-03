@@ -1,0 +1,7 @@
+class = "com/lmax/disruptor/SleepingWaitStrategy"
+
+[[member]]
+name = "<init>"
+descriptor = "(IJ)V"
+kind = "builtin"
+references = 1

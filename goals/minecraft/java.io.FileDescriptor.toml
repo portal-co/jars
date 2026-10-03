@@ -1,0 +1,13 @@
+class = "java/io/FileDescriptor"
+
+[[member]]
+name = "err"
+descriptor = "Ljava/io/FileDescriptor;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "out"
+descriptor = "Ljava/io/FileDescriptor;"
+kind = "builtin"
+references = 1

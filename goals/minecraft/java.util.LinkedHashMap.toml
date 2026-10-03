@@ -1,0 +1,25 @@
+class = "java/util/LinkedHashMap"
+
+[[member]]
+name = "entrySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 52
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
+references = 4

@@ -1,0 +1,13 @@
+class = "java/util/jar/JarEntry"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isDirectory"
+descriptor = "()Z"
+kind = "builtin"
+references = 2

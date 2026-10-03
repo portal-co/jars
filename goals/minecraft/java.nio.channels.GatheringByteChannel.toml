@@ -1,0 +1,13 @@
+class = "java/nio/channels/GatheringByteChannel"
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "write"
+descriptor = "([Ljava/nio/ByteBuffer;)J"
+kind = "builtin"
+references = 2

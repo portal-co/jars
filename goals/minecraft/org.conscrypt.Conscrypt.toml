@@ -1,0 +1,37 @@
+class = "org/conscrypt/Conscrypt"
+
+[[member]]
+name = "maxEncryptedPacketLength"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxSealOverhead"
+descriptor = "(Ljavax/net/ssl/SSLEngine;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setBufferAllocator"
+descriptor = "(Ljavax/net/ssl/SSLEngine;Lorg/conscrypt/BufferAllocator;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setHandshakeListener"
+descriptor = "(Ljavax/net/ssl/SSLEngine;Lorg/conscrypt/HandshakeListener;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setApplicationProtocols"
+descriptor = "(Ljavax/net/ssl/SSLEngine;[Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unwrap"
+descriptor = "(Ljavax/net/ssl/SSLEngine;[Ljava/nio/ByteBuffer;[Ljava/nio/ByteBuffer;)Ljavax/net/ssl/SSLEngineResult;"
+kind = "builtin"
+references = 1

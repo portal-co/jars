@@ -1,0 +1,13 @@
+class = "java/nio/file/Paths"
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/String;[Ljava/lang/String;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 32
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/net/URI;)Ljava/nio/file/Path;"
+kind = "builtin"
+references = 3

@@ -1,0 +1,19 @@
+class = "org/zeromq/ZContext"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createSocket"
+descriptor = "(Lorg/zeromq/SocketType;)Lorg/zeromq/ZMQ$Socket;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,55 @@
+class = "com/sun/jna/platform/mac/SystemB$ProcTaskInfo"
+
+[[member]]
+name = "pti_csw"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_faults"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_pageins"
+descriptor = "I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pti_priority"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_threadnum"
+descriptor = "I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "pti_resident_size"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_total_system"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_total_user"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pti_virtual_size"
+descriptor = "J"
+kind = "builtin"
+references = 1

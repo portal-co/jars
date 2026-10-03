@@ -1,0 +1,7 @@
+class = "java/util/function/IntSupplier"
+
+[[member]]
+name = "getAsInt"
+descriptor = "()I"
+kind = "builtin"
+references = 8

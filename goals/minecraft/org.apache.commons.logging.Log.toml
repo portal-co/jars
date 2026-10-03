@@ -1,0 +1,91 @@
+class = "org/apache/commons/logging/Log"
+
+[[member]]
+name = "isDebugEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isErrorEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isInfoEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isTraceEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isWarnEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "debug"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "error"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "info"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "trace"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "warn"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "debug"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "error"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "info"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "trace"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "warn"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 4

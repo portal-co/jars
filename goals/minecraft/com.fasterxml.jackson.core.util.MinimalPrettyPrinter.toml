@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/core/util/MinimalPrettyPrinter"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2

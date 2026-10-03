@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/aix/Perfstat$perfstat_value_t"
+
+[[member]]
+name = "max"
+descriptor = "J"
+kind = "builtin"
+references = 2

@@ -1,0 +1,13 @@
+class = "org/xml/sax/InputSource"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSystemId"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

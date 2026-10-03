@@ -1,0 +1,25 @@
+class = "java/lang/Package"
+
+[[member]]
+name = "getImplementationVersion"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSpecificationTitle"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSpecificationVersion"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

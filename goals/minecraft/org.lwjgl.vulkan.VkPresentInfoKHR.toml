@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkPresentInfoKHR"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "swapchainCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pImageIndices"
+descriptor = "(Ljava/nio/IntBuffer;)Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pSwapchains"
+descriptor = "(Ljava/nio/LongBuffer;)Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pWaitSemaphores"
+descriptor = "(Ljava/nio/LongBuffer;)Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPresentInfoKHR;"
+kind = "builtin"
+references = 1

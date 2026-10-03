@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkRect2D$Buffer"
+
+[[member]]
+name = "extent"
+descriptor = "()Lorg/lwjgl/vulkan/VkExtent2D;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "offset"
+descriptor = "()Lorg/lwjgl/vulkan/VkOffset2D;"
+kind = "builtin"
+references = 1

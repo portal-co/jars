@@ -1,0 +1,43 @@
+class = "java/nio/LongBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/LongBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)J"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "([J)Ljava/nio/LongBuffer;"
+kind = "builtin"
+references = 1

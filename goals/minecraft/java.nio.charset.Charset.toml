@@ -1,0 +1,73 @@
+class = "java/nio/charset/Charset"
+
+[[member]]
+name = "displayName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "name"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "defaultCharset"
+descriptor = "()Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "newDecoder"
+descriptor = "()Ljava/nio/charset/CharsetDecoder;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "newEncoder"
+descriptor = "()Ljava/nio/charset/CharsetEncoder;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "aliases"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "encode"
+descriptor = "(Ljava/lang/String;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forName"
+descriptor = "(Ljava/lang/String;)Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "isSupported"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/nio/ByteBuffer;)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1

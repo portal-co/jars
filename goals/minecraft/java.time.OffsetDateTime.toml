@@ -1,0 +1,43 @@
+class = "java/time/OffsetDateTime"
+
+[[member]]
+name = "toInstant"
+descriptor = "()Ljava/time/Instant;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toLocalDate"
+descriptor = "()Ljava/time/LocalDate;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toLocalDateTime"
+descriptor = "()Ljava/time/LocalDateTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOffset"
+descriptor = "()Ljava/time/ZoneOffset;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parse"
+descriptor = "(Ljava/lang/CharSequence;Ljava/time/format/DateTimeFormatter;)Ljava/time/OffsetDateTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/time/LocalDateTime;Ljava/time/ZoneOffset;)Ljava/time/OffsetDateTime;"
+kind = "builtin"
+references = 1

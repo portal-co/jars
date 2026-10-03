@@ -1,0 +1,55 @@
+class = "jdk/internal/misc/Unsafe"
+
+[[member]]
+name = "getUnsafe"
+descriptor = "()Ljdk/internal/misc/Unsafe;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "objectFieldOffset"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getFloat"
+descriptor = "(Ljava/lang/Object;J)F"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getLong"
+descriptor = "(Ljava/lang/Object;J)J"
+kind = "native"
+references = 6
+
+[[member]]
+name = "getLongUnaligned"
+descriptor = "(Ljava/lang/Object;J)J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "putFloat"
+descriptor = "(Ljava/lang/Object;JF)V"
+kind = "native"
+references = 3
+
+[[member]]
+name = "putIntUnaligned"
+descriptor = "(Ljava/lang/Object;JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "putLongUnaligned"
+descriptor = "(Ljava/lang/Object;JJ)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "objectFieldOffset"
+descriptor = "(Ljava/lang/reflect/Field;)J"
+kind = "builtin"
+references = 26

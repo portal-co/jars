@@ -1,0 +1,19 @@
+class = "java/lang/ref/Reference"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "enqueue"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

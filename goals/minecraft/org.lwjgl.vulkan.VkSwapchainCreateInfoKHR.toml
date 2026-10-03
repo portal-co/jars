@@ -1,0 +1,85 @@
+class = "org/lwjgl/vulkan/VkSwapchainCreateInfoKHR"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compositeAlpha"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageArrayLayers"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageColorSpace"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageFormat"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageSharingMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageUsage"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "minImageCount"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "preTransform"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "presentMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "surface"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageExtent"
+descriptor = "(Lorg/lwjgl/vulkan/VkExtent2D;)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clipped"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkSwapchainCreateInfoKHR;"
+kind = "builtin"
+references = 1

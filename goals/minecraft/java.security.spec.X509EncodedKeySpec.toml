@@ -1,0 +1,7 @@
+class = "java/security/spec/X509EncodedKeySpec"
+
+[[member]]
+name = "<init>"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2

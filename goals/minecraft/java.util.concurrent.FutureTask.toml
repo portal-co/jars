@@ -1,0 +1,7 @@
+class = "java/util/concurrent/FutureTask"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/concurrent/Callable;)V"
+kind = "builtin"
+references = 1

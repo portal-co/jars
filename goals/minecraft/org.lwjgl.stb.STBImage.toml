@@ -1,0 +1,19 @@
+class = "org/lwjgl/stb/STBImage"
+
+[[member]]
+name = "stbi_failure_reason"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "nstbi_image_free"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stbi_load_from_memory"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;Ljava/nio/IntBuffer;I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1

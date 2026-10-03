@@ -1,0 +1,61 @@
+class = "org/lwjgl/openal/ALC10"
+
+[[member]]
+name = "alcGetError"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alcDestroyContext"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcCloseDevice"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcMakeContextCurrent"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcGetInteger"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "alcGetString"
+descriptor = "(JI)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "alcGetIntegerv"
+descriptor = "(JILjava/nio/IntBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcIsExtensionPresent"
+descriptor = "(JLjava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "alcCreateContext"
+descriptor = "(JLjava/nio/IntBuffer;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcOpenDevice"
+descriptor = "(Ljava/lang/CharSequence;)J"
+kind = "builtin"
+references = 1

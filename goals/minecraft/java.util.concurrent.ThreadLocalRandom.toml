@@ -1,0 +1,37 @@
+class = "java/util/concurrent/ThreadLocalRandom"
+
+[[member]]
+name = "nextDouble"
+descriptor = "()D"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nextInt"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "current"
+descriptor = "()Ljava/util/concurrent/ThreadLocalRandom;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "nextInt"
+descriptor = "(I)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "nextLong"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "nextBytes"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2

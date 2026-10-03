@@ -1,0 +1,7 @@
+class = "java/text/AttributedCharacterIterator$Attribute"
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1

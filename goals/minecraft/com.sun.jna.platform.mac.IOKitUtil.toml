@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/mac/IOKitUtil"
+
+[[member]]
+name = "getMatchingServices"
+descriptor = "(Ljava/lang/String;)Lcom/sun/jna/platform/mac/IOKit$IOIterator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getMatchingService"
+descriptor = "(Ljava/lang/String;)Lcom/sun/jna/platform/mac/IOKit$IOService;"
+kind = "builtin"
+references = 5

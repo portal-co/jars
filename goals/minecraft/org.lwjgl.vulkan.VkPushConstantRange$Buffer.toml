@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkPushConstantRange$Buffer"
+
+[[member]]
+name = "offset"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPushConstantRange$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "size"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPushConstantRange$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stageFlags"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPushConstantRange$Buffer;"
+kind = "builtin"
+references = 1

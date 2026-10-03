@@ -1,0 +1,7 @@
+class = "java/util/concurrent/TransferQueue"
+
+[[member]]
+name = "tryTransfer"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1

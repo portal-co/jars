@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDLLog"
+
+[[member]]
+name = "SDL_SetLogPriorities"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetLogOutputFunction"
+descriptor = "(Lorg/lwjgl/sdl/SDL_LogOutputFunctionI;J)V"
+kind = "builtin"
+references = 1

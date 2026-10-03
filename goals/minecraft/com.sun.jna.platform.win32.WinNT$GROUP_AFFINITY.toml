@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinNT$GROUP_AFFINITY"
+
+[[member]]
+name = "mask"
+descriptor = "Lcom/sun/jna/platform/win32/BaseTSD$ULONG_PTR;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "group"
+descriptor = "S"
+kind = "builtin"
+references = 5

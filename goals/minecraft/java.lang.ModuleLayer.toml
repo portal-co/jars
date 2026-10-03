@@ -1,0 +1,7 @@
+class = "java/lang/ModuleLayer"
+
+[[member]]
+name = "findModule"
+descriptor = "(Ljava/lang/String;)Ljava/util/Optional;"
+kind = "builtin"
+references = 1

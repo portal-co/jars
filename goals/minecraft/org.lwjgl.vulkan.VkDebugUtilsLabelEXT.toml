@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkDebugUtilsLabelEXT"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkDebugUtilsLabelEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pLabelName"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/vulkan/VkDebugUtilsLabelEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkDebugUtilsLabelEXT;"
+kind = "builtin"
+references = 1

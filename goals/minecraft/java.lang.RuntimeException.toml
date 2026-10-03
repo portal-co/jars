@@ -1,8 +1,26 @@
 class = "java/lang/RuntimeException"
 
 [[member]]
+name = "getMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "<init>"
 descriptor = "()V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "printStackTrace"
+descriptor = "(Ljava/io/PrintStream;)V"
 kind = "builtin"
 references = 1
 
@@ -10,16 +28,28 @@ references = 1
 name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 2
+references = 61
 
 [[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;)V"
 kind = "builtin"
+references = 27
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Throwable;ZZ)V"
+kind = "builtin"
 references = 1
 
 [[member]]
 name = "<init>"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 52
+
+[[member]]
+name = "addSuppressed"
 descriptor = "(Ljava/lang/Throwable;)V"
 kind = "builtin"
 references = 1

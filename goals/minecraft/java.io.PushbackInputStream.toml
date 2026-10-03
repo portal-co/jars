@@ -1,0 +1,43 @@
+class = "java/io/PushbackInputStream"
+
+[[member]]
+name = "available"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "read"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "unread"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "read"
+descriptor = "([BII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unread"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

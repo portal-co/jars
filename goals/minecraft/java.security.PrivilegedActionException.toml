@@ -1,0 +1,13 @@
+class = "java/security/PrivilegedActionException"
+
+[[member]]
+name = "getException"
+descriptor = "()Ljava/lang/Exception;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+references = 3

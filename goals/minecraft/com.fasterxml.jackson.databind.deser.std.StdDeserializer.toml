@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/databind/deser/std/StdDeserializer"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Class;)V"
+kind = "builtin"
+references = 1

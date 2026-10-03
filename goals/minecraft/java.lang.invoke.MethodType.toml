@@ -1,0 +1,22 @@
+class = "java/lang/invoke/MethodType"
+
+[[member]]
+name = "methodType"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/invoke/MethodType;"
+kind = "builtin"
+reason = "closed-world"
+references = 14
+
+[[member]]
+name = "methodType"
+descriptor = "(Ljava/lang/Class;Ljava/lang/Class;)Ljava/lang/invoke/MethodType;"
+kind = "builtin"
+reason = "closed-world"
+references = 7
+
+[[member]]
+name = "methodType"
+descriptor = "(Ljava/lang/Class;Ljava/lang/Class;[Ljava/lang/Class;)Ljava/lang/invoke/MethodType;"
+kind = "builtin"
+reason = "closed-world"
+references = 11

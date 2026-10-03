@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/BaseTSD$ULONG_PTR"
+
+[[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 7

@@ -1,0 +1,55 @@
+class = "javax/crypto/Mac"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAlgorithm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "doFinal"
+descriptor = "()[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "(B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/crypto/Mac;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "init"
+descriptor = "(Ljava/security/Key;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

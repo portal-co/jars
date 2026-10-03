@@ -1,7 +1,73 @@
 class = "java/lang/Short"
 
 [[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shortValue"
+descriptor = "()S"
+kind = "builtin"
+references = 341
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Short;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Short;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parseShort"
+descriptor = "(Ljava/lang/String;)S"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "parseShort"
+descriptor = "(Ljava/lang/String;I)S"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "valueOf"
+descriptor = "(S)Ljava/lang/Short;"
+kind = "builtin"
+references = 51
+
+[[member]]
+name = "toString"
+descriptor = "(S)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "reverseBytes"
+descriptor = "(S)S"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "compare"
+descriptor = "(SS)I"
+kind = "builtin"
+references = 44
+
+[[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 12

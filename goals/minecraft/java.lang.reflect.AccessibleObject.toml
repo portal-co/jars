@@ -1,0 +1,22 @@
+class = "java/lang/reflect/AccessibleObject"
+
+[[member]]
+name = "isAccessible"
+descriptor = "()Z"
+kind = "builtin"
+reason = "closed-world"
+references = 1
+
+[[member]]
+name = "setAccessible"
+descriptor = "(Z)V"
+kind = "builtin"
+reason = "closed-world"
+references = 3
+
+[[member]]
+name = "setAccessible"
+descriptor = "([Ljava/lang/reflect/AccessibleObject;Z)V"
+kind = "builtin"
+reason = "closed-world"
+references = 3

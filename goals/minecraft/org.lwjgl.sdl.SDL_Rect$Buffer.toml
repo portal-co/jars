@@ -1,0 +1,25 @@
+class = "org/lwjgl/sdl/SDL_Rect$Buffer"
+
+[[member]]
+name = "h"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_Rect$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "w"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_Rect$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "x"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_Rect$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "y"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_Rect$Buffer;"
+kind = "builtin"
+references = 1

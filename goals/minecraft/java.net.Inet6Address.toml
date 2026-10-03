@@ -1,0 +1,37 @@
+class = "java/net/Inet6Address"
+
+[[member]]
+name = "getScopeId"
+descriptor = "()I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getHostAddress"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getScopedInterface"
+descriptor = "()Ljava/net/NetworkInterface;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAddress"
+descriptor = "()[B"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getByAddress"
+descriptor = "(Ljava/lang/String;[BI)Ljava/net/Inet6Address;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getByAddress"
+descriptor = "(Ljava/lang/String;[BLjava/net/NetworkInterface;)Ljava/net/Inet6Address;"
+kind = "builtin"
+references = 1

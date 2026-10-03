@@ -1,0 +1,13 @@
+class = "java/util/Currency"
+
+[[member]]
+name = "getCurrencyCode"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljava/util/Currency;"
+kind = "builtin"
+references = 1

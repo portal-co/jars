@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkBufferImageCopy$Buffer"
+
+[[member]]
+name = "imageExtent"
+descriptor = "()Lorg/lwjgl/vulkan/VkExtent3D;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "imageSubresource"
+descriptor = "()Lorg/lwjgl/vulkan/VkImageSubresourceLayers;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "imageOffset"
+descriptor = "()Lorg/lwjgl/vulkan/VkOffset3D;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "bufferImageHeight"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkBufferImageCopy$Buffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "bufferRowLength"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkBufferImageCopy$Buffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "bufferOffset"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferImageCopy$Buffer;"
+kind = "builtin"
+references = 3

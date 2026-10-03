@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkCommandBuffer"
+
+[[member]]
+name = "<init>"
+descriptor = "(JLorg/lwjgl/vulkan/VkDevice;)V"
+kind = "builtin"
+references = 1

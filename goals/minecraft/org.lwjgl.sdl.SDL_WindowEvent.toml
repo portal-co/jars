@@ -1,0 +1,13 @@
+class = "org/lwjgl/sdl/SDL_WindowEvent"
+
+[[member]]
+name = "data1"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "data2"
+descriptor = "()I"
+kind = "builtin"
+references = 3

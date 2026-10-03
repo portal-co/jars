@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDLTimer"
+
+[[member]]
+name = "SDL_GetTicksNS"
+descriptor = "()J"
+kind = "builtin"
+references = 2

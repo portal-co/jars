@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/network/chat/HoverEvent$Action;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

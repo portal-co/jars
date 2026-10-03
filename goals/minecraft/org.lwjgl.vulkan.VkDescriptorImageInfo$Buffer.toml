@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkDescriptorImageInfo$Buffer"
+
+[[member]]
+name = "imageLayout"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkDescriptorImageInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageView"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkDescriptorImageInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sampler"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkDescriptorImageInfo$Buffer;"
+kind = "builtin"
+references = 1

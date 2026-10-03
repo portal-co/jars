@@ -1,0 +1,13 @@
+class = "java/nio/file/FileVisitor"
+
+[[member]]
+name = "visitFileFailed"
+descriptor = "(Ljava/lang/Object;Ljava/io/IOException;)Ljava/nio/file/FileVisitResult;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "visitFile"
+descriptor = "(Ljava/lang/Object;Ljava/nio/file/attribute/BasicFileAttributes;)Ljava/nio/file/FileVisitResult;"
+kind = "builtin"
+references = 1

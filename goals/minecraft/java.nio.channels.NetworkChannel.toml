@@ -1,0 +1,19 @@
+class = "java/nio/channels/NetworkChannel"
+
+[[member]]
+name = "supportedOptions"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getOption"
+descriptor = "(Ljava/net/SocketOption;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setOption"
+descriptor = "(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/NetworkChannel;"
+kind = "builtin"
+references = 1

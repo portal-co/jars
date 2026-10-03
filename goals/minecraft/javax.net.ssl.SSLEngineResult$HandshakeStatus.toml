@@ -1,0 +1,37 @@
+class = "javax/net/ssl/SSLEngineResult$HandshakeStatus"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "FINISHED"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "NEED_TASK"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "NEED_UNWRAP"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "NEED_WRAP"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "NOT_HANDSHAKING"
+descriptor = "Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 8

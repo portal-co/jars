@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkSemaphoreTypeCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkSemaphoreTypeCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "semaphoreType"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSemaphoreTypeCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "initialValue"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkSemaphoreTypeCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkSemaphoreTypeCreateInfo;"
+kind = "builtin"
+references = 1

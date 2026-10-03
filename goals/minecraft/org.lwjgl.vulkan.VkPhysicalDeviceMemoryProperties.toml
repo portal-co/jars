@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceMemoryProperties"
+
+[[member]]
+name = "memoryHeapCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memoryTypeCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memoryHeaps"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkMemoryHeap;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memoryTypes"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkMemoryType;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPhysicalDeviceMemoryProperties;"
+kind = "builtin"
+references = 1

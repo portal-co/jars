@@ -1,0 +1,25 @@
+class = "java/util/PrimitiveIterator$OfLong"
+
+[[member]]
+name = "nextLong"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "remove"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/util/function/LongConsumer;)V"
+kind = "builtin"
+references = 9

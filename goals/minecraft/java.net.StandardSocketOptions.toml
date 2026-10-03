@@ -1,0 +1,37 @@
+class = "java/net/StandardSocketOptions"
+
+[[member]]
+name = "IP_MULTICAST_IF"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "IP_MULTICAST_LOOP"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "IP_MULTICAST_TTL"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "IP_TOS"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SO_RCVBUF"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SO_SNDBUF"
+descriptor = "Ljava/net/SocketOption;"
+kind = "builtin"
+references = 2

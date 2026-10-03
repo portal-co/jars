@@ -1,0 +1,7 @@
+class = "java/lang/Runnable"
+
+[[member]]
+name = "run"
+descriptor = "()V"
+kind = "builtin"
+references = 129

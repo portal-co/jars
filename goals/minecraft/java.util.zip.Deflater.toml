@@ -1,0 +1,91 @@
+class = "java/util/zip/Deflater"
+
+[[member]]
+name = "getTotalIn"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "end"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "finish"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "finished"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "needsInput"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setLevel"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setStrategy"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(IZ)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "deflate"
+descriptor = "([B)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setInput"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "deflate"
+descriptor = "([BII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setInput"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "deflate"
+descriptor = "([BIII)I"
+kind = "builtin"
+references = 2

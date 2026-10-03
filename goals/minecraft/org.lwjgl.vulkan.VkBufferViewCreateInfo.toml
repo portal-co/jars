@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkBufferViewCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "buffer"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "offset"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "range"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;"
+kind = "builtin"
+references = 1

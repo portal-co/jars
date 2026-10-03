@@ -1,0 +1,79 @@
+class = "java/io/DataInput"
+
+[[member]]
+name = "readByte"
+descriptor = "()B"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "readChar"
+descriptor = "()C"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readDouble"
+descriptor = "()D"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "readFloat"
+descriptor = "()F"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "readInt"
+descriptor = "()I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "readUnsignedByte"
+descriptor = "()I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "readUnsignedShort"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readLong"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "readUTF"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "readShort"
+descriptor = "()S"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "readBoolean"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "skipBytes"
+descriptor = "(I)I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "readFully"
+descriptor = "([B)V"
+kind = "builtin"
+references = 2

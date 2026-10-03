@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkQueueFamilyProperties"
+
+[[member]]
+name = "queueCount"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "queueFlags"
+descriptor = "()I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkQueueFamilyProperties$Buffer;"
+kind = "builtin"
+references = 1

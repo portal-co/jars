@@ -1,0 +1,13 @@
+class = "java/text/ParseException"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1

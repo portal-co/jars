@@ -1,0 +1,13 @@
+class = "java/util/zip/GZIPOutputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;I)V"
+kind = "builtin"
+references = 1

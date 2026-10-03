@@ -1,0 +1,7 @@
+class = "[Lcom/azure/json/implementation/jackson/core/JsonGenerator$Feature;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

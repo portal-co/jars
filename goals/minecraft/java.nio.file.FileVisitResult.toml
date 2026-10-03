@@ -1,0 +1,13 @@
+class = "java/nio/file/FileVisitResult"
+
+[[member]]
+name = "CONTINUE"
+descriptor = "Ljava/nio/file/FileVisitResult;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "TERMINATE"
+descriptor = "Ljava/nio/file/FileVisitResult;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,31 @@
+class = "com/sun/jna/platform/win32/WinNT$CACHE_RELATIONSHIP"
+
+[[member]]
+name = "associativity"
+descriptor = "B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "level"
+descriptor = "B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cacheSize"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "type"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lineSize"
+descriptor = "S"
+kind = "builtin"
+references = 1

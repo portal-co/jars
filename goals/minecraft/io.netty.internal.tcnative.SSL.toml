@@ -1,0 +1,301 @@
+class = "io/netty/internal/tcnative/SSL"
+
+[[member]]
+name = "getLastErrorNumber"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "version"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newMemBIO"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "versionString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clearError"
+descriptor = "()V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "bioLengthByteBuffer"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "bioLengthNonApplication"
+descriptor = "(J)I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "doHandshake"
+descriptor = "(J)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getHandshakeCount"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMaxWrapOverhead"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMode"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOptions"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getShutdown"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isInInit"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shutdownSSL"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sslPending"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getTime"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parseX509Chain"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAlpnSelected"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getCipherForSSL"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getErrorString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getNextProtoNegotiated"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getVersion"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "bioClearByteBuffer"
+descriptor = "(J)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "enableOcsp"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "freeBIO"
+descriptor = "(J)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "freePrivateKey"
+descriptor = "(J)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "freeSSL"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "freeX509Chain"
+descriptor = "(J)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getMasterKey"
+descriptor = "(J)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPeerCertificate"
+descriptor = "(J)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSessionId"
+descriptor = "(J)[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getCiphers"
+descriptor = "(J)[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPeerCertChain"
+descriptor = "(J)[[B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getError"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setMode"
+descriptor = "(JI)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bioNewByteBuffer"
+descriptor = "(JI)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bioSetFd"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clearOptions"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setOptions"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setRenegotiateMode"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setVerify"
+descriptor = "(JII)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setSession"
+descriptor = "(JJ)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bioWrite"
+descriptor = "(JJI)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "readFromSSL"
+descriptor = "(JJI)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "bioSetByteBuffer"
+descriptor = "(JJIZ)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setKeyMaterial"
+descriptor = "(JJJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "parsePrivateKey"
+descriptor = "(JLjava/lang/String;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTlsExtHostName"
+descriptor = "(JLjava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "newSSL"
+descriptor = "(JZ)J"
+kind = "builtin"
+references = 2

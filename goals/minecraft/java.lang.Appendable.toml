@@ -1,0 +1,19 @@
+class = "java/lang/Appendable"
+
+[[member]]
+name = "append"
+descriptor = "(C)Ljava/lang/Appendable;"
+kind = "builtin"
+references = 59
+
+[[member]]
+name = "append"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/lang/Appendable;"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "append"
+descriptor = "(Ljava/lang/CharSequence;II)Ljava/lang/Appendable;"
+kind = "builtin"
+references = 8

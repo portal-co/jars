@@ -1,0 +1,7 @@
+class = "javax/management/MBeanNotificationInfo"
+
+[[member]]
+name = "<init>"
+descriptor = "([Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2

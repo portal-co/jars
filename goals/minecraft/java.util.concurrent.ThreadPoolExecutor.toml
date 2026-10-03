@@ -1,0 +1,13 @@
+class = "java/util/concurrent/ThreadPoolExecutor"
+
+[[member]]
+name = "<init>"
+descriptor = "(IIJLjava/util/concurrent/TimeUnit;Ljava/util/concurrent/BlockingQueue;Ljava/util/concurrent/ThreadFactory;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "submit"
+descriptor = "(Ljava/lang/Runnable;)Ljava/util/concurrent/Future;"
+kind = "builtin"
+references = 1

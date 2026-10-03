@@ -1,0 +1,25 @@
+class = "java/util/zip/Checksum"
+
+[[member]]
+name = "getValue"
+descriptor = "()J"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "update"
+descriptor = "(I)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "update"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 4

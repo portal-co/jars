@@ -1,0 +1,37 @@
+class = "java/nio/charset/CharsetDecoder"
+
+[[member]]
+name = "charset"
+descriptor = "()Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "replaceWith"
+descriptor = "(Ljava/lang/String;)Ljava/nio/charset/CharsetDecoder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/nio/ByteBuffer;)Ljava/nio/CharBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/nio/CharBuffer;Z)Ljava/nio/charset/CoderResult;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "onMalformedInput"
+descriptor = "(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetDecoder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "onUnmappableCharacter"
+descriptor = "(Ljava/nio/charset/CodingErrorAction;)Ljava/nio/charset/CharsetDecoder;"
+kind = "builtin"
+references = 2

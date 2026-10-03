@@ -1,0 +1,31 @@
+class = "java/util/Spliterators"
+
+[[member]]
+name = "spliterator"
+descriptor = "(Ljava/util/Iterator;JI)Ljava/util/Spliterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spliteratorUnknownSize"
+descriptor = "(Ljava/util/PrimitiveIterator$OfLong;I)Ljava/util/Spliterator$OfLong;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "iterator"
+descriptor = "(Ljava/util/Spliterator$OfInt;)Ljava/util/PrimitiveIterator$OfInt;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "iterator"
+descriptor = "(Ljava/util/Spliterator;)Ljava/util/Iterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "spliterator"
+descriptor = "([Ljava/lang/Object;I)Ljava/util/Spliterator;"
+kind = "builtin"
+references = 1

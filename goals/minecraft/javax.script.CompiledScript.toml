@@ -1,0 +1,7 @@
+class = "javax/script/CompiledScript"
+
+[[member]]
+name = "eval"
+descriptor = "(Ljavax/script/Bindings;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,13 @@
+class = "java/lang/management/LockInfo"
+
+[[member]]
+name = "getIdentityHashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getClassName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

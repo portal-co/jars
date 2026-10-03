@@ -1,0 +1,13 @@
+class = "java/util/MissingResourceException"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 27
+
+[[member]]
+name = "initCause"
+descriptor = "(Ljava/lang/Throwable;)Ljava/lang/Throwable;"
+kind = "builtin"
+references = 1

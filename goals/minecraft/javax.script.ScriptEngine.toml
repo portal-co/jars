@@ -1,0 +1,13 @@
+class = "javax/script/ScriptEngine"
+
+[[member]]
+name = "getFactory"
+descriptor = "()Ljavax/script/ScriptEngineFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "eval"
+descriptor = "(Ljava/lang/String;Ljavax/script/Bindings;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

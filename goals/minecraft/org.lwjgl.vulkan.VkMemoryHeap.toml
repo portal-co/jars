@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkMemoryHeap"
+
+[[member]]
+name = "flags"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "size"
+descriptor = "()J"
+kind = "builtin"
+references = 2

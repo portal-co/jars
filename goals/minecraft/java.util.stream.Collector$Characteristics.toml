@@ -1,0 +1,7 @@
+class = "java/util/stream/Collector$Characteristics"
+
+[[member]]
+name = "UNORDERED"
+descriptor = "Ljava/util/stream/Collector$Characteristics;"
+kind = "builtin"
+references = 3

@@ -1,0 +1,13 @@
+class = "java/text/NumberFormat"
+
+[[member]]
+name = "format"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getIntegerInstance"
+descriptor = "(Ljava/util/Locale;)Ljava/text/NumberFormat;"
+kind = "builtin"
+references = 1

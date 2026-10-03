@@ -1,0 +1,67 @@
+class = "jdk/jfr/Recording"
+
+[[member]]
+name = "getId"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDestination"
+descriptor = "()Ljava/nio/file/Path;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "start"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stop"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "enable"
+descriptor = "(Ljava/lang/Class;)Ljdk/jfr/EventSettings;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDestination"
+descriptor = "(Ljava/nio/file/Path;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljdk/jfr/Configuration;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDumpOnExit"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setToDisk"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

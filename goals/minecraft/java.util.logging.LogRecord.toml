@@ -1,0 +1,31 @@
+class = "java/util/logging/LogRecord"
+
+[[member]]
+name = "setLoggerName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSourceClassName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSourceMethodName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setThrown"
+descriptor = "(Ljava/lang/Throwable;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/logging/Level;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

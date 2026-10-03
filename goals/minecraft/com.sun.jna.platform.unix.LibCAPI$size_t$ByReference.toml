@@ -1,0 +1,31 @@
+class = "com/sun/jna/platform/unix/LibCAPI$size_t$ByReference"
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "getValue"
+descriptor = "()Lcom/sun/jna/platform/unix/LibCAPI$size_t;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/platform/unix/LibCAPI$size_t;)V"
+kind = "builtin"
+references = 2

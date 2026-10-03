@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkImageBlit"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkImageBlit$Buffer;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "javax/naming/Context"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1

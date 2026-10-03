@@ -1,0 +1,7 @@
+class = "java/net/Inet4Address"
+
+[[member]]
+name = "getAddress"
+descriptor = "()[B"
+kind = "builtin"
+references = 1

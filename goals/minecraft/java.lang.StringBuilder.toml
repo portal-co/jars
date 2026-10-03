@@ -1,7 +1,199 @@
 class = "java/lang/StringBuilder"
 
 [[member]]
+name = "capacity"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "trimToSize"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "append"
+descriptor = "(D)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "append"
+descriptor = "(F)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "codePointAt"
+descriptor = "(I)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "codePointBefore"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "substring"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "appendCodePoint"
+descriptor = "(I)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "deleteCharAt"
+descriptor = "(I)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 90
+
+[[member]]
+name = "ensureCapacity"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setLength"
+descriptor = "(I)V"
+kind = "builtin"
+references = 83
+
+[[member]]
+name = "insert"
+descriptor = "(IC)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "setCharAt"
+descriptor = "(IC)V"
+kind = "builtin"
+references = 63
+
+[[member]]
+name = "offsetByCodePoints"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "subSequence"
+descriptor = "(II)Ljava/lang/CharSequence;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "delete"
+descriptor = "(II)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "replace"
+descriptor = "(IILjava/lang/String;)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getChars"
+descriptor = "(II[CI)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "insert"
+descriptor = "(ILjava/lang/String;)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "insert"
+descriptor = "(I[C)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "insert"
+descriptor = "(I[CII)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "append"
+descriptor = "(J)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 356
+
+[[member]]
+name = "append"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 38
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/CharSequence;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "append"
+descriptor = "(Ljava/lang/CharSequence;II)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 58
+
+[[member]]
 name = "append"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/StringBuilder;"
 kind = "builtin"
+references = 371
+
+[[member]]
+name = "indexOf"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "indexOf"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "lastIndexOf"
+descriptor = "(Ljava/lang/String;I)I"
+kind = "builtin"
 references = 5
+
+[[member]]
+name = "append"
+descriptor = "(Z)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 31
+
+[[member]]
+name = "append"
+descriptor = "([CII)Ljava/lang/StringBuilder;"
+kind = "builtin"
+references = 14

@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkOffset3D"
+
+[[member]]
+name = "set"
+descriptor = "(III)Lorg/lwjgl/vulkan/VkOffset3D;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkOffset3D$Buffer;"
+kind = "builtin"
+references = 2

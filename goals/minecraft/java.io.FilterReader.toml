@@ -1,0 +1,7 @@
+class = "java/io/FilterReader"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Reader;)V"
+kind = "builtin"
+references = 1

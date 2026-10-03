@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/WinPerf$PERF_DATA_BLOCK"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HeaderLength"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NumObjectTypes"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PerfTime100nSec"
+descriptor = "Lcom/sun/jna/platform/win32/WinNT$LARGE_INTEGER;"
+kind = "builtin"
+references = 1

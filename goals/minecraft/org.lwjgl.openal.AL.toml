@@ -1,0 +1,7 @@
+class = "org/lwjgl/openal/AL"
+
+[[member]]
+name = "createCapabilities"
+descriptor = "(Lorg/lwjgl/openal/ALCCapabilities;)Lorg/lwjgl/openal/ALCapabilities;"
+kind = "builtin"
+references = 1

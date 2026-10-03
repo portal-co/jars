@@ -1,0 +1,13 @@
+class = "java/security/KeyPair"
+
+[[member]]
+name = "getPrivate"
+descriptor = "()Ljava/security/PrivateKey;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPublic"
+descriptor = "()Ljava/security/PublicKey;"
+kind = "builtin"
+references = 2

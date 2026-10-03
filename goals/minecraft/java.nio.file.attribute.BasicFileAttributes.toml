@@ -1,0 +1,43 @@
+class = "java/nio/file/attribute/BasicFileAttributes"
+
+[[member]]
+name = "size"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "creationTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "lastAccessTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "lastModifiedTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isDirectory"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isRegularFile"
+descriptor = "()Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "isSymbolicLink"
+descriptor = "()Z"
+kind = "builtin"
+references = 4

@@ -1,0 +1,7 @@
+class = "org/lwjgl/sdl/SDL_MouseButtonEvent"
+
+[[member]]
+name = "button"
+descriptor = "()B"
+kind = "builtin"
+references = 1

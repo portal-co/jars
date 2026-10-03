@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/PdhUtil"
+
+[[member]]
+name = "PdhLookupPerfIndexByEnglishName"
+descriptor = "(Ljava/lang/String;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhLookupPerfNameByIndex"
+descriptor = "(Ljava/lang/String;I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PdhEnumObjectItems"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;I)Lcom/sun/jna/platform/win32/PdhUtil$PdhEnumObjectItems;"
+kind = "builtin"
+references = 1

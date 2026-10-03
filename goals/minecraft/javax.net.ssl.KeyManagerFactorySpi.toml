@@ -1,0 +1,7 @@
+class = "javax/net/ssl/KeyManagerFactorySpi"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,49 @@
+class = "java/text/FieldPosition"
+
+[[member]]
+name = "getBeginIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getEndIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getField"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getFieldAttribute"
+descriptor = "()Ljava/text/Format$Field;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "setBeginIndex"
+descriptor = "(I)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "setEndIndex"
+descriptor = "(I)V"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/text/Format$Field;)V"
+kind = "builtin"
+references = 1

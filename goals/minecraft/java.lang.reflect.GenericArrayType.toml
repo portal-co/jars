@@ -1,0 +1,8 @@
+class = "java/lang/reflect/GenericArrayType"
+
+[[member]]
+name = "getGenericComponentType"
+descriptor = "()Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 23

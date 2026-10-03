@@ -4,4 +4,4 @@ class = "java/lang/Void"
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 2
+references = 16

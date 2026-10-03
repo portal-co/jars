@@ -1,0 +1,91 @@
+class = "java/util/zip/ZipEntry"
+
+[[member]]
+name = "getCompressedSize"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getCreationTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLastAccessTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLastModifiedTime"
+descriptor = "()Ljava/nio/file/attribute/FileTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isDirectory"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setCompressedSize"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setCrc"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTime"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setComment"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setCreationTime"
+descriptor = "(Ljava/nio/file/attribute/FileTime;)Ljava/util/zip/ZipEntry;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setLastAccessTime"
+descriptor = "(Ljava/nio/file/attribute/FileTime;)Ljava/util/zip/ZipEntry;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setLastModifiedTime"
+descriptor = "(Ljava/nio/file/attribute/FileTime;)Ljava/util/zip/ZipEntry;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setExtra"
+descriptor = "([B)V"
+kind = "builtin"
+references = 1

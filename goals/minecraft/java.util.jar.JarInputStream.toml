@@ -1,0 +1,19 @@
+class = "java/util/jar/JarInputStream"
+
+[[member]]
+name = "getNextJarEntry"
+descriptor = "()Ljava/util/jar/JarEntry;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 3

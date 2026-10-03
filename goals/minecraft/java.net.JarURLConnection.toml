@@ -1,0 +1,19 @@
+class = "java/net/JarURLConnection"
+
+[[member]]
+name = "getJarFileURL"
+descriptor = "()Ljava/net/URL;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getJarFile"
+descriptor = "()Ljava/util/jar/JarFile;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setUseCaches"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

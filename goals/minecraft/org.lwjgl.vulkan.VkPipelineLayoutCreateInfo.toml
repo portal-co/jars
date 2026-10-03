@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPipelineLayoutCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineLayoutCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pSetLayouts"
+descriptor = "(Ljava/nio/LongBuffer;)Lorg/lwjgl/vulkan/VkPipelineLayoutCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineLayoutCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pPushConstantRanges"
+descriptor = "(Lorg/lwjgl/vulkan/VkPushConstantRange$Buffer;)Lorg/lwjgl/vulkan/VkPipelineLayoutCreateInfo;"
+kind = "builtin"
+references = 1

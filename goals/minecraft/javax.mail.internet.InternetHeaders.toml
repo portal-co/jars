@@ -1,0 +1,13 @@
+class = "javax/mail/internet/InternetHeaders"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setHeader"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2

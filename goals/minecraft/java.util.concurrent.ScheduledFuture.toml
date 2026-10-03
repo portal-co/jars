@@ -1,0 +1,19 @@
+class = "java/util/concurrent/ScheduledFuture"
+
+[[member]]
+name = "isCancelled"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isDone"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cancel"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 7

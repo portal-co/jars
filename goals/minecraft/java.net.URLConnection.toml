@@ -1,0 +1,25 @@
+class = "java/net/URLConnection"
+
+[[member]]
+name = "getLastModified"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInputStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setRequestProperty"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setUseCaches"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 2

@@ -1,0 +1,19 @@
+class = "java/nio/channels/ReadableByteChannel"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "read"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 12

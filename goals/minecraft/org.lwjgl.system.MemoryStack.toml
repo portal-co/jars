@@ -1,0 +1,121 @@
+class = "org/lwjgl/system/MemoryStack"
+
+[[member]]
+name = "getPointer"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "push"
+descriptor = "()Lorg/lwjgl/system/MemoryStack;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "stackGet"
+descriptor = "()Lorg/lwjgl/system/MemoryStack;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "stackPush"
+descriptor = "()Lorg/lwjgl/system/MemoryStack;"
+kind = "builtin"
+references = 91
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 204
+
+[[member]]
+name = "malloc"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "callocFloat"
+descriptor = "(I)Ljava/nio/FloatBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mallocFloat"
+descriptor = "(I)Ljava/nio/FloatBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "callocInt"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "ints"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mallocInt"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "callocLong"
+descriptor = "(I)Ljava/nio/LongBuffer;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "callocPointer"
+descriptor = "(I)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "mallocPointer"
+descriptor = "(I)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "ints"
+descriptor = "(II)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ncalloc"
+descriptor = "(III)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "longs"
+descriptor = "(J)Ljava/nio/LongBuffer;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "ASCII"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "UTF8"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "UTF8"
+descriptor = "(Ljava/lang/CharSequence;Z)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2

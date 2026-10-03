@@ -4,4 +4,4 @@ class = "[Ljava/lang/Object;"
 name = "clone"
 descriptor = "()Ljava/lang/Object;"
 kind = "builtin"
-references = 1
+references = 10

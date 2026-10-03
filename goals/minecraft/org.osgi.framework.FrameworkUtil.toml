@@ -1,0 +1,7 @@
+class = "org/osgi/framework/FrameworkUtil"
+
+[[member]]
+name = "getBundle"
+descriptor = "(Ljava/lang/Class;)Lorg/osgi/framework/Bundle;"
+kind = "builtin"
+references = 3

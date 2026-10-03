@@ -1,0 +1,25 @@
+class = "java/io/BufferedWriter"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "newLine"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/Writer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "org/osgi/framework/wiring/BundleRevision"
+
+[[member]]
+name = "getTypes"
+descriptor = "()I"
+kind = "builtin"
+references = 1

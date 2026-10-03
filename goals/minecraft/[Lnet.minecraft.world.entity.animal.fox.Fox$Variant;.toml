@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/entity/animal/fox/Fox$Variant;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

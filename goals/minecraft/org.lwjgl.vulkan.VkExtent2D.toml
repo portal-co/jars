@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkExtent2D"
+
+[[member]]
+name = "height"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "width"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "set"
+descriptor = "(II)Lorg/lwjgl/vulkan/VkExtent2D;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkExtent2D;"
+kind = "builtin"
+references = 1

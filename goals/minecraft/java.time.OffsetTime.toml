@@ -1,0 +1,19 @@
+class = "java/time/OffsetTime"
+
+[[member]]
+name = "toLocalTime"
+descriptor = "()Ljava/time/LocalTime;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOffset"
+descriptor = "()Ljava/time/ZoneOffset;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/time/LocalTime;Ljava/time/ZoneOffset;)Ljava/time/OffsetTime;"
+kind = "builtin"
+references = 1

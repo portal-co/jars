@@ -1,0 +1,7 @@
+class = "javax/security/auth/x500/X500Principal"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1

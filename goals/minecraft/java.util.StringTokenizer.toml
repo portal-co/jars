@@ -1,0 +1,31 @@
+class = "java/util/StringTokenizer"
+
+[[member]]
+name = "nextToken"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "hasMoreElements"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "hasMoreTokens"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Z)V"
+kind = "builtin"
+references = 1

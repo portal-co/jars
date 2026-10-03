@@ -1,0 +1,73 @@
+class = "io/netty/channel/epoll/Native"
+
+[[member]]
+name = "epollCreate"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "eventFd"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "offsetofEpollData"
+descriptor = "()I"
+kind = "native"
+references = 2
+
+[[member]]
+name = "sizeofEpollEvent"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "timerFd"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isSupportingUdpSegment"
+descriptor = "()Z"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollCtlDel0"
+descriptor = "(II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollCtlAdd0"
+descriptor = "(III)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "epollCtlMod0"
+descriptor = "(III)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "eventFdWrite"
+descriptor = "(IJ)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "splice0"
+descriptor = "(IJIJJ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendmmsg0"
+descriptor = "(IZ[Lio/netty/channel/epoll/NativeDatagramPacketArray$NativeDatagramPacket;II)I"
+kind = "native"
+references = 1

@@ -1,0 +1,43 @@
+class = "java/util/AbstractList"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 23
+
+[[member]]
+name = "listIterator"
+descriptor = "()Ljava/util/ListIterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "subList"
+descriptor = "(II)Ljava/util/List;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 42

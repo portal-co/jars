@@ -1,0 +1,25 @@
+class = "org/osgi/framework/Bundle"
+
+[[member]]
+name = "getState"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSymbolicName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getBundleContext"
+descriptor = "()Lorg/osgi/framework/BundleContext;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "adapt"
+descriptor = "(Ljava/lang/Class;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2

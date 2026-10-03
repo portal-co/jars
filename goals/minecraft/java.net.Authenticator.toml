@@ -1,0 +1,13 @@
+class = "java/net/Authenticator"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDefault"
+descriptor = "(Ljava/net/Authenticator;)V"
+kind = "builtin"
+references = 1

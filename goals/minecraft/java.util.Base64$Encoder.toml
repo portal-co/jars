@@ -1,0 +1,13 @@
+class = "java/util/Base64$Encoder"
+
+[[member]]
+name = "encodeToString"
+descriptor = "([B)Ljava/lang/String;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "encode"
+descriptor = "([B)[B"
+kind = "builtin"
+references = 1

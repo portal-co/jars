@@ -1,0 +1,7 @@
+class = "[Lcom/mojang/authlib/minecraft/MinecraftProfileTexture$Type;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

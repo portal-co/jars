@@ -1,0 +1,79 @@
+class = "java/lang/management/ThreadInfo"
+
+[[member]]
+name = "getLockOwnerId"
+descriptor = "()J"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "getThreadId"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLockOwnerName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getThreadName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getThreadState"
+descriptor = "()Ljava/lang/Thread$State;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getLockInfo"
+descriptor = "()Ljava/lang/management/LockInfo;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isDaemon"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isInNative"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isSuspended"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getStackTrace"
+descriptor = "()[Ljava/lang/StackTraceElement;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getLockedSynchronizers"
+descriptor = "()[Ljava/lang/management/LockInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLockedMonitors"
+descriptor = "()[Ljava/lang/management/MonitorInfo;"
+kind = "builtin"
+references = 1

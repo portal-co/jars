@@ -2,6 +2,12 @@ class = "java/lang/NullPointerException"
 
 [[member]]
 name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "<init>"
 descriptor = "(Ljava/lang/String;)V"
 kind = "builtin"
-references = 2
+references = 34

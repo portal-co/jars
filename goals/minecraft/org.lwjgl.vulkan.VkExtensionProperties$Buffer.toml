@@ -1,0 +1,49 @@
+class = "org/lwjgl/vulkan/VkExtensionProperties$Buffer"
+
+[[member]]
+name = "limit"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "extensionNameString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(I)Lorg/lwjgl/system/Struct;"
+kind = "builtin"
+references = 1

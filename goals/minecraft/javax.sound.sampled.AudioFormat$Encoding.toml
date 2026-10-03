@@ -1,0 +1,19 @@
+class = "javax/sound/sampled/AudioFormat$Encoding"
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "PCM_SIGNED"
+descriptor = "Ljavax/sound/sampled/AudioFormat$Encoding;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "PCM_UNSIGNED"
+descriptor = "Ljavax/sound/sampled/AudioFormat$Encoding;"
+kind = "builtin"
+references = 1

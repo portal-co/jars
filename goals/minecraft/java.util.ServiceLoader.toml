@@ -1,0 +1,19 @@
+class = "java/util/ServiceLoader"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "load"
+descriptor = "(Ljava/lang/Class;)Ljava/util/ServiceLoader;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "load"
+descriptor = "(Ljava/lang/Class;Ljava/lang/ClassLoader;)Ljava/util/ServiceLoader;"
+kind = "builtin"
+references = 10

@@ -1,0 +1,19 @@
+class = "java/util/stream/Stream$Builder"
+
+[[member]]
+name = "build"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Ljava/util/stream/Stream$Builder;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "accept"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

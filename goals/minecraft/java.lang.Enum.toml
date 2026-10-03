@@ -1,19 +1,49 @@
 class = "java/lang/Enum"
 
 [[member]]
+name = "hashCode"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "ordinal"
 descriptor = "()I"
 kind = "builtin"
-references = 2
+references = 866
 
 [[member]]
 name = "name"
 descriptor = "()Ljava/lang/String;"
 kind = "builtin"
-references = 4
+references = 50
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/Class;Ljava/lang/String;)Ljava/lang/Enum;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Enum;)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 14
 
 [[member]]
 name = "<init>"
 descriptor = "(Ljava/lang/String;I)V"
 kind = "builtin"
-references = 5
+references = 699

@@ -1,0 +1,43 @@
+class = "java/util/concurrent/ScheduledThreadPoolExecutor"
+
+[[member]]
+name = "getQueue"
+descriptor = "()Ljava/util/concurrent/BlockingQueue;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shutdown"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(ILjava/util/concurrent/ThreadFactory;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "scheduleAtFixedRate"
+descriptor = "(Ljava/lang/Runnable;JJLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "schedule"
+descriptor = "(Ljava/lang/Runnable;JLjava/util/concurrent/TimeUnit;)Ljava/util/concurrent/ScheduledFuture;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setContinueExistingPeriodicTasksAfterShutdownPolicy"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setExecuteExistingDelayedTasksAfterShutdownPolicy"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,49 @@
+class = "com/lmax/disruptor/RingBuffer"
+
+[[member]]
+name = "getBufferSize"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "remainingCapacity"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "hasAvailableCapacity"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "tryPublishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslator;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "publishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslatorTwoArg;Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "tryPublishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslatorTwoArg;Ljava/lang/Object;Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "publishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslatorVararg;[Ljava/lang/Object;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "tryPublishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslatorVararg;[Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 2

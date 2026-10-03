@@ -1,0 +1,7 @@
+class = "java/security/CodeSource"
+
+[[member]]
+name = "getLocation"
+descriptor = "()Ljava/net/URL;"
+kind = "builtin"
+references = 2

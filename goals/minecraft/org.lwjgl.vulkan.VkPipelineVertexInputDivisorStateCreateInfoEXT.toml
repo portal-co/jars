@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPipelineVertexInputDivisorStateCreateInfoEXT"
+
+[[member]]
+name = "vertexBindingDivisorCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineVertexInputDivisorStateCreateInfoEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineVertexInputDivisorStateCreateInfoEXT;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pVertexBindingDivisors"
+descriptor = "(Lorg/lwjgl/vulkan/VkVertexInputBindingDivisorDescription$Buffer;)Lorg/lwjgl/vulkan/VkPipelineVertexInputDivisorStateCreateInfoEXT;"
+kind = "builtin"
+references = 1

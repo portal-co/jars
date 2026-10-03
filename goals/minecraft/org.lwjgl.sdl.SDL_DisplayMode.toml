@@ -1,0 +1,37 @@
+class = "org/lwjgl/sdl/SDL_DisplayMode"
+
+[[member]]
+name = "refresh_rate"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "h"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "w"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "create"
+descriptor = "(J)Lorg/lwjgl/sdl/SDL_DisplayMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "malloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/sdl/SDL_DisplayMode;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rasterizationSamples"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sampleShadingEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkPipelineMultisampleStateCreateInfo;"
+kind = "builtin"
+references = 1

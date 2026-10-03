@@ -1,0 +1,25 @@
+class = "com/jcraft/jzlib/Deflater"
+
+[[member]]
+name = "deflateEnd"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "deflate"
+descriptor = "(I)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "init"
+descriptor = "(IIILcom/jcraft/jzlib/JZlib$WrapperType;)I"
+kind = "builtin"
+references = 1

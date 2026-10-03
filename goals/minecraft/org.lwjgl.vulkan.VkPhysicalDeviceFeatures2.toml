@@ -1,0 +1,43 @@
+class = "org/lwjgl/vulkan/VkPhysicalDeviceFeatures2"
+
+[[member]]
+name = "address"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "pNext"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures2;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures2;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "features"
+descriptor = "()Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures2;"
+kind = "builtin"
+references = 2

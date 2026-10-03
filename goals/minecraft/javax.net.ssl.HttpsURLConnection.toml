@@ -1,0 +1,13 @@
+class = "javax/net/ssl/HttpsURLConnection"
+
+[[member]]
+name = "setHostnameVerifier"
+descriptor = "(Ljavax/net/ssl/HostnameVerifier;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setSSLSocketFactory"
+descriptor = "(Ljavax/net/ssl/SSLSocketFactory;)V"
+kind = "builtin"
+references = 2

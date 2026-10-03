@@ -1,0 +1,25 @@
+class = "javax/management/MBeanServer"
+
+[[member]]
+name = "registerMBean"
+descriptor = "(Ljava/lang/Object;Ljavax/management/ObjectName;)Ljavax/management/ObjectInstance;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "unregisterMBean"
+descriptor = "(Ljavax/management/ObjectName;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isRegistered"
+descriptor = "(Ljavax/management/ObjectName;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "queryNames"
+descriptor = "(Ljavax/management/ObjectName;Ljavax/management/QueryExp;)Ljava/util/Set;"
+kind = "builtin"
+references = 1

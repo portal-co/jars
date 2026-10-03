@@ -1,0 +1,31 @@
+class = "java/io/FileInputStream"
+
+[[member]]
+name = "getChannel"
+descriptor = "()Ljava/nio/channels/FileChannel;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/File;)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "read"
+descriptor = "([B)I"
+kind = "builtin"
+references = 2

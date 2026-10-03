@@ -1,7 +1,97 @@
 class = "java/lang/Float"
 
 [[member]]
+name = "floatValue"
+descriptor = "()F"
+kind = "builtin"
+references = 493
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "floatToIntBits"
+descriptor = "(F)I"
+kind = "builtin"
+references = 36
+
+[[member]]
+name = "floatToRawIntBits"
+descriptor = "(F)I"
+kind = "native"
+references = 2018
+
+[[member]]
+name = "valueOf"
+descriptor = "(F)Ljava/lang/Float;"
+kind = "builtin"
+references = 477
+
+[[member]]
+name = "toString"
+descriptor = "(F)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isFinite"
+descriptor = "(F)Z"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "isInfinite"
+descriptor = "(F)Z"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "isNaN"
+descriptor = "(F)Z"
+kind = "builtin"
+references = 30
+
+[[member]]
+name = "sum"
+descriptor = "(FF)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compare"
+descriptor = "(FF)I"
+kind = "builtin"
+references = 52
+
+[[member]]
+name = "intBitsToFloat"
+descriptor = "(I)F"
+kind = "native"
+references = 5
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Float;)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "parseFloat"
+descriptor = "(Ljava/lang/String;)F"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Float;"
+kind = "builtin"
+references = 3
+
+[[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 12

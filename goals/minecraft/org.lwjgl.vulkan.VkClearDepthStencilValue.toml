@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkClearDepthStencilValue"
+
+[[member]]
+name = "depth"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkClearDepthStencilValue;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkClearDepthStencilValue;"
+kind = "builtin"
+references = 2

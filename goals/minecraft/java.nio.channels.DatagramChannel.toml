@@ -1,0 +1,55 @@
+class = "java/nio/channels/DatagramChannel"
+
+[[member]]
+name = "socket"
+descriptor = "()Ljava/net/DatagramSocket;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "disconnect"
+descriptor = "()Ljava/nio/channels/DatagramChannel;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isConnected"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOption"
+descriptor = "(Ljava/net/SocketOption;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setOption"
+descriptor = "(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/DatagramChannel;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/net/SocketAddress;)I"
+kind = "builtin"
+references = 1

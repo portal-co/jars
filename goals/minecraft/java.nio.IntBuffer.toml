@@ -1,0 +1,91 @@
+class = "java/nio/IntBuffer"
+
+[[member]]
+name = "get"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clear"
+descriptor = "()Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "duplicate"
+descriptor = "()Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flip"
+descriptor = "()Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rewind"
+descriptor = "()Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)I"
+kind = "builtin"
+references = 44
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "limit"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "position"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "put"
+descriptor = "(II)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "get"
+descriptor = "([I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 3

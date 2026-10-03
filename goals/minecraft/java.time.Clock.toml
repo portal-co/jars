@@ -1,0 +1,19 @@
+class = "java/time/Clock"
+
+[[member]]
+name = "systemDefaultZone"
+descriptor = "()Ljava/time/Clock;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "systemUTC"
+descriptor = "()Ljava/time/Clock;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "instant"
+descriptor = "()Ljava/time/Instant;"
+kind = "builtin"
+references = 1

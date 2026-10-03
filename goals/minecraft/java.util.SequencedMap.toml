@@ -1,0 +1,37 @@
+class = "java/util/SequencedMap"
+
+[[member]]
+name = "values"
+descriptor = "()Ljava/util/Collection;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pollFirstEntry"
+descriptor = "()Ljava/util/Map$Entry;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "computeIfAbsent"
+descriptor = "(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1

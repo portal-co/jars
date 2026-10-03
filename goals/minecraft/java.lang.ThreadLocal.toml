@@ -1,7 +1,31 @@
 class = "java/lang/ThreadLocal"
 
 [[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 80
+
+[[member]]
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
-references = 2
+references = 28
+
+[[member]]
+name = "remove"
+descriptor = "()V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "set"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 40
+
+[[member]]
+name = "withInitial"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/lang/ThreadLocal;"
+kind = "builtin"
+references = 17

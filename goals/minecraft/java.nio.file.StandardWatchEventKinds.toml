@@ -1,0 +1,19 @@
+class = "java/nio/file/StandardWatchEventKinds"
+
+[[member]]
+name = "ENTRY_CREATE"
+descriptor = "Ljava/nio/file/WatchEvent$Kind;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "ENTRY_DELETE"
+descriptor = "Ljava/nio/file/WatchEvent$Kind;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ENTRY_MODIFY"
+descriptor = "Ljava/nio/file/WatchEvent$Kind;"
+kind = "builtin"
+references = 1

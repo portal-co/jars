@@ -1,0 +1,13 @@
+class = "org/lwjgl/util/vma/VmaAllocationInfo"
+
+[[member]]
+name = "memoryType"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/util/vma/VmaAllocationInfo;"
+kind = "builtin"
+references = 1

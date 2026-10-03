@@ -1,0 +1,7 @@
+class = "java/util/concurrent/ConcurrentHashMap$KeySetView"
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 1

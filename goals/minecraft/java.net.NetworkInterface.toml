@@ -1,0 +1,73 @@
+class = "java/net/NetworkInterface"
+
+[[member]]
+name = "getIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getDisplayName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getInetAddresses"
+descriptor = "()Ljava/util/Enumeration;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getNetworkInterfaces"
+descriptor = "()Ljava/util/Enumeration;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isLoopback"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "isUp"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isVirtual"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getHardwareAddress"
+descriptor = "()[B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getByIndex"
+descriptor = "(I)Ljava/net/NetworkInterface;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getByName"
+descriptor = "(Ljava/lang/String;)Ljava/net/NetworkInterface;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getByInetAddress"
+descriptor = "(Ljava/net/InetAddress;)Ljava/net/NetworkInterface;"
+kind = "builtin"
+references = 5

@@ -1,0 +1,7 @@
+class = "java/util/AbstractMap$SimpleEntry"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1

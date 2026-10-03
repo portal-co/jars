@@ -1,0 +1,7 @@
+class = "org/lwjgl/BufferUtils"
+
+[[member]]
+name = "createByteBuffer"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 3

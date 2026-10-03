@@ -1,0 +1,22 @@
+class = "java/lang/reflect/TypeVariable"
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+reason = "closed-world"
+references = 8
+
+[[member]]
+name = "getGenericDeclaration"
+descriptor = "()Ljava/lang/reflect/GenericDeclaration;"
+kind = "builtin"
+reason = "closed-world"
+references = 11
+
+[[member]]
+name = "getBounds"
+descriptor = "()[Ljava/lang/reflect/Type;"
+kind = "builtin"
+reason = "closed-world"
+references = 7

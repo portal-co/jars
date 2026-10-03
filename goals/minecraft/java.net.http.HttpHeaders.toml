@@ -1,0 +1,13 @@
+class = "java/net/http/HttpHeaders"
+
+[[member]]
+name = "firstValue"
+descriptor = "(Ljava/lang/String;)Ljava/util/Optional;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "firstValueAsLong"
+descriptor = "(Ljava/lang/String;)Ljava/util/OptionalLong;"
+kind = "builtin"
+references = 3

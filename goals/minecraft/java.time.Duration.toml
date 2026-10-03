@@ -1,13 +1,139 @@
 class = "java/time/Duration"
 
 [[member]]
-name = "toNanos"
+name = "getNano"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSeconds"
 descriptor = "()J"
 kind = "builtin"
 references = 1
 
 [[member]]
-name = "ofMillis"
+name = "toDays"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toHours"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toMillis"
+descriptor = "()J"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "toMinutes"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toNanos"
+descriptor = "()J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toSeconds"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isNegative"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isPositive"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "multipliedBy"
 descriptor = "(J)Ljava/time/Duration;"
 kind = "builtin"
 references = 1
+
+[[member]]
+name = "ofDays"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "ofHours"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "ofMillis"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "ofMinutes"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "ofNanos"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ofSeconds"
+descriptor = "(J)Ljava/time/Duration;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "ofSeconds"
+descriptor = "(JJ)Ljava/time/Duration;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "plus"
+descriptor = "(JLjava/time/temporal/TemporalUnit;)Ljava/time/Duration;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/time/Duration;)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "plus"
+descriptor = "(Ljava/time/Duration;)Ljava/time/Duration;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "between"
+descriptor = "(Ljava/time/temporal/Temporal;Ljava/time/temporal/Temporal;)Ljava/time/Duration;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "ZERO"
+descriptor = "Ljava/time/Duration;"
+kind = "builtin"
+references = 2

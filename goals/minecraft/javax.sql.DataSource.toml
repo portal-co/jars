@@ -1,0 +1,7 @@
+class = "javax/sql/DataSource"
+
+[[member]]
+name = "getConnection"
+descriptor = "()Ljava/sql/Connection;"
+kind = "builtin"
+references = 2

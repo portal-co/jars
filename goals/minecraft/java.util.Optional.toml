@@ -1,7 +1,109 @@
 class = "java/util/Optional"
 
 [[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 977
+
+[[member]]
+name = "orElseThrow"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 63
+
+[[member]]
+name = "empty"
+descriptor = "()Ljava/util/Optional;"
+kind = "builtin"
+references = 908
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 39
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 371
+
+[[member]]
+name = "isPresent"
+descriptor = "()Z"
+kind = "builtin"
+references = 744
+
+[[member]]
+name = "orElse"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 656
+
+[[member]]
 name = "of"
 descriptor = "(Ljava/lang/Object;)Ljava/util/Optional;"
 kind = "builtin"
-references = 1
+references = 725
+
+[[member]]
+name = "ofNullable"
+descriptor = "(Ljava/lang/Object;)Ljava/util/Optional;"
+kind = "builtin"
+references = 179
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "ifPresent"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 340
+
+[[member]]
+name = "ifPresentOrElse"
+descriptor = "(Ljava/util/function/Consumer;Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "flatMap"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/Optional;"
+kind = "builtin"
+references = 101
+
+[[member]]
+name = "map"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/Optional;"
+kind = "builtin"
+references = 508
+
+[[member]]
+name = "filter"
+descriptor = "(Ljava/util/function/Predicate;)Ljava/util/Optional;"
+kind = "builtin"
+references = 80
+
+[[member]]
+name = "orElseGet"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/lang/Object;"
+kind = "builtin"
+references = 147
+
+[[member]]
+name = "orElseThrow"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/lang/Object;"
+kind = "builtin"
+references = 70
+
+[[member]]
+name = "or"
+descriptor = "(Ljava/util/function/Supplier;)Ljava/util/Optional;"
+kind = "builtin"
+references = 29

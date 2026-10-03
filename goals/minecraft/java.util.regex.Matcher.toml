@@ -1,0 +1,85 @@
+class = "java/util/regex/Matcher"
+
+[[member]]
+name = "end"
+descriptor = "()I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "groupCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "start"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "group"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "find"
+descriptor = "()Z"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "lookingAt"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "matches"
+descriptor = "()Z"
+kind = "builtin"
+references = 64
+
+[[member]]
+name = "group"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 84
+
+[[member]]
+name = "find"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "region"
+descriptor = "(II)Ljava/util/regex/Matcher;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "group"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "quoteReplacement"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "replaceAll"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "replaceFirst"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 5

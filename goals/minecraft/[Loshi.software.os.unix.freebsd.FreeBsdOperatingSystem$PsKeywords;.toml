@@ -1,0 +1,7 @@
+class = "[Loshi/software/os/unix/freebsd/FreeBsdOperatingSystem$PsKeywords;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

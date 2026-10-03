@@ -1,0 +1,25 @@
+class = "java/nio/channels/Channels"
+
+[[member]]
+name = "newChannel"
+descriptor = "(Ljava/io/InputStream;)Ljava/nio/channels/ReadableByteChannel;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "newChannel"
+descriptor = "(Ljava/io/OutputStream;)Ljava/nio/channels/WritableByteChannel;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "newInputStream"
+descriptor = "(Ljava/nio/channels/ReadableByteChannel;)Ljava/io/InputStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "newWriter"
+descriptor = "(Ljava/nio/channels/WritableByteChannel;Ljava/nio/charset/Charset;)Ljava/io/Writer;"
+kind = "builtin"
+references = 1

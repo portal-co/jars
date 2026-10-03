@@ -1,0 +1,7 @@
+class = "jdk/jfr/Configuration"
+
+[[member]]
+name = "create"
+descriptor = "(Ljava/io/Reader;)Ljdk/jfr/Configuration;"
+kind = "builtin"
+references = 1

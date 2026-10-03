@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkPhysicalDevice"
+
+[[member]]
+name = "getInstance"
+descriptor = "()Lorg/lwjgl/vulkan/VkInstance;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "<init>"
+descriptor = "(JLorg/lwjgl/vulkan/VkInstance;)V"
+kind = "builtin"
+references = 1

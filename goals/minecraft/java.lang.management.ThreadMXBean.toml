@@ -1,0 +1,19 @@
+class = "java/lang/management/ThreadMXBean"
+
+[[member]]
+name = "isObjectMonitorUsageSupported"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isSynchronizerUsageSupported"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "dumpAllThreads"
+descriptor = "(ZZ)[Ljava/lang/management/ThreadInfo;"
+kind = "builtin"
+references = 1

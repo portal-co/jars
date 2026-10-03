@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/Wtsapi32"
+
+[[member]]
+name = "WTSFreeMemoryEx"
+descriptor = "(ILcom/sun/jna/Pointer;I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "WTSEnumerateProcessesEx"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;Lcom/sun/jna/ptr/IntByReference;ILcom/sun/jna/ptr/PointerByReference;Lcom/sun/jna/ptr/IntByReference;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "WTS_CURRENT_SERVER_HANDLE"
+descriptor = "Lcom/sun/jna/platform/win32/WinNT$HANDLE;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Wtsapi32;"
+kind = "builtin"
+references = 2

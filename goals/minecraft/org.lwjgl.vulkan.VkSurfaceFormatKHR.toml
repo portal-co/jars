@@ -1,0 +1,19 @@
+class = "org/lwjgl/vulkan/VkSurfaceFormatKHR"
+
+[[member]]
+name = "colorSpace"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "format"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "calloc"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSurfaceFormatKHR$Buffer;"
+kind = "builtin"
+references = 1

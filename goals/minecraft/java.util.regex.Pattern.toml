@@ -1,0 +1,43 @@
+class = "java/util/regex/Pattern"
+
+[[member]]
+name = "pattern"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "asPredicate"
+descriptor = "()Ljava/util/function/Predicate;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "matcher"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/util/regex/Matcher;"
+kind = "builtin"
+references = 91
+
+[[member]]
+name = "split"
+descriptor = "(Ljava/lang/CharSequence;)[Ljava/lang/String;"
+kind = "builtin"
+references = 38
+
+[[member]]
+name = "split"
+descriptor = "(Ljava/lang/CharSequence;I)[Ljava/lang/String;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "quote"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "compile"
+descriptor = "(Ljava/lang/String;I)Ljava/util/regex/Pattern;"
+kind = "builtin"
+references = 10

@@ -1,0 +1,25 @@
+class = "java/util/PrimitiveIterator$OfInt"
+
+[[member]]
+name = "nextInt"
+descriptor = "()I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "remove"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "hasNext"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/util/function/IntConsumer;)V"
+kind = "builtin"
+references = 17

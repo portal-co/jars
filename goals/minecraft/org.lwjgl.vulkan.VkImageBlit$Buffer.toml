@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkImageBlit$Buffer"
+
+[[member]]
+name = "dstSubresource"
+descriptor = "(Lorg/lwjgl/vulkan/VkImageSubresourceLayers;)Lorg/lwjgl/vulkan/VkImageBlit$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "srcSubresource"
+descriptor = "(Lorg/lwjgl/vulkan/VkImageSubresourceLayers;)Lorg/lwjgl/vulkan/VkImageBlit$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "dstOffsets"
+descriptor = "(Lorg/lwjgl/vulkan/VkOffset3D$Buffer;)Lorg/lwjgl/vulkan/VkImageBlit$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "srcOffsets"
+descriptor = "(Lorg/lwjgl/vulkan/VkOffset3D$Buffer;)Lorg/lwjgl/vulkan/VkImageBlit$Buffer;"
+kind = "builtin"
+references = 1

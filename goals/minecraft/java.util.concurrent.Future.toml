@@ -1,0 +1,31 @@
+class = "java/util/concurrent/Future"
+
+[[member]]
+name = "get"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "isCancelled"
+descriptor = "()Z"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "isDone"
+descriptor = "()Z"
+kind = "builtin"
+references = 53
+
+[[member]]
+name = "get"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cancel"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 11

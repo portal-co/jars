@@ -1,0 +1,19 @@
+class = "javax/management/Notification"
+
+[[member]]
+name = "setUserData"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Object;JJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Object;JJLjava/lang/String;)V"
+kind = "builtin"
+references = 1

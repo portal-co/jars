@@ -1,0 +1,157 @@
+class = "java/util/BitSet"
+
+[[member]]
+name = "cardinality"
+descriptor = "()I"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "length"
+descriptor = "()I"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "toByteArray"
+descriptor = "()[B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toLongArray"
+descriptor = "()[J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "nextClearBit"
+descriptor = "(I)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "nextSetBit"
+descriptor = "(I)I"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 28
+
+[[member]]
+name = "clear"
+descriptor = "(I)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "set"
+descriptor = "(I)V"
+kind = "builtin"
+references = 37
+
+[[member]]
+name = "get"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 50
+
+[[member]]
+name = "get"
+descriptor = "(II)Ljava/util/BitSet;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clear"
+descriptor = "(II)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "set"
+descriptor = "(II)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "set"
+descriptor = "(IIZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(IZ)V"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "or"
+descriptor = "(Ljava/util/BitSet;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "intersects"
+descriptor = "(Ljava/util/BitSet;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "valueOf"
+descriptor = "([B)Ljava/util/BitSet;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "valueOf"
+descriptor = "([J)Ljava/util/BitSet;"
+kind = "builtin"
+references = 2

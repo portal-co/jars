@@ -1,0 +1,13 @@
+class = "io/netty/channel/unix/Buffer"
+
+[[member]]
+name = "addressSize0"
+descriptor = "()I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "memoryAddress0"
+descriptor = "(Ljava/nio/ByteBuffer;)J"
+kind = "native"
+references = 1

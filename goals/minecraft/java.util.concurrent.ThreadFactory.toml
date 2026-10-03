@@ -1,0 +1,7 @@
+class = "java/util/concurrent/ThreadFactory"
+
+[[member]]
+name = "newThread"
+descriptor = "(Ljava/lang/Runnable;)Ljava/lang/Thread;"
+kind = "builtin"
+references = 4

@@ -1,0 +1,7 @@
+class = "com/aayushatharva/brotli4j/decoder/DecoderJNI$Status"
+
+[[member]]
+name = "ordinal"
+descriptor = "()I"
+kind = "builtin"
+references = 1

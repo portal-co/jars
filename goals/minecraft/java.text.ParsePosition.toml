@@ -1,0 +1,19 @@
+class = "java/text/ParsePosition"
+
+[[member]]
+name = "getIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setIndex"
+descriptor = "(I)V"
+kind = "builtin"
+references = 9

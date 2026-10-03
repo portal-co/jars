@@ -1,0 +1,139 @@
+class = "org/zeromq/ZMQ$Socket"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReceiveTimeOut"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSendTimeOut"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTCPKeepAlive"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setAffinity"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setBacklog"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setLinger"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setMaxMsgSize"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setRcvHWM"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReceiveBufferSize"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReconnectIVL"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReconnectIVLMax"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSendBufferSize"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSndHWM"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTCPKeepAliveCount"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTCPKeepAliveIdle"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTCPKeepAliveInterval"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bind"
+descriptor = "(Ljava/lang/String;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDelayAttachOnConnect"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setIPv4Only"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setXpubVerbose"
+descriptor = "(Z)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "([B)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setIdentity"
+descriptor = "([B)Z"
+kind = "builtin"
+references = 1

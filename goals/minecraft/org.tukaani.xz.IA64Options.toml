@@ -1,0 +1,7 @@
+class = "org/tukaani/xz/IA64Options"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

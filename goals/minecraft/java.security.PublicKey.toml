@@ -1,0 +1,13 @@
+class = "java/security/PublicKey"
+
+[[member]]
+name = "getAlgorithm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getEncoded"
+descriptor = "()[B"
+kind = "builtin"
+references = 4

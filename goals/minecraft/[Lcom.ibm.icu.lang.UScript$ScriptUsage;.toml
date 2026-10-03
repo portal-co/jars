@@ -1,0 +1,7 @@
+class = "[Lcom/ibm/icu/lang/UScript$ScriptUsage;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

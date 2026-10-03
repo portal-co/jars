@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/EXTDebugUtils"
+
+[[member]]
+name = "vkCmdEndDebugUtilsLabelEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBeginDebugUtilsLabelEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;Lorg/lwjgl/vulkan/VkDebugUtilsLabelEXT;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkSetDebugUtilsObjectNameEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkDebugUtilsObjectNameInfoEXT;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyDebugUtilsMessengerEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateDebugUtilsMessengerEXT"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;Lorg/lwjgl/vulkan/VkDebugUtilsMessengerCreateInfoEXT;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1

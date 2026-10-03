@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/VkClearAttachment"
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkClearAttachment$Buffer;"
+kind = "builtin"
+references = 1

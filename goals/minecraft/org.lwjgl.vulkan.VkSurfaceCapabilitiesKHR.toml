@@ -1,0 +1,31 @@
+class = "org/lwjgl/vulkan/VkSurfaceCapabilitiesKHR"
+
+[[member]]
+name = "currentTransform"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "minImageCount"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxImageExtent"
+descriptor = "()Lorg/lwjgl/vulkan/VkExtent2D;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "minImageExtent"
+descriptor = "()Lorg/lwjgl/vulkan/VkExtent2D;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkSurfaceCapabilitiesKHR;"
+kind = "builtin"
+references = 1

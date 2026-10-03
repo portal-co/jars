@@ -1,0 +1,55 @@
+class = "java/io/PrintStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "println"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "print"
+descriptor = "(C)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;ZLjava/nio/charset/Charset;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "println"
+descriptor = "(Ljava/lang/Object;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "print"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "printf"
+descriptor = "(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;"
+kind = "builtin"
+references = 1

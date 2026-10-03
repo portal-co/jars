@@ -1,0 +1,55 @@
+class = "org/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthBiasConstantFactor"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthBiasSlopeFactor"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lineWidth"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "cullMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "frontFace"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "polygonMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "depthBiasEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkPipelineRasterizationStateCreateInfo;"
+kind = "builtin"
+references = 1

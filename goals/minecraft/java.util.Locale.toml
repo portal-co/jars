@@ -1,0 +1,217 @@
+class = "java/util/Locale"
+
+[[member]]
+name = "getCountry"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getISO3Country"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLanguage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getScript"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getVariant"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toLanguageTag"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDefault"
+descriptor = "()Ljava/util/Locale;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "getExtensionKeys"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getUnicodeLocaleAttributes"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getUnicodeLocaleKeys"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getExtension"
+descriptor = "(C)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getUnicodeLocaleType"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forLanguageTag"
+descriptor = "(Ljava/lang/String;)Ljava/util/Locale;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getDefault"
+descriptor = "(Ljava/util/Locale$Category;)Ljava/util/Locale;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "CANADA"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CANADA_FRENCH"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "CHINESE"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ENGLISH"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "FRANCE"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "FRENCH"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GERMAN"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "GERMANY"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ITALIAN"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ITALY"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "JAPAN"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "JAPANESE"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "KOREA"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "KOREAN"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ROOT"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 452
+
+[[member]]
+name = "UK"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "US"
+descriptor = "Ljava/util/Locale;"
+kind = "builtin"
+references = 20

@@ -1,0 +1,7 @@
+class = "java/util/concurrent/Executor"
+
+[[member]]
+name = "execute"
+descriptor = "(Ljava/lang/Runnable;)V"
+kind = "builtin"
+references = 103

@@ -1,0 +1,13 @@
+class = "java/util/zip/Adler32"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1

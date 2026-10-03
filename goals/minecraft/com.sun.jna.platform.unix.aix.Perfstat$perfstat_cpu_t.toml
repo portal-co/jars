@@ -1,0 +1,67 @@
+class = "com/sun/jna/platform/unix/aix/Perfstat$perfstat_cpu_t"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toArray"
+descriptor = "(I)[Lcom/sun/jna/Structure;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "busy_stolen_purr"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "devintrs"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "idle"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "idle_stolen_purr"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "softintrs"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sys"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "user"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "wait"
+descriptor = "J"
+kind = "builtin"
+references = 1

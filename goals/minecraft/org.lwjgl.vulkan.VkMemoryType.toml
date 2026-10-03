@@ -1,0 +1,13 @@
+class = "org/lwjgl/vulkan/VkMemoryType"
+
+[[member]]
+name = "heapIndex"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "propertyFlags"
+descriptor = "()I"
+kind = "builtin"
+references = 2

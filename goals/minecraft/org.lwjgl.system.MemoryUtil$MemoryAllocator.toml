@@ -1,0 +1,19 @@
+class = "org/lwjgl/system/MemoryUtil$MemoryAllocator"
+
+[[member]]
+name = "malloc"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "free"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "realloc"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1

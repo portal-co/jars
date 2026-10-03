@@ -1,0 +1,31 @@
+class = "org/lwjgl/opengl/KHRDebug"
+
+[[member]]
+name = "glPopDebugGroup"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDebugMessageControl"
+descriptor = "(III[IZ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glObjectLabel"
+descriptor = "(IILjava/lang/CharSequence;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "glPushDebugGroup"
+descriptor = "(IILjava/lang/CharSequence;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "glDebugMessageCallback"
+descriptor = "(Lorg/lwjgl/opengl/GLDebugMessageCallbackI;J)V"
+kind = "builtin"
+references = 1

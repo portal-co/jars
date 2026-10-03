@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/solaris/Kstat2$Kstat2Map"
+
+[[member]]
+name = "getValue"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2

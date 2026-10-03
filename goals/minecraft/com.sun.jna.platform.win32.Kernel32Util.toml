@@ -1,0 +1,25 @@
+class = "com/sun/jna/platform/win32/Kernel32Util"
+
+[[member]]
+name = "getLogicalProcessorInformation"
+descriptor = "()[Lcom/sun/jna/platform/win32/WinNT$SYSTEM_LOGICAL_PROCESSOR_INFORMATION;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getModules"
+descriptor = "(I)Ljava/util/List;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLogicalProcessorInformationEx"
+descriptor = "(I)[Lcom/sun/jna/platform/win32/WinNT$SYSTEM_LOGICAL_PROCESSOR_INFORMATION_EX;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "QueryFullProcessImageName"
+descriptor = "(Lcom/sun/jna/platform/win32/WinNT$HANDLE;I)Ljava/lang/String;"
+kind = "builtin"
+references = 1

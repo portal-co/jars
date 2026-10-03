@@ -1,0 +1,49 @@
+class = "org/lwjgl/vulkan/VkRenderingAttachmentInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageLayout"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "loadOp"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "storeOp"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo$Buffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "imageView"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clearValue"
+descriptor = "(Lorg/lwjgl/vulkan/VkClearValue;)Lorg/lwjgl/vulkan/VkRenderingAttachmentInfo;"
+kind = "builtin"
+references = 1

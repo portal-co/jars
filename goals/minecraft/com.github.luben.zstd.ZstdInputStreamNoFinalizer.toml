@@ -1,0 +1,19 @@
+class = "com/github/luben/zstd/ZstdInputStreamNoFinalizer"
+
+[[member]]
+name = "setLongMax"
+descriptor = "(I)Lcom/github/luben/zstd/ZstdInputStreamNoFinalizer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setContinuous"
+descriptor = "(Z)Lcom/github/luben/zstd/ZstdInputStreamNoFinalizer;"
+kind = "builtin"
+references = 1

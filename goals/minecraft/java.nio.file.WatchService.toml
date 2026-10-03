@@ -1,0 +1,13 @@
+class = "java/nio/file/WatchService"
+
+[[member]]
+name = "poll"
+descriptor = "()Ljava/nio/file/WatchKey;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2

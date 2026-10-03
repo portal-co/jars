@@ -1,0 +1,7 @@
+class = "com/sun/jna/PointerType"
+
+[[member]]
+name = "getPointer"
+descriptor = "()Lcom/sun/jna/Pointer;"
+kind = "builtin"
+references = 10

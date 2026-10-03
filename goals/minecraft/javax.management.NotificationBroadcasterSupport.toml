@@ -1,0 +1,13 @@
+class = "javax/management/NotificationBroadcasterSupport"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/concurrent/Executor;[Ljavax/management/MBeanNotificationInfo;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "sendNotification"
+descriptor = "(Ljavax/management/Notification;)V"
+kind = "builtin"
+references = 2

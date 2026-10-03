@@ -1,0 +1,31 @@
+class = "java/util/Spliterator$OfInt"
+
+[[member]]
+name = "characteristics"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "estimateSize"
+descriptor = "()J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "hasCharacteristics"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "forEachRemaining"
+descriptor = "(Ljava/util/function/IntConsumer;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "tryAdvance"
+descriptor = "(Ljava/util/function/IntConsumer;)Z"
+kind = "builtin"
+references = 8

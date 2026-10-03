@@ -1,13 +1,25 @@
 class = "java/lang/SecurityManager"
 
 [[member]]
+name = "getThreadGroup"
+descriptor = "()Ljava/lang/ThreadGroup;"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
-references = 1
+references = 2
 
 [[member]]
 name = "getClassContext"
 descriptor = "()[Ljava/lang/Class;"
 kind = "native"
+references = 2
+
+[[member]]
+name = "checkPermission"
+descriptor = "(Ljava/security/Permission;)V"
+kind = "builtin"
 references = 1

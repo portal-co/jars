@@ -1,0 +1,43 @@
+class = "javax/xml/parsers/DocumentBuilderFactory"
+
+[[member]]
+name = "newDocumentBuilder"
+descriptor = "()Ljavax/xml/parsers/DocumentBuilder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "newInstance"
+descriptor = "()Ljavax/xml/parsers/DocumentBuilderFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setFeature"
+descriptor = "(Ljava/lang/String;Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setExpandEntityReferences"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setNamespaceAware"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setValidating"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setXIncludeAware"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 2

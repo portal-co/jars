@@ -1,0 +1,7 @@
+class = "org/tukaani/xz/FilterOptions"
+
+[[member]]
+name = "getInputStream"
+descriptor = "(Ljava/io/InputStream;)Ljava/io/InputStream;"
+kind = "builtin"
+references = 1

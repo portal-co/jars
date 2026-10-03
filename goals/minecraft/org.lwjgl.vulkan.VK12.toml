@@ -1,0 +1,355 @@
+class = "org/lwjgl/vulkan/VK12"
+
+[[member]]
+name = "vkEnumerateInstanceExtensionProperties"
+descriptor = "(Ljava/lang/CharSequence;Ljava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkExtensionProperties$Buffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkEnumerateInstanceLayerProperties"
+descriptor = "(Ljava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkLayerProperties$Buffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkEndCommandBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "vkCmdDraw"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;IIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdDrawIndexed"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;IIIII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdPipelineBarrier"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;IIILorg/lwjgl/vulkan/VkMemoryBarrier$Buffer;Lorg/lwjgl/vulkan/VkBufferMemoryBarrier$Buffer;Lorg/lwjgl/vulkan/VkImageMemoryBarrier$Buffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBindPipeline"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;IJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBindVertexBuffers"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;ILjava/nio/LongBuffer;Ljava/nio/LongBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdSetScissor"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;ILorg/lwjgl/vulkan/VkRect2D$Buffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdSetViewport"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;ILorg/lwjgl/vulkan/VkViewport$Buffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBlitImage"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JIJILorg/lwjgl/vulkan/VkImageBlit$Buffer;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdCopyImageToBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JIJLorg/lwjgl/vulkan/VkBufferImageCopy$Buffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdClearColorImage"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JILorg/lwjgl/vulkan/VkClearColorValue;Lorg/lwjgl/vulkan/VkImageSubresourceRange;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdClearDepthStencilImage"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JILorg/lwjgl/vulkan/VkClearDepthStencilValue;Lorg/lwjgl/vulkan/VkImageSubresourceRange;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdBindIndexBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJI)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdDrawIndexedIndirect"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJII)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCmdCopyBufferToImage"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJILorg/lwjgl/vulkan/VkBufferImageCopy$Buffer;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkCmdCopyBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;JJLorg/lwjgl/vulkan/VkBufferCopy$Buffer;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "vkCmdClearAttachments"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;Lorg/lwjgl/vulkan/VkClearAttachment$Buffer;Lorg/lwjgl/vulkan/VkClearRect$Buffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkBeginCommandBuffer"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;Lorg/lwjgl/vulkan/VkCommandBufferBeginInfo;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetDeviceQueue"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;IILorg/lwjgl/PointerBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkResetCommandPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JI)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkResetQueryPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JII)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkGetQueryPoolResults"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JIILjava/nio/LongBuffer;JI)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkFreeCommandBuffers"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/PointerBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyBufferView"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyCommandPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyDescriptorSetLayout"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyImageView"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyPipeline"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkDestroyPipelineLayout"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroyQueryPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroySampler"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkDestroySemaphore"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vkDestroyShaderModule"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateGraphicsPipelines"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;JLorg/lwjgl/vulkan/VkGraphicsPipelineCreateInfo$Buffer;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkDestroyDevice"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkCreateBufferView"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkBufferViewCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkAllocateCommandBuffers"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkCommandBufferAllocateInfo;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateCommandPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkCommandPoolCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateDescriptorSetLayout"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkDescriptorSetLayoutCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateImageView"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkImageViewCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreatePipelineLayout"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkPipelineLayoutCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateQueryPool"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkQueryPoolCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateSampler"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkSamplerCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateSemaphore"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkSemaphoreCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vkWaitSemaphores"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkSemaphoreWaitInfo;J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateShaderModule"
+descriptor = "(Lorg/lwjgl/vulkan/VkDevice;Lorg/lwjgl/vulkan/VkShaderModuleCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Ljava/nio/LongBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkEnumeratePhysicalDevices"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;Ljava/nio/IntBuffer;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkDestroyInstance"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstance;Lorg/lwjgl/vulkan/VkAllocationCallbacks;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkCreateInstance"
+descriptor = "(Lorg/lwjgl/vulkan/VkInstanceCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkEnumerateDeviceExtensionProperties"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Ljava/lang/CharSequence;Ljava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkExtensionProperties$Buffer;)I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "vkGetPhysicalDeviceQueueFamilyProperties"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Ljava/nio/IntBuffer;Lorg/lwjgl/vulkan/VkQueueFamilyProperties$Buffer;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkCreateDevice"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Lorg/lwjgl/vulkan/VkDeviceCreateInfo;Lorg/lwjgl/vulkan/VkAllocationCallbacks;Lorg/lwjgl/PointerBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetPhysicalDeviceFeatures2"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures2;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "vkGetPhysicalDeviceMemoryProperties"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Lorg/lwjgl/vulkan/VkPhysicalDeviceMemoryProperties;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkGetPhysicalDeviceProperties2"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties2;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "vkGetPhysicalDeviceProperties"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDevice;Lorg/lwjgl/vulkan/VkPhysicalDeviceProperties;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "vkQueueWaitIdle"
+descriptor = "(Lorg/lwjgl/vulkan/VkQueue;)I"
+kind = "builtin"
+references = 1

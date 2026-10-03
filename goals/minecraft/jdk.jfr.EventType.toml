@@ -1,0 +1,13 @@
+class = "jdk/jfr/EventType"
+
+[[member]]
+name = "isEnabled"
+descriptor = "()Z"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "getEventType"
+descriptor = "(Ljava/lang/Class;)Ljdk/jfr/EventType;"
+kind = "builtin"
+references = 9

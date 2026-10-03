@@ -1,0 +1,7 @@
+class = "java/sql/DatabaseMetaData"
+
+[[member]]
+name = "supportsBatchUpdates"
+descriptor = "()Z"
+kind = "builtin"
+references = 1

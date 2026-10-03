@@ -1,0 +1,19 @@
+class = "java/time/Month"
+
+[[member]]
+name = "DECEMBER"
+descriptor = "Ljava/time/Month;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "JANUARY"
+descriptor = "Ljava/time/Month;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "OCTOBER"
+descriptor = "Ljava/time/Month;"
+kind = "builtin"
+references = 1

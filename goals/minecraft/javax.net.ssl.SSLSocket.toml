@@ -1,0 +1,25 @@
+class = "javax/net/ssl/SSLSocket"
+
+[[member]]
+name = "getSSLParameters"
+descriptor = "()Ljavax/net/ssl/SSLParameters;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "startHandshake"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "connect"
+descriptor = "(Ljava/net/SocketAddress;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setSSLParameters"
+descriptor = "(Ljavax/net/ssl/SSLParameters;)V"
+kind = "builtin"
+references = 1

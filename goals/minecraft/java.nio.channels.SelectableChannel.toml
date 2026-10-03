@@ -1,0 +1,13 @@
+class = "java/nio/channels/SelectableChannel"
+
+[[member]]
+name = "isOpen"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "register"
+descriptor = "(Ljava/nio/channels/Selector;ILjava/lang/Object;)Ljava/nio/channels/SelectionKey;"
+kind = "builtin"
+references = 1

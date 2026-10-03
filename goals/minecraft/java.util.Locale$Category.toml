@@ -1,0 +1,7 @@
+class = "java/util/Locale$Category"
+
+[[member]]
+name = "FORMAT"
+descriptor = "Ljava/util/Locale$Category;"
+kind = "builtin"
+references = 3

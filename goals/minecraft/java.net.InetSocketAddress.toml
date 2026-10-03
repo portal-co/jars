@@ -1,0 +1,43 @@
+class = "java/net/InetSocketAddress"
+
+[[member]]
+name = "getPort"
+descriptor = "()I"
+kind = "builtin"
+references = 40
+
+[[member]]
+name = "getHostName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAddress"
+descriptor = "()Ljava/net/InetAddress;"
+kind = "builtin"
+references = 47
+
+[[member]]
+name = "isUnresolved"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/net/InetAddress;I)V"
+kind = "builtin"
+references = 9

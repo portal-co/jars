@@ -1,0 +1,13 @@
+class = "java/net/IDN"
+
+[[member]]
+name = "toASCII"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toASCII"
+descriptor = "(Ljava/lang/String;I)Ljava/lang/String;"
+kind = "builtin"
+references = 1

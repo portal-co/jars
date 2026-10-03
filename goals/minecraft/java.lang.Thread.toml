@@ -1,0 +1,181 @@
+class = "java/lang/Thread"
+
+[[member]]
+name = "getPriority"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getId"
+descriptor = "()J"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "threadId"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getContextClassLoader"
+descriptor = "()Ljava/lang/ClassLoader;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "getState"
+descriptor = "()Ljava/lang/Thread$State;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "currentThread"
+descriptor = "()Ljava/lang/Thread;"
+kind = "native"
+references = 124
+
+[[member]]
+name = "getThreadGroup"
+descriptor = "()Ljava/lang/ThreadGroup;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "dumpStack"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "interrupt"
+descriptor = "()V"
+kind = "builtin"
+references = 41
+
+[[member]]
+name = "join"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "onSpinWait"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "start"
+descriptor = "()V"
+kind = "builtin"
+references = 37
+
+[[member]]
+name = "yield"
+descriptor = "()V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "interrupted"
+descriptor = "()Z"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "isAlive"
+descriptor = "()Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "isDaemon"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getStackTrace"
+descriptor = "()[Ljava/lang/StackTraceElement;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "setPriority"
+descriptor = "(I)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "join"
+descriptor = "(J)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "sleep"
+descriptor = "(J)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "setContextClassLoader"
+descriptor = "(Ljava/lang/ClassLoader;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "holdsLock"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "native"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/Runnable;Ljava/lang/String;)V"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "setName"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "setUncaughtExceptionHandler"
+descriptor = "(Ljava/lang/Thread$UncaughtExceptionHandler;)V"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "sleep"
+descriptor = "(Ljava/time/Duration;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setDaemon"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 24

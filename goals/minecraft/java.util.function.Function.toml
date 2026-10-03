@@ -4,16 +4,22 @@ class = "java/util/function/Function"
 name = "identity"
 descriptor = "()Ljava/util/function/Function;"
 kind = "builtin"
-references = 1
+references = 104
 
 [[member]]
 name = "apply"
 descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
 kind = "builtin"
-references = 2
+references = 862
 
 [[member]]
 name = "andThen"
 descriptor = "(Ljava/util/function/Function;)Ljava/util/function/Function;"
 kind = "builtin"
-references = 2
+references = 7
+
+[[member]]
+name = "compose"
+descriptor = "(Ljava/util/function/Function;)Ljava/util/function/Function;"
+kind = "builtin"
+references = 5

@@ -1,0 +1,61 @@
+class = "java/util/HexFormat"
+
+[[member]]
+name = "of"
+descriptor = "()Ljava/util/HexFormat;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "withUpperCase"
+descriptor = "()Ljava/util/HexFormat;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "toHexDigits"
+descriptor = "(B)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toHexDigits"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "toHexDigits"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toHexDigits"
+descriptor = "(JI)Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "fromHexDigits"
+descriptor = "(Ljava/lang/CharSequence;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "fromHexDigitsToLong"
+descriptor = "(Ljava/lang/CharSequence;II)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "withPrefix"
+descriptor = "(Ljava/lang/String;)Ljava/util/HexFormat;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "formatHex"
+descriptor = "([B)Ljava/lang/String;"
+kind = "builtin"
+references = 2

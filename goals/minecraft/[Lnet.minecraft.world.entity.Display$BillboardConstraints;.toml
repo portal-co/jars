@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/world/entity/Display$BillboardConstraints;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

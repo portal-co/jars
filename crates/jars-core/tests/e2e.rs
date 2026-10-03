@@ -169,8 +169,7 @@ fn add_factory_entity_host_matches_the_task_host() {
         .unwrap()
         .join("jars-bevy");
     let deps = format!("jars-bevy = {{ path = {:?} }}\n", bevy);
-    let (stdout, generated) =
-        compile_and_run_with("AddFactory", ObjectModel::Entity, &deps);
+    let (stdout, generated) = compile_and_run_with("AddFactory", ObjectModel::Entity, &deps);
     assert_eq!(stdout, "42\n");
     assert!(generated.contains("jars_bevy::ObjectTable"));
     assert!(generated.contains("entity:"));

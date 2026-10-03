@@ -1,0 +1,43 @@
+class = "java/util/zip/CRC32"
+
+[[member]]
+name = "getValue"
+descriptor = "()J"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "update"
+descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "update"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "update"
+descriptor = "([B)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "update"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 2

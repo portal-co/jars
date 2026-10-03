@@ -1,0 +1,235 @@
+class = "io/netty/channel/unix/Socket"
+
+[[member]]
+name = "msgFastopen"
+descriptor = "()I"
+kind = "native"
+references = 3
+
+[[member]]
+name = "getReceiveBufferSize"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getSendBufferSize"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getSoLinger"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isBroadcast"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isKeepAlive"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isReuseAddress"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isReusePort"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isTcpNoDelay"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "localAddress"
+descriptor = "(I)[B"
+kind = "native"
+references = 1
+
+[[member]]
+name = "remoteAddress"
+descriptor = "(I)[B"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendFd"
+descriptor = "(II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setBroadcast"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setKeepAlive"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setReceiveBufferSize"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setReuseAddress"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setReusePort"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setSendBufferSize"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setSoLinger"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpNoDelay"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getIntOpt"
+descriptor = "(III)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setIntOpt"
+descriptor = "(IIII)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getRawOptAddress"
+descriptor = "(IIIJI)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setRawOptAddress"
+descriptor = "(IIIJI)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getRawOptArray"
+descriptor = "(III[BII)V"
+kind = "native"
+references = 2
+
+[[member]]
+name = "setRawOptArray"
+descriptor = "(III[BII)V"
+kind = "native"
+references = 2
+
+[[member]]
+name = "sendAddress"
+descriptor = "(IJII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendToAddressDomainSocket"
+descriptor = "(IJII[B)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendToAddressesDomainSocket"
+descriptor = "(IJI[B)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "send"
+descriptor = "(ILjava/nio/ByteBuffer;II)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendToDomainSocket"
+descriptor = "(ILjava/nio/ByteBuffer;II[B)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "disconnect"
+descriptor = "(IZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTrafficClass"
+descriptor = "(IZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTrafficClass"
+descriptor = "(IZI)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendToAddress"
+descriptor = "(IZJII[BIII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendToAddresses"
+descriptor = "(IZJI[BIII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendTo"
+descriptor = "(IZLjava/nio/ByteBuffer;II[BIII)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "shutdown"
+descriptor = "(IZZ)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "isIPv6Preferred0"
+descriptor = "(Z)Z"
+kind = "native"
+references = 1

@@ -1,0 +1,43 @@
+class = "java/io/DataInputStream"
+
+[[member]]
+name = "readByte"
+descriptor = "()B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "readInt"
+descriptor = "()I"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "readLong"
+descriptor = "()J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "readUTF"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 17
+
+[[member]]
+name = "readBoolean"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 9

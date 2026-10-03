@@ -1,0 +1,73 @@
+class = "java/util/TimeZone"
+
+[[member]]
+name = "getRawOffset"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getID"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "toZoneId"
+descriptor = "()Ljava/time/ZoneId;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDefault"
+descriptor = "()Ljava/util/TimeZone;"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "useDaylightTime"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAvailableIDs"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOffset"
+descriptor = "(IIIIII)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getOffset"
+descriptor = "(J)I"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getTimeZone"
+descriptor = "(Ljava/lang/String;)Ljava/util/TimeZone;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "inDaylightTime"
+descriptor = "(Ljava/util/Date;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDisplayName"
+descriptor = "(ZILjava/util/Locale;)Ljava/lang/String;"
+kind = "builtin"
+references = 1

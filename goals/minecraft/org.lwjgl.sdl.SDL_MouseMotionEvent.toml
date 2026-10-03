@@ -1,0 +1,25 @@
+class = "org/lwjgl/sdl/SDL_MouseMotionEvent"
+
+[[member]]
+name = "x"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "xrel"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "y"
+descriptor = "()F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "yrel"
+descriptor = "()F"
+kind = "builtin"
+references = 1

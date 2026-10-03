@@ -1,0 +1,37 @@
+class = "com/sun/jna/platform/unix/solaris/LibKstat$Kstat"
+
+[[member]]
+name = "next"
+descriptor = "()Lcom/sun/jna/platform/unix/solaris/LibKstat$Kstat;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ks_type"
+descriptor = "B"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "ks_instance"
+descriptor = "I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "ks_snaptime"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ks_module"
+descriptor = "[B"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "ks_name"
+descriptor = "[B"
+kind = "builtin"
+references = 3

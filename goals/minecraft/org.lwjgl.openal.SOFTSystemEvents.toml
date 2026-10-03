@@ -1,0 +1,19 @@
+class = "org/lwjgl/openal/SOFTSystemEvents"
+
+[[member]]
+name = "alcEventIsSupportedSOFT"
+descriptor = "(II)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcEventCallbackSOFT"
+descriptor = "(Lorg/lwjgl/openal/SOFTSystemEventProcI;J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "alcEventControlSOFT"
+descriptor = "([IZ)Z"
+kind = "builtin"
+references = 1

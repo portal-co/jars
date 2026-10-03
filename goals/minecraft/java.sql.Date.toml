@@ -1,0 +1,7 @@
+class = "java/sql/Date"
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2

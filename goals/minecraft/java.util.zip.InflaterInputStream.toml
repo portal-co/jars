@@ -1,0 +1,13 @@
+class = "java/util/zip/InflaterInputStream"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/InputStream;Ljava/util/zip/Inflater;)V"
+kind = "builtin"
+references = 1

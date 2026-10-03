@@ -1,0 +1,37 @@
+class = "java/net/http/HttpRequest$Builder"
+
+[[member]]
+name = "GET"
+descriptor = "()Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HEAD"
+descriptor = "()Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "build"
+descriptor = "()Ljava/net/http/HttpRequest;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setHeader"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "POST"
+descriptor = "(Ljava/net/http/HttpRequest$BodyPublisher;)Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "timeout"
+descriptor = "(Ljava/time/Duration;)Ljava/net/http/HttpRequest$Builder;"
+kind = "builtin"
+references = 2

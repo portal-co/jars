@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/WinBase$SYSTEM_INFO$UNION"
+
+[[member]]
+name = "pi"
+descriptor = "Lcom/sun/jna/platform/win32/WinBase$SYSTEM_INFO$PI;"
+kind = "builtin"
+references = 2

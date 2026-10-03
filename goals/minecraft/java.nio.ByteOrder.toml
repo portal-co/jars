@@ -1,0 +1,25 @@
+class = "java/nio/ByteOrder"
+
+[[member]]
+name = "nativeOrder"
+descriptor = "()Ljava/nio/ByteOrder;"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "BIG_ENDIAN"
+descriptor = "Ljava/nio/ByteOrder;"
+kind = "builtin"
+references = 81
+
+[[member]]
+name = "LITTLE_ENDIAN"
+descriptor = "Ljava/nio/ByteOrder;"
+kind = "builtin"
+references = 48

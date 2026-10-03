@@ -1,0 +1,97 @@
+class = "java/net/InetAddress"
+
+[[member]]
+name = "getCanonicalHostName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getHostAddress"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "getHostName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getLocalHost"
+descriptor = "()Ljava/net/InetAddress;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isAnyLocalAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isLinkLocalAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isLoopbackAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isMulticastAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isSiteLocalAddress"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAddress"
+descriptor = "()[B"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getByName"
+descriptor = "(Ljava/lang/String;)Ljava/net/InetAddress;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "getAllByName"
+descriptor = "(Ljava/lang/String;)[Ljava/net/InetAddress;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getByAddress"
+descriptor = "(Ljava/lang/String;[B)Ljava/net/InetAddress;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getByAddress"
+descriptor = "([B)Ljava/net/InetAddress;"
+kind = "builtin"
+references = 3

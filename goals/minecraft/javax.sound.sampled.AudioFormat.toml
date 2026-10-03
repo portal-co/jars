@@ -1,0 +1,31 @@
+class = "javax/sound/sampled/AudioFormat"
+
+[[member]]
+name = "getSampleRate"
+descriptor = "()F"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getChannels"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getSampleSizeInBits"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getEncoding"
+descriptor = "()Ljavax/sound/sampled/AudioFormat$Encoding;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(FIIZZ)V"
+kind = "builtin"
+references = 1

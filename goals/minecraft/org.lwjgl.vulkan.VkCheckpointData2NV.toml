@@ -1,0 +1,25 @@
+class = "org/lwjgl/vulkan/VkCheckpointData2NV"
+
+[[member]]
+name = "pCheckpointMarker"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "stage"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkCheckpointData2NV;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(ILorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkCheckpointData2NV$Buffer;"
+kind = "builtin"
+references = 1

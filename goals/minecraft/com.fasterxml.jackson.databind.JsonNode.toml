@@ -1,0 +1,55 @@
+class = "com/fasterxml/jackson/databind/JsonNode"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getNodeType"
+descriptor = "()Lcom/fasterxml/jackson/databind/node/JsonNodeType;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "asText"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "fields"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "iterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isArray"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "isObject"
+descriptor = "()Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isValueNode"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)Lcom/fasterxml/jackson/databind/JsonNode;"
+kind = "builtin"
+references = 4

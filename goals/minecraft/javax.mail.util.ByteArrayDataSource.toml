@@ -1,0 +1,7 @@
+class = "javax/mail/util/ByteArrayDataSource"
+
+[[member]]
+name = "<init>"
+descriptor = "([BLjava/lang/String;)V"
+kind = "builtin"
+references = 1

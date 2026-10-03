@@ -1,37 +1,187 @@
 class = "java/util/Collections"
 
 [[member]]
+name = "emptyIterator"
+descriptor = "()Ljava/util/Iterator;"
+kind = "builtin"
+references = 6
+
+[[member]]
 name = "emptyList"
 descriptor = "()Ljava/util/List;"
 kind = "builtin"
-references = 4
+references = 111
 
 [[member]]
 name = "emptyMap"
 descriptor = "()Ljava/util/Map;"
 kind = "builtin"
-references = 1
+references = 47
+
+[[member]]
+name = "emptySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "nCopies"
+descriptor = "(ILjava/lang/Object;)Ljava/util/List;"
+kind = "builtin"
+references = 5
 
 [[member]]
 name = "singletonList"
 descriptor = "(Ljava/lang/Object;)Ljava/util/List;"
 kind = "builtin"
-references = 2
+references = 21
 
 [[member]]
 name = "singleton"
 descriptor = "(Ljava/lang/Object;)Ljava/util/Set;"
 kind = "builtin"
+references = 33
+
+[[member]]
+name = "singletonMap"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Map;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "max"
+descriptor = "(Ljava/util/Collection;)Ljava/lang/Object;"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "unmodifiableCollection"
+descriptor = "(Ljava/util/Collection;)Ljava/util/Collection;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "enumeration"
+descriptor = "(Ljava/util/Collection;)Ljava/util/Enumeration;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "disjoint"
+descriptor = "(Ljava/util/Collection;Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "min"
+descriptor = "(Ljava/util/Collection;Ljava/util/Comparator;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;[Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "reverseOrder"
+descriptor = "(Ljava/util/Comparator;)Ljava/util/Comparator;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "list"
+descriptor = "(Ljava/util/Enumeration;)Ljava/util/ArrayList;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "synchronizedList"
+descriptor = "(Ljava/util/List;)Ljava/util/List;"
+kind = "builtin"
+references = 3
 
 [[member]]
 name = "unmodifiableList"
 descriptor = "(Ljava/util/List;)Ljava/util/List;"
 kind = "builtin"
-references = 2
+references = 48
 
 [[member]]
 name = "reverse"
 descriptor = "(Ljava/util/List;)V"
 kind = "builtin"
+references = 9
+
+[[member]]
+name = "shuffle"
+descriptor = "(Ljava/util/List;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "sort"
+descriptor = "(Ljava/util/List;)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "rotate"
+descriptor = "(Ljava/util/List;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "swap"
+descriptor = "(Ljava/util/List;II)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "binarySearch"
+descriptor = "(Ljava/util/List;Ljava/lang/Object;Ljava/util/Comparator;)I"
+kind = "builtin"
 references = 2
+
+[[member]]
+name = "sort"
+descriptor = "(Ljava/util/List;Ljava/util/Comparator;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "synchronizedMap"
+descriptor = "(Ljava/util/Map;)Ljava/util/Map;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unmodifiableMap"
+descriptor = "(Ljava/util/Map;)Ljava/util/Map;"
+kind = "builtin"
+references = 46
+
+[[member]]
+name = "newSetFromMap"
+descriptor = "(Ljava/util/Map;)Ljava/util/Set;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "unmodifiableSet"
+descriptor = "(Ljava/util/Set;)Ljava/util/Set;"
+kind = "builtin"
+references = 57
+
+[[member]]
+name = "unmodifiableSortedMap"
+descriptor = "(Ljava/util/SortedMap;)Ljava/util/SortedMap;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "unmodifiableSortedSet"
+descriptor = "(Ljava/util/SortedSet;)Ljava/util/SortedSet;"
+kind = "builtin"
+references = 5

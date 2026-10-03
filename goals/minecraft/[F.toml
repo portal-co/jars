@@ -1,0 +1,7 @@
+class = "[F"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 2

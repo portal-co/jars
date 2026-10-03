@@ -1,0 +1,13 @@
+class = "org/lwjgl/util/shaderc/ShadercIncludeResultRelease"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "create"
+descriptor = "(Lorg/lwjgl/util/shaderc/ShadercIncludeResultReleaseI;)Lorg/lwjgl/util/shaderc/ShadercIncludeResultRelease;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "java/util/NavigableMap"
+
+[[member]]
+name = "floorEntry"
+descriptor = "(Ljava/lang/Object;)Ljava/util/Map$Entry;"
+kind = "builtin"
+references = 1

@@ -1,7 +1,37 @@
 class = "java/nio/charset/StandardCharsets"
 
 [[member]]
+name = "ISO_8859_1"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "US_ASCII"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "UTF_16"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "UTF_16BE"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "UTF_16LE"
+descriptor = "Ljava/nio/charset/Charset;"
+kind = "builtin"
+references = 9
+
+[[member]]
 name = "UTF_8"
 descriptor = "Ljava/nio/charset/Charset;"
 kind = "builtin"
-references = 3
+references = 126

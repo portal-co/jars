@@ -1,7 +1,187 @@
 class = "java/lang/Long"
 
 [[member]]
+name = "intValue"
+descriptor = "()I"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 545
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bitCount"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "hashCode"
+descriptor = "(J)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "numberOfLeadingZeros"
+descriptor = "(J)I"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "numberOfTrailingZeros"
+descriptor = "(J)I"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "highestOneBit"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reverse"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "reverseBytes"
+descriptor = "(J)J"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "valueOf"
+descriptor = "(J)Ljava/lang/Long;"
+kind = "builtin"
+references = 404
+
+[[member]]
+name = "toHexString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "toOctalString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "toUnsignedString"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rotateLeft"
+descriptor = "(JI)J"
+kind = "builtin"
+references = 85
+
+[[member]]
+name = "rotateRight"
+descriptor = "(JI)J"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "toString"
+descriptor = "(JI)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compare"
+descriptor = "(JJ)I"
+kind = "builtin"
+references = 50
+
+[[member]]
+name = "compareUnsigned"
+descriptor = "(JJ)I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "divideUnsigned"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "max"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "remainderUnsigned"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "sum"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Long;)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "parseLong"
+descriptor = "(Ljava/lang/String;)J"
+kind = "builtin"
+references = 33
+
+[[member]]
+name = "decode"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Long;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "valueOf"
+descriptor = "(Ljava/lang/String;)Ljava/lang/Long;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "parseLong"
+descriptor = "(Ljava/lang/String;I)J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "parseUnsignedLong"
+descriptor = "(Ljava/lang/String;I)J"
+kind = "builtin"
+references = 1
+
+[[member]]
 name = "TYPE"
 descriptor = "Ljava/lang/Class;"
 kind = "builtin"
-references = 3
+references = 31

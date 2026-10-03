@@ -1,0 +1,25 @@
+class = "org/lwjgl/util/freetype/FT_Bitmap"
+
+[[member]]
+name = "pixel_mode"
+descriptor = "()B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "rows"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "width"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "buffer"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1

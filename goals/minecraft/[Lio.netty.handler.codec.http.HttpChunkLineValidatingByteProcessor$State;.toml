@@ -1,0 +1,7 @@
+class = "[Lio/netty/handler/codec/http/HttpChunkLineValidatingByteProcessor$State;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,31 @@
+class = "org/w3c/dom/Element"
+
+[[member]]
+name = "getTagName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAttributes"
+descriptor = "()Lorg/w3c/dom/NamedNodeMap;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getChildNodes"
+descriptor = "()Lorg/w3c/dom/NodeList;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setAttribute"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "appendChild"
+descriptor = "(Lorg/w3c/dom/Node;)Lorg/w3c/dom/Node;"
+kind = "builtin"
+references = 2

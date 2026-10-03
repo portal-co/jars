@@ -1,0 +1,133 @@
+class = "java/util/Calendar"
+
+[[member]]
+name = "getFirstDayOfWeek"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getWeekYear"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getTimeInMillis"
+descriptor = "()J"
+kind = "builtin"
+references = 18
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "()Ljava/util/Calendar;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getTime"
+descriptor = "()Ljava/util/Date;"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "getTimeZone"
+descriptor = "()Ljava/util/TimeZone;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(I)I"
+kind = "builtin"
+references = 75
+
+[[member]]
+name = "getLeastMaximum"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMaximum"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setMinimalDaysInFirstWeek"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "add"
+descriptor = "(II)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "set"
+descriptor = "(II)V"
+kind = "builtin"
+references = 113
+
+[[member]]
+name = "set"
+descriptor = "(III)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "set"
+descriptor = "(IIIIII)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setTimeInMillis"
+descriptor = "(J)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "setTime"
+descriptor = "(Ljava/util/Date;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/util/TimeZone;)Ljava/util/Calendar;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "setTimeZone"
+descriptor = "(Ljava/util/TimeZone;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/util/TimeZone;Ljava/util/Locale;)Ljava/util/Calendar;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setLenient"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 2

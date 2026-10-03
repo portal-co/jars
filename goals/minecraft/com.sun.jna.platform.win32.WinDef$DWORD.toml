@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/WinDef$DWORD"
+
+[[member]]
+name = "longValue"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(J)V"
+kind = "builtin"
+references = 2

@@ -1,0 +1,7 @@
+class = "java/io/ObjectStreamField"
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/Class;)V"
+kind = "builtin"
+references = 7

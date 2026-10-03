@@ -1,0 +1,91 @@
+class = "org/lwjgl/PointerBuffer"
+
+[[member]]
+name = "capacity"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "limit"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "remaining"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "address0"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "()J"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "clear"
+descriptor = "()Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "flip"
+descriptor = "()Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "rewind"
+descriptor = "()Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "free"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "hasRemaining"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "(I)J"
+kind = "builtin"
+references = 34
+
+[[member]]
+name = "limit"
+descriptor = "(I)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "slice"
+descriptor = "(II)Lorg/lwjgl/system/CustomBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(ILjava/nio/ByteBuffer;)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/nio/ByteBuffer;)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 3

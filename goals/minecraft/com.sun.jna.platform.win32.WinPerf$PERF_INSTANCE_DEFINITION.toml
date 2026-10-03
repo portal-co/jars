@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/WinPerf$PERF_INSTANCE_DEFINITION"
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/sun/jna/Pointer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ByteLength"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "NameOffset"
+descriptor = "I"
+kind = "builtin"
+references = 1

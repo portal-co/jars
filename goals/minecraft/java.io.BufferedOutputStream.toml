@@ -1,0 +1,19 @@
+class = "java/io/BufferedOutputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;I)V"
+kind = "builtin"
+references = 1

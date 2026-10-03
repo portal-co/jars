@@ -1,0 +1,19 @@
+class = "org/lwjgl/system/Platform"
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getArchitecture"
+descriptor = "()Lorg/lwjgl/system/Platform$Architecture;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "get"
+descriptor = "()Lorg/lwjgl/system/Platform;"
+kind = "builtin"
+references = 1

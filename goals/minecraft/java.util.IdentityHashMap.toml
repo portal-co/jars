@@ -4,4 +4,28 @@ class = "java/util/IdentityHashMap"
 name = "<init>"
 descriptor = "()V"
 kind = "builtin"
+references = 32
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/util/Map;)V"
+kind = "builtin"
 references = 1

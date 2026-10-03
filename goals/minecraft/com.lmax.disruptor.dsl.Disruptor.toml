@@ -1,0 +1,49 @@
+class = "com/lmax/disruptor/dsl/Disruptor"
+
+[[member]]
+name = "getRingBuffer"
+descriptor = "()Lcom/lmax/disruptor/RingBuffer;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "start"
+descriptor = "()Lcom/lmax/disruptor/RingBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "halt"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "shutdown"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "<init>"
+descriptor = "(Lcom/lmax/disruptor/EventFactory;ILjava/util/concurrent/ThreadFactory;Lcom/lmax/disruptor/dsl/ProducerType;Lcom/lmax/disruptor/WaitStrategy;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "publishEvent"
+descriptor = "(Lcom/lmax/disruptor/EventTranslator;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setDefaultExceptionHandler"
+descriptor = "(Lcom/lmax/disruptor/ExceptionHandler;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "handleEventsWith"
+descriptor = "([Lcom/lmax/disruptor/EventHandler;)Lcom/lmax/disruptor/dsl/EventHandlerGroup;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,67 @@
+class = "javax/net/ssl/SSLContext"
+
+[[member]]
+name = "getProvider"
+descriptor = "()Ljava/security/Provider;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDefault"
+descriptor = "()Ljavax/net/ssl/SSLContext;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createSSLEngine"
+descriptor = "()Ljavax/net/ssl/SSLEngine;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getDefaultSSLParameters"
+descriptor = "()Ljavax/net/ssl/SSLParameters;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getSupportedSSLParameters"
+descriptor = "()Ljavax/net/ssl/SSLParameters;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getClientSessionContext"
+descriptor = "()Ljavax/net/ssl/SSLSessionContext;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getServerSessionContext"
+descriptor = "()Ljavax/net/ssl/SSLSessionContext;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSocketFactory"
+descriptor = "()Ljavax/net/ssl/SSLSocketFactory;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/net/ssl/SSLContext;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;Ljava/security/Provider;)Ljavax/net/ssl/SSLContext;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "init"
+descriptor = "([Ljavax/net/ssl/KeyManager;[Ljavax/net/ssl/TrustManager;Ljava/security/SecureRandom;)V"
+kind = "builtin"
+references = 6

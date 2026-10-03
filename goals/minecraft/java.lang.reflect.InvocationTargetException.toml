@@ -1,0 +1,8 @@
+class = "java/lang/reflect/InvocationTargetException"
+
+[[member]]
+name = "getCause"
+descriptor = "()Ljava/lang/Throwable;"
+kind = "builtin"
+reason = "closed-world"
+references = 7

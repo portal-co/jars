@@ -1,0 +1,13 @@
+class = "java/lang/Comparable"
+
+[[member]]
+name = "compareTo"
+descriptor = "(Ljava/lang/Object;)I"
+kind = "builtin"
+references = 64
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3

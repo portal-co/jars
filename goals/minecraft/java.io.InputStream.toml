@@ -1,7 +1,73 @@
 class = "java/io/InputStream"
 
 [[member]]
+name = "available"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "read"
+descriptor = "()I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 18
+
+[[member]]
 name = "close"
 descriptor = "()V"
 kind = "builtin"
-references = 8
+references = 141
+
+[[member]]
+name = "reset"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "markSupported"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "readAllBytes"
+descriptor = "()[B"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "mark"
+descriptor = "(I)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "skip"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "transferTo"
+descriptor = "(Ljava/io/OutputStream;)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "read"
+descriptor = "([B)I"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "read"
+descriptor = "([BII)I"
+kind = "builtin"
+references = 19

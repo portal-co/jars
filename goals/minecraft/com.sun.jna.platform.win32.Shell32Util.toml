@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/Shell32Util"
+
+[[member]]
+name = "CommandLineToArgv"
+descriptor = "(Ljava/lang/String;)[Ljava/lang/String;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,157 @@
+class = "javax/net/ssl/SSLEngine"
+
+[[member]]
+name = "getPeerPort"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getDelegatedTask"
+descriptor = "()Ljava/lang/Runnable;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getPeerHost"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getHandshakeStatus"
+descriptor = "()Ljavax/net/ssl/SSLEngineResult$HandshakeStatus;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getSSLParameters"
+descriptor = "()Ljavax/net/ssl/SSLParameters;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getSession"
+descriptor = "()Ljavax/net/ssl/SSLSession;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "beginHandshake"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "closeInbound"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "closeOutbound"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getNeedClientAuth"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getUseClientMode"
+descriptor = "()Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getWantClientAuth"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "isInboundDone"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEnabledCipherSuites"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getEnabledProtocols"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getSupportedCipherSuites"
+descriptor = "()[Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unwrap"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)Ljavax/net/ssl/SSLEngineResult;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setSSLParameters"
+descriptor = "(Ljavax/net/ssl/SSLParameters;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setNeedClientAuth"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setUseClientMode"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setWantClientAuth"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setEnabledCipherSuites"
+descriptor = "([Ljava/lang/String;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setEnabledProtocols"
+descriptor = "([Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "wrap"
+descriptor = "([Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)Ljavax/net/ssl/SSLEngineResult;"
+kind = "builtin"
+references = 1

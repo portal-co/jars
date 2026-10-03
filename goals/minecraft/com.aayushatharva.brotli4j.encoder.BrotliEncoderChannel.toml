@@ -1,0 +1,19 @@
+class = "com/aayushatharva/brotli4j/encoder/BrotliEncoderChannel"
+
+[[member]]
+name = "flush"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "(Ljava/nio/ByteBuffer;)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/nio/channels/WritableByteChannel;Lcom/aayushatharva/brotli4j/encoder/Encoder$Parameters;)V"
+kind = "builtin"
+references = 1

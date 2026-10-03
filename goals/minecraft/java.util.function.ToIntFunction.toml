@@ -1,0 +1,7 @@
+class = "java/util/function/ToIntFunction"
+
+[[member]]
+name = "applyAsInt"
+descriptor = "(Ljava/lang/Object;)I"
+kind = "builtin"
+references = 27

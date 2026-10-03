@@ -1,7 +1,193 @@
 class = "java/util/Set"
 
 [[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 105
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
 name = "iterator"
 descriptor = "()Ljava/util/Iterator;"
 kind = "builtin"
+references = 487
+
+[[member]]
+name = "of"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 69
+
+[[member]]
+name = "spliterator"
+descriptor = "()Ljava/util/Spliterator;"
+kind = "builtin"
 references = 1
+
+[[member]]
+name = "stream"
+descriptor = "()Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 157
+
+[[member]]
+name = "clear"
+descriptor = "()V"
+kind = "builtin"
+references = 52
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 145
+
+[[member]]
+name = "toArray"
+descriptor = "()[Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 71
+
+[[member]]
+name = "add"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 458
+
+[[member]]
+name = "contains"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 295
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 85
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 22
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "of"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "copyOf"
+descriptor = "(Ljava/util/Collection;)Ljava/util/Set;"
+kind = "builtin"
+references = 20
+
+[[member]]
+name = "addAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 83
+
+[[member]]
+name = "containsAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "removeAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "retainAll"
+descriptor = "(Ljava/util/Collection;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/Consumer;)V"
+kind = "builtin"
+references = 26
+
+[[member]]
+name = "toArray"
+descriptor = "(Ljava/util/function/IntFunction;)[Ljava/lang/Object;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "removeIf"
+descriptor = "(Ljava/util/function/Predicate;)Z"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "of"
+descriptor = "([Ljava/lang/Object;)Ljava/util/Set;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "toArray"
+descriptor = "([Ljava/lang/Object;)[Ljava/lang/Object;"
+kind = "builtin"
+references = 15

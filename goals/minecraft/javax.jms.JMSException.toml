@@ -1,0 +1,7 @@
+class = "javax/jms/JMSException"
+
+[[member]]
+name = "getLocalizedMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 4

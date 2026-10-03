@@ -1,0 +1,79 @@
+class = "java/sql/PreparedStatement"
+
+[[member]]
+name = "executeUpdate"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getMetaData"
+descriptor = "()Ljava/sql/ResultSetMetaData;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addBatch"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "clearParameters"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "executeBatch"
+descriptor = "()[I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setNull"
+descriptor = "(II)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setClob"
+descriptor = "(ILjava/io/Reader;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setNClob"
+descriptor = "(ILjava/io/Reader;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setObject"
+descriptor = "(ILjava/lang/Object;)V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setNString"
+descriptor = "(ILjava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setString"
+descriptor = "(ILjava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setTimestamp"
+descriptor = "(ILjava/sql/Timestamp;)V"
+kind = "builtin"
+references = 1

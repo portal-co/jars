@@ -1,0 +1,7 @@
+class = "com/fasterxml/jackson/databind/ser/impl/SimpleBeanPropertyFilter"
+
+[[member]]
+name = "serializeAllExcept"
+descriptor = "(Ljava/util/Set;)Lcom/fasterxml/jackson/databind/ser/impl/SimpleBeanPropertyFilter;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,37 @@
+class = "org/lwjgl/vulkan/VkDeviceCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pNext"
+descriptor = "(J)Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "ppEnabledExtensionNames"
+descriptor = "(Lorg/lwjgl/PointerBuffer;)Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pQueueCreateInfos"
+descriptor = "(Lorg/lwjgl/vulkan/VkDeviceQueueCreateInfo$Buffer;)Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pEnabledFeatures"
+descriptor = "(Lorg/lwjgl/vulkan/VkPhysicalDeviceFeatures;)Lorg/lwjgl/vulkan/VkDeviceCreateInfo;"
+kind = "builtin"
+references = 1

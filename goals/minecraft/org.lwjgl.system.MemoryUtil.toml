@@ -1,0 +1,205 @@
+class = "org/lwjgl/system/MemoryUtil"
+
+[[member]]
+name = "memAlloc"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "memCalloc"
+descriptor = "(I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memAllocInt"
+descriptor = "(I)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memAllocPointer"
+descriptor = "(I)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memGetByte"
+descriptor = "(J)B"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memGetInt"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memGetAddress"
+descriptor = "(J)J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "nmemAlloc"
+descriptor = "(J)J"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "memASCII"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memUTF8"
+descriptor = "(J)Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "nmemFree"
+descriptor = "(J)V"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "memPutByte"
+descriptor = "(JB)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "memPutFloat"
+descriptor = "(JF)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "memASCII"
+descriptor = "(JI)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memByteBuffer"
+descriptor = "(JI)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "memIntBuffer"
+descriptor = "(JI)Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "memPutInt"
+descriptor = "(JI)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "memSet"
+descriptor = "(JIJ)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "nmemCalloc"
+descriptor = "(JJ)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memCopy"
+descriptor = "(JJJ)V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "memPutShort"
+descriptor = "(JS)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "memUTF8"
+descriptor = "(Ljava/lang/CharSequence;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memUTF8"
+descriptor = "(Ljava/lang/CharSequence;Z)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "memAddress"
+descriptor = "(Ljava/nio/ByteBuffer;)J"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "memFree"
+descriptor = "(Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "memRealloc"
+descriptor = "(Ljava/nio/ByteBuffer;I)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memSlice"
+descriptor = "(Ljava/nio/ByteBuffer;II)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "memCopy"
+descriptor = "(Ljava/nio/ByteBuffer;Ljava/nio/ByteBuffer;)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "memByteBuffer"
+descriptor = "(Ljava/nio/IntBuffer;)Ljava/nio/ByteBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memFree"
+descriptor = "(Ljava/nio/IntBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memRealloc"
+descriptor = "(Lorg/lwjgl/PointerBuffer;I)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memFree"
+descriptor = "(Lorg/lwjgl/system/CustomBuffer;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "memSet"
+descriptor = "(Lorg/lwjgl/system/CustomBuffer;I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAllocator"
+descriptor = "(Z)Lorg/lwjgl/system/MemoryUtil$MemoryAllocator;"
+kind = "builtin"
+references = 1

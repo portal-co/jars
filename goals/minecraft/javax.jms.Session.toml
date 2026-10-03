@@ -1,0 +1,31 @@
+class = "javax/jms/Session"
+
+[[member]]
+name = "createMapMessage"
+descriptor = "()Ljavax/jms/MapMessage;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createObjectMessage"
+descriptor = "(Ljava/io/Serializable;)Ljavax/jms/ObjectMessage;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createTextMessage"
+descriptor = "(Ljava/lang/String;)Ljavax/jms/TextMessage;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "createProducer"
+descriptor = "(Ljavax/jms/Destination;)Ljavax/jms/MessageProducer;"
+kind = "builtin"
+references = 1

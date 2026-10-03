@@ -1,0 +1,31 @@
+class = "java/util/concurrent/locks/Lock"
+
+[[member]]
+name = "newCondition"
+descriptor = "()Ljava/util/concurrent/locks/Condition;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "lock"
+descriptor = "()V"
+kind = "builtin"
+references = 32
+
+[[member]]
+name = "lockInterruptibly"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "unlock"
+descriptor = "()V"
+kind = "builtin"
+references = 75
+
+[[member]]
+name = "tryLock"
+descriptor = "()Z"
+kind = "builtin"
+references = 2

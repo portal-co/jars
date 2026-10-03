@@ -1,0 +1,235 @@
+class = "org/lwjgl/sdl/SDLVideo"
+
+[[member]]
+name = "SDL_GetPrimaryDisplay"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetCurrentVideoDriver"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetDisplays"
+descriptor = "()Ljava/nio/IntBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_UnloadLibrary"
+descriptor = "()V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GetDisplayName"
+descriptor = "(I)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetFullscreenDisplayModes"
+descriptor = "(I)Lorg/lwjgl/PointerBuffer;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetCurrentDisplayMode"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_DisplayMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetDesktopDisplayMode"
+descriptor = "(I)Lorg/lwjgl/sdl/SDL_DisplayMode;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_SetSwapInterval"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_SetAttribute"
+descriptor = "(II)Z"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "SDL_GetClosestFullscreenDisplayMode"
+descriptor = "(IIIFZLorg/lwjgl/sdl/SDL_DisplayMode;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_GetAttribute"
+descriptor = "(ILjava/nio/IntBuffer;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GetDisplayBounds"
+descriptor = "(ILorg/lwjgl/sdl/SDL_Rect;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GetWindowPixelDensity"
+descriptor = "(J)F"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetDisplayForWindow"
+descriptor = "(J)I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GL_CreateContext"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetWindowFlags"
+descriptor = "(J)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetWindowFullscreenMode"
+descriptor = "(J)Lorg/lwjgl/sdl/SDL_DisplayMode;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_DestroyWindow"
+descriptor = "(J)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "SDL_GL_DestroyContext"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GL_SwapWindow"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_RestoreWindow"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SyncWindow"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowMaximumSize"
+descriptor = "(JII)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowMinimumSize"
+descriptor = "(JII)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowPosition"
+descriptor = "(JII)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowSize"
+descriptor = "(JII)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_MakeCurrent"
+descriptor = "(JJ)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowTitle"
+descriptor = "(JLjava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GetWindowPosition"
+descriptor = "(JLjava/nio/IntBuffer;Ljava/nio/IntBuffer;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_GetWindowSizeInPixels"
+descriptor = "(JLjava/nio/IntBuffer;Ljava/nio/IntBuffer;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowFullscreenMode"
+descriptor = "(JLorg/lwjgl/sdl/SDL_DisplayMode;)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_SetWindowIcon"
+descriptor = "(JLorg/lwjgl/sdl/SDL_Surface;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_SetWindowBordered"
+descriptor = "(JZ)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "SDL_SetWindowFullscreen"
+descriptor = "(JZ)Z"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "SDL_SetWindowMouseGrab"
+descriptor = "(JZ)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_GetProcAddress"
+descriptor = "(Ljava/lang/CharSequence;)J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_GL_LoadLibrary"
+descriptor = "(Ljava/lang/CharSequence;)Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "SDL_CreateWindow"
+descriptor = "(Ljava/lang/CharSequence;IIJ)J"
+kind = "builtin"
+references = 2

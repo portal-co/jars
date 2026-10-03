@@ -1,0 +1,7 @@
+class = "org/lwjgl/vulkan/KHRPushDescriptor"
+
+[[member]]
+name = "vkCmdPushDescriptorSetKHR"
+descriptor = "(Lorg/lwjgl/vulkan/VkCommandBuffer;IJILorg/lwjgl/vulkan/VkWriteDescriptorSet$Buffer;)V"
+kind = "builtin"
+references = 1

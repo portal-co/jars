@@ -1,0 +1,55 @@
+class = "com/sun/jna/platform/mac/SystemB$ProcBsdInfo"
+
+[[member]]
+name = "pbi_flags"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_gid"
+descriptor = "I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "pbi_nfiles"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_ppid"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_status"
+descriptor = "I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_uid"
+descriptor = "I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "pbi_start_tvsec"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_start_tvusec"
+descriptor = "J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "pbi_comm"
+descriptor = "[B"
+kind = "builtin"
+references = 1

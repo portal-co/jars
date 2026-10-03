@@ -1,0 +1,37 @@
+class = "java/lang/StackWalker$StackFrame"
+
+[[member]]
+name = "getLineNumber"
+descriptor = "()I"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getDeclaringClass"
+descriptor = "()Ljava/lang/Class;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "toStackTraceElement"
+descriptor = "()Ljava/lang/StackTraceElement;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getClassName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getFileName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getMethodName"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,25 @@
+class = "javax/net/ssl/TrustManagerFactory"
+
+[[member]]
+name = "getDefaultAlgorithm"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getTrustManagers"
+descriptor = "()[Ljavax/net/ssl/TrustManager;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/lang/String;)Ljavax/net/ssl/TrustManagerFactory;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "init"
+descriptor = "(Ljava/security/KeyStore;)V"
+kind = "builtin"
+references = 1

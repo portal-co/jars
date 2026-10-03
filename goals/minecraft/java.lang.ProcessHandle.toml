@@ -1,0 +1,13 @@
+class = "java/lang/ProcessHandle"
+
+[[member]]
+name = "pid"
+descriptor = "()J"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "current"
+descriptor = "()Ljava/lang/ProcessHandle;"
+kind = "builtin"
+references = 1

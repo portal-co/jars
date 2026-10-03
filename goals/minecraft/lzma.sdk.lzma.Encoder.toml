@@ -1,0 +1,7 @@
+class = "lzma/sdk/lzma/Encoder"
+
+[[member]]
+name = "code"
+descriptor = "(Ljava/io/InputStream;Ljava/io/OutputStream;JJLlzma/sdk/ICodeProgress;)V"
+kind = "builtin"
+references = 1

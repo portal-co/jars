@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/unix/aix/Perfstat$perfstat_id_t"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 3

@@ -1,0 +1,67 @@
+class = "org/lwjgl/vulkan/VkSamplerCreateInfo"
+
+[[member]]
+name = "sType$Default"
+descriptor = "()Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxAnisotropy"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "maxLod"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mipLodBias"
+descriptor = "(F)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addressModeU"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "addressModeV"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "magFilter"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "minFilter"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "mipmapMode"
+descriptor = "(I)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "calloc"
+descriptor = "(Lorg/lwjgl/system/MemoryStack;)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "anisotropyEnable"
+descriptor = "(Z)Lorg/lwjgl/vulkan/VkSamplerCreateInfo;"
+kind = "builtin"
+references = 1

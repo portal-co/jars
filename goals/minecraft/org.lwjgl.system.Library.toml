@@ -1,0 +1,7 @@
+class = "org/lwjgl/system/Library"
+
+[[member]]
+name = "initialize"
+descriptor = "()V"
+kind = "builtin"
+references = 1

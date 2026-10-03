@@ -1,0 +1,73 @@
+class = "java/util/concurrent/atomic/AtomicInteger"
+
+[[member]]
+name = "decrementAndGet"
+descriptor = "()I"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "get"
+descriptor = "()I"
+kind = "builtin"
+references = 42
+
+[[member]]
+name = "getAndDecrement"
+descriptor = "()I"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getAndIncrement"
+descriptor = "()I"
+kind = "builtin"
+references = 15
+
+[[member]]
+name = "incrementAndGet"
+descriptor = "()I"
+kind = "builtin"
+references = 43
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 46
+
+[[member]]
+name = "addAndGet"
+descriptor = "(I)I"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "getAndAdd"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getAndSet"
+descriptor = "(I)I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(I)V"
+kind = "builtin"
+references = 24
+
+[[member]]
+name = "set"
+descriptor = "(I)V"
+kind = "builtin"
+references = 12
+
+[[member]]
+name = "compareAndSet"
+descriptor = "(II)Z"
+kind = "builtin"
+references = 6

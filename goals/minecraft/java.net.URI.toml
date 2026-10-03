@@ -1,0 +1,139 @@
+class = "java/net/URI"
+
+[[member]]
+name = "getPort"
+descriptor = "()I"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getFragment"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getHost"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "getQuery"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getRawPath"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getRawQuery"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getScheme"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 25
+
+[[member]]
+name = "getSchemeSpecificPart"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getUserInfo"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toASCIIString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "toString"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 21
+
+[[member]]
+name = "normalize"
+descriptor = "()Ljava/net/URI;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "toURL"
+descriptor = "()Ljava/net/URL;"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "isAbsolute"
+descriptor = "()Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "equals"
+descriptor = "(Ljava/lang/Object;)Z"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "create"
+descriptor = "(Ljava/lang/String;)Ljava/net/URI;"
+kind = "builtin"
+references = 29
+
+[[member]]
+name = "resolve"
+descriptor = "(Ljava/lang/String;)Ljava/net/URI;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 14
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 2

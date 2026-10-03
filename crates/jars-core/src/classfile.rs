@@ -293,6 +293,11 @@ pub(crate) enum RawInstruction {
     InvokeDynamic {
         index: u16,
     },
+    /// A JVM opcode the lowering does not model. Its operands were consumed,
+    /// so a later instruction in the same method can still be visited.
+    Skipped {
+        opcode: u8,
+    },
     Unsupported {
         opcode: u8,
     },
@@ -553,6 +558,35 @@ impl ConstantPool {
         Ok((name, descriptor))
     }
 
+    /// Bootstrap-method table index of an `invokedynamic` constant.
+    pub(crate) fn invoke_dynamic_bootstrap(&self, index: u16) -> Result<u16, Error> {
+        match self.entry(index)? {
+            CpEntry::InvokeDynamic { bootstrap, .. } => Ok(*bootstrap),
+            _ => Err(Error::new(format!(
+                "constant-pool index {index} is not an invokedynamic"
+            ))),
+        }
+    }
+
+    /// Method named by a `CONSTANT_MethodHandle`, when the handle points at a
+    /// method rather than a field. The boolean is true for virtual and
+    /// interface handles, whose concrete targets may be overrides.
+    pub(crate) fn method_handle_call(
+        &self,
+        index: u16,
+    ) -> Result<Option<(bool, MemberRef)>, Error> {
+        let (kind, reference) = match self.entry(index)? {
+            CpEntry::MethodHandle { kind, reference } => (*kind, *reference),
+            _ => return Ok(None),
+        };
+        match kind {
+            5 => Ok(Some((true, self.method_ref(reference)?))),
+            6 | 7 | 8 => Ok(Some((false, self.method_ref(reference)?))),
+            9 => Ok(Some((true, self.interface_method_ref(reference)?))),
+            _ => Ok(None),
+        }
+    }
+
     pub(crate) fn constant(&self, index: u16) -> Result<ConstantValue<'_>, Error> {
         match self.entry(index)? {
             CpEntry::Integer(value) => Ok(ConstantValue::Integer(*value)),
@@ -808,6 +842,46 @@ pub(crate) fn parse(bytes: &[u8]) -> Result<ClassFile, Error> {
     })
 }
 
+/// Methods named by an `invokedynamic` bootstrap specifier: the bootstrap
+/// handle itself, plus any method-handle arguments (the lambda or other
+/// implementation method).
+pub(crate) fn bootstrap_method_refs(
+    class: &ClassFile,
+    bootstrap_index: u16,
+) -> Result<Vec<(bool, MemberRef)>, Error> {
+    let Some(attribute) = class
+        .attributes
+        .iter()
+        .find(|attribute| attribute.name == "BootstrapMethods")
+    else {
+        return Ok(Vec::new());
+    };
+    let mut reader = Reader::new(&attribute.info);
+    let count = reader.u2()?;
+    for index in 0..count {
+        let handle = reader.u2()?;
+        let argument_count = reader.u2()?;
+        let mut arguments = Vec::with_capacity(usize::from(argument_count));
+        for _ in 0..argument_count {
+            arguments.push(reader.u2()?);
+        }
+        if index != bootstrap_index {
+            continue;
+        }
+        let mut refs = Vec::new();
+        if let Some(member) = class.constant_pool.method_handle_call(handle)? {
+            refs.push(member);
+        }
+        for argument in arguments {
+            if let Some(member) = class.constant_pool.method_handle_call(argument)? {
+                refs.push(member);
+            }
+        }
+        return Ok(refs);
+    }
+    Ok(Vec::new())
+}
+
 pub(crate) fn constant_value(attribute: &Attribute) -> Result<Option<u16>, Error> {
     if attribute.name != "ConstantValue" {
         return Ok(None);
@@ -908,6 +982,7 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
     let opcode = reader.u1()?;
     use RawInstruction::*;
     Ok(match opcode {
+        0x00 => Skipped { opcode },
         0x01 => AConstNull,
         0x02 => IConst(-1),
         0x03..=0x08 => IConst(i32::from(opcode) - 3),
@@ -1006,6 +1081,7 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
         0x55 => CAStore,
         0x56 => SAStore,
         0x57 => Pop,
+        0x58 | 0x5a..=0x5f => Skipped { opcode },
         0x59 => Dup,
         0x60 => IAdd,
         0x61 => LAdd,
@@ -1032,6 +1108,7 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
         0x76 => FNeg,
         0x77 => DNeg,
         0x78 => IShl,
+        0x79 | 0x7b | 0x7d | 0x7f | 0x81 | 0x83 => Skipped { opcode },
         0x7a => IShr,
         0x7c => IUshr,
         0x7e => IAnd,
@@ -1041,6 +1118,7 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
             index: u16::from(reader.u1()?),
             value: i16::from(reader.i1()?),
         },
+        0x85..=0x98 => Skipped { opcode },
         0x99 => If {
             kind: IfKind::Eq,
             offset: i32::from(reader.i2()?),
@@ -1100,6 +1178,14 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
         0xa7 => Goto {
             offset: i32::from(reader.i2()?),
         },
+        0xa8 => {
+            let _ = reader.i2()?;
+            Skipped { opcode }
+        }
+        0xa9 => {
+            let _ = reader.u1()?;
+            Skipped { opcode }
+        }
         0xaa => {
             switch_padding(reader, offset)?;
             let default = reader.i4()?;
@@ -1191,6 +1277,11 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
         },
         0xbe => ArrayLength,
         0xbf => AThrow,
+        0xc0 | 0xc1 => {
+            let _ = reader.u2()?;
+            Skipped { opcode }
+        }
+        0xc2 | 0xc3 => Skipped { opcode },
         0xc4 => wide(reader, offset)?,
         0xc5 => MultiANewArray {
             index: reader.u2()?,
@@ -1207,6 +1298,10 @@ fn decode_one(reader: &mut Reader<'_>, offset: u32) -> Result<RawInstruction, Er
         0xc8 => Goto {
             offset: reader.i4()?,
         },
+        0xc9 => {
+            let _ = reader.i4()?;
+            Skipped { opcode }
+        }
         _ => Unsupported { opcode },
     })
 }
@@ -1219,6 +1314,9 @@ pub(crate) fn instructions(code: &[u8]) -> Result<Vec<(u32, RawInstruction)>, Er
         let instruction = decode_one(&mut reader, offset)?;
         let unsupported = matches!(instruction, RawInstruction::Unsupported { .. });
         instructions.push((offset, instruction));
+        // An unknown opcode has an unknown length, so the rest of the method
+        // cannot be scanned. Known opcodes the lowering skips still consume
+        // their operands and leave the following instructions addressable.
         if unsupported {
             break;
         }
@@ -1287,6 +1385,20 @@ mod tests {
             "😀"
         );
         assert_eq!(modified_utf8(&[0xed, 0xa0, 0x80]).unwrap(), "\u{FFFD}");
+    }
+
+    #[test]
+    fn checkcast_does_not_hide_a_following_invoke() {
+        let code = [0xc0, 0x00, 0x01, 0xb8, 0x00, 0x02];
+        let instructions = instructions(&code).unwrap();
+        assert!(matches!(
+            instructions[0].1,
+            RawInstruction::Skipped { opcode: 0xc0 }
+        ));
+        assert!(matches!(
+            instructions[1].1,
+            RawInstruction::InvokeStatic { index: 2 }
+        ));
     }
 
     #[test]

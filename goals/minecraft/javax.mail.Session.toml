@@ -1,0 +1,19 @@
+class = "javax/mail/Session"
+
+[[member]]
+name = "setProtocolForAddress"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getInstance"
+descriptor = "(Ljava/util/Properties;Ljavax/mail/Authenticator;)Ljavax/mail/Session;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setDebug"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

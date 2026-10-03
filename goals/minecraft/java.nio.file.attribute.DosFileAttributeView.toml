@@ -1,0 +1,7 @@
+class = "java/nio/file/attribute/DosFileAttributeView"
+
+[[member]]
+name = "setReadOnly"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 1

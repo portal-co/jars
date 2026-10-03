@@ -1,0 +1,7 @@
+class = "java/util/function/IntPredicate"
+
+[[member]]
+name = "test"
+descriptor = "(I)Z"
+kind = "builtin"
+references = 4

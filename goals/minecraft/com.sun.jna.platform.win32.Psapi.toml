@@ -1,0 +1,13 @@
+class = "com/sun/jna/platform/win32/Psapi"
+
+[[member]]
+name = "GetPerformanceInfo"
+descriptor = "(Lcom/sun/jna/platform/win32/Psapi$PERFORMANCE_INFORMATION;I)Z"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "INSTANCE"
+descriptor = "Lcom/sun/jna/platform/win32/Psapi;"
+kind = "builtin"
+references = 2

@@ -1,0 +1,13 @@
+class = "io/netty/internal/tcnative/SSLSession"
+
+[[member]]
+name = "free"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "shouldBeSingleUse"
+descriptor = "(J)Z"
+kind = "builtin"
+references = 1

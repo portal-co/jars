@@ -1,0 +1,7 @@
+class = "com/sun/jna/platform/win32/PowrProf"
+
+[[member]]
+name = "CallNtPowerInformation"
+descriptor = "(ILcom/sun/jna/Pointer;ILcom/sun/jna/Pointer;I)I"
+kind = "builtin"
+references = 1

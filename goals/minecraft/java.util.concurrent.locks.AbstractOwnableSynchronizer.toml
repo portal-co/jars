@@ -1,0 +1,13 @@
+class = "java/util/concurrent/locks/AbstractOwnableSynchronizer"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setExclusiveOwnerThread"
+descriptor = "(Ljava/lang/Thread;)V"
+kind = "builtin"
+references = 1

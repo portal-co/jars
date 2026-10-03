@@ -1,0 +1,67 @@
+class = "java/util/SortedMap"
+
+[[member]]
+name = "size"
+descriptor = "()I"
+kind = "builtin"
+references = 11
+
+[[member]]
+name = "firstKey"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "lastKey"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "comparator"
+descriptor = "()Ljava/util/Comparator;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "entrySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 6
+
+[[member]]
+name = "keySet"
+descriptor = "()Ljava/util/Set;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "isEmpty"
+descriptor = "()Z"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "get"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "remove"
+descriptor = "(Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "put"
+descriptor = "(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+kind = "builtin"
+references = 13
+
+[[member]]
+name = "forEach"
+descriptor = "(Ljava/util/function/BiConsumer;)V"
+kind = "builtin"
+references = 1

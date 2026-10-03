@@ -1,0 +1,139 @@
+class = "java/net/HttpURLConnection"
+
+[[member]]
+name = "getResponseCode"
+descriptor = "()I"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getLastModified"
+descriptor = "()J"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getErrorStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getInputStream"
+descriptor = "()Ljava/io/InputStream;"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "getOutputStream"
+descriptor = "()Ljava/io/OutputStream;"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "getContentType"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "getResponseMessage"
+descriptor = "()Ljava/lang/String;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "getURL"
+descriptor = "()Ljava/net/URL;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "connect"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "disconnect"
+descriptor = "()V"
+kind = "builtin"
+references = 10
+
+[[member]]
+name = "setConnectTimeout"
+descriptor = "(I)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "setFixedLengthStreamingMode"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setReadTimeout"
+descriptor = "(I)V"
+kind = "builtin"
+references = 5
+
+[[member]]
+name = "setIfModifiedSince"
+descriptor = "(J)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "getHeaderField"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "getRequestProperty"
+descriptor = "(Ljava/lang/String;)Ljava/lang/String;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "setRequestMethod"
+descriptor = "(Ljava/lang/String;)V"
+kind = "builtin"
+references = 8
+
+[[member]]
+name = "addRequestProperty"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "setRequestProperty"
+descriptor = "(Ljava/lang/String;Ljava/lang/String;)V"
+kind = "builtin"
+references = 19
+
+[[member]]
+name = "setAllowUserInteraction"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "setDoInput"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 7
+
+[[member]]
+name = "setDoOutput"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 9
+
+[[member]]
+name = "setUseCaches"
+descriptor = "(Z)V"
+kind = "builtin"
+references = 4

@@ -1,0 +1,31 @@
+class = "java/util/zip/ZipOutputStream"
+
+[[member]]
+name = "close"
+descriptor = "()V"
+kind = "builtin"
+references = 4
+
+[[member]]
+name = "setLevel"
+descriptor = "(I)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Ljava/io/OutputStream;)V"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "putNextEntry"
+descriptor = "(Ljava/util/zip/ZipEntry;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "write"
+descriptor = "([BII)V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,31 @@
+class = "org/zeromq/ZMonitor"
+
+[[member]]
+name = "nextEvent"
+descriptor = "()Lorg/zeromq/ZMonitor$ZEvent;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "start"
+descriptor = "()Lorg/zeromq/ZMonitor;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "destroy"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "<init>"
+descriptor = "(Lorg/zeromq/ZContext;Lorg/zeromq/ZMQ$Socket;)V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "add"
+descriptor = "([Lorg/zeromq/ZMonitor$Event;)Lorg/zeromq/ZMonitor;"
+kind = "builtin"
+references = 1

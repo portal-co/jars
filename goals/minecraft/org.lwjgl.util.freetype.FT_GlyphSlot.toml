@@ -1,0 +1,25 @@
+class = "org/lwjgl/util/freetype/FT_GlyphSlot"
+
+[[member]]
+name = "bitmap_left"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bitmap_top"
+descriptor = "()I"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "bitmap"
+descriptor = "()Lorg/lwjgl/util/freetype/FT_Bitmap;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "advance"
+descriptor = "()Lorg/lwjgl/util/freetype/FT_Vector;"
+kind = "builtin"
+references = 1

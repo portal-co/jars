@@ -1,0 +1,43 @@
+class = "io/netty/channel/kqueue/BsdSocket"
+
+[[member]]
+name = "getSndLowAt"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getTcpNoPush"
+descriptor = "(I)I"
+kind = "native"
+references = 1
+
+[[member]]
+name = "getAcceptFilter"
+descriptor = "(I)[Ljava/lang/String;"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setSndLowAt"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setTcpNoPush"
+descriptor = "(II)V"
+kind = "native"
+references = 1
+
+[[member]]
+name = "sendFile"
+descriptor = "(ILio/netty/channel/DefaultFileRegion;JJJ)J"
+kind = "native"
+references = 1
+
+[[member]]
+name = "setAcceptFilter"
+descriptor = "(ILjava/lang/String;Ljava/lang/String;)V"
+kind = "native"
+references = 1

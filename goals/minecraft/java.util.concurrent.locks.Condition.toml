@@ -1,0 +1,13 @@
+class = "java/util/concurrent/locks/Condition"
+
+[[member]]
+name = "signalAll"
+descriptor = "()V"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "await"
+descriptor = "(JLjava/util/concurrent/TimeUnit;)Z"
+kind = "builtin"
+references = 1

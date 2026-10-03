@@ -1,0 +1,19 @@
+class = "java/util/stream/StreamSupport"
+
+[[member]]
+name = "intStream"
+descriptor = "(Ljava/util/Spliterator$OfInt;Z)Ljava/util/stream/IntStream;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "longStream"
+descriptor = "(Ljava/util/Spliterator$OfLong;Z)Ljava/util/stream/LongStream;"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "stream"
+descriptor = "(Ljava/util/Spliterator;Z)Ljava/util/stream/Stream;"
+kind = "builtin"
+references = 20

@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/WinReg"
+
+[[member]]
+name = "HKEY_CURRENT_USER"
+descriptor = "Lcom/sun/jna/platform/win32/WinReg$HKEY;"
+kind = "builtin"
+references = 1
+
+[[member]]
+name = "HKEY_LOCAL_MACHINE"
+descriptor = "Lcom/sun/jna/platform/win32/WinReg$HKEY;"
+kind = "builtin"
+references = 16
+
+[[member]]
+name = "HKEY_PERFORMANCE_DATA"
+descriptor = "Lcom/sun/jna/platform/win32/WinReg$HKEY;"
+kind = "builtin"
+references = 2

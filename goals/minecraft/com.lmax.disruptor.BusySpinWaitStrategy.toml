@@ -1,0 +1,7 @@
+class = "com/lmax/disruptor/BusySpinWaitStrategy"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 1

@@ -1,0 +1,19 @@
+class = "com/sun/jna/platform/win32/WinBase$FILETIME"
+
+[[member]]
+name = "toDWordLong"
+descriptor = "()Lcom/sun/jna/platform/win32/WinDef$DWORDLONG;"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 3
+
+[[member]]
+name = "filetimeToDate"
+descriptor = "(II)Ljava/util/Date;"
+kind = "builtin"
+references = 4

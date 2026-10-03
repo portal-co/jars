@@ -1,0 +1,7 @@
+class = "[Lnet/minecraft/network/protocol/game/ClientboundCustomChatCompletionsPacket$Action;"
+
+[[member]]
+name = "clone"
+descriptor = "()Ljava/lang/Object;"
+kind = "builtin"
+references = 1

@@ -1,0 +1,7 @@
+class = "java/util/AbstractMap"
+
+[[member]]
+name = "<init>"
+descriptor = "()V"
+kind = "builtin"
+references = 7

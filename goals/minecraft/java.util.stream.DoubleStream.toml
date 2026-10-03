@@ -1,0 +1,13 @@
+class = "java/util/stream/DoubleStream"
+
+[[member]]
+name = "sum"
+descriptor = "()D"
+kind = "builtin"
+references = 2
+
+[[member]]
+name = "max"
+descriptor = "()Ljava/util/OptionalDouble;"
+kind = "builtin"
+references = 1
