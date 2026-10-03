@@ -27,13 +27,17 @@ fn whole_jar_compile_coverage_never_regresses() {
     let root = crate_root();
     let jar = root.join(VENDORED_JAR);
     let coverage = coverage_jars(&[&jar], JarImportOptions::for_release(21)).unwrap();
+    let unmodeled = coverage.unmodeled_platform_classes();
+    assert!(!unmodeled.iter().any(|class| class == "java/lang/String"));
+    assert!(!unmodeled.iter().any(|class| class == "java/lang/Integer"));
+    assert!(!unmodeled.iter().any(|class| class == "java/lang/Long"));
     let actual = format!(
         "classes {}\nok_classes {}\ntotal_methods {}\nok_methods {}\nunmodeled {}\n",
         coverage.classes.len(),
         coverage.ok_classes(),
         coverage.total_methods(),
         coverage.ok_methods(),
-        coverage.unmodeled_platform_classes().len(),
+        unmodeled.len(),
     );
     let snapshot_path = root.join(SNAPSHOT);
     if std::env::var("UPDATE_COVERAGE_SNAPSHOT").is_ok() {

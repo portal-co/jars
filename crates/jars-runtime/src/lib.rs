@@ -117,6 +117,17 @@ java_error!(
     "string index out of bounds"
 );
 
+#[derive(Debug)]
+pub struct IllegalArgumentException(String);
+
+impl Display for IllegalArgumentException {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(&self.0)
+    }
+}
+
+impl std::error::Error for IllegalArgumentException {}
+
 /// Returned after an earlier `<clinit>` failed.  The first caller sees the
 /// original error; later active uses see this cached failure instead.
 #[derive(Debug)]
@@ -184,6 +195,7 @@ pub fn catches(error: &JavaError, class: &str) -> bool {
         "java/lang/StringIndexOutOfBoundsException" => {
             error.is::<StringIndexOutOfBoundsException>()
         }
+        "java/lang/IllegalArgumentException" => error.is::<IllegalArgumentException>(),
         "java/lang/NegativeArraySizeException" => error.is::<NegativeArraySizeException>(),
         "java/lang/ArrayStoreException" => error.is::<ArrayStoreException>(),
         "java/lang/Exception" | "java/lang/RuntimeException" | "java/lang/Throwable" => {
@@ -192,6 +204,7 @@ pub fn catches(error: &JavaError, class: &str) -> bool {
                 || error.is::<ClassCastException>()
                 || error.is::<ArrayIndexOutOfBoundsException>()
                 || error.is::<StringIndexOutOfBoundsException>()
+                || error.is::<IllegalArgumentException>()
                 || error.is::<NegativeArraySizeException>()
                 || error.is::<ArrayStoreException>()
         }
@@ -665,6 +678,70 @@ mod tests {
         assert!(character::is_whitespace(u16::from(b'\t')));
         assert!(!character::is_whitespace(0x00a0));
         assert!(!character::is_whitespace(0x0085));
+    }
+
+    #[test]
+    fn kafka_producer_record_preserves_validated_immutable_fields() {
+        let topic = JavaString::new("events");
+        let partition = JavaInteger::new(3);
+        let timestamp = JavaLong::new(42);
+        let key = JavaObject::from_string(JavaString::new("key"));
+        let value = JavaObject::from_integer(JavaInteger::new(7));
+        let record = JavaProducerRecord::new(
+            Some(topic.clone()),
+            Some(partition.clone()),
+            Some(timestamp.clone()),
+            Some(key.clone()),
+            Some(value.clone()),
+        )
+        .unwrap();
+        assert!(record.topic.__same(&topic));
+        assert!(record.partition.as_ref().unwrap().__same(&partition));
+        assert!(record.timestamp.as_ref().unwrap().__same(&timestamp));
+        assert!(record.key.as_ref().unwrap().__same(&key));
+        assert!(record.value.as_ref().unwrap().__same(&value));
+
+        for (topic, partition, timestamp, message) in [
+            (None, None, None, "Topic cannot be null."),
+            (
+                Some(JavaString::new("")),
+                None,
+                None,
+                "Topic cannot be empty.",
+            ),
+        ] {
+            let error =
+                JavaProducerRecord::new(topic, partition, timestamp, None, None).unwrap_err();
+            assert!(error.is::<IllegalArgumentException>());
+            assert_eq!(error.to_string(), message);
+            assert!(catches(&error, "java/lang/IllegalArgumentException"));
+        }
+        assert!(
+            JavaProducerRecord::new(
+                Some(JavaString::new("events")),
+                Some(JavaInteger::new(-1)),
+                None,
+                None,
+                None,
+            )
+            .unwrap_err()
+            .is::<IllegalArgumentException>()
+        );
+        assert!(
+            JavaProducerRecord::new(
+                Some(JavaString::new("events")),
+                None,
+                Some(JavaLong::new(-1)),
+                None,
+                None,
+            )
+            .unwrap_err()
+            .is::<IllegalArgumentException>()
+        );
+        assert!(catches(
+            &IllegalArgumentException("invalid".to_owned()).into(),
+            "java/lang/RuntimeException"
+        ));
     }
 
     #[test]

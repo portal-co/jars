@@ -183,6 +183,26 @@ mod tests {
     }
 
     #[test]
+    fn producer_record_constructor_and_object_coercions_are_registered() {
+        let class = "org/apache/kafka/clients/producer/ProducerRecord";
+        let descriptor = "(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Object;Ljava/lang/Object;)V";
+        assert!(is_known_type(class));
+        assert!(is_constructible(class));
+        assert!(matches!(
+            member(class, "<init>", descriptor),
+            Some(StdMember::Constructor { .. })
+        ));
+        assert_eq!(
+            coerce("java/lang/Integer", "java/lang/Object", "partition"),
+            Some("partition.map(jars_runtime::JavaObject::from_integer)".to_owned())
+        );
+        assert_eq!(
+            coerce("java/lang/Long", "java/lang/Object", "timestamp"),
+            Some("timestamp.map(jars_runtime::JavaObject::from_long)".to_owned())
+        );
+    }
+
+    #[test]
     fn object_init_remains_a_no_op_constructor() {
         let Some(StdMember::Constructor { lower }) = member("java/lang/Object", "<init>", "()V")
         else {

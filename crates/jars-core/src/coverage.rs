@@ -110,6 +110,7 @@ impl JarCoverage {
             .iter()
             .flat_map(|class| &class.jdk_dependencies)
             .cloned()
+            .filter(|class| !crate::stdlib::is_known_type(class))
             .collect();
         classes.sort();
         classes.dedup();

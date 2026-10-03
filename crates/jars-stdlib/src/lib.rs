@@ -27,14 +27,22 @@ macro_rules! java_stdlib {
                     "java/lang/String" => |value| {
                         format!("{value}.map(jars_runtime::JavaObject::from_string)")
                     },
+                    "java/lang/Integer" => |value| {
+                        format!("{value}.map(jars_runtime::JavaObject::from_integer)")
+                    },
+                    "java/lang/Long" => |value| {
+                        format!("{value}.map(jars_runtime::JavaObject::from_long)")
+                    },
                 ],
                 runtime: {
                     /// The closed-world Java `Object` reference. Java code
-                    /// widens `String` values into `Object`-typed positions;
-                    /// each newly supported kind adds a variant here.
+                    /// widens only explicitly modeled reference kinds into
+                    /// `Object`-typed positions.
                     #[derive(Clone, Debug)]
                     pub enum JavaObject {
                         Str(JavaString),
+                        Integer(JavaInteger),
+                        Long(JavaLong),
                     }
 
                     impl JavaObject {
@@ -43,11 +51,23 @@ macro_rules! java_stdlib {
                             Self::Str(value)
                         }
 
+                        #[must_use]
+                        pub fn from_integer(value: JavaInteger) -> Self {
+                            Self::Integer(value)
+                        }
+
+                        #[must_use]
+                        pub fn from_long(value: JavaLong) -> Self {
+                            Self::Long(value)
+                        }
+
                         /// Java `Object.toString()` for the supported kinds.
                         #[must_use]
                         pub fn to_string_value(&self) -> JavaString {
                             match self {
                                 Self::Str(value) => value.clone(),
+                                Self::Integer(value) => JavaString::new(value.value().to_string()),
+                                Self::Long(value) => JavaString::new(value.value().to_string()),
                             }
                         }
 
@@ -56,6 +76,9 @@ macro_rules! java_stdlib {
                         pub fn __same(&self, other: &Self) -> bool {
                             match (self, other) {
                                 (Self::Str(left), Self::Str(right)) => left.__same(right),
+                                (Self::Integer(left), Self::Integer(right)) => left.__same(right),
+                                (Self::Long(left), Self::Long(right)) => left.__same(right),
+                                _ => false,
                             }
                         }
                     }
@@ -414,6 +437,124 @@ macro_rules! java_stdlib {
                             crate::model::runtime_method_name("java_string_from_char_range"),
                             args[0], args[1], args[2],
                             crate::model::await_token()
+                        ))
+                    };
+                ],
+            }
+            class {
+                name: "java/lang/Integer",
+                rust_type: Some("jars_runtime::JavaInteger"),
+                coercions: [],
+                runtime: {
+                    /// Immutable Java boxed integer used by closed-world APIs.
+                    #[derive(Clone, Debug)]
+                    pub struct JavaInteger(std::rc::Rc<i32>);
+
+                    impl JavaInteger {
+                        #[must_use]
+                        pub fn new(value: i32) -> Self {
+                            Self(std::rc::Rc::new(value))
+                        }
+
+                        #[must_use]
+                        pub fn value(&self) -> i32 {
+                            *self.0
+                        }
+
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.0, &other.0)
+                        }
+                    }
+                },
+                members: [],
+            }
+            class {
+                name: "java/lang/Long",
+                rust_type: Some("jars_runtime::JavaLong"),
+                coercions: [],
+                runtime: {
+                    /// Immutable Java boxed long used by closed-world APIs.
+                    #[derive(Clone, Debug)]
+                    pub struct JavaLong(std::rc::Rc<i64>);
+
+                    impl JavaLong {
+                        #[must_use]
+                        pub fn new(value: i64) -> Self {
+                            Self(std::rc::Rc::new(value))
+                        }
+
+                        #[must_use]
+                        pub fn value(&self) -> i64 {
+                            *self.0
+                        }
+
+                        #[must_use]
+                        pub fn __same(&self, other: &Self) -> bool {
+                            std::rc::Rc::ptr_eq(&self.0, &other.0)
+                        }
+                    }
+                },
+                members: [],
+            }
+            class {
+                name: "org/apache/kafka/clients/producer/ProducerRecord",
+                rust_type: Some("jars_runtime::JavaProducerRecord"),
+                coercions: [],
+                runtime: {
+                    /// Immutable record data used by the modeled Kafka
+                    /// constructor. The contained Java references remain
+                    /// owned values/actor addresses, never shared object state.
+                    #[derive(Clone, Debug)]
+                    pub struct JavaProducerRecord {
+                        topic: JavaString,
+                        partition: Option<JavaInteger>,
+                        timestamp: Option<JavaLong>,
+                        key: Option<JavaObject>,
+                        value: Option<JavaObject>,
+                    }
+
+                    impl JavaProducerRecord {
+                        pub fn new(
+                            topic: Option<JavaString>,
+                            partition: Option<JavaInteger>,
+                            timestamp: Option<JavaLong>,
+                            key: Option<JavaObject>,
+                            value: Option<JavaObject>,
+                        ) -> JavaResult<Self> {
+                            let topic = topic.ok_or_else(|| {
+                                IllegalArgumentException("Topic cannot be null.".to_owned())
+                            })?;
+                            if topic.is_empty() {
+                                return Err(IllegalArgumentException(
+                                    "Topic cannot be empty.".to_owned(),
+                                ).into());
+                            }
+                            if let Some(partition) = &partition {
+                                if partition.value() < 0 {
+                                    return Err(IllegalArgumentException(format!(
+                                        "Invalid partition given with record: {}",
+                                        partition.value()
+                                    )).into());
+                                }
+                            }
+                            if let Some(timestamp) = &timestamp {
+                                if timestamp.value() < 0 {
+                                    return Err(IllegalArgumentException(format!(
+                                        "Invalid timestamp: {}. Timestamp should always be non-negative or null.",
+                                        timestamp.value()
+                                    )).into());
+                                }
+                            }
+                            Ok(Self { topic, partition, timestamp, key, value })
+                        }
+                    }
+                },
+                members: [
+                    constructor "<init>" "(Ljava/lang/String;Ljava/lang/Integer;Ljava/lang/Long;Ljava/lang/Object;Ljava/lang/Object;)V" |args| {
+                        Some(format!(
+                            "Some(jars_runtime::JavaProducerRecord::new({}, {}, {}, {}, {})?)",
+                            args[0], args[1], args[2], args[3], args[4]
                         ))
                     };
                 ],

@@ -42,6 +42,25 @@ fn compile_java(name: &str, temp: &TempDir) -> Vec<u8> {
     fs::read(classes.join(format!("{name}.class"))).unwrap()
 }
 
+fn compile_java_with_sourcepath(name: &str, temp: &TempDir, sourcepath: &Path) -> Vec<u8> {
+    let classes = temp.path().join("classes");
+    fs::create_dir(&classes).unwrap();
+    let output = Command::new(homebrew_javac())
+        .arg("-d")
+        .arg(&classes)
+        .arg("-sourcepath")
+        .arg(sourcepath)
+        .arg(fixture(name))
+        .output()
+        .expect("JDK 21 javac should be available for the e2e fixtures");
+    assert!(
+        output.status.success(),
+        "javac failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    fs::read(classes.join(format!("{name}.class"))).unwrap()
+}
+
 fn compile_and_run(name: &str) -> (String, String) {
     compile_and_run_with(name, ObjectModel::Task, "")
 }
@@ -125,6 +144,42 @@ fn compile_set_and_run(names: &[&str]) -> (String, String) {
 #[test]
 fn hello_world_runs_after_java_to_rust_compilation() {
     assert_eq!(compile_and_run("Hello").0, "Hello, world!\n");
+}
+
+#[test]
+fn kafka_producer_record_builtin_constructor_compiles_and_runs() {
+    let temp = tempfile::tempdir().unwrap();
+    let sourcepath = Path::new(env!("CARGO_MANIFEST_DIR")).join("tests/fixtures");
+    let class_bytes = compile_java_with_sourcepath("ProducerRecordFixture", &temp, &sourcepath);
+    let generated = compile_class(&class_bytes).unwrap();
+    assert!(generated.contains("JavaProducerRecord::new"));
+
+    let package = temp.path().join("generated-producer-record");
+    fs::create_dir_all(package.join("src")).unwrap();
+    let runtime = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("jars-runtime");
+    fs::write(
+        package.join("Cargo.toml"),
+        format!(
+            "[package]\nname = \"generated-producer-record\"\nversion = \"0.0.0\"\nedition = \"2024\"\n\n[dependencies]\njars-runtime = {{ path = {:?} }}\n",
+            runtime
+        ),
+    )
+    .unwrap();
+    fs::write(package.join("src/main.rs"), &generated).unwrap();
+    let output = Command::new("cargo")
+        .args(["run", "--quiet", "--offline", "--manifest-path"])
+        .arg(package.join("Cargo.toml"))
+        .output()
+        .expect("cargo should compile generated Rust");
+    assert!(
+        output.status.success(),
+        "generated Rust failed: {}\n--- source ---\n{generated}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    assert_eq!(String::from_utf8(output.stdout).unwrap(), "constructed\n");
 }
 
 #[test]
