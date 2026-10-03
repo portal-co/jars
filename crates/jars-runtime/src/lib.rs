@@ -574,6 +574,52 @@ pub fn println_string(value: Option<JavaString>) {
 mod tests {
     use super::*;
 
+    static FLITE_TEST_NAME: std::sync::Mutex<Option<Option<String>>> = std::sync::Mutex::new(None);
+
+    unsafe extern "C" fn fake_register_cmu_us_kal16(
+        name: *const std::ffi::c_char,
+    ) -> *mut std::ffi::c_void {
+        let name = if name.is_null() {
+            None
+        } else {
+            Some(
+                unsafe { std::ffi::CStr::from_ptr(name) }
+                    .to_string_lossy()
+                    .into_owned(),
+            )
+        };
+        *FLITE_TEST_NAME.lock().unwrap() = Some(name);
+        0x1234_usize as *mut std::ffi::c_void
+    }
+
+    #[test]
+    fn flite_native_shim_marshals_nullable_java_strings_and_pointer_results() {
+        *FLITE_TEST_NAME.lock().unwrap() = None;
+        let result =
+            register_cmu_us_kal16_with(Some(JavaString::new("kal16")), fake_register_cmu_us_kal16)
+                .unwrap()
+                .unwrap();
+        assert_eq!(
+            *FLITE_TEST_NAME.lock().unwrap(),
+            Some(Some("kal16".to_owned()))
+        );
+        assert_eq!(result.as_ptr(), 0x1234_usize as *mut std::ffi::c_void);
+
+        *FLITE_TEST_NAME.lock().unwrap() = None;
+        let result = register_cmu_us_kal16_with(None, fake_register_cmu_us_kal16)
+            .unwrap()
+            .unwrap();
+        assert_eq!(result.as_ptr(), 0x1234_usize as *mut std::ffi::c_void);
+        assert_eq!(*FLITE_TEST_NAME.lock().unwrap(), Some(None));
+        assert!(
+            register_cmu_us_kal16_with(
+                Some(JavaString::new("bad\0name")),
+                fake_register_cmu_us_kal16,
+            )
+            .is_err()
+        );
+    }
+
     #[test]
     fn mailbox_and_reply_preserve_request_order() {
         let runtime = Runtime::new();

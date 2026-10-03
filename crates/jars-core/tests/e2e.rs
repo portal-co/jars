@@ -4,7 +4,10 @@ use std::{
     process::Command,
 };
 
-use jars_core::{ObjectModel, compile_class, compile_class_with_model, compile_classes};
+use jars_core::{
+    JarEntrypoint, ObjectModel, compile_class, compile_class_with_model, compile_classes,
+    compile_jars,
+};
 use tempfile::TempDir;
 
 fn fixture(name: &str) -> PathBuf {
@@ -130,6 +133,72 @@ fn hello_world_runs_after_java_to_rust_compilation() {
 #[test]
 fn math_min_resolves_through_the_stdlib_registry() {
     assert_eq!(compile_and_run("MathMin").0, "3\n");
+}
+
+#[test]
+fn flite_native_registration_compiles_through_its_runtime_shim() {
+    let temp = tempfile::tempdir().unwrap();
+    let classes = temp.path().join("classes");
+    fs::create_dir(&classes).unwrap();
+    let output = Command::new(homebrew_javac())
+        .arg("-d")
+        .arg(&classes)
+        .arg(fixture("FliteNative"))
+        .arg(fixture("com/mojang/text2speech/NarratorLinux"))
+        .arg(fixture("com/sun/jna/Pointer"))
+        .output()
+        .expect("JDK 21 javac should be available for the e2e fixtures");
+    assert!(
+        output.status.success(),
+        "javac failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let jar = temp.path().join("flite-native.jar");
+    let output = Command::new(homebrew_javac().with_file_name("jar"))
+        .args(["cf"])
+        .arg(&jar)
+        .args(["-C"])
+        .arg(&classes)
+        .arg(".")
+        .output()
+        .expect("JDK jar should be available for the e2e fixture");
+    assert!(
+        output.status.success(),
+        "jar failed: {}",
+        String::from_utf8_lossy(&output.stderr)
+    );
+    let generated = compile_jars(
+        &[jar],
+        &JarEntrypoint::new("FliteNative", "main", "([Ljava/lang/String;)V"),
+    )
+    .unwrap();
+    assert!(generated.contains("jars_runtime::register_cmu_us_kal16"));
+
+    let package = temp.path().join("generated");
+    fs::create_dir_all(package.join("src")).unwrap();
+    let runtime = Path::new(env!("CARGO_MANIFEST_DIR"))
+        .parent()
+        .unwrap()
+        .join("jars-runtime");
+    fs::write(
+        package.join("Cargo.toml"),
+        format!(
+            "[package]\nname = \"generated-flite-native\"\nversion = \"0.0.0\"\nedition = \"2024\"\n\n[dependencies]\njars-runtime = {{ path = {:?} }}\n",
+            runtime
+        ),
+    )
+    .unwrap();
+    fs::write(package.join("src/main.rs"), &generated).unwrap();
+    let output = Command::new("cargo")
+        .args(["check", "--quiet", "--offline", "--manifest-path"])
+        .arg(package.join("Cargo.toml"))
+        .output()
+        .expect("cargo should compile generated Rust");
+    assert!(
+        output.status.success(),
+        "generated Rust failed: {}\n--- source ---\n{generated}",
+        String::from_utf8_lossy(&output.stderr)
+    );
 }
 
 #[test]

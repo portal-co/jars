@@ -183,6 +183,25 @@ mod tests {
     }
 
     #[test]
+    fn flite_voice_registration_is_an_exact_native_shim_entry() {
+        let owner = "com/mojang/text2speech/NarratorLinux$FliteLibrary$CmuUsKal16";
+        let descriptor = "(Ljava/lang/String;)Lcom/sun/jna/Pointer;";
+        let Some(StdMember::InstanceMethod { lower }) =
+            member(owner, "register_cmu_us_kal16", descriptor)
+        else {
+            panic!("expected the Flite native shim to be registered");
+        };
+        assert_eq!(
+            lower("_receiver", &["name".to_owned()]),
+            "jars_runtime::register_cmu_us_kal16(name)?"
+        );
+        assert_eq!(
+            class("com/sun/jna/Pointer").and_then(|entry| entry.rust_type),
+            Some("jars_runtime::NativePointer")
+        );
+    }
+
+    #[test]
     fn object_init_remains_a_no_op_constructor() {
         let Some(StdMember::Constructor { lower }) = member("java/lang/Object", "<init>", "()V")
         else {
