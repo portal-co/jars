@@ -168,6 +168,10 @@ fn flite_native_registration_compiles_through_its_runtime_shim() {
     )
     .unwrap();
     assert!(generated.contains("jars_runtime::register_cmu_us_kal16"));
+    assert!(
+        generated.contains("arg0.clone().ok_or_else(jars_runtime::null_pointer)?"),
+        "generated source did not check the native shim receiver:\n{generated}"
+    );
 
     let package = temp.path().join("generated");
     fs::create_dir_all(package.join("src")).unwrap();

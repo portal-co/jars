@@ -192,8 +192,11 @@ mod tests {
             panic!("expected the Flite native shim to be registered");
         };
         assert_eq!(
-            lower("_receiver", &["name".to_owned()]),
-            "jars_runtime::register_cmu_us_kal16(name)?"
+            lower(
+                "receiver.ok_or_else(jars_runtime::null_pointer)?",
+                &["name".to_owned()],
+            ),
+            "{ let _receiver = receiver.ok_or_else(jars_runtime::null_pointer)?; jars_runtime::register_cmu_us_kal16(name)? }"
         );
         assert_eq!(
             class("com/sun/jna/Pointer").and_then(|entry| entry.rust_type),

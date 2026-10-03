@@ -5139,8 +5139,7 @@ fn render_declared_entry(
         .signature
         .parameters
         .iter()
-        .enumerate()
-        .map(|(index, ty)| default_argument(ty).map(|value| (index, value)))
+        .map(default_argument)
         .collect::<Option<Vec<_>>>()
         .ok_or_else(|| {
             invalid(format!(
@@ -5152,7 +5151,7 @@ fn render_declared_entry(
         "{class}::{method}(&program{})",
         invocation_arguments
             .iter()
-            .map(|(index, value)| format!(", arg{index} = {value}"))
+            .map(|value| format!(", {value}"))
             .collect::<String>()
     );
     // The entry result is discarded uniformly: `JavaUnit` wraps both `()`

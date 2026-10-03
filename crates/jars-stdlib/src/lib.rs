@@ -1779,9 +1779,9 @@ macro_rules! java_stdlib {
                 },
                 members: [
                     instance "register_cmu_us_kal16"
-                    "(Ljava/lang/String;)Lcom/sun/jna/Pointer;" |_receiver, args| {
+                    "(Ljava/lang/String;)Lcom/sun/jna/Pointer;" |receiver, args| {
                         format!(
-                            "jars_runtime::register_cmu_us_kal16({})?",
+                            "{{ let _receiver = {receiver}; jars_runtime::register_cmu_us_kal16({})? }}",
                             args[0]
                         )
                     };

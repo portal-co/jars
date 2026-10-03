@@ -3,8 +3,8 @@ entrypoint_class = "net/minecraft/client/main/Main"
 entrypoint_method = "main"
 entrypoint_descriptor = "([Ljava/lang/String;)V"
 target_release = 25
-open_classes = 1354
-open_members = 6054
+open_classes = 1353
+open_members = 6053
 blocked_members = 5471
 
 [[class]]
@@ -8354,13 +8354,6 @@ blocked_members = 0
 [[class]]
 name = "com/lmax/disruptor/YieldingWaitStrategy"
 file = "com.lmax.disruptor.YieldingWaitStrategy.toml"
-references = 1
-open_members = 1
-blocked_members = 0
-
-[[class]]
-name = "com/mojang/text2speech/NarratorLinux$FliteLibrary$CmuUsKal16"
-file = "com.mojang.text2speech.NarratorLinux$FliteLibrary$CmuUsKal16.toml"
 references = 1
 open_members = 1
 blocked_members = 0

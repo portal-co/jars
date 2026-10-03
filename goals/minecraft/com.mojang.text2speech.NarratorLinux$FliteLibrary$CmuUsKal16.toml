@@ -1,7 +1,0 @@
-class = "com/mojang/text2speech/NarratorLinux$FliteLibrary$CmuUsKal16"
-
-[[member]]
-name = "register_cmu_us_kal16"
-descriptor = "(Ljava/lang/String;)Lcom/sun/jna/Pointer;"
-kind = "native"
-references = 1
